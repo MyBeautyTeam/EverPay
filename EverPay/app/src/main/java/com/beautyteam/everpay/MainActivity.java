@@ -82,14 +82,16 @@ public class MainActivity extends Activity implements ActivityCallback{
 
 
     @Override
-    public void onSuccess() {
-        loader.setVisibility(View.INVISIBLE);
-        Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onError() {
-        loader.setVisibility(View.INVISIBLE);
-        Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
+    public void onRequestEnd(int result) {
+        switch (result) {
+            case Constants.Result.OK:
+                loader.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.Result.ERROR:
+                loader.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

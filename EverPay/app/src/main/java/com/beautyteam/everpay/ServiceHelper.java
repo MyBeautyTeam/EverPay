@@ -43,13 +43,6 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     @Override
     public void onReceiveResult(int resultCode, Bundle data) {
         Log.d(Constants.LOG, "ServiceHelper, onReceiveResult()");
-        switch (resultCode) {
-            case Constants.Result.OK:
-                activityCallback.onSuccess();
-                break;
-            case Constants.Result.ERROR:
-                activityCallback.onError();
-        }
-
+        activityCallback.onRequestEnd(resultCode);
     }
 }

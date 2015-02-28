@@ -21,7 +21,7 @@ public class MyContentProvider extends ContentProvider {
     // // Константы для БД
     // БД
     static final String DB_NAME = "mydb";
-    static final int DB_VERSION = 4;
+    static final int DB_VERSION = 1;
 
     //=========================
     // Таблица
@@ -39,8 +39,8 @@ public class MyContentProvider extends ContentProvider {
             + CONTACT_ID + " integer primary key autoincrement, "
             + CONTACT_NAME + " text, " +
             CONTACT_EMAIL + " text,"
-            + STATE + "integer,"
-            + RESULT + "integer" + ");";
+            + STATE + " integer,"
+            + RESULT + " integer" + ");";
 
 
     // // Uri
@@ -70,26 +70,12 @@ public class MyContentProvider extends ContentProvider {
     // Uri с указанным ID
     static final int URI_CONTACTS_ID = 2;
 
-    // Uri написать статус
-    static final int URI_CONTACTS_STATUS_PENDING = 3;
-    static final int URI_CONTACTS_STATUS_CLEAR_PENDING = 4;
-
-    // Uri результат
-    static final int URI_CONTACTS_RESULT_ERROR = 5;
-    static final int URI_CONTACTS_RESULT_OK = 6;
-
     // описание и создание UriMatcher
     private static final UriMatcher uriMatcher;
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, CONTACT_PATH, URI_CONTACTS);
         uriMatcher.addURI(AUTHORITY, CONTACT_PATH + "/#", URI_CONTACTS_ID);
-
-        uriMatcher.addURI(AUTHORITY, CONTACT_PATH + "/PENDING#", URI_CONTACTS_STATUS_PENDING);
-        uriMatcher.addURI(AUTHORITY, CONTACT_PATH + "/PENDING/CLEAR#", URI_CONTACTS_STATUS_CLEAR_PENDING);
-
-        uriMatcher.addURI(AUTHORITY, CONTACT_PATH + "/STATUS/ERROR#", URI_CONTACTS_RESULT_ERROR);
-        uriMatcher.addURI(AUTHORITY, CONTACT_PATH + "/STATUS/OK#", URI_CONTACTS_RESULT_OK);
     }
 
     DBHelper dbHelper;
@@ -225,6 +211,8 @@ public class MyContentProvider extends ContentProvider {
         }
 
         public void onCreate(SQLiteDatabase db) {
+            Log.d(Constants.LOG, "OnCreateDB");
+            Log.d(Constants.LOG, DB_CREATE);
             db.execSQL(DB_CREATE);
             ContentValues cv = new ContentValues();
             for (int i = 1; i <= 3; i++) {
@@ -233,10 +221,20 @@ public class MyContentProvider extends ContentProvider {
                 cv.put(RESULT, Constants.Result.OK);
                 db.insert(CONTACT_TABLE, null, cv);
             }
+
+            cv.put(CONTACT_NAME, "name " + 4);
+            cv.put(CONTACT_EMAIL, "email " + 4);
+            cv.put(RESULT, Constants.Result.ERROR);
+            db.insert(CONTACT_TABLE, null, cv);
+
+            cv.put(CONTACT_NAME, "name " + 5);
+            cv.put(CONTACT_EMAIL, "email " + 5);
+            cv.put(RESULT, Constants.Result.ERROR);
+            db.insert(CONTACT_TABLE, null, cv);
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.d(Constants.LOG, "in Upgrade");
+            /*Log.d(Constants.LOG, "in Upgrade");
             if (oldVersion == 3 && newVersion == 4) {
                 db.delete(CONTACT_TABLE, "", null);
                 ContentValues cv = new ContentValues();
@@ -247,19 +245,10 @@ public class MyContentProvider extends ContentProvider {
                     db.insert(CONTACT_TABLE, null, cv);
                 }
 
-                cv.put(CONTACT_NAME, "name " + 4);
-                cv.put(CONTACT_EMAIL, "email " + 4);
-                cv.put(RESULT, Constants.Result.ERROR);
-                db.insert(CONTACT_TABLE, null, cv);
-
-                cv.put(CONTACT_NAME, "name " + 5);
-                cv.put(CONTACT_EMAIL, "email " + 5);
-                cv.put(RESULT, Constants.Result.ERROR);
-                db.insert(CONTACT_TABLE, null, cv);
 
                 Log.d(Constants.LOG, "onUpgrade");
 
-            }
+            }*/
         }
     }
 }

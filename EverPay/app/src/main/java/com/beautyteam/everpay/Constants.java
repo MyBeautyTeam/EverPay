@@ -7,19 +7,18 @@ import android.net.Uri;
  */
 public class Constants {
     public class Result {
-        public final static int OK = 0;
+        public final static int OK = 1;
         public final static int ERROR = -1;
     }
 
     public class Action {
-        public final static String REGISTER = "REGISTER";
         public final static String ADD_CONTACT = "ADD_CONTACT";
+        public final static String ANY_ACTION_WITH_POST = "POST_ACTION";
     }
 
     public class State {
         public final static int IN_PROCESS = 1;
-        public final static int OK = 0;
-        public final static int ERROR = -1;
+        public final static int ENDS = -1;
     }
 
     public final static String RECEIVER = "RECEIVER";
