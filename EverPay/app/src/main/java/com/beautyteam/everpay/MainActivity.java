@@ -1,6 +1,9 @@
 package com.beautyteam.everpay;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,20 +19,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity implements ActivityCallback{
+public class MainActivity extends Activity implements ActivityCallback,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
-    private Button sendBtn;
-    private TextView loader;
+
     private ServiceHelper serviceHelper;
+    ContactCursorAdapter cursorAdapter;
 
-    SimpleCursorAdapter adapter;
+    private static final String[] PROJECTION = new String[] {
+            MyContentProvider.CONTACT_ID,
+            MyContentProvider.CONTACT_NAME,
+            MyContentProvider.CONTACT_EMAIL,
+            MyContentProvider.IMG_NAME,
+            MyContentProvider.STATE,
+            MyContentProvider.RESULT
+    };
+
     ListView lvContact;
 
-    EditText nameEditText;
-    EditText emailEditText;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_actity);
 
@@ -38,34 +47,10 @@ public class MainActivity extends Activity implements ActivityCallback{
          */
         serviceHelper = new ServiceHelper(this, this);
 
-        nameEditText = (EditText) findViewById(R.id.nameEditText);
-        emailEditText = (EditText) findViewById(R.id.emailEditText);
+        lvContact = (ListView) findViewById(R.id.listView);
+        cursorAdapter = new ContactCursorAdapter(this);
+        lvContact.setAdapter(cursorAdapter);
 
-        loader = (TextView) findViewById(R.id.loader);
-        sendBtn = (Button) findViewById(R.id.sendBtn);
-        sendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.sendBtn:
-                        loader.setVisibility(View.VISIBLE);
-                        serviceHelper.send(nameEditText.getText().toString(), emailEditText.getText().toString());
-                        Log.d(Constants.LOG, "onClick");
-                }
-            }
-        });
-
-        Cursor cursor = getContentResolver().query(Constants.CONTACT_URI, null, null,
-                null, null);
-        startManagingCursor(cursor);
-
-        String from[] = { "name", "email" };
-        int to[] = { android.R.id.text1, android.R.id.text2 };
-        adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_2, cursor, from, to);
-
-        lvContact = (ListView) findViewById(R.id.lvContact);
-        lvContact.setAdapter(adapter);
     }
 
     @Override
@@ -85,13 +70,29 @@ public class MainActivity extends Activity implements ActivityCallback{
     public void onRequestEnd(int result) {
         switch (result) {
             case Constants.Result.OK:
-                loader.setVisibility(View.INVISIBLE);
+                //loader.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
                 break;
             case Constants.Result.ERROR:
-                loader.setVisibility(View.INVISIBLE);
+                //loader.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this, Constants.CONTACT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        cursorAdapter = new ContactCursorAdapter(this);
+        lvContact.setAdapter(cursorAdapter);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        cursorAdapter.swapCursor(null);
     }
 }

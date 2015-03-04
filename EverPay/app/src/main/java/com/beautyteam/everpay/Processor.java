@@ -1,24 +1,29 @@
 package com.beautyteam.everpay;
 
-import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -56,6 +61,11 @@ public class Processor {
             }
             service.getContentResolver().update(uriOfInsertedRow, cv, null, null);
         }
+        else if (DOWNLOAD_IMG.equals(action)) {
+            String url = intent.getStringExtra(Constants.IntentParams.URL);
+            String name = intent.getStringExtra(Constants.IntentParams.NAME);
+            result = downloadAndSaveBitmap(url, name);
+        }
         else if (ANY_ACTION_WITH_POST.equals(action)) {
             ContentValues cv = new ContentValues();
             cv.put(MyContentProvider.STATE, Constants.State.IN_PROCESS);
@@ -76,7 +86,6 @@ public class Processor {
             }
             service.getContentResolver().update(uriOfInsertedRow, cv, null, null);
         }
-
         service.onRequestEnd(result, intent);
     }
 
@@ -124,6 +133,50 @@ public class Processor {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    private Bitmap downloadImg(String url) throws IOException {
+        HttpUriRequest request = new HttpGet(url.toString());
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse response = httpClient.execute(request);
+
+        StatusLine statusLine = response.getStatusLine();
+        int statusCode = statusLine.getStatusCode();
+        if (statusCode == 200) {
+            HttpEntity entity = response.getEntity();
+            byte[] bytes = EntityUtils.toByteArray(entity);
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
+                    bytes.length);
+            return bitmap;
+        } else {
+            throw new IOException("Download failed, HTTP response code "
+                    + statusCode + " - " + statusLine.getReasonPhrase());
+        }
+    }
+
+    private void saveBitmapAtDisk(Bitmap bmp, String name) throws IOException{
+        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                Constants.FILE_DIRECTORY;
+        File dir = new File(file_path);
+        if(!dir.exists())
+            dir.mkdirs();
+        File file = new File(dir, name + ".png");
+        FileOutputStream fOut = new FileOutputStream(file);
+
+        bmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+        fOut.flush();
+        fOut.close();
+    }
+
+    private int downloadAndSaveBitmap (String url, String name) {
+        try {
+            Bitmap bitmap = downloadImg(url);
+            saveBitmapAtDisk(bitmap, name);
+        } catch (IOException e) {
+            return Constants.Result.ERROR;
+        }
+        return Constants.Result.OK;
     }
 
 }

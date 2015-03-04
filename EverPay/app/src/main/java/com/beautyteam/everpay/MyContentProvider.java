@@ -31,14 +31,16 @@ public class MyContentProvider extends ContentProvider {
     static final String CONTACT_ID = "_id";
     static final String CONTACT_NAME = "name";
     static final String CONTACT_EMAIL = "email";
+    static final String IMG_NAME = "img_name";
     static final String STATE = "state";
     static final String RESULT = "result";
 
     // Скрипт создания таблицы
     static final String DB_CREATE = "create table " + CONTACT_TABLE + "("
             + CONTACT_ID + " integer primary key autoincrement, "
-            + CONTACT_NAME + " text, " +
-            CONTACT_EMAIL + " text,"
+            + CONTACT_NAME + " text, "
+            + CONTACT_EMAIL + " text,"
+            + IMG_NAME + " text,"
             + STATE + " integer,"
             + RESULT + " integer" + ");";
 
@@ -215,26 +217,29 @@ public class MyContentProvider extends ContentProvider {
             Log.d(Constants.LOG, DB_CREATE);
             db.execSQL(DB_CREATE);
             ContentValues cv = new ContentValues();
-            for (int i = 1; i <= 3; i++) {
+            for (int i = 1; i <= 10; i++) {
                 cv.put(CONTACT_NAME, "name " + i);
                 cv.put(CONTACT_EMAIL, "email " + i);
+                cv.put(IMG_NAME, i+".png");
                 cv.put(RESULT, Constants.Result.OK);
                 db.insert(CONTACT_TABLE, null, cv);
             }
 
-            cv.put(CONTACT_NAME, "name " + 4);
-            cv.put(CONTACT_EMAIL, "email " + 4);
+            cv.put(CONTACT_NAME, "name " + 11);
+            cv.put(CONTACT_EMAIL, "email " + 11);
+            cv.put(IMG_NAME, 11+".png");
             cv.put(RESULT, Constants.Result.ERROR);
             db.insert(CONTACT_TABLE, null, cv);
 
-            cv.put(CONTACT_NAME, "name " + 5);
-            cv.put(CONTACT_EMAIL, "email " + 5);
+            cv.put(CONTACT_NAME, "name " + 2);
+            cv.put(CONTACT_EMAIL, "email " + 2);
+            cv.put(IMG_NAME, 12+".png");
             cv.put(RESULT, Constants.Result.ERROR);
             db.insert(CONTACT_TABLE, null, cv);
         }
 
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            /*Log.d(Constants.LOG, "in Upgrade");
+            Log.d(Constants.LOG, "in Upgrade");
             if (oldVersion == 3 && newVersion == 4) {
                 db.delete(CONTACT_TABLE, "", null);
                 ContentValues cv = new ContentValues();
@@ -248,7 +253,7 @@ public class MyContentProvider extends ContentProvider {
 
                 Log.d(Constants.LOG, "onUpgrade");
 
-            }*/
+            }
         }
     }
 }

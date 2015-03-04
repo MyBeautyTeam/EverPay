@@ -14,6 +14,7 @@ public class Constants {
     public class Action {
         public final static String ADD_CONTACT = "ADD_CONTACT";
         public final static String ANY_ACTION_WITH_POST = "POST_ACTION";
+        public final static String DOWNLOAD_IMG = "DOWNLOAD_IMG";
     }
 
     public class State {
@@ -21,9 +22,16 @@ public class Constants {
         public final static int ENDS = -1;
     }
 
+    public class IntentParams {
+        public final static String URL = "URL";
+        public final static String NAME = "NAME";
+    }
+
     public final static String RECEIVER = "RECEIVER";
 
     public final static String LOG = "MyProgram";
 
-    final public static Uri CONTACT_URI = Uri.parse("content://com.beautyteam.everpay.AdressBook/contacts");
+    public final static Uri CONTACT_URI = Uri.parse("content://com.beautyteam.everpay.AdressBook/contacts");
+
+    public final static String FILE_DIRECTORY = "/.EverPay";
 }

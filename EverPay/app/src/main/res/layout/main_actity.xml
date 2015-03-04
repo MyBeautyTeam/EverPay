@@ -4,42 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
         <Button
-            android:id="@+id/sendBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Отправить"/>
-        <EditText
-            android:id="@+id/nameEditText"
-            android:layout_width="120dp"
-            android:layout_height="match_parent" />
-        <EditText
-            android:id="@+id/emailEditText"
-            android:inputType="textWebEmailAddress"
-            android:layout_width="120dp"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/loader"
-        android:text="Загрузка..."
-        android:textSize="25dp"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_gravity="center"
-        />
-
-    <ListView
-        android:id="@+id/lvContact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
-
+            android:text="нос"/>
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
 
 </LinearLayout>

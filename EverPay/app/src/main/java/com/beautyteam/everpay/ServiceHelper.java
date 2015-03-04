@@ -40,6 +40,15 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
     // Обработка результата из сервиса
+    public void downloadImage(String url, String name) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.DOWNLOAD_IMG);
+        intentService.putExtra(Constants.IntentParams.NAME, name);
+        intentService.putExtra(Constants.IntentParams.URL, url);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+        Log.d(Constants.LOG, "ServiceHelper, send()");
+    }
     @Override
     public void onReceiveResult(int resultCode, Bundle data) {
         Log.d(Constants.LOG, "ServiceHelper, onReceiveResult()");
