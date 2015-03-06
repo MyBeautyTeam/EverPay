@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="нос"/>
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"

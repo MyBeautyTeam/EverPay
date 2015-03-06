@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 /**
  * Created by Admin on 05.03.2015.
  */
@@ -20,9 +22,11 @@ public class ContactCursorAdapter extends CursorAdapter {
 
     private final LayoutInflater inflater;
 
-    public ContactCursorAdapter(Context context) {
-        super(context, null, 0);
-        inflater = LayoutInflater.from(context);
+    public ContactCursorAdapter(Context context, Cursor c, int flags) {
+        super(context, c, flags);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //inflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -40,15 +44,18 @@ public class ContactCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
+        //holder.text.setText("abcd");
+        //holder.icon.setImageResource(R.drawable.ic_launcher);
         String fileName =  cursor.getString(cursor.getColumnIndex(MyContentProvider.IMG_NAME)); // Возможно, в дальнейшем будет id
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                Constants.FILE_DIRECTORY + fileName;
-        Picasso.with(context).load(filePath).resize(50,50).centerInside().into(holder.icon);
+                Constants.FILE_DIRECTORY + '/' + fileName;
+        File file = new File(filePath);
+        Picasso.with(context).load(file).resize(200, 200).centerInside().into(holder.icon);
     }
 
     @Override
     public int getCount() {
-        return 12;//getCursor() == null ? 0 : super.getCount();
+        return getCursor() == null ? 0 : super.getCount();
     }
 
     private static class ViewHolder {
