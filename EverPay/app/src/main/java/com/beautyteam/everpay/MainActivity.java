@@ -6,22 +6,14 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity implements ActivityCallback,
-        LoaderManager.LoaderCallbacks<Cursor> {
-
+public class MainActivity extends Activity implements ActivityCallback {
+        //LoaderManager.LoaderCallbacks<Cursor> {
 
     private ServiceHelper serviceHelper;
     ContactCursorAdapter cursorAdapter;
@@ -48,21 +40,23 @@ public class MainActivity extends Activity implements ActivityCallback,
         serviceHelper = new ServiceHelper(this, this);
 
         lvContact = (ListView) findViewById(R.id.listView);
-        cursorAdapter = new ContactCursorAdapter(this);
+        Cursor cursor = getContentResolver().query(Constants.CONTACT_URI, null, null,
+                null, null);
+        startManagingCursor(cursor);
+        cursorAdapter = new ContactCursorAdapter(this, cursor, 0);
         lvContact.setAdapter(cursorAdapter);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        serviceHelper.resumeBind();
+        serviceHelper.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        serviceHelper.pauseBind();
+        serviceHelper.onPause();
     }
 
 
@@ -80,14 +74,15 @@ public class MainActivity extends Activity implements ActivityCallback,
         }
     }
 
+/*
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, Constants.CONTACT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
+        return new CursorLoader(this, Constants.CONTACT_URI, PROJECTION, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter = new ContactCursorAdapter(this);
+        cursorAdapter = new ContactCursorAdapter(this, data, 0);
         lvContact.setAdapter(cursorAdapter);
     }
 
@@ -95,4 +90,5 @@ public class MainActivity extends Activity implements ActivityCallback,
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
     }
+*/
 }

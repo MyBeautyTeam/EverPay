@@ -21,7 +21,7 @@ public class MyContentProvider extends ContentProvider {
     // // Константы для БД
     // БД
     static final String DB_NAME = "mydb";
-    static final int DB_VERSION = 1;
+    static final int DB_VERSION = 6;
 
     //=========================
     // Таблица

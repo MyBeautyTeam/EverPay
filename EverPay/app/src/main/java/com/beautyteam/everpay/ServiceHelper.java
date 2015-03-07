@@ -20,12 +20,12 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         this.activityCallback = _activityCallback;
     }
 
-    public void resumeBind() {
+    public void onResume() {
         mReceiver = new AppResultsReceiver(new Handler());
         mReceiver.setReceiver(this);
     }
 
-    public void pauseBind() {
+    public void onPause() {
         mReceiver.setReceiver(null);
     }
 
