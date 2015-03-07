@@ -44,8 +44,6 @@ public class ContactCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
-        //holder.text.setText("abcd");
-        //holder.icon.setImageResource(R.drawable.ic_launcher);
         String fileName =  cursor.getString(cursor.getColumnIndex(MyContentProvider.IMG_NAME)); // Возможно, в дальнейшем будет id
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 Constants.FILE_DIRECTORY + '/' + fileName;
