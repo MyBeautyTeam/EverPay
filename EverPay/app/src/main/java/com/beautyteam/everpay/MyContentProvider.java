@@ -28,12 +28,12 @@ public class MyContentProvider extends ContentProvider {
     static final String CONTACT_TABLE = "contacts";
 
     // Поля
-    static final String CONTACT_ID = "_id";
-    static final String CONTACT_NAME = "name";
-    static final String CONTACT_EMAIL = "email";
-    static final String IMG_NAME = "img_name";
-    static final String STATE = "state";
-    static final String RESULT = "result";
+    public static final String CONTACT_ID = "_id";
+    public static final String CONTACT_NAME = "name";
+    public static final String CONTACT_EMAIL = "email";
+    public static final String IMG_NAME = "img_name";
+    public static final String STATE = "state";
+    public static final String RESULT = "result";
 
     // Скрипт создания таблицы
     static final String DB_CREATE = "create table " + CONTACT_TABLE + "("

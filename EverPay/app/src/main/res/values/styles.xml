@@ -7,10 +7,10 @@
         <!-- Customize your theme here. -->
 
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">#228833</item>
+        <item name="colorPrimary">@color/light_blue_600</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">#AA55DD</item>
+        <item name="colorPrimaryDark">@color/light_blue_800</item>
 
         <!-- colorAccent is used as the default value for colorControlActivated
         which is used to tint widgets -->

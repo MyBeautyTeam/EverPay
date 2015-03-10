@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:minHeight="80dp"
+    android:layout_height="match_parent">
+    <com.beautyteam.everpay.Views.RoundedImageView
+        android:id="@+id/debtorsListItemAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/debtorsListItemSumma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:textSize="24dip"
+        android:text="500"/>
+    <TextView
+        android:id="@+id/debtorsListItemDiscript"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dip"
+        android:fontFamily="sans-serif-light"
+        android:text="Маша Бережнова, член партии"/>
+    </LinearLayout>
+
+</LinearLayout>

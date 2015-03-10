@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.beautyteam.everpay"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'it.neokree:MaterialTabs:0.11'
 }
