@@ -9,18 +9,25 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Fragments.MainPageFragment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 //import it.neokree.materialtabs.MaterialTab;
 //import it.neokree.materialtabs.MaterialTabHost;
@@ -63,49 +70,8 @@ public class MainActivity123 extends ActionBarActivity {//} implements MaterialT
 
         //PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
 
-        //FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
-        //fTran.replace(R.id.mainLayout, MainPageFragment.getInstance());
-        //fTran.commit();
 
-        //============= DRAWER
-        mTitle = "EverPay";
-
-        mPlanetTitles = new String[]{"Главная", "Группы", "Выход"};
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_item, mPlanetTitles));
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this, /* host Activity */
-                mDrawerLayout, /* DrawerLayout object */
-                R.drawable.ic_menu_white_18dp, /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open, /* "open drawer" description */
-                R.string.drawer_close /* "close drawer" description */
-        ) {
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(mTitle);
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle("ФАК");
-                invalidateOptionsMenu();
-            }
-        };
-
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        //=============
+        setupDrawer(); // DRAWER
     }
 
 /*    @Override
@@ -113,7 +79,7 @@ public class MainActivity123 extends ActionBarActivity {//} implements MaterialT
         viewPager.setCurrentItem(tab.getPosition());
     }
     @Override
-    public void onTabReselected(MaterialTab tab) {
+    public void onTabReselected(MaterialTab tab) {mo
     }
     @Override
     public void onTabUnselected(MaterialTab tab) {
@@ -175,6 +141,74 @@ public class MainActivity123 extends ActionBarActivity {//} implements MaterialT
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
+
         }
     }
+
+   private void setupDrawer() {
+
+       final String ATTRIBUTE_NAME_TEXT = "text";
+       final String ATTRIBUTE_NAME_IMAGE = "image";
+
+       mTitle = "EverPay";
+
+       mPlanetTitles = new String[]{"Главная", "Группы", "Выход"};
+       int img[] = {R.drawable.ic_home_white_18dp, R.drawable.ic_group_white_18dp, R.drawable.ic_exit_to_app_white_18dp};
+
+       ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
+               mPlanetTitles.length);
+       Map<String, Object> m;
+       for (int i = 0; i < mPlanetTitles.length; i++) {
+           m = new HashMap<String, Object>();
+           m.put(ATTRIBUTE_NAME_TEXT, mPlanetTitles[i]);
+           m.put(ATTRIBUTE_NAME_IMAGE, img[i]);
+           data.add(m);
+       }
+
+       // массив имен атрибутов, из которых будут читаться данные
+       String[] from = { ATTRIBUTE_NAME_TEXT,ATTRIBUTE_NAME_IMAGE };
+       // массив ID View-компонентов, в которые будут вставлять данные
+       int[] to = { R.id.drawerText, R.id.drawerImageView};
+
+       mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+       mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+       mDrawerList.setBackgroundColor(getResources().getColor(R.color.drawer));
+
+       //mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+         //      R.layout.drawer_item, mPlanetTitles));
+       SimpleAdapter sAdapter = new SimpleAdapter(this, data, R.layout.drawer_item,
+               from, to);
+
+       mDrawerList.setAdapter(sAdapter);
+
+
+       mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+       mDrawerToggle = new ActionBarDrawerToggle(
+               this, /* host Activity */
+               mDrawerLayout, /* DrawerLayout object */
+               R.drawable.ic_menu_white_18dp, /* nav drawer icon to replace 'Up' caret */
+               R.string.drawer_open, /* "open drawer" description */
+               R.string.drawer_close /* "close drawer" description */
+       ) {
+
+           /** Called when a drawer has settled in a completely closed state. */
+           public void onDrawerClosed(View view) {
+               getSupportActionBar().setTitle(mTitle);
+           }
+
+           /** Called when a drawer has settled in a completely open state. */
+           public void onDrawerOpened(View drawerView) {
+               getSupportActionBar().setTitle("ФАК");
+               invalidateOptionsMenu();
+           }
+       };
+
+       // Set the drawer toggle as the DrawerListener
+       mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       getSupportActionBar().setHomeButtonEnabled(true);
+   }
 }
