@@ -9,24 +9,21 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<it.neokree.materialtabs.MaterialTabHost
-            android:id="@+id/materialTabHost"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            app:textColor="#FFFFFF"
-            app:primaryColor="YOUR_PRIMARY_COLOR"
-            app:accentColor="YOUR_ACCENT_COLOR" />-->
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <android.support.v4.view.PagerTabStrip
-                android:id="@+id/pagerTitle"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.beautyteam.everpay.Views.SlidingTabLayout
+                android:id="@+id/sliding_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top">
-            </android.support.v4.view.PagerTabStrip>
-        </android.support.v4.view.ViewPager>
+                android:background="@color/light_blue_600"/>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </android.support.v4.view.ViewPager>
+        </LinearLayout>
         <ListView
             android:id="@+id/left_drawer"
             android:layout_width="240dp"

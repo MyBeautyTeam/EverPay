@@ -15,6 +15,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.PageAdapter;
+import com.beautyteam.everpay.Views.SlidingTabLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,37 +46,9 @@ public class MainActivity123 extends ActionBarActivity {//} implements MaterialT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_acrivity123);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
-//        tabHost = (MaterialTabHost) this.findViewById(R.id.materialTabHost);
-
-        pageAdapter = new PageAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pageAdapter);
-
-  /*      for (int i = 0; i < pageAdapter.getCount(); i++) {
-            tabHost.addTab(
-                    tabHost.newTab()
-                            .setText(pageAdapter.getPageTitle(i))
-                            .setTabListener(this)
-            );
-        }*/
-
-        //PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pagerTabStrip);
-
-
+        setupViewPager(); // ViewPager
         setupDrawer(); // DRAWER
     }
-
-/*    @Override
-    public void onTabSelected(MaterialTab tab) {
-        viewPager.setCurrentItem(tab.getPosition());
-    }
-    @Override
-    public void onTabReselected(MaterialTab tab) {mo
-    }
-    @Override
-    public void onTabUnselected(MaterialTab tab) {
-    }
-*/
 
 
     @Override
@@ -202,4 +175,23 @@ public class MainActivity123 extends ActionBarActivity {//} implements MaterialT
        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        getSupportActionBar().setHomeButtonEnabled(true);
    }
+
+    private void setupViewPager() {
+        viewPager = (ViewPager) findViewById(R.id.pager);
+
+        pageAdapter = new PageAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pageAdapter);
+
+        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        // Center the tabs in the layout
+        slidingTabLayout.setDistributeEvenly(true);
+        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.light_blue_800);
+            }
+        });
+        slidingTabLayout.setViewPager(viewPager);
+
+    }
 }
