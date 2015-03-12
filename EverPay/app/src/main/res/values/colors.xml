@@ -278,4 +278,9 @@
     <color name="blue_grey_700">#455a64</color>
     <color name="blue_grey_800">#37474f</color>
     <color name="blue_grey_900">#263238</color>
+
+    <color name="inactive_blue">#91a7ff</color>
+    <color name="inactive_white">#b0bec5</color>
+
+    <color name="active_white">#FFFFFF</color>
 </resources>

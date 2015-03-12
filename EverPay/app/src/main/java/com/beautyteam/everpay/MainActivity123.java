@@ -191,7 +191,7 @@ public class MainActivity123 extends ActionBarActivity {//} implements MaterialT
                 return getResources().getColor(R.color.light_blue_800);
             }
         });
-        slidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.testTabText);
+        slidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tabHeader);
         slidingTabLayout.setViewPager(viewPager);
 
     }

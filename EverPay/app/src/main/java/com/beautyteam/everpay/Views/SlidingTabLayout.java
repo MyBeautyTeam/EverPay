@@ -5,7 +5,6 @@ package com.beautyteam.everpay.Views;
  */
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -21,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -60,6 +60,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
     private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
     private final SlidingTabStrip mTabStrip;
+    private View[] tabViewArray;
     public SlidingTabLayout(Context context) {
         this(context, null);
     }
@@ -151,13 +152,18 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private void populateTabStrip() {
         final PagerAdapter adapter = mViewPager.getAdapter();
         final View.OnClickListener tabClickListener = new TabClickListener();
+        int currentPage = 0;
         for (int i = 0; i < adapter.getCount(); i++) {
             View tabView = null;
             TextView tabTitleView = null;
             if (mTabViewLayoutId != 0) {
 // If there is a custom tab view layout id set, try and inflate it
+                if (tabViewArray == null) {
+                    tabViewArray = new View[adapter.getCount()];
+                }
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
                         false);
+                tabViewArray[i] = tabView;
                 tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
             }
             if (tabView == null) {
@@ -180,8 +186,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
             mTabStrip.addView(tabView);
             if (i == mViewPager.getCurrentItem()) {
                 tabView.setSelected(true);
+                currentPage = i;
             }
         }
+        makeTabActive(currentPage);
     }
     public void setContentDescription(int i, String desc) {
         mContentDescriptions.put(i, desc);
@@ -237,6 +245,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
         @Override
         public void onPageSelected(int position) {
             Log.d(Constants.LOG, "onPageSelected");
+            makeTabActive(position);
             if (mScrollState == ViewPager.SCROLL_STATE_IDLE) {
                 mTabStrip.onViewPagerPageChanged(position, 0f);
                 scrollToTab(position, 0);
@@ -249,6 +258,33 @@ public class SlidingTabLayout extends HorizontalScrollView {
             }
         }
     }
+
+   private void makeTabActive(int position) {
+
+       for (int i=0; i<tabViewArray.length; i++) {
+           if (position != i) {
+               View view = tabViewArray[i];
+               TextView tabSumma = (TextView)view.findViewById(R.id.tabSumma);
+               tabSumma.setTextColor(getResources().getColor(R.color.inactive_blue));
+               tabSumma.setBackgroundDrawable(getResources().getDrawable(R.drawable.oval_around_text_inactive));
+
+               TextView tabHeader = (TextView)view.findViewById(R.id.tabHeader);
+               tabHeader.setTextColor(getResources().getColor(R.color.inactive_white));
+
+           } else {
+               View view = tabViewArray[i];
+
+               TextView tabSumma = (TextView)view.findViewById(R.id.tabSumma);
+               tabSumma.setTextColor(getResources().getColor(R.color.light_blue_800));
+               tabSumma.setBackgroundDrawable(getResources().getDrawable(R.drawable.oval_around_text));
+
+               TextView tabHeader = (TextView)view.findViewById(R.id.tabHeader);
+               tabHeader.setTextColor(getResources().getColor(R.color.active_white));
+           }
+       }
+   }
+
+
     private class TabClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -260,4 +296,5 @@ public class SlidingTabLayout extends HorizontalScrollView {
             }
         }
     }
+
 }
