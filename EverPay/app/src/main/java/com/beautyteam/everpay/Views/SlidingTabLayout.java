@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.beautyteam.everpay.Constants;
+
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
  * the user's scroll progress.
@@ -45,7 +49,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
          */
         int getIndicatorColor(int position);
     }
-    private static final int TITLE_OFFSET_DIPS = 24;
+    private static final int TITLE_OFFSET_DIPS = 0;
     private static final int TAB_VIEW_PADDING_DIPS = 16;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
     private int mTitleOffset;
@@ -232,6 +236,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
         }
         @Override
         public void onPageSelected(int position) {
+            Log.d(Constants.LOG, "onPageSelected");
             if (mScrollState == ViewPager.SCROLL_STATE_IDLE) {
                 mTabStrip.onViewPagerPageChanged(position, 0f);
                 scrollToTab(position, 0);
