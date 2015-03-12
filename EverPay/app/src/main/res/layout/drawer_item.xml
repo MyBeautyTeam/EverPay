@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/on_drawer_pressed_selector"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/on_drawer_pressed_selector">
+
     <ImageView
         android:id="@+id/drawerImageView"
         android:layout_width="wrap_content"

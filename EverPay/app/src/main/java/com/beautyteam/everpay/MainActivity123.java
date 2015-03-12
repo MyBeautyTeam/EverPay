@@ -2,28 +2,19 @@ package com.beautyteam.everpay;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Adapters.PageAdapter;
-import com.beautyteam.everpay.Fragments.MainPageFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,7 +164,7 @@ public class MainActivity123 extends ActionBarActivity {//} implements MaterialT
        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-       mDrawerList.setBackgroundColor(getResources().getColor(R.color.drawer));
+       mDrawerList.setBackgroundColor(getResources().getColor(R.color.drawer_background));
 
        //mDrawerList.setAdapter(new ArrayAdapter<String>(this,
          //      R.layout.drawer_item, mPlanetTitles));

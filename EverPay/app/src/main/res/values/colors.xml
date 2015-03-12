@@ -75,7 +75,8 @@
     <color name="indigo_A400">#3d5afe</color>
     <color name="indigo_A700">#304ffe</color>
 
-    <color name="drawer">#303b44</color>
+    <color name="drawer_background">#3c4a55</color>
+    <color name="drawer_item">#303b44</color>
     <!--<color name="indigo_700">#3c4a55</color>-->
 
     <color name="blue_50">#e7e9fd</color>
