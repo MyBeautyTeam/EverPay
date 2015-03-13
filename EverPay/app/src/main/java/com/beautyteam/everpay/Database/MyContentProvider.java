@@ -1,4 +1,4 @@
-package com.beautyteam.everpay;
+package com.beautyteam.everpay.Database;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.beautyteam.everpay.Constants;
 
 /**
  * Created by Admin on 27.02.2015.

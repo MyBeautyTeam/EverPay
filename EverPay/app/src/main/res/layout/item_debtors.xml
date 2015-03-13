@@ -6,7 +6,7 @@
     android:minHeight="80dp"
     android:layout_height="match_parent">
     <com.beautyteam.everpay.Views.RoundedImageView
-        android:id="@+id/debtorsListItemAvatar"
+        android:id="@+id/debtors_list_item_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:orientation="vertical">
     <TextView
-        android:id="@+id/debtorsListItemSumma"
+        android:id="@+id/debtors_list_item_summa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
@@ -26,7 +26,7 @@
         android:textSize="24dip"
         android:text="500"/>
     <TextView
-        android:id="@+id/debtorsListItemDiscript"
+        android:id="@+id/debtors_list_item_discript"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16dip"

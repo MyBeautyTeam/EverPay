@@ -1,4 +1,4 @@
-package com.beautyteam.everpay;
+package com.beautyteam.everpay.REST;
 
 /**
  * Created by Admin on 27.02.2015.

@@ -1,10 +1,12 @@
-package com.beautyteam.everpay;
+package com.beautyteam.everpay.REST;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+
+import com.beautyteam.everpay.Constants;
 
 /**
  * Created by Admin on 27.02.2015.

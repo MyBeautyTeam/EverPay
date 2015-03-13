@@ -1,94 +1,196 @@
 package com.beautyteam.everpay;
 
-import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.beautyteam.everpay.Adapters.PageAdapter;
+import com.beautyteam.everpay.Views.SlidingTabLayout;
 
-public class MainActivity extends Activity implements ActivityCallback {
-        //LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-    private ServiceHelper serviceHelper;
-    ContactCursorAdapter cursorAdapter;
+//import it.neokree.materialtabs.MaterialTab;
+//import it.neokree.materialtabs.MaterialTabHost;
+//import it.neokree.materialtabs.MaterialTabListener;
 
-    private static final String[] PROJECTION = new String[] {
-            MyContentProvider.CONTACT_ID,
-            MyContentProvider.CONTACT_NAME,
-            MyContentProvider.CONTACT_EMAIL,
-            MyContentProvider.IMG_NAME,
-            MyContentProvider.STATE,
-            MyContentProvider.RESULT
-    };
+/**
+ * Created by Admin on 07.03.2015.
+ */
+public class MainActivity extends ActionBarActivity {//} implements MaterialTabListener {
 
-    ListView lvContact;
+    ViewPager viewPager;
+    PageAdapter pageAdapter;
+//    MaterialTabHost tabHost;
+
+    private String[] mPlanetTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private CharSequence mTitle;
+    private ActionBarDrawerToggle mDrawerToggle;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_actity);
+        setContentView(R.layout.activity_main);
 
-        /*
-        Нужно ли два аргумента. Такое ощущение, что использование serviceHelper в качестве ресивера неоправдано.
-         */
-        serviceHelper = new ServiceHelper(this, this);
-
-        lvContact = (ListView) findViewById(R.id.listView);
-        Cursor cursor = getContentResolver().query(Constants.CONTACT_URI, null, null,
-                null, null);
-        startManagingCursor(cursor);
-        cursorAdapter = new ContactCursorAdapter(this, cursor, 0);
-        lvContact.setAdapter(cursorAdapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        serviceHelper.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        serviceHelper.onPause();
+        setupViewPager(); // ViewPager
+        setupDrawer(); // DRAWER
     }
 
 
     @Override
-    public void onRequestEnd(int result) {
-        switch (result) {
-            case Constants.Result.OK:
-                //loader.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
-                break;
-            case Constants.Result.ERROR:
-                //loader.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
-                break;
+    public boolean onCreateOptionsMenu(Menu menu) {
+// Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+// Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+// Pass the event to ActionBarDrawerToggle, if it returns
+// true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+// Handle your other action bar items...
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Swaps fragments in the main content view
+     */
+    private void selectItem(int position) {
+        Toast.makeText(this, R.string.app_name, Toast.LENGTH_SHORT).show();
+
+// Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(mPlanetTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+
         }
     }
 
-/*
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, Constants.CONTACT_URI, PROJECTION, null, null, null);
-    }
+   private void setupDrawer() {
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter = new ContactCursorAdapter(this, data, 0);
-        lvContact.setAdapter(cursorAdapter);
-    }
+       final String ATTRIBUTE_NAME_TEXT = "text";
+       final String ATTRIBUTE_NAME_IMAGE = "image";
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
+       mTitle = "EverPay";
+
+       mPlanetTitles = new String[]{"Главная", "Группы", "Выход"};
+       int img[] = {R.drawable.ic_home_white_18dp, R.drawable.ic_group_white_18dp, R.drawable.ic_exit_to_app_white_18dp};
+
+       ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
+               mPlanetTitles.length);
+       Map<String, Object> m;
+       for (int i = 0; i < mPlanetTitles.length; i++) {
+           m = new HashMap<String, Object>();
+           m.put(ATTRIBUTE_NAME_TEXT, mPlanetTitles[i]);
+           m.put(ATTRIBUTE_NAME_IMAGE, img[i]);
+           data.add(m);
+       }
+
+       // массив имен атрибутов, из которых будут читаться данные
+       String[] from = { ATTRIBUTE_NAME_TEXT,ATTRIBUTE_NAME_IMAGE };
+       // массив ID View-компонентов, в которые будут вставлять данные
+       int[] to = { R.id.drawer_text, R.id.drawer_image_view};
+
+       mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+       mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+       mDrawerList.setBackgroundColor(getResources().getColor(R.color.drawer_background));
+
+       SimpleAdapter sAdapter = new SimpleAdapter(this, data, R.layout.item_drawer,
+               from, to);
+
+       mDrawerList.setAdapter(sAdapter);
+
+
+       mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+       mDrawerToggle = new ActionBarDrawerToggle(
+               this, /* host Activity */
+               mDrawerLayout, /* DrawerLayout object */
+               R.drawable.ic_menu_white_18dp, /* nav drawer icon to replace 'Up' caret */
+               R.string.drawer_open, /* "open drawer" description */
+               R.string.drawer_close /* "close drawer" description */
+       ) {
+
+           /** Called when a drawer has settled in a completely closed state. */
+           public void onDrawerClosed(View view) {
+               getSupportActionBar().setTitle(mTitle);
+           }
+
+           /** Called when a drawer has settled in a completely open state. */
+           public void onDrawerOpened(View drawerView) {
+               getSupportActionBar().setTitle("ФАК");
+               invalidateOptionsMenu();
+           }
+       };
+
+       // Set the drawer toggle as the DrawerListener
+       mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       getSupportActionBar().setHomeButtonEnabled(true);
+   }
+
+    private void setupViewPager() {
+        viewPager = (ViewPager) findViewById(R.id.pager);
+
+        pageAdapter = new PageAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pageAdapter);
+
+        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        // Center the tabs in the layout
+        slidingTabLayout.setDistributeEvenly(true);
+        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.light_blue_800);
+            }
+        });
+        slidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tab_header);
+        slidingTabLayout.setViewPager(viewPager);
+
     }
-*/
 }

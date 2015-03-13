@@ -7,11 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.MyContentProvider;
+import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -32,11 +31,11 @@ public class DebtorsListAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View itemLayout = inflater.inflate(R.layout.main_page_debtors_list_item, viewGroup, false);
+        View itemLayout = inflater.inflate(R.layout.item_debtors, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.summa = (TextView) itemLayout.findViewById(R.id.debtorsListItemSumma);
-        holder.discript = (TextView) itemLayout.findViewById(R.id.debtorsListItemDiscript);
-        holder.avatar = (RoundedImageView) itemLayout.findViewById(R.id.debtorsListItemAvatar);
+        holder.summa = (TextView) itemLayout.findViewById(R.id.debtors_list_item_summa);
+        holder.discript = (TextView) itemLayout.findViewById(R.id.debtors_list_item_discript);
+        holder.avatar = (RoundedImageView) itemLayout.findViewById(R.id.debtors_list_item_avatar);
         itemLayout.setTag(holder);
         return itemLayout;
     }

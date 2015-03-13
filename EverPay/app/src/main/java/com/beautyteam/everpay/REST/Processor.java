@@ -1,4 +1,4 @@
-package com.beautyteam.everpay;
+package com.beautyteam.everpay.REST;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+
+import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.MyContentProvider;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

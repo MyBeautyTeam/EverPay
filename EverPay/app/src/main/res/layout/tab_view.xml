@@ -11,7 +11,7 @@
         android:background="@drawable/oval_around_text"
         >
     <TextView
-        android:id="@+id/tabSumma"
+        android:id="@+id/tab_summa"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         />
     </LinearLayout>
     <TextView
-        android:id="@+id/tabHeader"
+        android:id="@+id/tab_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="5dp"

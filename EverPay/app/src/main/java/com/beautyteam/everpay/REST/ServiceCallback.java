@@ -1,4 +1,4 @@
-package com.beautyteam.everpay;
+package com.beautyteam.everpay.REST;
 
 import android.content.Intent;
 

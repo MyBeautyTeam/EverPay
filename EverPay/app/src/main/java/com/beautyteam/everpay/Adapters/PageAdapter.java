@@ -5,8 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.Fragments.MainPageFragment;
-import com.beautyteam.everpay.MainActivity;
+import com.beautyteam.everpay.Fragments.FragmentIDebt;
 
 /**
  * Created by Admin on 10.03.2015.
@@ -21,11 +20,11 @@ public class PageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MainPageFragment.getInstance();
+                return FragmentIDebt.getInstance();
             case 1:
-                return MainPageFragment.getInstance();
+                return FragmentIDebt.getInstance();
         }
-        return MainPageFragment.getInstance();
+        return FragmentIDebt.getInstance();
     }
 
     @Override

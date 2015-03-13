@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
-import com.beautyteam.everpay.MyContentProvider;
+import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.R;
 
 /**
  * Created by Admin on 10.03.2015.
  */
-public class MainPageFragment extends Fragment implements
+public class FragmentIDebt extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private ListView debtorsList;
@@ -26,15 +26,15 @@ public class MainPageFragment extends Fragment implements
     private static final int LOADER_ID = 0;
     private DebtorsListAdapter mAdapter;
 
-    public static MainPageFragment getInstance() {
-        MainPageFragment mainPageFragment = new MainPageFragment();
-        return mainPageFragment;
+    public static FragmentIDebt getInstance() {
+        FragmentIDebt fragmentIDebt = new FragmentIDebt();
+        return fragmentIDebt;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getLoaderManager().initLoader(LOADER_ID, null, this);
-        return inflater.inflate(R.layout.main_page_fragment, null);
+        return inflater.inflate(R.layout.fragment_i_debts, null);
     }
 
     @Override
