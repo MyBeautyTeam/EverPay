@@ -1,29 +1,29 @@
 package com.beautyteam.everpay;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
+import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Adapters.PageAdapter;
+import com.beautyteam.everpay.Views.RoundedImageView;
 import com.beautyteam.everpay.Views.SlidingTabLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-//import it.neokree.materialtabs.MaterialTab;
-//import it.neokree.materialtabs.MaterialTabHost;
-//import it.neokree.materialtabs.MaterialTabListener;
 
 /**
  * Created by Admin on 07.03.2015.
@@ -32,13 +32,35 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
 
     ViewPager viewPager;
     PageAdapter pageAdapter;
-//    MaterialTabHost tabHost;
 
-    private String[] mPlanetTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private CharSequence mTitle;
-    private ActionBarDrawerToggle mDrawerToggle;
+    //String TITLES[] = {"Главная" ,"Группы", "Выход"};
+    //int ICONS[] = {R.drawable.ic_home_white_18dp, R.drawable.ic_group_white_18dp, R.drawable.ic_exit_to_app_white_18dp};
+
+
+    //Similarly we Create a String Resource for the name and email in the header view
+    //And we also create a int resource for profile picture in the header view
+
+    //First We Declare Titles And Icons For Our Navigation Drawer List View
+    //This Icons And Titles Are holded in an Array as you can see
+
+    String TITLES[] = {"Главная" ,"Группы", "Выход"};
+    int ICONS[] = {R.drawable.ic_home_white_18dp, R.drawable.ic_group_white_18dp, R.drawable.ic_exit_to_app_white_18dp};
+
+    //Similarly we Create a String Resource for the name and email in the header view
+    //And we also create a int resource for profile picture in the header view
+
+    String NAME = "Akash Bangad";
+    String EMAIL = "akash.bangad@android4devs.com";
+    int PROFILE = R.drawable.avatar;
+
+    private Toolbar toolbar;                              // Declaring the Toolbar Object
+
+    RecyclerView mRecyclerView;                           // Declaring RecyclerView
+    RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
+    RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
+    DrawerLayout Drawer;                                  // Declaring DrawerLayout
+
+    ActionBarDrawerToggle mDrawerToggle;
 
 
     @Override
@@ -47,132 +69,66 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         setContentView(R.layout.activity_main);
 
         setupViewPager(); // ViewPager
-        setupDrawer(); // DRAWER
-    }
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        setSupportActionBar(toolbar);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
+
+        mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
+
+        mAdapter = new DrawerAdapter(TITLES,ICONS,NAME,EMAIL,PROFILE);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+        // And passing the titles,icons,header view name, header view email,
+        // and header view profile picture
+
+        mRecyclerView.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
+
+        mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
+
+        mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
+
+
+        Drawer = (DrawerLayout) findViewById(R.id.drawer_layout);        // Drawer object Assigned to the view
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,Drawer,toolbar,R.string.drawer_open,R.string.drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                // code here will execute once the drawer is opened( As I dont want anything happened whe drawer is
+                // open I am not going to put anything here)
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                // Code here will execute once drawer is closed
+            }
+        };
+        // Drawer Toggle Object Made
+        Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
+        mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-// Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-// Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-// Pass the event to ActionBarDrawerToggle, if it returns
-// true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
             return true;
         }
-// Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * Swaps fragments in the main content view
-     */
-    private void selectItem(int position) {
-        Toast.makeText(this, R.string.app_name, Toast.LENGTH_SHORT).show();
-
-// Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-
-        }
-    }
-
-   private void setupDrawer() {
-
-       final String ATTRIBUTE_NAME_TEXT = "text";
-       final String ATTRIBUTE_NAME_IMAGE = "image";
-
-       mTitle = "EverPay";
-
-       mPlanetTitles = new String[]{"Главная", "Группы", "Выход"};
-       int img[] = {R.drawable.ic_home_white_18dp, R.drawable.ic_group_white_18dp, R.drawable.ic_exit_to_app_white_18dp};
-
-       ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
-               mPlanetTitles.length);
-       Map<String, Object> m;
-       for (int i = 0; i < mPlanetTitles.length; i++) {
-           m = new HashMap<String, Object>();
-           m.put(ATTRIBUTE_NAME_TEXT, mPlanetTitles[i]);
-           m.put(ATTRIBUTE_NAME_IMAGE, img[i]);
-           data.add(m);
-       }
-
-       // массив имен атрибутов, из которых будут читаться данные
-       String[] from = { ATTRIBUTE_NAME_TEXT,ATTRIBUTE_NAME_IMAGE };
-       // массив ID View-компонентов, в которые будут вставлять данные
-       int[] to = { R.id.drawer_text, R.id.drawer_image_view};
-
-       mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-       mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-       mDrawerList.setBackgroundColor(getResources().getColor(R.color.drawer_background));
-
-       SimpleAdapter sAdapter = new SimpleAdapter(this, data, R.layout.item_drawer,
-               from, to);
-
-       mDrawerList.setAdapter(sAdapter);
-
-
-       mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-       mDrawerToggle = new ActionBarDrawerToggle(
-               this, /* host Activity */
-               mDrawerLayout, /* DrawerLayout object */
-               R.drawable.ic_menu_white_18dp, /* nav drawer icon to replace 'Up' caret */
-               R.string.drawer_open, /* "open drawer" description */
-               R.string.drawer_close /* "close drawer" description */
-       ) {
-
-           /** Called when a drawer has settled in a completely closed state. */
-           public void onDrawerClosed(View view) {
-               getSupportActionBar().setTitle(mTitle);
-           }
-
-           /** Called when a drawer has settled in a completely open state. */
-           public void onDrawerOpened(View drawerView) {
-               getSupportActionBar().setTitle("ФАК");
-               invalidateOptionsMenu();
-           }
-       };
-
-       // Set the drawer toggle as the DrawerListener
-       mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       getSupportActionBar().setHomeButtonEnabled(true);
-   }
 
     private void setupViewPager() {
         viewPager = (ViewPager) findViewById(R.id.pager);
