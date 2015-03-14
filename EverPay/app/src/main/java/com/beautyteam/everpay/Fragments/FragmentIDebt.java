@@ -40,7 +40,7 @@ public class FragmentIDebt extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        debtorsList = (ListView) view.findViewById(R.id.main_page_debtors_list);
+        debtorsList = (ListView) view.findViewById(R.id.debtors_fragment_list);
 
     }
 
