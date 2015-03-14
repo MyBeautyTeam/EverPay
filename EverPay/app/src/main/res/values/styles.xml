@@ -15,8 +15,13 @@
         <!-- colorAccent is used as the default value for colorControlActivated
         which is used to tint widgets -->
         <item name="colorAccent">#CC33BB</item>
-        <item name="android:textColor">#CC33BB</item>
         <!-- You can also set colorControlNormal, colorControlActivated
         colorControlHighlight & colorSwitchThumbNormal. -->
     </style>
+    <style name="AppTheme.Login" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="android:windowBackground">@color/grey_1000w</item>
+        <item name = "android:textColor">@color/primary_blue</item>
+    </style>
+
 </resources>

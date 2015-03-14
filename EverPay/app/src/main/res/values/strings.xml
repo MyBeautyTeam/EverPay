@@ -2,10 +2,10 @@
 <resources>
 
     <string name="app_name">EverPay</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">EVERPAY</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="title_login">Войти</string>
+    <string name="title_login">ВОЙТИ ЧЕРЕЗ ВКОНТАКТЕ</string>
 
 
 </resources>

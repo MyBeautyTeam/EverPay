@@ -274,4 +274,7 @@
     <color name="blue_grey_700">#455a64</color>
     <color name="blue_grey_800">#37474f</color>
     <color name="blue_grey_900">#263238</color>
+
+    <color name="primary_blue">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
 </resources>
