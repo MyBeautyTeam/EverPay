@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
 
         //setupViewPager(); // ViewPager
         setupDrawer();
-        replaceFragment(new FragmentViewPager());
+        replaceFragment(FragmentViewPager.getInstance());
 
     }
 
@@ -95,12 +95,12 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                     toolbar.setTitle(TITLES[position]);
                     switch (position) {
                         case 0:
-                            replaceFragment(new FragmentViewPager());
+                            replaceFragment(FragmentViewPager.getInstance());
                             break;
                         case 1:
-                            replaceFragment(FragmentCalculation.getInstance());
                             break;
                         case 2:
+                            replaceFragment(FragmentCalculation.getInstance());
                             break;
                     }
                     return true;
@@ -161,29 +161,16 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         return super.onOptionsItemSelected(item);
     }
 
-    /*private void setupViewPager() {
-        viewPager = (ViewPager) findViewById(R.id.pager);
-
-        pageAdapter = new PageAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pageAdapter);
-
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        // Center the tabs in the layout
-        slidingTabLayout.setDistributeEvenly(true);
-        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.light_blue_800);
-            }
-        });
-        slidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tab_header);
-        slidingTabLayout.setViewPager(viewPager);
-    }*/
-
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
         fTran.replace(R.id.main_container, fragment);
-        //fTran.addToBackStack(null);
+        fTran.commit();
+    }
+
+    public void addFragment(Fragment fragment) {
+        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
+        fTran.add(R.id.main_container, fragment);
+        fTran.addToBackStack(null);
         fTran.commit();
     }
 
