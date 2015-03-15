@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;import android.support.v4.app.LoaderManag
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +37,7 @@ public class FragmentGroups extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            setHasOptionsMenu(true);
             getLoaderManager().initLoader(LOADER_ID, null, this);
             return inflater.inflate(R.layout.fragment_groups, null);
             }
@@ -72,4 +76,14 @@ public class FragmentGroups extends Fragment implements
         mAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.group, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 }
