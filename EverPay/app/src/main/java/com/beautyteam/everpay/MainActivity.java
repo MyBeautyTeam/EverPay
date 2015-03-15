@@ -89,7 +89,6 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
 
                 if(child!=null && mGestureDetector.onTouchEvent(motionEvent)){
                     Drawer.closeDrawers();
-                    //Toast.makeText(MainActivity.this,"The Item Clicked is: "+recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
                     int position = recyclerView.getChildPosition(child) - 1; //Поскольку клик на картинку тоже считается
                     if (position < 0) position = 0;
                     toolbar.setTitle(TITLES[position]);

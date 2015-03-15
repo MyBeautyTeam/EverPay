@@ -11,6 +11,7 @@
         android:layout_weight="1"
         android:dividerHeight="16dp"
         android:divider="@null"
+        android:paddingTop="8dp"
         />
     <Button
         android:id="@+id/calc_btn"
@@ -19,7 +20,10 @@
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
         android:layout_gravity="center"
-        android:background="@drawable/on_drawer_pressed_selector"
+        android:textColor="@color/blue_400"
+        android:background="@drawable/on_btn_pressed_selector"
+        android:drawableLeft="@drawable/ic_check_black_18dp"
+        android:drawablePadding="8dp"
         android:text="Готово"
         android:layout_weight="0"/>
 </LinearLayout>
