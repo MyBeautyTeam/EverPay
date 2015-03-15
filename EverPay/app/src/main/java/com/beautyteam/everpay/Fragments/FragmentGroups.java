@@ -8,6 +8,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.beautyteam.everpay.R;
@@ -21,6 +22,7 @@ public class FragmentGroups extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private ListView groupList;
+    private Button addBtn;
 
     private static final int LOADER_ID = 0;
     private GroupsListAdapter mAdapter;
@@ -32,7 +34,7 @@ public class FragmentGroups extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            //getLoaderManager().initLoader(LOADER_ID, null, this);
+            getLoaderManager().initLoader(LOADER_ID, null, this);
             return inflater.inflate(R.layout.fragment_groups, null);
             }
 
@@ -40,6 +42,7 @@ public class FragmentGroups extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             groupList = (ListView) view.findViewById(R.id.groups_list);
+            addBtn = (Button) view.findViewById(R.id.add_group_button);
 
             }
 
