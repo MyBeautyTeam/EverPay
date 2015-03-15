@@ -19,6 +19,7 @@ import android.view.View;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Adapters.PageAdapter;
+import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
 
@@ -31,8 +32,8 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     ViewPager viewPager;
     PageAdapter pageAdapter;
 
-    String TITLES[] = {"Главная" ,"Группы", "Выход"};
-    int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
+    String TITLES[] = {"Главная" ,"Группы", "Выход", "Добавить счет"};
+    int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
     //Similarly we Create a String Resource for the name and email in the header view
     //And we also create a int resource for profile picture in the header view
@@ -97,9 +98,13 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                             replaceFragment(FragmentViewPager.getInstance());
                             break;
                         case 1:
+
                             break;
                         case 2:
                             replaceFragment(FragmentCalculation.getInstance());
+                            break;
+                        case 3:
+                            replaceFragment(FragmentAddBill.getInstance());
                             break;
                     }
                     return true;
@@ -136,28 +141,6 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         // Drawer Toggle Object Made
         Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void replaceFragment(Fragment fragment) {
