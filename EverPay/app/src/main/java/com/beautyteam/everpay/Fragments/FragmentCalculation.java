@@ -9,39 +9,42 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.beautyteam.everpay.Adapters.CalcListAdapter;
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.R;
 
 /**
- * Created by Admin on 10.03.2015.
+ * Created by Admin on 14.03.2015.
  */
-public class FragmentIDebt extends Fragment implements
+public class FragmentCalculation extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private ListView debtorsList;
+    private static final int LOADER_ID = 1;
+    private ListView calcList;
+    private Button calcBtn;
 
-    private static final int LOADER_ID = 0;
-    private DebtorsListAdapter mAdapter;
+    private CalcListAdapter mAdapter;
 
-    public static FragmentIDebt getInstance() {
-        FragmentIDebt fragmentIDebt = new FragmentIDebt();
-        return fragmentIDebt;
+    public static FragmentCalculation getInstance() {
+        FragmentCalculation fragmentCalculation = new FragmentCalculation();
+        return fragmentCalculation;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getLoaderManager().initLoader(LOADER_ID, null, this);
-        return inflater.inflate(R.layout.fragment_i_debts, null);
+        return inflater.inflate(R.layout.fragment_calculation, null);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        debtorsList = (ListView) view.findViewById(R.id.debtors_fragment_list);
-
+        calcList = (ListView) view.findViewById(R.id.calc_list);
+        calcBtn = (Button) view.findViewById(R.id.calc_btn);
     }
 
     private static final String[] PROJECTION = new String[] {
@@ -56,11 +59,12 @@ public class FragmentIDebt extends Fragment implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(), MyContentProvider.CONTACT_CONTENT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
     }
+
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOADER_ID:
-                mAdapter = new DebtorsListAdapter(getActivity(), cursor, 0);
-                debtorsList.setAdapter(mAdapter);
+                mAdapter = new CalcListAdapter(getActivity(), cursor, 0);
+                calcList.setAdapter(mAdapter);
                 break;
         }
     }

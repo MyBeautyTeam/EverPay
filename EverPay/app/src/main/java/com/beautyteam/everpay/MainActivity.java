@@ -1,10 +1,8 @@
 package com.beautyteam.everpay;
 
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -13,12 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.vk.sdk.api.VKApi;
@@ -37,12 +35,8 @@ import java.util.List;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Adapters.PageAdapter;
-import com.beautyteam.everpay.Views.RoundedImageView;
-import com.beautyteam.everpay.Views.SlidingTabLayout;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.beautyteam.everpay.Fragments.FragmentCalculation;
+import com.beautyteam.everpay.Fragments.FragmentViewPager;
 
 
 /**
@@ -54,7 +48,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     PageAdapter pageAdapter;
 
     String TITLES[] = {"Главная" ,"Группы", "Выход"};
-    int ICONS[] = {R.drawable.ic_home_white_18dp, R.drawable.ic_group_white_18dp, R.drawable.ic_exit_to_app_white_18dp};
+    int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
     //Similarly we Create a String Resource for the name and email in the header view
     //And we also create a int resource for profile picture in the header view
@@ -79,8 +73,9 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
 
         setContentView(R.layout.activity_main);
         startLoading();
-        setupViewPager(); // ViewPager
+        //setupViewPager(); // ViewPager
         setupDrawer();
+        replaceFragment(FragmentViewPager.getInstance());
 
     }
 
@@ -89,7 +84,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         setSupportActionBar(toolbar);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
-        mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
+        mRecyclerView.setHasFixedSize(true);                             // Letting the system know that the list objects are of fixed size
 
         mAdapter = new DrawerAdapter(TITLES,ICONS,NAME,EMAIL,PROFILE);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,header view name, header view email,
@@ -117,12 +112,13 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                     toolbar.setTitle(TITLES[position]);
                     switch (position) {
                         case 0:
-                            replaceFragment(FragmentGroups.getInstance());
+                            replaceFragment(FragmentViewPager.getInstance());
                             break;
                         case 1:
+                            replaceFragment(FragmentGroups.getInstance());
                             break;
                         case 2:
-                            replaceFragment(FragmentGroups.getInstance());
+                            replaceFragment(FragmentCalculation.getInstance());
                             break;
                     }
                     return true;
@@ -183,24 +179,17 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupViewPager() {
-        viewPager = (ViewPager) findViewById(R.id.pager);
+    public void replaceFragment(Fragment fragment) {
+        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
+        fTran.replace(R.id.main_container, fragment);
+        fTran.commit();
+    }
 
-        pageAdapter = new PageAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pageAdapter);
-
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        // Center the tabs in the layout
-        slidingTabLayout.setDistributeEvenly(true);
-        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.light_blue_800);
-            }
-        });
-        slidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tab_header);
-        slidingTabLayout.setViewPager(viewPager);
-
+    public void addFragment(Fragment fragment) {
+        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
+        fTran.add(R.id.main_container, fragment);
+        fTran.addToBackStack(null);
+        fTran.commit();
     }
 
     public void startLoading() {
@@ -232,18 +221,5 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                 Log.d("VkDemoApp", "onError: " + error);
             }
         });
-    }
-
-    public void replaceFragment(Fragment fragment) {
-        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
-        fTran.replace(R.id.main_container, fragment);
-        fTran.commit();
-    }
-
-    public void addFragment(Fragment fragment) {
-        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
-        fTran.add(R.id.main_container, fragment);
-        fTran.addToBackStack(null);
-        fTran.commit();
     }
 }

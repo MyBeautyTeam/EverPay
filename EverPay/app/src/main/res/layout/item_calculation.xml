@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/calc_first_name"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:lines="2"
+        android:text="Паша\nКочетков"
+        android:gravity="center"
+        />
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/calc_summa"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:text="5000"
+            />
+        <ImageView
+            android:id="@+id/calc_arrow"
+            android:layout_width="64dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_trending_neutral_blue_36dp"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/calc_second_name"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:lines="2"
+        android:text="Паша\nКочетков"
+        android:gravity="center"
+        />
+    <CheckBox
+        android:id="@+id/calc_checkbox"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        />
+
+
+</LinearLayout>

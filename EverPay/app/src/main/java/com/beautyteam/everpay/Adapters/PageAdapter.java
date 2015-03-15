@@ -3,6 +3,7 @@ package com.beautyteam.everpay.Adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Fragments.FragmentIDebt;
@@ -10,7 +11,7 @@ import com.beautyteam.everpay.Fragments.FragmentIDebt;
 /**
  * Created by Admin on 10.03.2015.
  */
-public class PageAdapter extends FragmentPagerAdapter {
+public class PageAdapter extends FragmentStatePagerAdapter {
 
     public PageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
