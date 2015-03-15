@@ -3,6 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/calc_first_name"
@@ -15,9 +17,9 @@
         android:gravity="center"
         />
     <LinearLayout
-        android:layout_weight="1"
+        android:layout_weight="1.2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
         <TextView
@@ -26,12 +28,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16dp"
+            android:textColor="@color/light_blue_800"
             android:text="5000"
             />
         <ImageView
             android:id="@+id/calc_arrow"
-            android:layout_width="64dp"
-            android:layout_height="16dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_trending_neutral_blue_36dp"/>
     </LinearLayout>
     <TextView
@@ -44,13 +47,20 @@
         android:text="Паша\nКочетков"
         android:gravity="center"
         />
+    <!--
+    Чтобы изменить цвет CheckBox меняем
+    <item name="colorAccent">@color/light_blue_800</item>
+    <item name="android:textColorSecondary">@color/secondary_text_default_material_light</item>
+    -->
     <CheckBox
         android:id="@+id/calc_checkbox"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true"
+        android:checked="false"
+        android:layout_marginLeft="5dp"
         />
+
 
 
 </LinearLayout>
