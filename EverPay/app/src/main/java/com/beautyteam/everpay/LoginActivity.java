@@ -25,14 +25,6 @@ public class LoginActivity extends Activity {
     private static String VK_APP_ID = "4799302";
     private static String sTokenKey = "VK_ACCESS_TOKEN";
     private static String[] sMyScope = new String[]{VKScope.FRIENDS, VKScope.PHOTOS};
-    private Context context;
-    private String text;
-
-   /* public LoginActivity(Context _context, String _text) {
-        context = _context;
-        text = _text;
-    }*/
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +85,10 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onAccessDenied(VKError authorizationError) {
-            new AlertDialog.Builder(LoginActivity.this)
-                    .setMessage("Необходимо авторизоваться")
-                    .show();
-            // Toast.makeText(context, "Необходимо авторизоваться", Toast.LENGTH_LONG).show();
+            //new AlertDialog.Builder(LoginActivity.this)
+            //        .setMessage("Необходимо авторизоваться")
+            //        .show();
+
 
         }
 

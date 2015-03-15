@@ -1,7 +1,9 @@
 package com.beautyteam.everpay;
 
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKBatchRequest;
@@ -112,6 +115,16 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                     int position = recyclerView.getChildPosition(child) - 1; //Поскольку клик на картинку тоже считается
                     if (position < 0) position = 0;
                     toolbar.setTitle(TITLES[position]);
+                    switch (position) {
+                        case 0:
+                            replaceFragment(FragmentGroups.getInstance());
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            replaceFragment(FragmentGroups.getInstance());
+                            break;
+                    }
                     return true;
                 }
 
@@ -219,5 +232,18 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                 Log.d("VkDemoApp", "onError: " + error);
             }
         });
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
+        fTran.replace(R.id.main_container, fragment);
+        fTran.commit();
+    }
+
+    public void addFragment(Fragment fragment) {
+        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
+        fTran.add(R.id.main_container, fragment);
+        fTran.addToBackStack(null);
+        fTran.commit();
     }
 }
