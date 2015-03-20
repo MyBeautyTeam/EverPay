@@ -50,7 +50,6 @@ public class AddBillListAdapter extends CursorAdapter {
         holder.put = (EditText) itemLayout.findViewById(R.id.add_bill_list_put);
         holder.remove = (ImageView) itemLayout.findViewById(R.id.add_bill_list_remove);
         itemLayout.setTag(holder);
-        Log.d(Constants.LOG, "newView");
         return itemLayout;
     }
 
@@ -58,7 +57,6 @@ public class AddBillListAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
         holder.name.setText("Танька Петрова");
         if (mode == TEXT_VIEW_MODE) {
             holder.textNeed.setVisibility(View.VISIBLE);
@@ -67,14 +65,6 @@ public class AddBillListAdapter extends CursorAdapter {
             holder.textNeed.setVisibility(View.GONE);
             holder.editNeed.setVisibility(View.VISIBLE);
         }
-        Log.d(Constants.LOG, "bindView");
-        //holder.summa.setText(new Random().nextInt(10000) + "");
-        //holder.secondName.setText("Егор\nРакитянский");
-        //if ((new Random().nextInt() % 2) == 1) {
-//            holder.checkBox.setChecked(true);
-//        } else {
-//            holder.checkBox.setChecked(false);
-//        }
     }
 
     @Override

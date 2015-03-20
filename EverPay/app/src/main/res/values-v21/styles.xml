@@ -26,25 +26,12 @@
         <item name="colorPrimary">#00FFFF</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">#0000AA</item>
 
-        <item name="colorAccent">#AAAA00</item>
+        <item name="colorControlActivated">@color/light_blue_800</item>
 
-        <item name="colorControlNormal">#00AA00</item>
+        <item name="colorControlHighlight">@color/light_blue_600</item>
 
-        <item name="colorControlActivated">#0000AA</item>
-
-        <item name="colorControlHighlight">#AA0000</item>
-
-        <item name="colorButtonNormal">#000000</item>
-
-        <item name="colorSwitchThumbNormal">#0000AA</item>
-
-        <item name="android:colorBackground">#000000</item>
-
-
-
-
+        <item name="colorSwitchThumbNormal">@color/light_blue_800</item>
 
     </style>
 </resources> 
