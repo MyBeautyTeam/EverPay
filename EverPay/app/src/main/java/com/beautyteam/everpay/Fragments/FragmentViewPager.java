@@ -82,11 +82,6 @@ public class FragmentViewPager extends Fragment {
 
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.action_settings:
-                return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

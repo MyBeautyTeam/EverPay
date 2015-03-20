@@ -23,10 +23,10 @@
 
     <style name="SwitchCompat" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">#00FFFF</item>
+        <item name="colorPrimary">#112233</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">#0000AA</item>
+        <item name="colorPrimaryDark">#FFFFFF</item>
 
         <item name="colorAccent">#AAAA00</item>
 
@@ -35,16 +35,6 @@
         <item name="colorControlActivated">#0000AA</item>
 
         <item name="colorControlHighlight">#AA0000</item>
-
-        <item name="colorButtonNormal">#000000</item>
-
-        <item name="colorSwitchThumbNormal">#0000AA</item>
-
-        <item name="android:colorBackground">#000000</item>
-
-
-
-
 
     </style>
 </resources> 
