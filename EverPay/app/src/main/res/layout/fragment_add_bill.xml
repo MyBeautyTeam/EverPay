@@ -129,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Должен"
-            android:drawableBottom="@drawable/ic_trending_neutral_blue_36dp"
+            android:drawableBottom="@drawable/package_up"
             android:gravity="center"
             android:textSize="14dp"
             />
@@ -139,7 +139,7 @@
             android:layout_height="match_parent"
             android:text="Внес"
             android:gravity="center"
-            android:drawableBottom="@drawable/ic_trending_neutral_blue_36dp"
+            android:drawableBottom="@drawable/package_down"
             android:textSize="14dp"
             />
         <LinearLayout

@@ -10,6 +10,9 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -54,6 +57,7 @@ public class FragmentAddBill extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_add_bill, null);
     }
@@ -169,6 +173,20 @@ public class FragmentAddBill extends Fragment implements
         mAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.ok_btn, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_apply:
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -231,6 +249,7 @@ public class FragmentAddBill extends Fragment implements
             }
         }
     }
+
 
     private class AnimationListenerImpl implements Animation.AnimationListener {
         static public final int ACTION_APPEAR = 1;
