@@ -2,22 +2,15 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.R;
-
-import java.net.CookieHandler;
-import java.util.Random;
 
 /**
  * Created by Admin on 15.03.2015.
@@ -29,11 +22,17 @@ public class AddBillListAdapter extends CursorAdapter {
     public static int TEXT_VIEW_MODE = 1;
     public static int EDIT_TEXT_MODE = 2;
 
+    private String needSumma = "0";
+
     private int mode=TEXT_VIEW_MODE;
 
     public AddBillListAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void setNeedSumma(String _needSumma) {
+        needSumma = _needSumma;
     }
 
     public void setItemMode(int _mode) {
@@ -58,6 +57,7 @@ public class AddBillListAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         holder.name.setText("Танька Петрова");
+        holder.textNeed.setText(needSumma);
         if (mode == TEXT_VIEW_MODE) {
             holder.textNeed.setVisibility(View.VISIBLE);
             holder.editNeed.setVisibility(View.GONE);
@@ -79,6 +79,7 @@ public class AddBillListAdapter extends CursorAdapter {
         EditText put;
         ImageView remove;
     }
+
 
 
 }

@@ -22,7 +22,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="16dp"
-        android:text="0000"
+        android:text="0"
         android:visibility="gone"
         />
     <EditText
