@@ -52,7 +52,7 @@ public class FragmentViewPager extends Fragment {
         slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.light_blue_800);
+                return getResources().getColor(R.color.dark_primary);
             }
         });
         slidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tab_header);

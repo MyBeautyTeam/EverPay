@@ -275,7 +275,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                View view = tabViewArray[i];
 
                TextView tabSumma = (TextView)view.findViewById(R.id.tab_summa);
-               tabSumma.setTextColor(getResources().getColor(R.color.light_blue_800));
+               tabSumma.setTextColor(getResources().getColor(R.color.dark_primary));
                tabSumma.setBackgroundDrawable(getResources().getDrawable(R.drawable.oval_around_text));
 
                TextView tabHeader = (TextView)view.findViewById(R.id.tab_header);

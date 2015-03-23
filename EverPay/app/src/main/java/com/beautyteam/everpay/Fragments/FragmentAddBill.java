@@ -191,8 +191,8 @@ public class FragmentAddBill extends Fragment implements
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-            int colorFrom = getResources().getColor(R.color.secondary_text_default_material_light);
-            int colorTo = getResources().getColor(R.color.light_blue_800);
+            int colorFrom = getResources().getColor(R.color.secondary_text);
+            int colorTo = getResources().getColor(R.color.dark_primary);
 
             if (b == true) { // Не поровну
                 hideListTextViews();
@@ -219,7 +219,6 @@ public class FragmentAddBill extends Fragment implements
             int last = addBillList.getLastVisiblePosition();
 
             for (int i = 0; i <= last - first; i++) {
-
 
                 View view = addBillList.getChildAt(i);
 
