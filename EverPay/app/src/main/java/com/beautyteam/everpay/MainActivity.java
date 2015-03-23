@@ -149,6 +149,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
 
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
+        fTran.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
         fTran.replace(R.id.main_container, fragment);
         fTran.commit();
     }
