@@ -2,6 +2,7 @@ package com.beautyteam.everpay;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -38,6 +39,9 @@ import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
+
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -162,6 +166,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
 
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
+        fTran.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
         fTran.replace(R.id.main_container, fragment);
         fTran.commit();
     }
@@ -203,4 +208,21 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
             }
         });
     }
+
+    public void replaceAllFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fTran = fragmentManager.beginTransaction();
+        List<Fragment> fragmentList = fragmentManager.getFragments();
+
+        Iterator<Fragment> iterator = fragmentList.iterator();
+
+        while (iterator.hasNext()) {
+            Fragment innerFragment = iterator.next();
+            fTran.remove(innerFragment);
+        }
+        fTran.replace(R.id.main_container, fragment);
+        fTran.commit();
+    }
+
+
 }

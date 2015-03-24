@@ -18,7 +18,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:fontFamily="sans-serif"
-        android:textColor="@color/light_blue_800"
+        android:textColor="@color/dark_primary"
         android:textStyle="bold"
         android:text="1000"
         />

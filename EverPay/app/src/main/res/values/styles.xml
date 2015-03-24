@@ -6,17 +6,17 @@
         <!-- Customize your theme here. -->
 
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/light_blue_600</item>
+        <item name="colorPrimary">@color/primary</item>
 
         <item name="android:color">@color/primary_text_default_material_dark</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/light_blue_800</item>
+        <item name="colorPrimaryDark">@color/dark_primary</item>
 
         <!-- colorAccent is used as the default value for colorControlActivated
         which is used to tint widgets -->
 
-        <item name="colorAccent">@color/light_blue_800</item>
+        <item name="colorAccent">@color/dark_primary</item>
         <item name="android:textColorSecondary">@color/secondary_text_default_material_light</item>
 
         <!-- You can also set colorControlNormal, colorControlActivated
@@ -24,8 +24,8 @@
     </style>
     <style name="AppTheme.Login" parent="Theme.AppCompat.Light.DarkActionBar">
 
-        <item name="android:windowBackground">@color/grey_1000w</item>
-        <item name = "android:textColor">@color/primary_blue</item>
+        <item name="android:windowBackground">@color/active_white</item>
+        <item name = "android:textColor">@color/primary</item>
     </style>
 
 </resources>

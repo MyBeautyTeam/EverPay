@@ -52,7 +52,7 @@ public class FragmentViewPager extends Fragment {
         slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.light_blue_800);
+                return getResources().getColor(R.color.dark_primary);
             }
         });
         slidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tab_header);
@@ -73,19 +73,12 @@ public class FragmentViewPager extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.ok_btn, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_settings:
-                return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -2,12 +2,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/light_blue_800" />
+            <solid android:color="@color/dark_primary" />
         </shape>
     </item>
     <item android:left="5dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/grey_300" />
+            <solid android:color="@color/inactive_white" />
         </shape>
     </item>
 </layer-list>
