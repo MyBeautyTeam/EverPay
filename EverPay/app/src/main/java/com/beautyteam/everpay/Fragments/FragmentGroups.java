@@ -21,11 +21,12 @@ import com.beautyteam.everpay.Database.MyContentProvider;
 /**
  * Created by asus on 15.03.2015.
  */
-public class FragmentGroups extends Fragment implements
+public class FragmentGroups extends Fragment implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private ListView groupList;
     private Button addBtn;
+    private Fragment self;
 
     private static final int LOADER_ID = 0;
     private GroupsListAdapter mAdapter;
@@ -45,8 +46,11 @@ public class FragmentGroups extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+
+            self=this;
             groupList = (ListView) view.findViewById(R.id.groups_list);
             addBtn = (Button) view.findViewById(R.id.add_group_button);
+        addBtn.setOnClickListener(this);
 
             }
 
@@ -84,6 +88,30 @@ public class FragmentGroups extends Fragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.add_group_tlb:
+                FragmentAddGroup frag= new FragmentAddGroup();
+                this.getFragmentManager().beginTransaction()
+                        .replace(R.id.main_container, frag)
+                        .addToBackStack(null)
+                        .commit();
+                return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add_group_button:
+                FragmentAddGroup frag= new FragmentAddGroup();
+                this.getFragmentManager().beginTransaction()
+                        .replace(R.id.main_container, frag)
+                        .addToBackStack(null)
+                        .commit();
+        }
     }
 }

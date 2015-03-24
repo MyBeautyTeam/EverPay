@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity" >
     <item
-        android:id="@+id/action_search"
+        android:id="@+id/add_group_tlb"
         android:orderInCategory="200"
         android:title="@string/add_group"
         android:icon="@drawable/ic_group_add_white_24dp"

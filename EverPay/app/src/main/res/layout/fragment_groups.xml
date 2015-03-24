@@ -5,16 +5,23 @@
     <ListView
         android:id="@+id/groups_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
     </ListView>
 
     <Button
         android:id="@+id/add_group_button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_group"
-        android:background="@drawable/btn_vk_login_style"
-        android:textColor="@color/primary_blue"
-        />
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:layout_gravity="center"
+        android:textColor="@color/blue_400"
+        android:background="@drawable/on_btn_pressed_selector"
+        android:drawableLeft="@drawable/ic_group_add_black_18dp"
+        android:drawablePadding="8dp"
+        android:layout_weight="0"/>
 
 </LinearLayout>

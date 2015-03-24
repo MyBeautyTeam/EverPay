@@ -9,5 +9,6 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="add_group">ДОБАВИТЬ ГРУППУ</string>
+    <string name="ready">Готово</string>
 
 </resources>
