@@ -2,16 +2,28 @@ package com.beautyteam.everpay.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 
 import com.beautyteam.everpay.R;
 
 /**
  * Created by asus on 16.03.2015.
  */
-public class FragmentAddGroup extends Fragment {
+public class FragmentAddGroup extends Fragment
+        implements View.OnClickListener {
+    private Toolbar toolbar;
+    private Button addBtn;
+    private Fragment self;
+
     public static FragmentAddGroup getInstance() {
         FragmentAddGroup fragmentAddGroup = new FragmentAddGroup();
         return fragmentAddGroup;
@@ -27,5 +39,32 @@ public class FragmentAddGroup extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        self = this;
+        addBtn = (Button) view.findViewById(R.id.add_btn_friend);
+        addBtn.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.empty, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add_btn_friend:
+                FragmentAddFriends frag= new FragmentAddFriends();
+                this.getFragmentManager().beginTransaction()
+                        .replace(R.id.main_container, frag)
+                        .addToBackStack(null)
+                        .commit();
+        }
     }
 }

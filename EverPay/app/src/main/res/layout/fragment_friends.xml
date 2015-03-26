@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ListView
+        android:id="@+id/friends_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:dividerHeight="16dp"
+        android:divider="@null"
+        android:paddingTop="8dp"
+        />
+    <Button
+        android:id="@+id/save_btn_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:layout_gravity="center"
+        android:textColor="@color/dark_primary"
+        android:background="@drawable/on_btn_pressed_selector"
+        android:drawableLeft="@drawable/ic_check_black_18dp"
+        android:drawablePadding="8dp"
+        android:text="@string/ready"
+        android:layout_weight="0"/>
+</LinearLayout>

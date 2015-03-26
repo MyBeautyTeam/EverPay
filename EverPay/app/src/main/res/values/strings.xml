@@ -10,5 +10,9 @@
     <string name="drawer_close">Close</string>
     <string name="add_group">ДОБАВИТЬ ГРУППУ</string>
     <string name="ready">Готово</string>
+    <string name="add_friend">ДОБАВИТЬ УЧАСТНИКА</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

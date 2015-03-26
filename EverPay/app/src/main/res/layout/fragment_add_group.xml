@@ -2,15 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        >
     <EditText
         android:id="@+id/group_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lines="1"
+        android:layout_gravity="center"
         android:textSize="20dip"
         android:fontFamily="sans-serif-light"
         android:hint="Название группы"
-        android:layout_margin="@dimen/activity_horizontal_margin"/>
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Участники"
+        android:textSize="20dip"
+        android:drawableRight="@drawable/ic_group_black_18dp"
+        android:drawablePadding="8dp"
+        android:paddingBottom="10dip"
+        />
+    <Button
+        android:id="@+id/add_btn_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_gravity="center"
+        android:textColor="@color/dark_primary"
+        android:background="@drawable/btn_add_friend_style"
+        android:drawablePadding="8dp"
+        android:text="@string/add_friend"
+        />
+    </LinearLayout>
     <Button
         android:id="@+id/save_btn_group"
         android:layout_width="wrap_content"

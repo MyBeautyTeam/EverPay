@@ -224,5 +224,4 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         fTran.commit();
     }
 
-
 }
