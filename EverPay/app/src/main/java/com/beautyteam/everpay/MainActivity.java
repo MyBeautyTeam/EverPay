@@ -49,8 +49,6 @@ import java.util.List;
  */
 public class MainActivity extends ActionBarActivity {//} implements MaterialTabListener {
 
-    ViewPager viewPager;
-    PageAdapter pageAdapter;
 
     String TITLES[] = {"Главная" ,"Группы", "Выход", "Добавить счет"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
@@ -70,7 +68,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     DrawerLayout Drawer;                                  // Declaring DrawerLayout
 
     ActionBarDrawerToggle mDrawerToggle;
-
+    private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,16 +114,16 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                     toolbar.setTitle(TITLES[position]);
                     switch (position) {
                         case 0:
-                            replaceFragment(FragmentViewPager.getInstance());
+                            replaceAllFragment(FragmentViewPager.getInstance());
                             break;
                         case 1:
-                            replaceFragment(FragmentGroups.getInstance());
+                            replaceAllFragment(FragmentGroups.getInstance());
                             break;
                         case 2:
-                            replaceFragment(FragmentCalculation.getInstance());
+                            replaceAllFragment(FragmentCalculation.getInstance());
                             break;
                         case 3:
-                            replaceFragment(FragmentAddBill.getInstance());
+                            replaceAllFragment(FragmentAddBill.getInstance());
                             break;
                     }
                     return true;
@@ -165,15 +163,15 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     }
 
     public void replaceFragment(Fragment fragment) {
-        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
-        fTran.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+        FragmentTransaction fTran = fragmentManager.beginTransaction();
+        //fTran.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
         fTran.replace(R.id.main_container, fragment);
         fTran.commit();
     }
 
     public void addFragment(Fragment fragment) {
-        FragmentTransaction fTran = getSupportFragmentManager().beginTransaction();
-        fTran.add(R.id.main_container, fragment);
+        FragmentTransaction fTran = fragmentManager.beginTransaction();
+        fTran.replace(R.id.main_container, fragment);
         fTran.addToBackStack(null);
         fTran.commit();
     }
@@ -210,16 +208,12 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     }
 
     public void replaceAllFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fTran = fragmentManager.beginTransaction();
-        List<Fragment> fragmentList = fragmentManager.getFragments();
 
-        Iterator<Fragment> iterator = fragmentList.iterator();
-
-        while (iterator.hasNext()) {
-            Fragment innerFragment = iterator.next();
-            fTran.remove(innerFragment);
+        for(int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+
+        FragmentTransaction fTran = fragmentManager.beginTransaction();
         fTran.replace(R.id.main_container, fragment);
         fTran.commit();
     }

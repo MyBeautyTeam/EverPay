@@ -197,15 +197,15 @@ public class FragmentAddBill extends Fragment implements
             if (b == true) { // Не поровну
                 hideListTextViews();
                 leftSummaLayout.setVisibility(View.VISIBLE);
-                AnimUtils.animateText(notEqText, colorFrom, colorTo, 300, 14, 20);
-                AnimUtils.animateText(eqText, colorTo, colorFrom, 300, 20, 14);
+                AnimUtils.animateText(notEqText, colorFrom, colorTo, 300, 12, 18);
+                AnimUtils.animateText(eqText, colorTo, colorFrom, 300, 18, 12);
                 leftSummaLayout.startAnimation(alphaAppear);
 
                 //leftSummaLayout.startAnimation(new ScaleAnim(1.0f, 1.0f, 0.0f, 1.0f, 300, leftSummaLayout, true));
             } else { // Поровну
                 hideListEditTextViews();
-                AnimUtils.animateText(eqText, colorFrom, colorTo, 300, 14, 20);
-                AnimUtils.animateText(notEqText, colorTo, colorFrom, 300, 20, 14);
+                AnimUtils.animateText(eqText, colorFrom, colorTo, 300, 12, 18);
+                AnimUtils.animateText(notEqText, colorTo, colorFrom, 300, 18, 12);
 
                 leftSummaLayout.startAnimation(alphaDisappear);
 

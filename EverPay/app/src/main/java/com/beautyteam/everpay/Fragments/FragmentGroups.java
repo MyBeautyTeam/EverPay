@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;import android.support.v4.app.LoaderManager;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.Database.MyContentProvider;
@@ -27,6 +29,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     private ListView groupList;
     private Button addBtn;
     private Fragment self;
+    private MainActivity mainActivity;
 
     private static final int LOADER_ID = 0;
     private GroupsListAdapter mAdapter;
@@ -92,11 +95,8 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
         int id = item.getItemId();
         switch (id) {
             case R.id.add_group_tlb:
-                FragmentAddGroup frag= new FragmentAddGroup();
-                this.getFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, frag)
-                        .addToBackStack(null)
-                        .commit();
+                FragmentAddGroup frag= FragmentAddGroup.getInstance();
+                mainActivity.addFragment(frag);
                 return true;
         }
 
@@ -107,11 +107,14 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_group_button:
-                FragmentAddGroup frag= new FragmentAddGroup();
-                this.getFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, frag)
-                        .addToBackStack(null)
-                        .commit();
+                FragmentAddGroup frag= FragmentAddGroup.getInstance();
+                mainActivity.addFragment(frag);
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mainActivity = (MainActivity)activity;
     }
 }

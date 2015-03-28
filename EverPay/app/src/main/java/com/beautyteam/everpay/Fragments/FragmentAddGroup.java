@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
 /**
@@ -23,6 +25,7 @@ public class FragmentAddGroup extends Fragment
     private Toolbar toolbar;
     private Button addBtn;
     private Fragment self;
+    private MainActivity mainActivity;
 
     public static FragmentAddGroup getInstance() {
         FragmentAddGroup fragmentAddGroup = new FragmentAddGroup();
@@ -60,11 +63,14 @@ public class FragmentAddGroup extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_btn_friend:
-                FragmentAddFriends frag= new FragmentAddFriends();
-                this.getFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, frag)
-                        .addToBackStack(null)
-                        .commit();
+                FragmentAddFriends frag= FragmentAddFriends.getInstance();
+                mainActivity.addFragment(frag);
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mainActivity = (MainActivity)activity;
     }
 }
