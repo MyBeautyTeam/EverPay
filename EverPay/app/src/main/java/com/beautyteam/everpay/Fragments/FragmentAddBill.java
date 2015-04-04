@@ -68,7 +68,7 @@ public class FragmentAddBill extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
         addBillList = (ListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-        addBillList.setStackFromBottom(true);
+        //addBillList.setStackFromBottom(true);
 
         leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa);
         needSumma = (EditText) view.findViewById(R.id.add_bill_need_summa);
