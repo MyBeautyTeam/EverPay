@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Database.MyContentProvider;
+import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
 import com.beautyteam.everpay.Utils.ScaleAnim;
@@ -110,6 +111,8 @@ public class FragmentAddBill extends Fragment implements
 
         initializeAnimate();
 
+        DialogWindow dialogWindow = new DialogWindow(getActivity());
+        dialogWindow.show();
 
     }
 

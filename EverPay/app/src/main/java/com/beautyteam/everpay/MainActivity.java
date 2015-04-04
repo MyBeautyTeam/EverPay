@@ -189,7 +189,6 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                 VKApiUserFull userFull = ((VKList<VKApiUserFull>) responses[0].parsedModel).get(0);
                 User user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
 
-
                 final List<User> users = new ArrayList<User>();
                 Log.d("vksdk", responses[1].parsedModel.toString());
                 VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
@@ -212,7 +211,6 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         for(int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-
         FragmentTransaction fTran = fragmentManager.beginTransaction();
         fTran.replace(R.id.main_container, fragment);
         fTran.commit();
