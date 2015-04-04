@@ -17,18 +17,16 @@ import com.beautyteam.everpay.Constants;
 /**
  * Created by Admin on 27.02.2015.
  */
+
 public class MyContentProvider extends ContentProvider {
     final String LOG_TAG = "myLogs";
-
     // // Константы для БД
-    // БД
+// БД
     static final String DB_NAME = "mydb";
     static final int DB_VERSION = 6;
-
     //=========================
-    // Таблица
+// Таблица
     static final String CONTACT_TABLE = "contacts";
-
     // Поля
     public static final String CONTACT_ID = "_id";
     public static final String CONTACT_NAME = "name";
@@ -36,7 +34,6 @@ public class MyContentProvider extends ContentProvider {
     public static final String IMG_NAME = "img_name";
     public static final String STATE = "state";
     public static final String RESULT = "result";
-
     // Скрипт создания таблицы
     static final String DB_CREATE = "create table " + CONTACT_TABLE + "("
             + CONTACT_ID + " integer primary key autoincrement, "
@@ -45,35 +42,26 @@ public class MyContentProvider extends ContentProvider {
             + IMG_NAME + " text,"
             + STATE + " integer,"
             + RESULT + " integer" + ");";
-
-
     // // Uri
-    // authority
+// authority
     static final String AUTHORITY = "com.beautyteam.everpay.AdressBook";
-
     // path
     static final String CONTACT_PATH = "contacts";
-
     // Общий Uri
     public static final Uri CONTACT_CONTENT_URI = Uri.parse("content://"
             + AUTHORITY + "/" + CONTACT_PATH);
-
     // Типы данных
-    // набор строк
+// набор строк
     static final String CONTACT_CONTENT_TYPE = "vnd.android.cursor.dir/vnd."
             + AUTHORITY + "." + CONTACT_PATH;
-
     // одна строка
     static final String CONTACT_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd."
             + AUTHORITY + "." + CONTACT_PATH;
-
     //// UriMatcher
-    // общий Uri
+// общий Uri
     static final int URI_CONTACTS = 1;
-
     // Uri с указанным ID
     static final int URI_CONTACTS_ID = 2;
-
     // описание и создание UriMatcher
     private static final UriMatcher uriMatcher;
     static {
@@ -81,10 +69,8 @@ public class MyContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, CONTACT_PATH, URI_CONTACTS);
         uriMatcher.addURI(AUTHORITY, CONTACT_PATH + "/#", URI_CONTACTS_ID);
     }
-
     DBHelper dbHelper;
     SQLiteDatabase db;
-
     public boolean onCreate() {
         Log.d(LOG_TAG, "onCreate");
         dbHelper = new DBHelper(getContext());
@@ -103,7 +89,7 @@ public class MyContentProvider extends ContentProvider {
         }
         switch (uriMatcher.match(uri)) {
             case URI_CONTACTS: // общий Uri
-                Log.d(LOG_TAG, "URI_CONTACTS");
+                Log.d(LOG_TAG, "URI_USERS");
                 // если сортировка не указана, ставим свою - по имени
                 if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = CONTACT_NAME + " DESC";
@@ -111,7 +97,7 @@ public class MyContentProvider extends ContentProvider {
                 break;
             case URI_CONTACTS_ID: // Uri с ID
                 String id = uri.getLastPathSegment();
-                Log.d(LOG_TAG, "URI_CONTACTS_ID, " + id);
+                Log.d(LOG_TAG, "URI_USERS_ID, " + id);
                 // добавляем ID к условию выборки
                 if (TextUtils.isEmpty(selection)) {
                     selection = CONTACT_ID + " = " + id;
@@ -127,7 +113,7 @@ public class MyContentProvider extends ContentProvider {
         Cursor cursor = db.query(CONTACT_TABLE, projection, selection,
                 selectionArgs, null, null, sortOrder);
         // просим ContentResolver уведомлять этот курсор
-        // об изменениях данных в CONTACT_CONTENT_URI
+        // об изменениях данных в USERS_CONTENT_URI
         cursor.setNotificationUri(getContext().getContentResolver(),
                 CONTACT_CONTENT_URI);
         return cursor;
@@ -151,11 +137,11 @@ public class MyContentProvider extends ContentProvider {
         Log.d(LOG_TAG, "delete, " + uri.toString());
         switch (uriMatcher.match(uri)) {
             case URI_CONTACTS:
-                Log.d(LOG_TAG, "URI_CONTACTS");
+                Log.d(LOG_TAG, "URI_USERS");
                 break;
             case URI_CONTACTS_ID:
                 String id = uri.getLastPathSegment();
-                Log.d(LOG_TAG, "URI_CONTACTS_ID, " + id);
+                Log.d(LOG_TAG, "URI_USERS_ID, " + id);
                 if (TextUtils.isEmpty(selection)) {
                     selection = CONTACT_ID + " = " + id;
                 } else {
@@ -176,12 +162,12 @@ public class MyContentProvider extends ContentProvider {
         Log.d(LOG_TAG, "update, " + uri.toString());
         switch (uriMatcher.match(uri)) {
             case URI_CONTACTS:
-                Log.d(LOG_TAG, "URI_CONTACTS");
+                Log.d(LOG_TAG, "URI_USERS");
 
                 break;
             case URI_CONTACTS_ID:
                 String id = uri.getLastPathSegment();
-                Log.d(LOG_TAG, "URI_CONTACTS_ID, " + id);
+                Log.d(LOG_TAG, "URI_USERS_ID, " + id);
                 if (TextUtils.isEmpty(selection)) {
                     selection = CONTACT_ID + " = " + id;
                 } else {
@@ -259,3 +245,4 @@ public class MyContentProvider extends ContentProvider {
         }
     }
 }
+

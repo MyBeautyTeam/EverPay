@@ -82,7 +82,4 @@ public class FragmentViewPager extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-
 }

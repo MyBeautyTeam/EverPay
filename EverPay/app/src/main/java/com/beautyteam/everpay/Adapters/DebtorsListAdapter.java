@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.MyContentProvider;
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -48,7 +49,7 @@ public class DebtorsListAdapter extends CursorAdapter {
         //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
         holder.summa.setText("500");
         holder.discript.setText("Танька Петрова, \"Вонючкин дом\" ");
-        String fileName =  cursor.getString(cursor.getColumnIndex(MyContentProvider.IMG_NAME)); // Возможно, в дальнейшем будет id
+        String fileName =  cursor.getString(cursor.getColumnIndex(Users.IMG)); // Возможно, в дальнейшем будет id
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 Constants.FILE_DIRECTORY + '/' + fileName;
 

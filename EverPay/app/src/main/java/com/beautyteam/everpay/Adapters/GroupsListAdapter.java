@@ -10,7 +10,6 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
