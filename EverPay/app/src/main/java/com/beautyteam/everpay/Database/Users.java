@@ -15,6 +15,4 @@ public class Users {
             + NAME + " char(70), "
             + IMG + " char(70)"
             + ")";
-
-
 }

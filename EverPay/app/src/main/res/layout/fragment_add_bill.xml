@@ -81,22 +81,22 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/add_bill_left_summa"
+        android:id="@+id/add_bill_left_summa_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:visibility="gone"
         >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Осталось внести"
+            android:text="Уже внесено"
             android:textSize="16dp"
             />
         <TextView
+            android:id="@+id/add_bill_left_summa"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -47,7 +47,6 @@ public class FragmentIDebt extends Fragment implements
     }
 
     private static final String[] PROJECTION = new String[] {
-            "_id",
             Users.USER_ID_VK,
             Users.NAME,
             Users.IMG

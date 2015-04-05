@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,11 +25,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
-import com.beautyteam.everpay.Database.MyContentProvider;
+import com.beautyteam.everpay.Adapters.AddBillListAdapterTmp;
+import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
-import com.beautyteam.everpay.Utils.ScaleAnim;
 
 /**
  * Created by Admin on 15.03.2015.
@@ -36,12 +38,16 @@ import com.beautyteam.everpay.Utils.ScaleAnim;
 public class FragmentAddBill extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>{
 
-    private AddBillListAdapter mAdapter;
+    private static final String GROUP_ID = "GROUP_ID";
+    private int groupId;
+
+    private AddBillListAdapterTmp mAdapter;
     private ListView addBillList;
     private SwitchCompat switchCompat;
     private LinearLayout leftSummaLayout;
     private EditText needSumma;
 
+    private TextView leftSumma;
     private TextView eqText;
     private TextView notEqText;
 
@@ -50,8 +56,13 @@ public class FragmentAddBill extends Fragment implements
 
     private static final int LOADER_ID = 2;
 
-    public static FragmentAddBill getInstance() {
+    public static FragmentAddBill getInstance(int groupId) {
         FragmentAddBill fragmentAddBill = new FragmentAddBill();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(GROUP_ID, groupId);
+        fragmentAddBill.setArguments(bundle);
+
         return fragmentAddBill;
     }
 
@@ -63,19 +74,21 @@ public class FragmentAddBill extends Fragment implements
         return inflater.inflate(R.layout.fragment_add_bill, null);
     }
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        groupId = getArguments().getInt(GROUP_ID);
+
         addBillList = (ListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-        //addBillList.setStackFromBottom(true);
 
-        leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa);
+        leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa_layout);
         needSumma = (EditText) view.findViewById(R.id.add_bill_need_summa);
         needSumma.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
             }
 
             @Override
@@ -85,9 +98,11 @@ public class FragmentAddBill extends Fragment implements
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
+
+        leftSumma = (TextView) view.findViewById(R.id.add_bill_left_summa);
+        leftSumma.setText("0");
 
         switchCompat = (SwitchCompat) view.findViewById(R.id.add_bill_switch);
         switchCompat.setOnCheckedChangeListener(new SwitchChangeListener());
@@ -116,6 +131,12 @@ public class FragmentAddBill extends Fragment implements
 
     }
 
+    public void changeLeftSumma(int diff) {
+        int value = Integer.parseInt(leftSumma.getText().toString());
+        value += diff;
+        leftSumma.setText(value + "");
+    }
+
 
     private void initializeAnimate() {
         alphaAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_appear);
@@ -125,6 +146,7 @@ public class FragmentAddBill extends Fragment implements
         alphaDisappear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_DISAPPEAR));
 
     }
+
 
     private void updateNeedListText(CharSequence charSequence) {
         String value = "";
@@ -150,27 +172,28 @@ public class FragmentAddBill extends Fragment implements
         }
     }
 
+
     private static final String[] PROJECTION = new String[] {
-            MyContentProvider.CONTACT_ID,
-            MyContentProvider.CONTACT_NAME,
-            MyContentProvider.CONTACT_EMAIL,
-            MyContentProvider.IMG_NAME,
-            MyContentProvider.STATE,
-            MyContentProvider.RESULT,
+            Users.USER_ID_VK,
+            Users.NAME,
+            Users.IMG
     };
 
+
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), MyContentProvider.CONTACT_CONTENT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
+        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
     }
+
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOADER_ID:
-                mAdapter = new AddBillListAdapter(getActivity(), cursor, 0);
+                mAdapter = new AddBillListAdapterTmp(getActivity(), cursor, 0, this);
                 addBillList.setAdapter(mAdapter);
                 break;
         }
     }
+
 
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
@@ -279,4 +302,5 @@ public class FragmentAddBill extends Fragment implements
         public void onAnimationRepeat(Animation animation) {
         }
     }
+
 }

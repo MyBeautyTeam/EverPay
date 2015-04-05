@@ -12,13 +12,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 
 /**
  * Created by Admin on 15.03.2015.
  */
-public class AddBillListAdapter extends CursorAdapter {
+public class AddBillListAdapterTmp extends CursorAdapter {
 
     private final LayoutInflater inflater;
 
@@ -29,12 +30,29 @@ public class AddBillListAdapter extends CursorAdapter {
 
     private int mode=TEXT_VIEW_MODE;
 
-    private FragmentAddBill mFragmentAddBill; // ВОЗМОЖНА ТЕЧКА!!!
+    private FragmentAddBill mFragmentAddBill; // ВОЗМОЖНА ТЕЧКА!!! ^^
 
-    public AddBillListAdapter(Context context, Cursor c, int flags, FragmentAddBill fragmentAddBill) {
+    public AddBillListAdapterTmp(Context context, Cursor c, int flags, FragmentAddBill fragmentAddBill) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFragmentAddBill = fragmentAddBill;
+        BillItem[] billItem = new BillItem[c.getCount()];
+        for (int i=0; i<billItem.length; i++)
+            billItem[i] = new BillItem();
+        int i=0;
+        if(c.moveToFirst() && c.getCount() != 0) {
+            while(!c.isAfterLast()) {
+                billItem[i].id = c.getString(c.getColumnIndex(Users.USER_ID_VK));
+                billItem[i].name = c.getString(c.getColumnIndex(Users.NAME));
+                billItem[i].need = "0";
+                billItem[i].invest = "0";
+                billItem[i].isRemoved = false;
+                c.moveToNext();
+                i++;
+            }
+        }
+        int g = -1312;
+
     }
 
     public void setNeedSumma(String _needSumma) {
@@ -89,7 +107,7 @@ public class AddBillListAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        holder.name.setText("Танька Петрова");
+        holder.name.setText(cursor.getString(cursor.getColumnIndex(Users.NAME)));
         holder.textNeed.setText(needSumma);
         if (mode == TEXT_VIEW_MODE) {
             holder.textNeed.setVisibility(View.VISIBLE);
@@ -98,6 +116,7 @@ public class AddBillListAdapter extends CursorAdapter {
             holder.textNeed.setVisibility(View.GONE);
             holder.editNeed.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override
@@ -113,5 +132,13 @@ public class AddBillListAdapter extends CursorAdapter {
         ImageView remove;
     }
 
+
+    private class BillItem {
+        private String id;
+        private String name;
+        private String need;
+        private String invest;
+        private boolean isRemoved;
+    }
 
 }

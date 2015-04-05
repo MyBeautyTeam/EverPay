@@ -49,7 +49,7 @@ public class DebtorsListAdapter extends CursorAdapter {
         //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
         holder.summa.setText("500");
         holder.discript.setText("Танька Петрова, \"Вонючкин дом\" ");
-        String fileName =  cursor.getString(cursor.getColumnIndex(Users.IMG)); // Возможно, в дальнейшем будет id
+        String fileName = cursor.getString(cursor.getColumnIndex(Users.IMG)); // Возможно, в дальнейшем будет id
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 Constants.FILE_DIRECTORY + '/' + fileName;
 

@@ -7,8 +7,8 @@ public class GroupDetails {
     static final String GROUP_DETAILS_TABLE = "group_details";
 
     static public final String ITEM_ID = "_id";
-    static private final String GROUP_ID = "group_id";
-    static private final String USER_ID = "user_id";
+    static public final String GROUP_ID = "group_id";
+    static public final String USER_ID = "user_id";
 
     static public final String CREATE_TABLE = "create table " + GROUP_DETAILS_TABLE + "("
             + ITEM_ID + " integer primary key autoincrement, "

@@ -8,7 +8,7 @@ public class BillDetails {
     static private final String BILL_DETAIL_TABLE = "bill_details";
 
     // Поля
-    static private final String ITEM_ID = "item_id";
+    static private final String ITEM_ID = "_id";
     static private final String USER_ID = "user_id";
     static private final String DEBT_SUM = "DEBT_SUM";
     static private final String INVEST_SUM = "INVEST_SUM";

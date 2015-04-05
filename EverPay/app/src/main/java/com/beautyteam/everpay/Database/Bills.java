@@ -6,7 +6,7 @@ package com.beautyteam.everpay.Database;
 public class Bills {
     static final String BILLS_TABLE = "bills";
 
-    static public final String BILL_ID = "bill_id";
+    static public final String BILL_ID = "_id";
     static private final String TITLE = "title_id";
     static private final String USER_ID = "user_id";
     static private final String GROUP_ID = "group_id";
