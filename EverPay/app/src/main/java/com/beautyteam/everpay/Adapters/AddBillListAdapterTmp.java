@@ -51,7 +51,6 @@ public class AddBillListAdapterTmp extends CursorAdapter {
                 i++;
             }
         }
-        int g = -1312;
 
     }
 

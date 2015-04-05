@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +23,7 @@ import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
+
 
 /**
  * Created by asus on 16.03.2015.
@@ -54,8 +56,6 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         friendsList = (ListView) view.findViewById(R.id.friends_list);
-
-
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -181,7 +182,9 @@ public class FragmentAddBill extends Fragment implements
 
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
+        Uri uri= Uri.withAppendedPath(EverContentProvider.GROUP_DETAILS_CONTENT_URI, "users");
+        uri= Uri.withAppendedPath(uri, groupId+"");
+        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
     }
 
 

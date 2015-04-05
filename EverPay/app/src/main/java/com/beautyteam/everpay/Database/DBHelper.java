@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.User;
@@ -24,6 +26,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(Users.CREATE_TABLE);
         db.execSQL(Groups.CREATE_TABLE);
         db.execSQL(GroupDetails.CREATE_TABLE);
+
+        Log.d("SQL", Users.CREATE_TABLE + "\n" + Groups.CREATE_TABLE + "\n" + GroupDetails.CREATE_TABLE + "\n");
 
         ContentValues cv = new ContentValues();
         for (int i = 1; i <= 10; i++) {
