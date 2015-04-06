@@ -48,19 +48,12 @@ public class DBHelper extends SQLiteOpenHelper {
         cv = new ContentValues();
         for (int i=0; i <= 10; i++) {
             cv.put(GroupDetails.GROUP_ID, i);
-            for (int j=0; j<5; j++) {
-                cv.put(GroupDetails.USER_ID, j);
+            for (int j=0; j<25; j++) {
+                cv.put(GroupDetails.USER_ID, j%10);
                 db.insert(GroupDetails.GROUP_DETAILS_TABLE, null, cv);
             }
         }
 
-
-
-
-//        db.execSQL(Groups.CREATE_TABLE);
-//        db.execSQL(GroupDetails.CREATE_TABLE);
-//        db.execSQL(Bills.CREATE_TABLE);
-//        db.execSQL(BillDetails.CREATE_TABLE);
     }
 
     @Override

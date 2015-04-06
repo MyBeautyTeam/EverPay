@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,11 +26,15 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.AddBillListAdapterTmp;
+import com.beautyteam.everpay.Adapters.AddBillListNEWAdapter;
+import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by Admin on 15.03.2015.
@@ -42,7 +45,7 @@ public class FragmentAddBill extends Fragment implements
     private static final String GROUP_ID = "GROUP_ID";
     private int groupId;
 
-    private AddBillListAdapterTmp mAdapter;
+    private AddBillListNEWAdapter mAdapter;
     private ListView addBillList;
     private SwitchCompat switchCompat;
     private LinearLayout leftSummaLayout;
@@ -54,6 +57,8 @@ public class FragmentAddBill extends Fragment implements
 
     private Animation alphaAppear;
     private Animation alphaDisappear;
+
+    private ArrayList<BillListItem> billArrayList;
 
     private static final int LOADER_ID = 2;
 
@@ -127,15 +132,10 @@ public class FragmentAddBill extends Fragment implements
 
         initializeAnimate();
 
-        DialogWindow dialogWindow = new DialogWindow(getActivity());
-        dialogWindow.show();
-
     }
 
-    public void changeLeftSumma(int diff) {
-        int value = Integer.parseInt(leftSumma.getText().toString());
-        value += diff;
-        leftSumma.setText(value + "");
+    public void setLeftSumma(int summa) {
+        leftSumma.setText(summa + "");
     }
 
 
@@ -188,18 +188,38 @@ public class FragmentAddBill extends Fragment implements
     }
 
 
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
             case LOADER_ID:
-                mAdapter = new AddBillListAdapterTmp(getActivity(), cursor, 0, this);
+                billArrayList = new ArrayList<BillListItem>();
+                int i=0;
+                if(c.moveToFirst() && c.getCount() != 0) {
+                    while(!c.isAfterLast()) {
+                        BillListItem billItem = new BillListItem();
+                        billItem.id = c.getString(c.getColumnIndex(Users.USER_ID_VK));
+                        billItem.name = c.getString(c.getColumnIndex(Users.NAME));
+                        billItem.need = 0;
+                        billItem.invest = 0;
+                        billItem.isRemoved = false;
+                        c.moveToNext();
+                        i++;
+                        billArrayList.add(billItem);
+                    }
+                }
+                mAdapter = new AddBillListNEWAdapter(getActivity(), billArrayList, this);
                 addBillList.setAdapter(mAdapter);
                 break;
         }
     }
 
+    public void showDialog() {
+        DialogWindow dialogWindow = new DialogWindow(getActivity());
+        dialogWindow.show();
+    }
+
 
     public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
+        //mAdapter.swapCursor(null);
     }
 
     @Override

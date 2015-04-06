@@ -48,7 +48,6 @@ public class GroupsListAdapter  extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
         holder.discript.setText(cursor.getString(cursor.getColumnIndex(Groups.TITLE)));
 
         final String id = cursor.getString(cursor.getColumnIndex(Groups.GROUP_ID));

@@ -96,7 +96,7 @@ public class AddBillListAdapterTmp extends CursorAdapter {
                 } else {
                     newValue = Integer.parseInt(editable.toString());
                 }
-                mFragmentAddBill.changeLeftSumma(newValue-oldValue);
+                mFragmentAddBill.setLeftSumma(newValue - oldValue);
             }
         });
         return itemLayout;
