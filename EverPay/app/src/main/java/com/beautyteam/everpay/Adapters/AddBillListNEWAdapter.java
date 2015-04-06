@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 
@@ -38,16 +39,14 @@ public class AddBillListNEWAdapter extends BaseAdapter {
     public AddBillListNEWAdapter(Context _context, ArrayList<BillListItem> billFullArrayList, FragmentAddBill fragmentAddBill) {
         context = _context;
         this.billFullArrayList = billFullArrayList;
-
-        refreshAvaliableList();
-
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFragmentAddBill = fragmentAddBill;
 
-        for (int i = 0; i < billAvailableArrayList.size(); i++) {
-            myItems.add(Integer.toString(0));
+        refreshAvaliableList();
+        for (int i=0; i<billAvailableArrayList.size(); i++) {
+            myItems.add("");
         }
 
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public void refreshAvaliableList() {
@@ -55,6 +54,11 @@ public class AddBillListNEWAdapter extends BaseAdapter {
         for (int i = 0; i < billFullArrayList.size(); i++) {
             if (!billFullArrayList.get(i).isRemoved)
                 billAvailableArrayList.add(billFullArrayList.get(i));
+        }
+        if (billAvailableArrayList.size() == billFullArrayList.size()) {
+            mFragmentAddBill.removeFooterBtn();
+        } else {
+            mFragmentAddBill.addFooterBtn();
         }
         notifyDataSetChanged();
     }
@@ -83,13 +87,15 @@ public class AddBillListNEWAdapter extends BaseAdapter {
             viewHolder.name = (TextView) convertView.findViewById(R.id.add_bill_list_name);
             viewHolder.editNeed = (EditText) convertView.findViewById(R.id.add_bill_list_need_edit);
             viewHolder.textNeed = (TextView) convertView.findViewById(R.id.add_bill_list_need_text);
+
             viewHolder.put = (EditText) convertView.findViewById(R.id.add_bill_list_put);
             viewHolder.put.setId(position);
+            viewHolder.put.addTextChangedListener(new GenericTextWatcher(viewHolder.put));
+
             viewHolder.remove = (ImageView) convertView.findViewById(R.id.add_bill_list_remove);
             viewHolder.position = position;
             convertView.setTag(viewHolder);
 
-            viewHolder.put.addTextChangedListener(new GenericTextWatcher(viewHolder.put));
 
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
@@ -105,6 +111,9 @@ public class AddBillListNEWAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 billAvailableArrayList.get(position).isRemoved = true;
+                billAvailableArrayList.get(position).invest = 0;
+                billAvailableArrayList.get(position).need = 0;
+                myItems.remove(position);
                 refreshAvaliableList();
             }
         });
@@ -160,9 +169,11 @@ public class AddBillListNEWAdapter extends BaseAdapter {
         public void afterTextChanged(Editable editable) {
             final int position = view.getId();
             final EditText editText = (EditText) view;
-            myItems.set(position, editText.getText().toString());
+            String value = editText.getText().toString();
+            myItems.set(position, value);
             BillListItem billListItem = billAvailableArrayList.get(position);
-            billListItem.invest = Integer.parseInt(editText.getText().toString());
+            if (value.isEmpty()) billListItem.invest = 0;
+            else billListItem.invest = Integer.parseInt(value);
             mFragmentAddBill.setLeftSumma(getLeftSumma());
         }
     }

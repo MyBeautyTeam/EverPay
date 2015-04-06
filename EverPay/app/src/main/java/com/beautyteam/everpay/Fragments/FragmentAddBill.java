@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -58,6 +59,8 @@ public class FragmentAddBill extends Fragment implements
     private Animation alphaAppear;
     private Animation alphaDisappear;
 
+    private Button footerBtn;
+
     private ArrayList<BillListItem> billArrayList;
 
     private static final int LOADER_ID = 2;
@@ -84,6 +87,10 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        LayoutInflater inflater = getLayoutInflater(savedInstanceState);
+
+        footerBtn = (Button)inflater.inflate(R.layout.footer_btn, addBillList);
 
         groupId = getArguments().getInt(GROUP_ID);
 
@@ -169,7 +176,8 @@ public class FragmentAddBill extends Fragment implements
             View view = addBillList.getChildAt(i);
 
             TextView textView = (TextView) view.findViewById(R.id.add_bill_list_need_text);
-            textView.setText(value);
+            if (textView != null)
+                textView.setText(value);
         }
     }
 
@@ -215,6 +223,18 @@ public class FragmentAddBill extends Fragment implements
     public void showDialog() {
         DialogWindow dialogWindow = new DialogWindow(getActivity());
         dialogWindow.show();
+    }
+
+    public void addFooterBtn() {
+        if (addBillList.getFooterViewsCount() == 0) {
+            addBillList.addFooterView(footerBtn);
+        }
+    }
+
+    public void removeFooterBtn() {
+        if (addBillList.getFooterViewsCount() != 0) {
+            addBillList.removeFooterView(footerBtn);
+        }
     }
 
 
@@ -263,38 +283,12 @@ public class FragmentAddBill extends Fragment implements
 
         private void hideListTextViews() {
             mAdapter.setItemMode(AddBillListAdapter.EDIT_TEXT_MODE);
-
-            int first = addBillList.getFirstVisiblePosition();
-            int last = addBillList.getLastVisiblePosition();
-
-            for (int i = 0; i <= last - first; i++) {
-
-                View view = addBillList.getChildAt(i);
-
-                TextView textView = (TextView) view.findViewById(R.id.add_bill_list_need_text);
-                textView.setVisibility(View.GONE);
-
-                EditText editText = (EditText) view.findViewById(R.id.add_bill_list_need_edit);
-                editText.setVisibility(View.VISIBLE);
-
-            }
+            mAdapter.refreshAvaliableList();
         }
 
         private void hideListEditTextViews() {
             mAdapter.setItemMode(AddBillListAdapter.TEXT_VIEW_MODE);
-
-            int first = addBillList.getFirstVisiblePosition();
-            int last = addBillList.getLastVisiblePosition();
-
-            for (int i = 0; i <= last - first; i++) {
-
-                View view = addBillList.getChildAt(i);
-                EditText editText = (EditText) view.findViewById(R.id.add_bill_list_need_edit);
-                editText.setVisibility(View.GONE);
-
-                TextView textView = (TextView) view.findViewById(R.id.add_bill_list_need_text);
-                textView.setVisibility(View.VISIBLE);
-            }
+            mAdapter.refreshAvaliableList();
         }
     }
 
