@@ -50,7 +50,6 @@ public class FragmentAddFriendToBill extends Fragment {
         mAdapter = new AddFriendsToBillAdapter(getActivity(), billArrayList);
         friendsList.setAdapter(mAdapter);
 
-        final Fragment self = this;
         friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

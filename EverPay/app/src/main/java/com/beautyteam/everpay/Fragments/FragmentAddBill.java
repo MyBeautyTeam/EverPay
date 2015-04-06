@@ -232,7 +232,8 @@ public class FragmentAddBill extends Fragment implements
                         }
                     }
                 }
-                mAdapter = new AddBillListNEWAdapter(getActivity(), billArrayList, this);
+                int mode = switchCompat.isChecked() ? AddBillListNEWAdapter.EDIT_TEXT_MODE : AddBillListNEWAdapter.TEXT_VIEW_MODE;
+                mAdapter = new AddBillListNEWAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
                 addBillList.setAdapter(mAdapter);
                 break;
         }

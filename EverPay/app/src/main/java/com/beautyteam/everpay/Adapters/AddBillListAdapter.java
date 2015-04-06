@@ -1,109 +1,200 @@
 package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 
-/**
- * Created by Admin on 15.03.2015.
- */
-public class AddBillListAdapter extends CursorAdapter {
+import java.util.ArrayList;
 
-    private final LayoutInflater inflater;
+/**
+ * Created by Admin on 06.04.2015.
+ */
+public class AddBillListAdapter extends BaseAdapter {
+
+    private ArrayList<BillListItem> billFullArrayList;
+    private ArrayList<BillListItem> billAvailableArrayList;
+    private Context context;
+    private LayoutInflater inflater;
+    private int needSumma = 0;
+    private int mode=TEXT_VIEW_MODE;
 
     public static int TEXT_VIEW_MODE = 1;
     public static int EDIT_TEXT_MODE = 2;
+    private FragmentAddBill mFragmentAddBill;
 
-    private String needSumma = "0";
+    ArrayList<String> investSummaArray = new ArrayList<String>();
+    ArrayList<String> needSummaArray = new ArrayList<String>();
 
-    private int mode=TEXT_VIEW_MODE;
-
-    private FragmentAddBill mFragmentAddBill; // ВОЗМОЖНА ТЕЧКА!!!
-
-    public AddBillListAdapter(Context context, Cursor c, int flags, FragmentAddBill fragmentAddBill) {
-        super(context, c, flags);
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public AddBillListAdapter(Context _context, ArrayList<BillListItem> billFullArrayList, FragmentAddBill fragmentAddBill, String needEditValue, int mode) {
+        context = _context;
+        this.billFullArrayList = billFullArrayList;
         mFragmentAddBill = fragmentAddBill;
-    }
+        this.mode = mode;
+        if (needEditValue.isEmpty())
+            needSumma = 0;
+        else
+            needSumma = Integer.parseInt(needEditValue);
 
-    public void setNeedSumma(String _needSumma) {
-        needSumma = _needSumma;
-    }
-
-    public void setItemMode(int _mode) {
-        mode = _mode;
-    }
-
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View itemLayout = inflater.inflate(R.layout.item_add_bill, viewGroup, false);
-        ViewHolder holder = new ViewHolder();
-        holder.name = (TextView) itemLayout.findViewById(R.id.add_bill_list_name);
-        holder.editNeed = (EditText) itemLayout.findViewById(R.id.add_bill_list_need_edit);
-        holder.textNeed = (TextView) itemLayout.findViewById(R.id.add_bill_list_need_text);
-        holder.put = (EditText) itemLayout.findViewById(R.id.add_bill_list_put);
-        holder.remove = (ImageView) itemLayout.findViewById(R.id.add_bill_list_remove);
-        itemLayout.setTag(holder);
-
-        holder.put.addTextChangedListener(new TextWatcher() {
-            int oldValue;
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                if (charSequence.toString().isEmpty()) {
-                    oldValue = 0;
-                } else {
-                    oldValue = Integer.parseInt(charSequence.toString());
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                int newValue;
-                if (editable.toString().isEmpty()) {
-                    newValue = 0;
-                } else {
-                    newValue = Integer.parseInt(editable.toString());
-                }
-                mFragmentAddBill.setLeftSumma(newValue - oldValue);
-            }
-        });
-        return itemLayout;
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
-
-        holder.name.setText("Танька Петрова");
-        holder.textNeed.setText(needSumma);
-        if (mode == TEXT_VIEW_MODE) {
-            holder.textNeed.setVisibility(View.VISIBLE);
-            holder.editNeed.setVisibility(View.GONE);
-        } else {
-            holder.textNeed.setVisibility(View.GONE);
-            holder.editNeed.setVisibility(View.VISIBLE);
+        refreshAvaliableList();
+        for (int i=0; i<billAvailableArrayList.size(); i++) {
+            investSummaArray.add("");
+            needSummaArray.add("");
         }
+
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void refreshAvaliableList() {
+        billAvailableArrayList = new ArrayList<BillListItem>(); // Собираем новый список доступных пользователей
+        for (int i = 0; i < billFullArrayList.size(); i++) {
+            if (!billFullArrayList.get(i).isRemoved)
+                billAvailableArrayList.add(billFullArrayList.get(i));
+        }
+        if (billAvailableArrayList.size() == billFullArrayList.size()) { // Если хотя бы один удален - показываем кнопку "добавить участника"
+            mFragmentAddBill.removeFooterBtn();
+        } else {
+            mFragmentAddBill.addFooterBtn();
+        }
+
+        /*
+        Если ввод поля Должен доступен, то определяем дог каждого по общему
+         */
+        if (mode == TEXT_VIEW_MODE) {
+            int needSummaPerUser;
+            int count = billAvailableArrayList.size();
+            if (count != 0) // чтобы избежать деления на ноль, когда всех пользователей удалили
+                needSummaPerUser = needSumma / billAvailableArrayList.size();
+            else
+                needSummaPerUser = 0;
+            for (int i=0; i<billAvailableArrayList.size(); i++)
+                billAvailableArrayList.get(i).need = needSummaPerUser;
+        }
+
+        notifyDataSetChanged();
+        mFragmentAddBill.setNeedSumma(getNeedSumma());
+        mFragmentAddBill.setLeftSumma(getInvestSumma());
     }
 
     @Override
     public int getCount() {
-        return getCursor() == null ? 0 : super.getCount();
+        return billAvailableArrayList.size();
     }
+
+    @Override
+    public Object getItem(int position) {
+        return billAvailableArrayList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+        ViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = inflater.from(context).inflate(R.layout.item_add_bill, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.name = (TextView) convertView.findViewById(R.id.add_bill_list_name);
+            viewHolder.textNeed = (TextView) convertView.findViewById(R.id.add_bill_list_need_text);
+
+            viewHolder.editNeed = (EditText) convertView.findViewById(R.id.add_bill_list_need_edit);
+            viewHolder.editNeed.setId(position);
+            viewHolder.editNeed.addTextChangedListener(new GenericTextWatcherNeed(viewHolder.editNeed));
+
+            viewHolder.put = (EditText) convertView.findViewById(R.id.add_bill_list_put);
+            viewHolder.put.setId(position);
+            viewHolder.put.addTextChangedListener(new GenericTextWatcher(viewHolder.put));
+
+            viewHolder.remove = (ImageView) convertView.findViewById(R.id.add_bill_list_remove);
+            viewHolder.position = position;
+            convertView.setTag(viewHolder);
+
+
+        } else {
+            viewHolder = (ViewHolder)convertView.getTag();
+            viewHolder.put.setId(position);
+            viewHolder.editNeed.setId(position);
+        }
+
+        BillListItem billListItem = (BillListItem)getItem(position);
+        viewHolder.name.setText(billListItem.name + "");
+
+        viewHolder.textNeed.setText(billListItem.need + "");
+
+        if (billListItem.invest == 0)
+            viewHolder.put.setText("");
+        else
+            viewHolder.put.setText(billListItem.invest + "");
+
+        if (billListItem.need == 0)
+            viewHolder.editNeed.setText("");
+        else
+            viewHolder.editNeed.setText(billListItem.need + "");
+
+        /*
+        Удаляем элемент
+         */
+        viewHolder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                billAvailableArrayList.get(position).isRemoved = true;
+                billAvailableArrayList.get(position).invest = 0;
+                billAvailableArrayList.get(position).need = 0;
+                investSummaArray.remove(position);
+                refreshAvaliableList();
+            }
+        });
+
+        /*
+        В зависимости от мода прячем нужные вьюшки
+         */
+        if (mode == TEXT_VIEW_MODE) {
+            viewHolder.textNeed.setVisibility(View.VISIBLE);
+            viewHolder.editNeed.setVisibility(View.GONE);
+        } else {
+            viewHolder.textNeed.setVisibility(View.GONE);
+            viewHolder.editNeed.setVisibility(View.VISIBLE);
+        }
+
+        return convertView;
+    }
+
+    /*
+    Считает сумму колонки Внес
+     */
+    private int getInvestSumma() {
+        int summa = 0;
+        for (int i=0; i< billAvailableArrayList.size(); i++) {
+            summa += billAvailableArrayList.get(i).invest;
+        }
+        return summa;
+    }
+
+    /*
+    Считает сумму колонки Должен
+     */
+    private int getNeedSumma() {
+        int summa = 0;
+        for (int i=0; i< billAvailableArrayList.size(); i++) {
+            summa += billAvailableArrayList.get(i).need;
+        }
+        return summa;
+    }
+
+
 
     private static class ViewHolder {
         TextView name;
@@ -111,7 +202,71 @@ public class AddBillListAdapter extends CursorAdapter {
         TextView textNeed;
         EditText put;
         ImageView remove;
+        int position;
     }
 
+    /*
+    Передаем адаптеру информацию о сумме "ДОЛЖНЫ" из фрагмента
+     */
+    public void setNeedSumma(int summa) {
+        needSumma = summa;
+        refreshAvaliableList();
+    }
 
+    /*
+    Устанавливает режим EditText или TextView
+     */
+    public void setItemMode(int _mode) {
+        mode = _mode;
+    }
+
+    /*
+    Удивительный черный ящик-спаситель!
+     */
+    private class GenericTextWatcher implements TextWatcher{
+
+        private View view;
+        private GenericTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void afterTextChanged(Editable editable) {
+            final int position = view.getId();
+            final EditText editText = (EditText) view;
+            String value = editText.getText().toString();
+            investSummaArray.set(position, value);
+            BillListItem billListItem = billAvailableArrayList.get(position);
+            if (value.isEmpty()) billListItem.invest = 0;
+            else billListItem.invest = Integer.parseInt(value);
+            mFragmentAddBill.setLeftSumma(getInvestSumma());
+        }
+    }
+
+    /*
+    Удивительный черный ящик-спаситель!
+     */
+    private class GenericTextWatcherNeed implements TextWatcher{
+
+        private View view;
+        private GenericTextWatcherNeed(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void afterTextChanged(Editable editable) {
+            final int position = view.getId();
+            final EditText editText = (EditText) view;
+            String value = editText.getText().toString();
+            needSummaArray.set(position, value);
+            BillListItem billListItem = billAvailableArrayList.get(position);
+            if (value.isEmpty()) billListItem.need = 0;
+            else billListItem.need = Integer.parseInt(value);
+            mFragmentAddBill.setNeedSumma(getNeedSumma());
+        }
+    }
 }
