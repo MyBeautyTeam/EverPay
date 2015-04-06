@@ -26,7 +26,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
-import com.beautyteam.everpay.Adapters.AddBillListAdapterTmp;
 import com.beautyteam.everpay.Adapters.AddBillListNEWAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -50,7 +49,8 @@ public class FragmentAddBill extends Fragment implements
     private ListView addBillList;
     private SwitchCompat switchCompat;
     private LinearLayout leftSummaLayout;
-    private EditText needSumma;
+    private EditText needSummaEdit;
+    private TextView needSummaText;
 
     private TextView leftSumma;
     private TextView eqText;
@@ -98,8 +98,11 @@ public class FragmentAddBill extends Fragment implements
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 
         leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa_layout);
-        needSumma = (EditText) view.findViewById(R.id.add_bill_need_summa);
-        needSumma.addTextChangedListener(new TextWatcher() {
+
+        needSummaText = (TextView) view.findViewById(R.id.add_bill_need_summa_text);
+        needSummaEdit = (EditText) view.findViewById(R.id.add_bill_need_summa_edit);
+
+        needSummaEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             }
@@ -145,18 +148,23 @@ public class FragmentAddBill extends Fragment implements
         leftSumma.setText(summa + "");
     }
 
+    public void setNeedSumma(int summa) {
+        needSummaEdit.setText(summa + "");
+    }
+
 
     private void initializeAnimate() {
         alphaAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_appear);
-        alphaAppear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_APPEAR));
+        //alphaAppear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_APPEAR));
 
         alphaDisappear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_disappear);
-        alphaDisappear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_DISAPPEAR));
+        //alphaDisappear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_DISAPPEAR));
 
     }
 
 
     private void updateNeedListText(CharSequence charSequence) {
+        /*
         String value = "";
         try {
             float summa = Float.parseFloat(charSequence.toString());
@@ -170,15 +178,13 @@ public class FragmentAddBill extends Fragment implements
         int last = addBillList.getLastVisiblePosition();
 
         mAdapter.setNeedSumma(value);
+        */
+        String value = charSequence.toString();
+        int summa;
+        if (value.isEmpty()) summa = 0;
+        else  summa = Integer.parseInt(value);
+        mAdapter.setNeedSumma(summa);
 
-        for (int i = 0; i <= last - first; i++) {
-
-            View view = addBillList.getChildAt(i);
-
-            TextView textView = (TextView) view.findViewById(R.id.add_bill_list_need_text);
-            if (textView != null)
-                textView.setText(value);
-        }
     }
 
 
@@ -265,18 +271,25 @@ public class FragmentAddBill extends Fragment implements
 
             if (b == true) { // Не поровну
                 hideListTextViews();
-                leftSummaLayout.setVisibility(View.VISIBLE);
+
+                needSummaEdit.setVisibility(View.GONE);
+                needSummaText.setVisibility(View.VISIBLE);
+
                 AnimUtils.animateText(notEqText, colorFrom, colorTo, 300, 12, 18);
                 AnimUtils.animateText(eqText, colorTo, colorFrom, 300, 18, 12);
-                leftSummaLayout.startAnimation(alphaAppear);
+                //needSummaText.startAnimation(alphaAppear);
 
                 //leftSummaLayout.startAnimation(new ScaleAnim(1.0f, 1.0f, 0.0f, 1.0f, 300, leftSummaLayout, true));
             } else { // Поровну
                 hideListEditTextViews();
+
+                needSummaText.setVisibility(View.GONE);
+                needSummaEdit.setVisibility(View.VISIBLE);
+
                 AnimUtils.animateText(eqText, colorFrom, colorTo, 300, 12, 18);
                 AnimUtils.animateText(notEqText, colorTo, colorFrom, 300, 18, 12);
 
-                leftSummaLayout.startAnimation(alphaDisappear);
+                //leftSummaLayout.startAnimation(alphaDisappear);
 
             }
         }
