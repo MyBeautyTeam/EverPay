@@ -27,7 +27,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
-import com.beautyteam.everpay.Adapters.AddBillListNEWAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
@@ -47,7 +46,7 @@ public class FragmentAddBill extends Fragment implements
     private static final String GROUP_ID = "GROUP_ID";
     private int groupId;
 
-    private AddBillListNEWAdapter mAdapter;
+    private AddBillListAdapter mAdapter;
     private ListView addBillList;
     private SwitchCompat switchCompat;
     private LinearLayout leftSummaLayout;
@@ -232,8 +231,8 @@ public class FragmentAddBill extends Fragment implements
                         }
                     }
                 }
-                int mode = switchCompat.isChecked() ? AddBillListNEWAdapter.EDIT_TEXT_MODE : AddBillListNEWAdapter.TEXT_VIEW_MODE;
-                mAdapter = new AddBillListNEWAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
+                int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
+                mAdapter = new AddBillListAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
                 addBillList.setAdapter(mAdapter);
                 break;
         }
