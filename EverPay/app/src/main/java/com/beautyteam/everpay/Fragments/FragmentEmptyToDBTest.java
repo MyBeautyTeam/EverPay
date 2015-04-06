@@ -51,6 +51,32 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
     }
 
     private static final String[] PROJECTION = new String[] {
+            Bills.BILL_ID,
+            Bills.TITLE,
+            Bills.USER_ID,
+            Bills.GROUP_ID
+    };
+
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), EverContentProvider.BILLS_CONTENT_URI, PROJECTION, null, null, null);
+    }
+
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        switch (loader.getId()) {
+            case LOADER_ID:
+                if (c.moveToFirst() && c.getCount() != 0) {
+                    while (!c.isAfterLast()) {
+                        String newText = textView.getText().toString()+"\n"+c.getString(c.getColumnIndex(Bills.TITLE));
+                        textView.setText(newText);
+                        c.moveToNext();
+                    }
+                    break;
+                }
+        }
+    }
+
+    /*
+    private static final String[] PROJECTION = new String[] {
         Users.USER_ID_VK,
         Users.NAME,
         Users.IMG,
@@ -77,7 +103,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
                 }
         }
     }
-
+    */
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 

@@ -73,17 +73,31 @@ public class AddBillListAdapter extends BaseAdapter {
         if (mode == TEXT_VIEW_MODE) {
             int needSummaPerUser;
             int count = billAvailableArrayList.size();
-            if (count != 0) // чтобы избежать деления на ноль, когда всех пользователей удалили
+            int ostatok = 0;
+            if (count != 0) { // чтобы избежать деления на ноль, когда всех пользователей удалили
                 needSummaPerUser = needSumma / billAvailableArrayList.size();
+                ostatok = needSumma % count;
+            }
             else
                 needSummaPerUser = 0;
-            for (int i=0; i<billAvailableArrayList.size(); i++)
-                billAvailableArrayList.get(i).need = needSummaPerUser;
+
+            for (int i=0; i<billAvailableArrayList.size(); i++) {
+                int correct = 0;
+                if (ostatok != 0) {
+                    ostatok--;
+                    correct = 1;
+                }
+                billAvailableArrayList.get(i).need = needSummaPerUser + correct;
+            }
         }
 
         notifyDataSetChanged();
         mFragmentAddBill.setNeedSumma(getNeedSumma());
         mFragmentAddBill.setLeftSumma(getInvestSumma());
+    }
+
+    public int getCountAvailable() {
+        return billAvailableArrayList.size();
     }
 
     @Override
@@ -175,7 +189,7 @@ public class AddBillListAdapter extends BaseAdapter {
     /*
     Считает сумму колонки Внес
      */
-    private int getInvestSumma() {
+    public int getInvestSumma() {
         int summa = 0;
         for (int i=0; i< billAvailableArrayList.size(); i++) {
             summa += billAvailableArrayList.get(i).invest;
@@ -186,7 +200,7 @@ public class AddBillListAdapter extends BaseAdapter {
     /*
     Считает сумму колонки Должен
      */
-    private int getNeedSumma() {
+    public int getNeedSumma() {
         int summa = 0;
         for (int i=0; i< billAvailableArrayList.size(); i++) {
             summa += billAvailableArrayList.get(i).need;

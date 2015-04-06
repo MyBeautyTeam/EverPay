@@ -55,7 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.insert(GroupDetails.GROUP_DETAILS_TABLE, null, cv);
             }
         }
-
+        /*
         cv = new ContentValues();
         for (int i=0; i<=10; i++) {
             cv.put(Bills.BILL_ID, i);
@@ -75,6 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.insert(BillDetails.BILL_DETAIL_TABLE, null, cv);
             }
         }
+        */
     }
 
     @Override

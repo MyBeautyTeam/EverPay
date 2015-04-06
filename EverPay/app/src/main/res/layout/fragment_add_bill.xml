@@ -9,13 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/add_bill_text"
+            android:id="@+id/add_bill_title"
             android:layout_width="match_parent"
             android:hint="Название счета"
             android:gravity="center"
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:maxLines="1"
+            android:maxLength="50"
             />
     </LinearLayout>
     <LinearLayout

@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Database;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -210,9 +211,6 @@ public class EverContentProvider extends ContentProvider {
                 return c;
             }
 
-
-
-
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
 
@@ -225,7 +223,21 @@ public class EverContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        return null;
+        String table;
+        switch (uriMatcher.match(uri)) {
+            case URI_BILLS:
+                table = Bills.BILLS_TABLE;
+                break;
+            case URI_BILL_DETAILS:
+                table = BillDetails.BILL_DETAIL_TABLE;
+                break;
+            default:
+                throw new IllegalArgumentException("Wrong URI: " + uri);
+        }
+        db = dbHelper.getWritableDatabase();
+        long rowID = db.insert(table, null, contentValues);
+        Uri resultUri = ContentUris.withAppendedId(uri, rowID);
+        return resultUri;
     }
 
     @Override

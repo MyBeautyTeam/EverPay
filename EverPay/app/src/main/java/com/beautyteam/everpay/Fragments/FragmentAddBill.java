@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,9 +26,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
+import com.beautyteam.everpay.Database.BillDetails;
+import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.DialogWindow;
@@ -56,6 +60,7 @@ public class FragmentAddBill extends Fragment implements
     private TextView leftSumma;
     private TextView eqText;
     private TextView notEqText;
+    private EditText titleEditText;
 
     private Animation alphaAppear;
     private Animation alphaDisappear;
@@ -90,6 +95,8 @@ public class FragmentAddBill extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
 
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
+
+        titleEditText = (EditText) view.findViewById(R.id.add_bill_title);
 
         groupId = getArguments().getInt(GROUP_ID);
 
@@ -270,8 +277,79 @@ public class FragmentAddBill extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_apply:
+                if (isCorrectData()) {
+                    insertToDB();
+                    Toast.makeText(getActivity(), "Счет был добавлен", Toast.LENGTH_SHORT).show();
+                    ((MainActivity)getActivity()).removeFragment();
+
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isCorrectData() {
+        if (titleEditText.getText().toString().length() < 6) {
+            Toast.makeText(getActivity(), "Слишком короткое название", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        int needSumma = mAdapter.getNeedSumma();
+        int investSumma = mAdapter.getInvestSumma();
+
+        if (needSumma != investSumma) {
+            Toast.makeText(getActivity(), "Сколько должны, столько и вносите!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (mAdapter.getCountAvailable() < 2) {
+            Toast.makeText(getActivity(), "Ха! Не маловато ли народу для счета?", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        /*
+        Может быть ситуация, когда все поля пустые, кроме одного. Отсекаем ее.
+        Проверяем количество ненулевых (и при этом неудаленных) элементов
+         */
+        int count = 0;
+        for (int i=0; i<billArrayList.size(); i++) {
+            if (! ((billArrayList.get(i).need == 0) && (billArrayList.get(i).invest == 0)))
+                count++;
+        }
+
+        if (count < 2) {
+            Toast.makeText(getActivity(), "Ха! Не маловато ли народу для счета?", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (needSumma == 0) {
+            Toast.makeText(getActivity(), "С нулевым долгом не принимаем!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private void insertToDB() {
+        ContentValues cv = new ContentValues();
+        cv.put(Bills.TITLE, titleEditText.getText().toString());
+        cv.put(Bills.GROUP_ID, groupId);
+        cv.put(Bills.USER_ID, 4);
+        Uri uri = getActivity().getContentResolver().insert(EverContentProvider.BILLS_CONTENT_URI, cv);
+        String tmpBill = uri.getLastPathSegment();
+
+        cv = new ContentValues();
+        cv.put(BillDetails.BILL_ID, tmpBill);
+        for (int i=0; i<billArrayList.size(); i++) {
+            BillListItem item = billArrayList.get(i);
+            if (!item.isRemoved && !((item.invest == 0) && (item.need == 0))) { // Если не удалено и одновременно не равны нулю
+                cv.put(BillDetails.USER_ID, billArrayList.get(i).id);
+                cv.put(BillDetails.INVEST_SUM, billArrayList.get(i).invest);
+                cv.put(BillDetails.DEBT_SUM, billArrayList.get(i).need);
+                uri = getActivity().getContentResolver().insert(EverContentProvider.BILL_DETAILS_CONTENT_URI, cv);
+            }
+        }
     }
 
     private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
