@@ -50,24 +50,34 @@ public class AddBillListNEWAdapter extends BaseAdapter {
     }
 
     public void refreshAvaliableList() {
-        billAvailableArrayList = new ArrayList<BillListItem>();
+        billAvailableArrayList = new ArrayList<BillListItem>(); // Собираем новый список доступных пользователей
         for (int i = 0; i < billFullArrayList.size(); i++) {
             if (!billFullArrayList.get(i).isRemoved)
                 billAvailableArrayList.add(billFullArrayList.get(i));
         }
-        if (billAvailableArrayList.size() == billFullArrayList.size()) {
+        if (billAvailableArrayList.size() == billFullArrayList.size()) { // Если хотя бы один удален - показываем кнопку "добавить участника"
             mFragmentAddBill.removeFooterBtn();
         } else {
             mFragmentAddBill.addFooterBtn();
         }
 
+        /*
+        Если ввод поля Должен доступен, то определяем дог каждого по общему
+         */
         if (mode == TEXT_VIEW_MODE) {
-            int needSummaPerUser = needSumma/billAvailableArrayList.size();
+            int needSummaPerUser;
+            int count = billAvailableArrayList.size();
+            if (count != 0) // чтобы избежать деления на ноль, когда всех пользователей удалили
+                needSummaPerUser = needSumma / billAvailableArrayList.size();
+            else
+                needSummaPerUser = 0;
             for (int i=0; i<billAvailableArrayList.size(); i++)
                 billAvailableArrayList.get(i).need = needSummaPerUser;
         }
 
         notifyDataSetChanged();
+        mFragmentAddBill.setNeedSumma(getNeedSumma());
+        mFragmentAddBill.setLeftSumma(getInvestSumma());
     }
 
     @Override
@@ -115,11 +125,22 @@ public class AddBillListNEWAdapter extends BaseAdapter {
 
         BillListItem billListItem = (BillListItem)getItem(position);
         viewHolder.name.setText(billListItem.name + "");
+
         viewHolder.textNeed.setText(billListItem.need + "");
 
-        viewHolder.put.setText(billListItem.invest + "");
-        viewHolder.editNeed.setText(billListItem.need + "");
+        if (billListItem.invest == 0)
+            viewHolder.put.setText("");
+        else
+            viewHolder.put.setText(billListItem.invest + "");
 
+        if (billListItem.need == 0)
+            viewHolder.editNeed.setText("");
+        else
+            viewHolder.editNeed.setText(billListItem.need + "");
+
+        /*
+        Удаляем элемент
+         */
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,6 +152,9 @@ public class AddBillListNEWAdapter extends BaseAdapter {
             }
         });
 
+        /*
+        В зависимости от мода прячем нужные вьюшки
+         */
         if (mode == TEXT_VIEW_MODE) {
             viewHolder.textNeed.setVisibility(View.VISIBLE);
             viewHolder.editNeed.setVisibility(View.GONE);
@@ -142,14 +166,28 @@ public class AddBillListNEWAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private int getLeftSumma() {
+    /*
+    Считает сумму колонки Внес
+     */
+    private int getInvestSumma() {
         int summa = 0;
         for (int i=0; i< billAvailableArrayList.size(); i++) {
             summa += billAvailableArrayList.get(i).invest;
         }
         return summa;
-
     }
+
+    /*
+    Считает сумму колонки Должен
+     */
+    private int getNeedSumma() {
+        int summa = 0;
+        for (int i=0; i< billAvailableArrayList.size(); i++) {
+            summa += billAvailableArrayList.get(i).need;
+        }
+        return summa;
+    }
+
 
 
     private static class ViewHolder {
@@ -161,15 +199,24 @@ public class AddBillListNEWAdapter extends BaseAdapter {
         int position;
     }
 
+    /*
+    Передаем адаптеру информацию о сумме "ДОЛЖНЫ" из фрагмента
+     */
     public void setNeedSumma(int summa) {
         needSumma = summa;
         refreshAvaliableList();
     }
 
+    /*
+    Устанавливает режим EditText или TextView
+     */
     public void setItemMode(int _mode) {
         mode = _mode;
     }
 
+    /*
+    Удивительный черный ящик-спаситель!
+     */
     private class GenericTextWatcher implements TextWatcher{
 
         private View view;
@@ -188,11 +235,13 @@ public class AddBillListNEWAdapter extends BaseAdapter {
             BillListItem billListItem = billAvailableArrayList.get(position);
             if (value.isEmpty()) billListItem.invest = 0;
             else billListItem.invest = Integer.parseInt(value);
-            mFragmentAddBill.setLeftSumma(getLeftSumma());
+            mFragmentAddBill.setLeftSumma(getInvestSumma());
         }
     }
 
-
+    /*
+    Удивительный черный ящик-спаситель!
+     */
     private class GenericTextWatcherNeed implements TextWatcher{
 
         private View view;
@@ -211,7 +260,7 @@ public class AddBillListNEWAdapter extends BaseAdapter {
             BillListItem billListItem = billAvailableArrayList.get(position);
             if (value.isEmpty()) billListItem.need = 0;
             else billListItem.need = Integer.parseInt(value);
-            //mFragmentAddBill.setLeftSumma(getLeftSumma());
+            mFragmentAddBill.setNeedSumma(getNeedSumma());
         }
     }
 }

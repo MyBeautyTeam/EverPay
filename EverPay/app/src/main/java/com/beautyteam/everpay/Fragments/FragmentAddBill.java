@@ -149,7 +149,7 @@ public class FragmentAddBill extends Fragment implements
     }
 
     public void setNeedSumma(int summa) {
-        needSummaEdit.setText(summa + "");
+        needSummaText.setText(summa + "");
     }
 
 
