@@ -91,34 +91,6 @@ public class AddBillListNEWAdapter extends BaseAdapter {
 
             viewHolder.put.addTextChangedListener(new GenericTextWatcher(viewHolder.put));
 
-/*            viewHolder.put.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    int newValue = 0;
-                    if (editable.toString().isEmpty()) {
-                        newValue = 0;
-                    } else {
-                        int firstVisible = ((ListView) parent).getFirstVisiblePosition();
-                        int lastVisiblePosition = ((ListView) parent).getLastVisiblePosition();
-                        if (( viewHolder.position >= firstVisible) && (viewHolder.position <= lastVisiblePosition)) {
-                            newValue = Integer.parseInt(editable.toString());
-                            BillListItem billListItem = (BillListItem) getItem(position);
-                            billListItem.invest = newValue;
-                        }
-                    }
-                    mFragmentAddBill.setLeftSumma(getLeftSumma());
-                }
-            });
-            */
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
             viewHolder.put.setId(position);
@@ -128,6 +100,14 @@ public class AddBillListNEWAdapter extends BaseAdapter {
         viewHolder.name.setText(billListItem.name + "");
         viewHolder.put.setText(myItems.get(position));
         viewHolder.textNeed.setText(needSumma);
+
+        viewHolder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                billAvailableArrayList.get(position).isRemoved = true;
+                refreshAvaliableList();
+            }
+        });
 
         if (mode == TEXT_VIEW_MODE) {
             viewHolder.textNeed.setVisibility(View.VISIBLE);
