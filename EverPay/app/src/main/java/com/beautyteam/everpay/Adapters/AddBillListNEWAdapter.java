@@ -9,20 +9,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Admin on 06.04.2015.
  */
 public class AddBillListNEWAdapter extends BaseAdapter {
 
-    private ArrayList<BillListItem> billArrayList;
+    private ArrayList<BillListItem> billFullArrayList;
+    private ArrayList<BillListItem> billAvailableArrayList;
     private Context context;
     private LayoutInflater inflater;
     private String needSumma = "0";
@@ -34,26 +35,38 @@ public class AddBillListNEWAdapter extends BaseAdapter {
 
     ArrayList<String> myItems = new ArrayList<String>();
 
-    public AddBillListNEWAdapter(Context _context, ArrayList<BillListItem> _billArrayList, FragmentAddBill fragmentAddBill) {
+    public AddBillListNEWAdapter(Context _context, ArrayList<BillListItem> billFullArrayList, FragmentAddBill fragmentAddBill) {
         context = _context;
-        billArrayList = _billArrayList;
+        this.billFullArrayList = billFullArrayList;
+
+        refreshAvaliableList();
+
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFragmentAddBill = fragmentAddBill;
 
-        for (int i = 0; i < billArrayList.size(); i++) {
+        for (int i = 0; i < billAvailableArrayList.size(); i++) {
             myItems.add(Integer.toString(0));
         }
 
     }
 
+    public void refreshAvaliableList() {
+        billAvailableArrayList = new ArrayList<BillListItem>();
+        for (int i = 0; i < billFullArrayList.size(); i++) {
+            if (!billFullArrayList.get(i).isRemoved)
+                billAvailableArrayList.add(billFullArrayList.get(i));
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return billArrayList.size();
+        return billAvailableArrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return billArrayList.get(position);
+        return billAvailableArrayList.get(position);
     }
 
     @Override
@@ -129,10 +142,11 @@ public class AddBillListNEWAdapter extends BaseAdapter {
 
     private int getLeftSumma() {
         int summa = 0;
-        for (int i=0; i<billArrayList.size(); i++) {
-            summa += billArrayList.get(i).invest;
+        for (int i=0; i< billAvailableArrayList.size(); i++) {
+            summa += billAvailableArrayList.get(i).invest;
         }
         return summa;
+
     }
 
 
@@ -167,7 +181,7 @@ public class AddBillListNEWAdapter extends BaseAdapter {
             final int position = view.getId();
             final EditText editText = (EditText) view;
             myItems.set(position, editText.getText().toString());
-            BillListItem billListItem = billArrayList.get(position);
+            BillListItem billListItem = billAvailableArrayList.get(position);
             billListItem.invest = Integer.parseInt(editText.getText().toString());
             mFragmentAddBill.setLeftSumma(getLeftSumma());
         }
