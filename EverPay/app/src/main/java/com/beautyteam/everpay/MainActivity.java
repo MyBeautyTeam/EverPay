@@ -213,4 +213,18 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         fTran.commit();
     }
 
+    public void removeFragment() {
+        FragmentTransaction fTran = fragmentManager.beginTransaction();
+        //fTran.remove(fragment);
+        fragmentManager.popBackStackImmediate();
+        fTran.commit();
+    }
+
+    public void addCoveredFragment(Fragment fragment) {
+        FragmentTransaction fTran = fragmentManager.beginTransaction();
+        fTran.replace(R.id.main_container, fragment);
+        fTran.addToBackStack(null);
+        fTran.commit();
+    }
+
 }

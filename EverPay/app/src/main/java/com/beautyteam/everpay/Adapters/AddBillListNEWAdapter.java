@@ -97,7 +97,7 @@ public class AddBillListNEWAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        final ViewHolder viewHolder;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.from(context).inflate(R.layout.item_add_bill, parent, false);
             viewHolder = new ViewHolder();

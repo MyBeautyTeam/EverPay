@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,7 @@ import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.DialogWindow;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
 
@@ -90,12 +92,12 @@ public class FragmentAddBill extends Fragment implements
 
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
 
-        footerBtn = (Button)inflater.inflate(R.layout.footer_btn, addBillList);
-
         groupId = getArguments().getInt(GROUP_ID);
 
         addBillList = (ListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+
+        footerBtn = (Button)inflater.inflate(R.layout.footer_btn, null);
 
         leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa_layout);
 
@@ -141,6 +143,13 @@ public class FragmentAddBill extends Fragment implements
         });
 
         initializeAnimate();
+
+        footerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getActivity()).addCoveredFragment(FragmentAddFriendToBill.getInstance(billArrayList));
+            }
+        });
 
     }
 
@@ -205,19 +214,22 @@ public class FragmentAddBill extends Fragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
             case LOADER_ID:
-                billArrayList = new ArrayList<BillListItem>();
-                int i=0;
-                if(c.moveToFirst() && c.getCount() != 0) {
-                    while(!c.isAfterLast()) {
-                        BillListItem billItem = new BillListItem();
-                        billItem.id = c.getString(c.getColumnIndex(Users.USER_ID_VK));
-                        billItem.name = c.getString(c.getColumnIndex(Users.NAME));
-                        billItem.need = 0;
-                        billItem.invest = 0;
-                        billItem.isRemoved = false;
-                        c.moveToNext();
-                        i++;
-                        billArrayList.add(billItem);
+                if (billArrayList == null) {
+                    billArrayList = new ArrayList<BillListItem>();
+                    int i = 0;
+                    if (c.moveToFirst() && c.getCount() != 0) {
+                        while (!c.isAfterLast()) {
+                            String id = c.getString(c.getColumnIndex(Users.USER_ID_VK));
+                            String name = c.getString(c.getColumnIndex(Users.NAME));
+                            String img = c.getString(c.getColumnIndex(Users.IMG));
+                            int need = 0;
+                            int invest = 0;
+                            boolean isRemoved = false;
+                            BillListItem billItem = new BillListItem(id, name, img, need, invest, isRemoved);
+                            c.moveToNext();
+                            i++;
+                            billArrayList.add(billItem);
+                        }
                     }
                 }
                 mAdapter = new AddBillListNEWAdapter(getActivity(), billArrayList, this);
@@ -331,6 +343,16 @@ public class FragmentAddBill extends Fragment implements
         @Override
         public void onAnimationRepeat(Animation animation) {
         }
+    }
+
+    public void onPause() {
+        super.onPause();
+        Log.d("FRAG", "onPasuse");
+    }
+
+    public void onResume() {
+        super.onResume();
+        Log.d("FRAG", "onRESUME");
     }
 
 }
