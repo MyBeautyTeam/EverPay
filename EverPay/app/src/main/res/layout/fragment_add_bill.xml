@@ -5,110 +5,132 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/add_bill_text"
-        android:layout_width="match_parent"
-        android:hint="Название счета"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:maxLines="1"
-        />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        >
-        <TextView
-            android:id="@+id/add_bill_equally_text"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/add_bill_text"
+            android:layout_width="match_parent"
+            android:hint="Название счета"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:maxLines="1"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1.8"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Поровну"
-            android:textSize="20dp"
-            android:textColor="@color/dark_primary"
-            android:gravity="right|center"
-            />
-        <LinearLayout
-            android:layout_weight="1.3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:gravity="center"
+            android:layout_weight="1"
             >
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/add_bill_switch"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/add_bill_equally_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="ПОРОВНУ"
+                android:textSize="18dp"
+                android:textColor="@color/dark_primary"
+                android:gravity="right|center"
+                />
+            <LinearLayout
+                android:layout_weight="1.3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/SwitchCompat"
+                android:gravity="center"
+                >
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/add_bill_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/SwitchCompat"
+                    />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/add_bill_not_equally_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="НЕ ПОРОВНУ"
+                android:gravity="left|center"
+                android:textSize="10dp"
                 />
         </LinearLayout>
-        <TextView
-            android:id="@+id/add_bill_not_equally_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Не поровну"
-            android:gravity="left|center"
-            android:textSize="12dp"
-            />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
+        <LinearLayout
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Нужно внести"
-            android:textSize="16dp"
-            />
-        <EditText
-            android:id="@+id/add_bill_need_summa"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
-            android:gravity="center"
-            android:textSize="16dp"
-            android:maxLines="1"
-            android:inputType="number"
-            />
-    </LinearLayout>
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Должны"
+                android:textSize="16dp"
+                />
 
-    <LinearLayout
-        android:id="@+id/add_bill_left_summa"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        >
-        <TextView
+            <TextView
+                android:id="@+id/add_bill_need_summa_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="16dp"
+                android:visibility="gone"
+                />
+
+            <EditText
+                android:id="@+id/add_bill_need_summa_edit"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:textSize="16dp"
+                android:maxLines="1"
+                android:inputType="number"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:id="@+id/add_bill_left_summa_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Осталось внести"
-            android:textSize="16dp"
-            />
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
-            android:gravity="center"
-            android:text="9942"
-            android:textSize="16dp"
-            android:textColor="@color/red_text"
-            />
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Внесли"
+                android:textSize="16dp"
+                />
+            <TextView
+                android:id="@+id/add_bill_left_summa"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="9942"
+                android:textSize="16dp"
+                android:textColor="@color/red_text"
+                />
+        </LinearLayout>
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -120,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_weight="1.2"
+            android:layout_weight="1.25"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </LinearLayout>
@@ -143,11 +165,13 @@
             android:textSize="14dp"
             />
         <LinearLayout
-            android:layout_weight="2"
+            android:layout_weight="2.1"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
     <ListView
+        android:layout_weight="1"
         android:id="@+id/add_bill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

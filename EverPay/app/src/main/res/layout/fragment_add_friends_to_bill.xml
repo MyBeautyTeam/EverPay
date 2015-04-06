@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@color/active_white"
+    >
+    <ListView
+        android:id="@+id/add_friends_to_bill_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:dividerHeight="16dp"
+        android:divider="@null"
+        android:paddingTop="8dp"
+    />
+</LinearLayout>

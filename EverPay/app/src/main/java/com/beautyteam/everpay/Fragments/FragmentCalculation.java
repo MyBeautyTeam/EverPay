@@ -17,7 +17,9 @@ import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.CalcListAdapter;
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
+import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.MyContentProvider;
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
 
 /**
@@ -52,16 +54,13 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private static final String[] PROJECTION = new String[] {
-            MyContentProvider.CONTACT_ID,
-            MyContentProvider.CONTACT_NAME,
-            MyContentProvider.CONTACT_EMAIL,
-            MyContentProvider.IMG_NAME,
-            MyContentProvider.STATE,
-            MyContentProvider.RESULT,
+            Users.USER_ID_VK,
+            Users.NAME,
+            Users.IMG
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), MyContentProvider.CONTACT_CONTENT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
+        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {

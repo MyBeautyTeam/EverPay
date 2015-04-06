@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.SlidingTabLayout;
 
@@ -23,7 +24,7 @@ import com.beautyteam.everpay.Views.SlidingTabLayout;
  */
 public class FragmentViewPager extends Fragment {
 
-    private FragmentActivity fragmentActivity;
+    private MainActivity mainActivity;
 
     public static FragmentViewPager getInstance() {
         FragmentViewPager fragmentViewPager = new FragmentViewPager();
@@ -42,7 +43,7 @@ public class FragmentViewPager extends Fragment {
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
 
-        PageAdapter pageAdapter = new PageAdapter(fragmentActivity.getSupportFragmentManager());
+        PageAdapter pageAdapter = new PageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
@@ -66,23 +67,19 @@ public class FragmentViewPager extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
-        fragmentActivity = (FragmentActivity) activity;
+        mainActivity = (MainActivity)activity;
         super.onAttach(activity);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.ok_btn, menu);
+        inflater.inflate(R.menu.empty, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 }

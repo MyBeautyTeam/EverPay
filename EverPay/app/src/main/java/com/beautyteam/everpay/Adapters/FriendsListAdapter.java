@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
 
 import java.util.Random;
@@ -43,7 +44,7 @@ public class FriendsListAdapter extends CursorAdapter implements StickyListHeade
         ViewHolder holder = (ViewHolder) view.getTag();
 
         //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
-        holder.firstName.setText("Танька Петрова");
+        holder.firstName.setText(cursor.getString(cursor.getColumnIndex(Users.NAME)));
        // holder.secondName.setText("Егор\nРакитянский");
         if ((new Random().nextInt() % 2) == 1) {
             holder.checkBox.setChecked(true);

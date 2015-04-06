@@ -12,13 +12,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <provider
-            android:authorities="com.beautyteam.everpay.AdressBook"
-            android:name=".Database.MyContentProvider"
+            android:authorities="com.beautyteam.everpay.EverpayDB"
+            android:name=".Database.EverContentProvider"
             android:exported="true">
         </provider>
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

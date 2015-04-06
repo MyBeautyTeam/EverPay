@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -19,7 +20,8 @@ import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.FriendsListAdapter;
 import com.beautyteam.everpay.Adapters.GroupsListAdapter;
-import com.beautyteam.everpay.Database.MyContentProvider;
+import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -70,16 +72,13 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     }
 
     private static final String[] PROJECTION = new String[] {
-            MyContentProvider.CONTACT_ID,
-            MyContentProvider.CONTACT_NAME,
-            MyContentProvider.CONTACT_EMAIL,
-            MyContentProvider.IMG_NAME,
-            MyContentProvider.STATE,
-            MyContentProvider.RESULT,
+            Users.USER_ID_VK,
+            Users.NAME,
+            Users.IMG
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), MyContentProvider.CONTACT_CONTENT_URI, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, null);
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
