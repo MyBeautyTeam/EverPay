@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -50,7 +51,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {//} implements MaterialTabListener {
 
 
-    String TITLES[] = {"Главная" ,"Группы", "Выход"};
+    String TITLES[] = {"Главная" ,"Группы", "Выход", "ТЕСТ"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
     //Similarly we Create a String Resource for the name and email in the header view
@@ -121,6 +122,9 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                             break;
                         case 2:
                             replaceAllFragment(FragmentCalculation.getInstance());
+                            break;
+                        case 3:
+                            replaceAllFragment(FragmentEmptyToDBTest.getInstance());
                             break;
                     }
                     return true;

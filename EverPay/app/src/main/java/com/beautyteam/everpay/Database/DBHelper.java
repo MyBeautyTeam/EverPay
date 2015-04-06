@@ -27,6 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(Groups.CREATE_TABLE);
         db.execSQL(GroupDetails.CREATE_TABLE);
         db.execSQL(Bills.CREATE_TABLE);
+        db.execSQL(BillDetails.CREATE_TABLE);
 
         Log.d("SQL", Users.CREATE_TABLE + "\n" + Groups.CREATE_TABLE + "\n" + GroupDetails.CREATE_TABLE + "\n");
 
@@ -64,7 +65,16 @@ public class DBHelper extends SQLiteOpenHelper {
             db.insert(Bills.BILLS_TABLE, null, cv);
         }
 
-
+        cv = new ContentValues();
+        for (int i=0; i<=10; i++) {
+            cv.put(BillDetails.BILL_ID, i);
+            for (int j=0; j<=10; j++) {
+                cv.put(BillDetails.USER_ID, j);
+                cv.put(BillDetails.DEBT_SUM, j);
+                cv.put(BillDetails.INVEST_SUM, j);
+                db.insert(BillDetails.BILL_DETAIL_TABLE, null, cv);
+            }
+        }
     }
 
     @Override

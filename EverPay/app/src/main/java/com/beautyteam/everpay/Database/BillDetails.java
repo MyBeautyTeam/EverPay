@@ -5,14 +5,14 @@ package com.beautyteam.everpay.Database;
  */
 public class BillDetails {
     // Таблица
-    static private final String BILL_DETAIL_TABLE = "bill_details";
+    static public final String BILL_DETAIL_TABLE = "bill_details";
 
     // Поля
-    static private final String ITEM_ID = "_id";
-    static private final String USER_ID = "user_id";
-    static private final String DEBT_SUM = "DEBT_SUM";
-    static private final String INVEST_SUM = "INVEST_SUM";
-    static private final String BILL_ID = "bill_id";
+    static public final String ITEM_ID = "_id";
+    static public final String USER_ID = "user_id";
+    static public final String DEBT_SUM = "debt_sum";
+    static public final String INVEST_SUM = "invest_sum";
+    static public final String BILL_ID = "bill_id";
 
     // Скрипт создания таблицы
     static public final String CREATE_TABLE = "create table " + BILL_DETAIL_TABLE + "("
