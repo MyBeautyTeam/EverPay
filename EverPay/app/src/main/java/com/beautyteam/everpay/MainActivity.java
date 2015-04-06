@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -41,7 +39,6 @@ import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
 
 import java.util.Iterator;
-import java.util.List;
 
 
 /**

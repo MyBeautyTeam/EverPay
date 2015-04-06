@@ -22,6 +22,8 @@ import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.R;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
 /**
  * Created by asus on 16.03.2015.
  */
@@ -30,7 +32,7 @@ import com.beautyteam.everpay.R;
 public class FragmentAddFriends extends Fragment implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     private Toolbar toolbar;
-    private ListView friendsList;
+    private StickyListHeadersListView friendsList;
     private Button addBtn;
     private Fragment self;
 
@@ -52,8 +54,7 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        friendsList = (ListView) view.findViewById(R.id.friends_list);
-
+        friendsList = (StickyListHeadersListView) view.findViewById(R.id.friends_list);
 
     }
 
@@ -84,6 +85,7 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOADER_ID:
+
                 mAdapter = new FriendsListAdapter(getActivity(), cursor, 0);
                 friendsList.setAdapter(mAdapter);
                 break;
