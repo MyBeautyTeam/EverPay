@@ -57,8 +57,8 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     //Similarly we Create a String Resource for the name and email in the header view
     //And we also create a int resource for profile picture in the header view
 
-    String NAME = "Egor Rakitsky";
-    String EMAIL = "Rakitsky@brazzers.com";
+    String NAME = "Alexander Gornii";
+    String EMAIL = "gornii@mail.ru";
     int PROFILE = R.drawable.avatar;
 
     private Toolbar toolbar;                              // Declaring the Toolbar Object

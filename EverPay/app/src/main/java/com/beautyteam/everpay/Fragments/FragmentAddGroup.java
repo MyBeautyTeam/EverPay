@@ -35,7 +35,7 @@ public class FragmentAddGroup extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          setHasOptionsMenu(true);
-        //   getLoaderManager().initLoader(LOADER_ID, null, this);
+        //   getLoaderManager().initLoader(LOADER_ID_I_DEBT, null, this);
         return inflater.inflate(R.layout.fragment_add_group, null);
     }
 

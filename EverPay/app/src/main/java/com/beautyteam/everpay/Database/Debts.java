@@ -1,0 +1,28 @@
+package com.beautyteam.everpay.Database;
+
+/**
+ * Created by Admin on 07.04.2015.
+ */
+public class Debts {
+    // Таблица
+    static public final String DEBTS_TABLE = "debts";
+
+    // Поля
+    static public final String ITEM_ID = "_id";
+    static public final String SUMMA = "summa";
+    static public final String USER_ID = "user_id";
+    static public final String USER_NAME = "user_name";
+    static public final String GROUP_TITLE = "group_title";
+    static public final String IS_I_DEBT = "is_i_debt";
+
+
+    // Скрипт создания таблицы
+    static public final String CREATE_TABLE = "create table " + DEBTS_TABLE + "("
+            + ITEM_ID + " integer primary key autoincrement, "
+            + USER_ID + " integer, "
+            + USER_NAME + " CHAR(70), "
+            + GROUP_TITLE + " CHAR(50), "
+            + SUMMA + " integer, "
+            + IS_I_DEBT + " integer "
+            + ")";
+}

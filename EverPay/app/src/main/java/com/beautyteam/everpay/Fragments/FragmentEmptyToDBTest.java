@@ -92,7 +92,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
-            case LOADER_ID:
+            case LOADER_ID_I_DEBT:
                 if (c.moveToFirst() && c.getCount() != 0) {
                     while (!c.isAfterLast()) {
                         String newText = textView.getText().toString()+"\n"+c.getString(c.getColumnIndex(Users.NAME));

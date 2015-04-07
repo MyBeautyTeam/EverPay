@@ -10,18 +10,17 @@
         android:layout_height="wrap_content"
         android:background="@drawable/oval_around_text"
         >
-    <TextView
-        android:id="@+id/tab_summa"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:fontFamily="sans-serif"
-        android:textColor="@color/dark_primary"
-        android:textStyle="bold"
-        android:text="1000"
-        />
+        <TextView
+            android:id="@+id/tab_summa"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/dark_primary"
+            android:textStyle="bold"
+            />
     </LinearLayout>
     <TextView
         android:id="@+id/tab_header"

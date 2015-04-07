@@ -10,6 +10,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
@@ -47,14 +48,26 @@ public class DebtorsListAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
-        holder.summa.setText("500");
-        holder.discript.setText("Танька Петрова, \"Вонючкин дом\" ");
-        String fileName = cursor.getString(cursor.getColumnIndex(Users.IMG)); // Возможно, в дальнейшем будет id
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                Constants.FILE_DIRECTORY + '/' + fileName;
+        holder.summa.setText(cursor.getString(cursor.getColumnIndex(Debts.SUMMA)));
 
-        File file = new File(filePath);
-        Picasso.with(context).load(file).resize(200, 200).centerInside().into(holder.avatar);
+        String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
+        String group = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
+
+        if (userName == null) {
+            holder.discript.setText(group);
+            Picasso.with(context).load(R.drawable.group_icon).resize(200, 200).centerInside().into(holder.avatar);
+        }
+        else {
+            holder.discript.setText(userName + ", " + group);
+            String fileName = cursor.getString(cursor.getColumnIndex(Debts.USER_ID)); // Возможно, в дальнейшем будет id
+            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                    Constants.FILE_DIRECTORY + '/' + fileName +
+                    ".png"; // !!!!!!!!!
+
+            File file = new File(filePath);
+            Picasso.with(context).load(file).resize(200, 200).centerInside().into(holder.avatar);
+        }
+
     }
 
     @Override

@@ -21,6 +21,9 @@ public class EverContentProvider extends ContentProvider {
 
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
+    public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
+
+
     public static final Uri GROUP_DETAILS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupDetails.GROUP_DETAILS_TABLE);
     public static final Uri BILLS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Bills.BILLS_TABLE);
     public static final Uri BILL_DETAILS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BillDetails.BILL_DETAIL_TABLE);
@@ -37,11 +40,13 @@ public class EverContentProvider extends ContentProvider {
     static final String GROUP_DETAILS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + GroupDetails.GROUP_DETAILS_TABLE;
 
     static final String BILLS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Bills.BILLS_TABLE;
-    static final String BILLS_CONTENT_ITEM_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Bills.BILLS_TABLE;
+    static final String BILLS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Bills.BILLS_TABLE;
 
     static final String BILL_DETAILS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + BillDetails.BILL_DETAIL_TABLE;
     static final String BILL_DETAILS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + BillDetails.BILL_DETAIL_TABLE;
 
+    static final String DEBTS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
+    static final String DEBTS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
 
 
     static final int URI_USERS = 1;
@@ -60,6 +65,10 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_BILL_DETAILS = 10;
     static final int URI_BILL_DETAILS_ID = 11;
     static final int URI_BILL_DETAILS_GET_BILL_DETAILS = 12;
+
+    static final int URI_DEBTS = 13;
+    static final int URI_DEBTS_ID = 14;
+    //static final int URI_DEBTS_SUMMA = 15;
 
     private static final UriMatcher uriMatcher;
     static {
@@ -80,6 +89,9 @@ public class EverContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, BillDetails.BILL_DETAIL_TABLE, URI_BILL_DETAILS);
         uriMatcher.addURI(AUTHORITY, BillDetails.BILL_DETAIL_TABLE+ "/#", URI_BILL_DETAILS_ID);
         uriMatcher.addURI(AUTHORITY, BillDetails.BILL_DETAIL_TABLE+ "/bill/#", URI_BILL_DETAILS_GET_BILL_DETAILS);
+
+        uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE, URI_DEBTS);
+        uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE+ "/#", URI_DEBTS_ID);
 
     }
 
@@ -126,6 +138,10 @@ public class EverContentProvider extends ContentProvider {
             case URI_BILL_DETAILS_GET_BILL_DETAILS:
                 return BILL_DETAILS_CONTENT_TYPE;
 
+            case URI_DEBTS:
+                return DEBTS_CONTENT_TYPE;
+            case URI_DEBTS_ID:
+                return DEBTS_CONTENT_ITEM_TYPE;
 
         }
         return null;
@@ -168,6 +184,7 @@ public class EverContentProvider extends ContentProvider {
             case URI_GROUP_DETAILS:
                 table = GroupDetails.GROUP_DETAILS_TABLE;
                 break;
+
             case URI_GROUP_DETAILS_ID: //!! ITEM в запросе или нет!?
                 id = uri.getLastPathSegment();
                 table = GroupDetails.GROUP_DETAILS_TABLE;
@@ -210,6 +227,19 @@ public class EverContentProvider extends ContentProvider {
                 Cursor c = db.rawQuery("select users._id as _id, users.user_name as user_name, users.img as img, bill_details.debt_sum as debt_sum, bill_details.invest_sum as invest_sum from users, bill_details where bill_details.user_id = users._id and bill_details.bill_id = " + id, null);
                 return c;
             }
+
+            case URI_DEBTS:
+                table = Debts.DEBTS_TABLE;
+                break;
+
+            case URI_DEBTS_ID:
+                id = uri.getLastPathSegment();
+                table = Debts.DEBTS_TABLE;
+                // добавляем ID к условию выборки
+                if (TextUtils.isEmpty(selection)) {
+                    selection = Debts.DEBTS_TABLE + " = " + id;
+                } else selection = selection + " AND " + Debts.DEBTS_TABLE + " = " + id;
+                break;
 
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
