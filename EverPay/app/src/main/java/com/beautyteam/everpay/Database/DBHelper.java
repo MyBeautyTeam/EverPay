@@ -73,10 +73,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
         // GroupDetails
-        cv = new ContentValues();
         for (int i=0; i <= 10; i++) {
+            cv = new ContentValues();
             cv.put(GroupDetails.GROUP_ID, i);
-            for (int j=0; j<25; j++) {
+            int length = new Random().nextInt(7)+4;
+            for (int j=0; j<length; j++) {
                 cv.put(GroupDetails.USER_ID, j%10);
                 db.insert(GroupDetails.GROUP_DETAILS_TABLE, null, cv);
             }
@@ -97,7 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv = new ContentValues();
         for (int i=0; i<=10; i++) {
             cv.put(BillDetails.BILL_ID, i);
-            for (int j=0; j<=10; j++) {
+            for (int j=0; j<=4; j++) {
                 cv.put(BillDetails.USER_ID, j);
                 cv.put(BillDetails.DEBT_SUM, j);
                 cv.put(BillDetails.INVEST_SUM, j);

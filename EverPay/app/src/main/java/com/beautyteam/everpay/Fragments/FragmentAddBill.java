@@ -297,6 +297,12 @@ public class FragmentAddBill extends Fragment implements
         int needSumma = mAdapter.getNeedSumma();
         int investSumma = mAdapter.getInvestSumma();
 
+
+        if (needSumma == 0) {
+            Toast.makeText(getActivity(), "С нулевым долгом не принимаем!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         if (needSumma != investSumma) {
             Toast.makeText(getActivity(), "Сколько должны, столько и вносите!", Toast.LENGTH_SHORT).show();
             return false;
@@ -319,11 +325,6 @@ public class FragmentAddBill extends Fragment implements
 
         if (count < 2) {
             Toast.makeText(getActivity(), "Ха! Не маловато ли народу для счета?", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (needSumma == 0) {
-            Toast.makeText(getActivity(), "С нулевым долгом не принимаем!", Toast.LENGTH_SHORT).show();
             return false;
         }
 
