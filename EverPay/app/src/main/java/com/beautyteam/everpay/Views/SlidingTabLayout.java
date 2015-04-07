@@ -4,6 +4,7 @@ package com.beautyteam.everpay.Views;
  * Created by Admin on 13.03.2015.
  */
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -264,22 +265,26 @@ public class SlidingTabLayout extends HorizontalScrollView {
        for (int i=0; i<tabViewArray.length; i++) {
            if (position != i) {
                View view = tabViewArray[i];
+
+               view.setBackgroundColor(getResources().getColor(R.color.dark_primary));
                TextView tabSumma = (TextView)view.findViewById(R.id.tab_summa);
-               tabSumma.setTextColor(getResources().getColor(R.color.inactive_blue));
+               tabSumma.setTextColor(getResources().getColor(R.color.dark_primary));
                tabSumma.setBackgroundDrawable(getResources().getDrawable(R.drawable.oval_around_text_inactive));
 
                TextView tabHeader = (TextView)view.findViewById(R.id.tab_header);
-               tabHeader.setTextColor(getResources().getColor(R.color.inactive_white));
+               tabHeader.setTextColor(getResources().getColor(R.color.active_white));
+
 
            } else {
                View view = tabViewArray[i];
 
+               view.setBackgroundColor(getResources().getColor(R.color.active_white));
                TextView tabSumma = (TextView)view.findViewById(R.id.tab_summa);
-               tabSumma.setTextColor(getResources().getColor(R.color.dark_primary));
+               tabSumma.setTextColor(getResources().getColor(R.color.active_white));
                tabSumma.setBackgroundDrawable(getResources().getDrawable(R.drawable.oval_around_text));
 
                TextView tabHeader = (TextView)view.findViewById(R.id.tab_header);
-               tabHeader.setTextColor(getResources().getColor(R.color.active_white));
+               tabHeader.setTextColor(getResources().getColor(R.color.dark_primary));
            }
        }
    }

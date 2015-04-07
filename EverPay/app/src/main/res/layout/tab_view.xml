@@ -30,7 +30,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:layout_gravity="center"
-        android:fontFamily="sans-serif-light"
+        android:fontFamily="bold"
         android:textColor="#FFFFFF"
         android:textSize="15dp"
     />
