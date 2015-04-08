@@ -52,6 +52,10 @@ public class CalcListAdapter extends CursorAdapter {
         c.moveToFirst();
     }
 
+    public HashMap<String, Integer> getMapIdToIsdeleted() {
+        return mapIdToIsdeleted;
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         View itemLayout = inflater.inflate(R.layout.item_calculation, viewGroup, false);

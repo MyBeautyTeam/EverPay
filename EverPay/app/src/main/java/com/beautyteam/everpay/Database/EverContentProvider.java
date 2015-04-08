@@ -101,9 +101,6 @@ public class EverContentProvider extends ContentProvider {
 
         uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE, URI_CALCULATION);
         uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE+ "/#", URI_CALCULATION);
-
-
-
     }
 
 
@@ -304,7 +301,20 @@ public class EverContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        return 0;
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
+        String table;
+        switch (uriMatcher.match(uri)) {
+            case URI_CALCULATION:
+                table = Calculation.CALCULATION_TABLE;
+                break;
+
+            default:
+                throw new IllegalArgumentException("Wrong URI: " + uri);
+        }
+
+        int cnt = db.update(table, values, selection, selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return cnt;
     }
 }
