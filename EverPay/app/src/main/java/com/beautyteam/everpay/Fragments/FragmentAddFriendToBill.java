@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.AddFriendsToBillAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -33,6 +34,12 @@ public class FragmentAddFriendToBill extends Fragment {
         fragmentAddFriendToBill.setArguments(arg);
 
         return fragmentAddFriendToBill;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_BILL);
     }
 
     @Override

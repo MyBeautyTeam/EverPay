@@ -207,6 +207,10 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         });
     }
 
+    public void setTitle(String title) {
+        this.toolbar.setTitle(title);
+    }
+
     public void replaceAllFragment(Fragment fragment) {
 
         for(int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {

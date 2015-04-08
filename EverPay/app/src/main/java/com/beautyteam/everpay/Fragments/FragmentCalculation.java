@@ -17,9 +17,11 @@ import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.CalcListAdapter;
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.Database.Users;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
 /**
@@ -87,6 +89,12 @@ public class FragmentCalculation extends Fragment implements
             case R.id.action_settings:
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
     }
 
 }

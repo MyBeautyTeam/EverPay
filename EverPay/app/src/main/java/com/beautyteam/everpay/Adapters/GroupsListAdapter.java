@@ -48,14 +48,16 @@ public class GroupsListAdapter  extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.discript.setText(cursor.getString(cursor.getColumnIndex(Groups.TITLE)));
+        final String groupTitle = cursor.getString(cursor.getColumnIndex(Groups.TITLE));
+        holder.discript.setText(groupTitle);
 
         final String id = cursor.getString(cursor.getColumnIndex(Groups.GROUP_ID));
+
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.addFragment(FragmentGroupDetails.getInstance(Integer.parseInt(id)));
+                mainActivity.addFragment(FragmentGroupDetails.getInstance(Integer.parseInt(id), groupTitle));
             }
         });
     }

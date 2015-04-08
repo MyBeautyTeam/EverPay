@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.Users;
@@ -119,6 +120,12 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mainActivity = (MainActivity)activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.GROUPS);
     }
 
 }

@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.BillDetails;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -426,12 +427,11 @@ public class FragmentAddBill extends Fragment implements
 
     public void onPause() {
         super.onPause();
-        Log.d("FRAG", "onPasuse");
     }
 
     public void onResume() {
         super.onResume();
-        Log.d("FRAG", "onRESUME");
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_BILL);
     }
 
 }

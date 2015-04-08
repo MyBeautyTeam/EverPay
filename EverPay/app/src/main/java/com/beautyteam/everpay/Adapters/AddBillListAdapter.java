@@ -101,6 +101,8 @@ public class AddBillListAdapter extends BaseAdapter {
         mFragmentAddBill.setLeftSumma(getInvestSumma());
     }
 
+
+
     public int getCountAvailable() {
         return billAvailableArrayList.size();
     }

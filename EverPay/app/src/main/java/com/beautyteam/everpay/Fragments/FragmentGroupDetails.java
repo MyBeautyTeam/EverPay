@@ -19,17 +19,20 @@ import java.security.acl.Group;
  */
 public class FragmentGroupDetails extends Fragment implements View.OnClickListener{
     private static final String GROUP_ID = "GROUP_ID";
+    private static final String GROUP_TITLE = "GROUP_TITLE";
 
     private Button addBillBtn;
     private TextView discriptGroup;
     private MainActivity mainActivity;
     private int groupId;
+    private String groupTitle;
 
-    public static FragmentGroupDetails getInstance(int groupId) {
+    public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
         FragmentGroupDetails fragmentGroupDetails = new FragmentGroupDetails();
 
         Bundle bundle = new Bundle();
         bundle.putInt(GROUP_ID, groupId);
+        bundle.putString(GROUP_TITLE, groupTitle);
         fragmentGroupDetails.setArguments(bundle);
 
         return fragmentGroupDetails;
@@ -45,6 +48,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle arg = getArguments();
         groupId = arg.getInt(GROUP_ID);
+        groupTitle = arg.getString(GROUP_TITLE);
         super.onViewCreated(view, savedInstanceState);
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
@@ -66,5 +70,11 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mainActivity = (MainActivity)activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setTitle(groupTitle);
     }
 }
