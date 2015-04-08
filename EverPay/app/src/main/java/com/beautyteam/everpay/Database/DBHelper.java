@@ -4,11 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
 import android.util.Log;
-
-import com.beautyteam.everpay.Adapters.GroupsListAdapter;
-import com.beautyteam.everpay.User;
 
 import java.util.Random;
 
@@ -108,19 +104,25 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         // Calculation
+        int calc_id = 0;
         for (int i=0; i<=10; i++) {
             cv = new ContentValues();
             cv.put(Calculation.GROUPS_ID, i);
             int count = new Random().nextInt(10) + 2;
             for (int j=1; j<=count; j++) {
-                cv.put(Calculation.ID_WHO, j);
-                cv.put(Calculation.NAME_WHO, "Name LastName" + j);
-                cv.put(Calculation.ID_WHOM, j);
-                cv.put(Calculation.NAME_WHOM, "Name LastName" + (j+10));
+                int who = new Random().nextInt(10) + 1;
+                cv.put(Calculation.WHO_ID, who);
+                cv.put(Calculation.NAME_WHO, "Name LastName" + who);
+
+                int whom = new Random().nextInt(10) + 1;
+                cv.put(Calculation.WHOM_ID, whom);
+                cv.put(Calculation.NAME_WHOM, "Name LastName" + whom);
 
                 cv.put(Calculation.SUMMA, new Random().nextInt(5000));
                 cv.put(Calculation.IS_DELETED, new Random().nextBoolean()? 1:0);
 
+                cv.put(Calculation.CALC_ID, calc_id);
+                calc_id++;
                 db.insert(Calculation.CALCULATION_TABLE, null, cv);
             }
         }

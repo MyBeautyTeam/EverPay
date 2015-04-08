@@ -60,11 +60,11 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private static final String[] PROJECTION = new String[] {
-            Calculation.ITEM_ID,
+            Calculation.CALC_ID,
             Calculation.GROUPS_ID,
-            Calculation.ID_WHO,
+            Calculation.WHO_ID,
             Calculation.NAME_WHO,
-            Calculation.ID_WHOM,
+            Calculation.WHOM_ID,
             Calculation.NAME_WHOM,
             Calculation.SUMMA,
             Calculation.IS_DELETED

@@ -60,6 +60,7 @@ public class AddBillListAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+
     public void refreshAvaliableList() {
         billAvailableArrayList = new ArrayList<BillListItem>(); // Собираем новый список доступных пользователей
         for (int i = 0; i < billFullArrayList.size(); i++) {
@@ -71,7 +72,6 @@ public class AddBillListAdapter extends BaseAdapter {
         } else {
             mFragmentAddBill.addFooterBtn();
         }
-
         /*
         Если ввод поля Должен доступен, то определяем дог каждого по общему
          */
