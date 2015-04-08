@@ -22,6 +22,7 @@ public class EverContentProvider extends ContentProvider {
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
+    public static final Uri CALCULATION_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Calculation.CALCULATION_TABLE);
 
 
     public static final Uri GROUP_DETAILS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupDetails.GROUP_DETAILS_TABLE);
@@ -48,6 +49,9 @@ public class EverContentProvider extends ContentProvider {
     static final String DEBTS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
     static final String DEBTS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
 
+    static final String CALCULATION_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Calculation.CALCULATION_TABLE;
+    static final String CALCULATION_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Calculation.CALCULATION_TABLE;
+
 
     static final int URI_USERS = 1;
     static final int URI_USERS_ID = 2;
@@ -68,7 +72,9 @@ public class EverContentProvider extends ContentProvider {
 
     static final int URI_DEBTS = 13;
     static final int URI_DEBTS_ID = 14;
-    //static final int URI_DEBTS_SUMMA = 15;
+
+    static final int URI_CALCULATION = 15;
+    static final int URI_CALCULATION_ID = 16;
 
     private static final UriMatcher uriMatcher;
     static {
@@ -92,6 +98,11 @@ public class EverContentProvider extends ContentProvider {
 
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE, URI_DEBTS);
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE+ "/#", URI_DEBTS_ID);
+
+        uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE, URI_CALCULATION);
+        uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE+ "/#", URI_CALCULATION);
+
+
 
     }
 
@@ -142,6 +153,11 @@ public class EverContentProvider extends ContentProvider {
                 return DEBTS_CONTENT_TYPE;
             case URI_DEBTS_ID:
                 return DEBTS_CONTENT_ITEM_TYPE;
+
+            case URI_CALCULATION:
+                return CALCULATION_CONTENT_TYPE;
+            case URI_CALCULATION_ID:
+                return CALCULATION_CONTENT_ITEM_TYPE;
 
         }
         return null;
@@ -239,6 +255,18 @@ public class EverContentProvider extends ContentProvider {
                 if (TextUtils.isEmpty(selection)) {
                     selection = Debts.DEBTS_TABLE + " = " + id;
                 } else selection = selection + " AND " + Debts.DEBTS_TABLE + " = " + id;
+                break;
+
+            case URI_CALCULATION:
+                table = Calculation.CALCULATION_TABLE;
+                break;
+            case URI_CALCULATION_ID:
+                id = uri.getLastPathSegment();
+                table = Calculation.CALCULATION_TABLE;
+                // добавляем ID к условию выборки
+                if (TextUtils.isEmpty(selection)) {
+                    selection = Calculation.CALCULATION_TABLE + " = " + id;
+                } else selection = selection + " AND " + Calculation.CALCULATION_TABLE + " = " + id;
                 break;
 
             default:

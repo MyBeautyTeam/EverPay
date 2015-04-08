@@ -28,18 +28,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(Users.CREATE_TABLE);
         db.execSQL(Groups.CREATE_TABLE);
         db.execSQL(Debts.CREATE_TABLE);
-
+        db.execSQL(Calculation.CREATE_TABLE);
         db.execSQL(GroupDetails.CREATE_TABLE);
         db.execSQL(Bills.CREATE_TABLE);
         db.execSQL(BillDetails.CREATE_TABLE);
 
-        Log.d("SQL", Users.CREATE_TABLE + "\n" + Groups.CREATE_TABLE + "\n" + GroupDetails.CREATE_TABLE + "\n");
+        String calc = Calculation.CREATE_TABLE;
 
+        Log.e("TABLE = ", Calculation.CREATE_TABLE);
         // Users
         ContentValues cv = new ContentValues();
         for (int i = 1; i <= 10; i++) {
             cv.put(Users.USER_ID_VK, i);
-            cv.put(Users.NAME, "name ololo " + i);
+            cv.put(Users.NAME, "Name LastName" + i);
             cv.put(Users.IMG, i + ".png");
             db.insert(Users.USERS_TABLE, null, cv);
         }
@@ -105,6 +106,25 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.insert(BillDetails.BILL_DETAIL_TABLE, null, cv);
             }
         }
+
+        // Calculation
+        for (int i=0; i<=10; i++) {
+            cv = new ContentValues();
+            cv.put(Calculation.GROUPS_ID, i);
+            int count = new Random().nextInt(10) + 2;
+            for (int j=1; j<=count; j++) {
+                cv.put(Calculation.ID_WHO, j);
+                cv.put(Calculation.NAME_WHO, "Name LastName" + j);
+                cv.put(Calculation.ID_WHOM, j);
+                cv.put(Calculation.NAME_WHOM, "Name LastName" + (j+10));
+
+                cv.put(Calculation.SUMMA, new Random().nextInt(5000));
+                cv.put(Calculation.IS_DELETED, new Random().nextBoolean()? 1:0);
+
+                db.insert(Calculation.CALCULATION_TABLE, null, cv);
+            }
+        }
+
 
     }
 

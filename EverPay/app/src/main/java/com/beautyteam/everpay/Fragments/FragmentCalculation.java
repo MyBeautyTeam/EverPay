@@ -16,11 +16,9 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.CalcListAdapter;
-import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
-import com.beautyteam.everpay.Database.MyContentProvider;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -35,9 +33,15 @@ public class FragmentCalculation extends Fragment implements
     private Button calcBtn;
 
     private CalcListAdapter mAdapter;
+    private static final String GROUP_ID = "GROUP_ID";
 
-    public static FragmentCalculation getInstance() {
+    public static FragmentCalculation getInstance(int groupId) {
         FragmentCalculation fragmentCalculation = new FragmentCalculation();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(GROUP_ID, groupId);
+        fragmentCalculation.setArguments(bundle);
+
         return fragmentCalculation;
     }
 
@@ -52,17 +56,23 @@ public class FragmentCalculation extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         calcList = (ListView) view.findViewById(R.id.calc_list);
-        calcBtn = (Button) view.findViewById(R.id.calc_btn);
+        calcBtn = (Button) view.findViewById(R.id.calc_ok_btn);
     }
 
     private static final String[] PROJECTION = new String[] {
-            Users.USER_ID_VK,
-            Users.NAME,
-            Users.IMG
+            Calculation.ITEM_ID,
+            Calculation.GROUPS_ID,
+            Calculation.ID_WHO,
+            Calculation.NAME_WHO,
+            Calculation.ID_WHOM,
+            Calculation.NAME_WHOM,
+            Calculation.SUMMA,
+            Calculation.IS_DELETED
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, /*SORT_ORDER*/null);
+        int groupId = getArguments().getInt(GROUP_ID);
+        return new CursorLoader(getActivity(), EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, Calculation.GROUPS_ID +" = " + groupId, null, /*SORT_ORDER*/null);
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {

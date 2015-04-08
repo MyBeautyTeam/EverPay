@@ -103,8 +103,9 @@ public class FragmentAddBill extends Fragment implements
 
         addBillList = (ListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-
         footerBtn = (Button)inflater.inflate(R.layout.footer_btn, null);
+        footerBtn.setVisibility(View.GONE);
+        addBillList.addFooterView(footerBtn);
 
         leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa_layout);
 
@@ -180,21 +181,6 @@ public class FragmentAddBill extends Fragment implements
 
 
     private void updateNeedListText(CharSequence charSequence) {
-        /*
-        String value = "";
-        try {
-            float summa = Float.parseFloat(charSequence.toString());
-            summa /= addBillList.getCount();
-            value = String.format("%.0f", summa);
-        } catch (NumberFormatException e) {
-            value = "0";
-        }
-
-        int first = addBillList.getFirstVisiblePosition();
-        int last = addBillList.getLastVisiblePosition();
-
-        mAdapter.setNeedSumma(value);
-        */
         String value = charSequence.toString();
         int summa;
         if (value.isEmpty()) summa = 0;
@@ -252,15 +238,11 @@ public class FragmentAddBill extends Fragment implements
     }
 
     public void addFooterBtn() {
-        if (addBillList.getFooterViewsCount() == 0) {
-            addBillList.addFooterView(footerBtn);
-        }
+        footerBtn.setVisibility(View.VISIBLE);
     }
 
     public void removeFooterBtn() {
-        if (addBillList.getFooterViewsCount() != 0) {
-            addBillList.removeFooterView(footerBtn);
-        }
+        footerBtn.setVisibility(View.GONE);
     }
 
 

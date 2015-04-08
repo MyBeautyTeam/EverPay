@@ -121,7 +121,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                             replaceAllFragment(FragmentGroups.getInstance());
                             break;
                         case 2:
-                            replaceAllFragment(FragmentCalculation.getInstance());
+                            finish();
                             break;
                         case 3:
                             replaceAllFragment(FragmentEmptyToDBTest.getInstance());
