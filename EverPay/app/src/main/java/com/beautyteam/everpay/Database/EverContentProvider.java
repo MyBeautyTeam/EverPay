@@ -23,11 +23,9 @@ public class EverContentProvider extends ContentProvider {
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
     public static final Uri CALCULATION_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Calculation.CALCULATION_TABLE);
+    public static final Uri GROUP_MEMBERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupMembers.GROUP_MEMBERS_TABLE);
 
-
-    public static final Uri GROUP_DETAILS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupDetails.GROUP_DETAILS_TABLE);
     public static final Uri BILLS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Bills.BILLS_TABLE);
-    public static final Uri BILL_DETAILS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BillDetails.BILL_DETAIL_TABLE);
 
 
 
@@ -37,14 +35,12 @@ public class EverContentProvider extends ContentProvider {
     static final String GROUPS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
     static final String GROUPS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
 
-    static final String GROUP_DETAILS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + GroupDetails.GROUP_DETAILS_TABLE;
-    static final String GROUP_DETAILS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + GroupDetails.GROUP_DETAILS_TABLE;
+    static final String GROUP_MEMBERS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + GroupMembers.GROUP_MEMBERS_TABLE;
+    static final String GROUP_MEMBERS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + GroupMembers.GROUP_MEMBERS_TABLE;
 
     static final String BILLS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Bills.BILLS_TABLE;
     static final String BILLS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Bills.BILLS_TABLE;
 
-    static final String BILL_DETAILS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + BillDetails.BILL_DETAIL_TABLE;
-    static final String BILL_DETAILS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + BillDetails.BILL_DETAIL_TABLE;
 
     static final String DEBTS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
     static final String DEBTS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
@@ -59,9 +55,9 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_GROUPS = 3;
     static final int URI_GROUPS_ID = 4;
 
-    static final int URI_GROUP_DETAILS = 5;
-    static final int URI_GROUP_DETAILS_ID = 6;
-    static final int URI_GROUP_DETAILS_GET_GROUP_USERS = 7;
+    static final int URI_GROUP_MEMBERS = 5;
+    static final int URI_GROUP_MEMBERS_ID = 6;
+    static final int URI_GROUP_MEMBERS_GET_GROUP_USERS = 7;
 
     static final int URI_BILLS = 8;
     static final int URI_BILLS_ID = 9;
@@ -85,16 +81,12 @@ public class EverContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, Groups.GROUPS_TABLE, URI_GROUPS);
         uriMatcher.addURI(AUTHORITY, Groups.CREATE_TABLE+ "/#", URI_GROUPS_ID);
 
-        uriMatcher.addURI(AUTHORITY, GroupDetails.GROUP_DETAILS_TABLE, URI_GROUP_DETAILS);
-        uriMatcher.addURI(AUTHORITY, GroupDetails.GROUP_DETAILS_TABLE+ "/#", URI_GROUP_DETAILS_ID);
-        uriMatcher.addURI(AUTHORITY, GroupDetails.GROUP_DETAILS_TABLE+ "/users/#", URI_GROUP_DETAILS_GET_GROUP_USERS);
+        uriMatcher.addURI(AUTHORITY, GroupMembers.GROUP_MEMBERS_TABLE, URI_GROUP_MEMBERS);
+        uriMatcher.addURI(AUTHORITY, GroupMembers.GROUP_MEMBERS_TABLE + "/#", URI_GROUP_MEMBERS_ID);
+        uriMatcher.addURI(AUTHORITY, GroupMembers.GROUP_MEMBERS_TABLE + "/users/#", URI_GROUP_MEMBERS_GET_GROUP_USERS);
 
         uriMatcher.addURI(AUTHORITY, Bills.BILLS_TABLE, URI_BILLS);
         uriMatcher.addURI(AUTHORITY, Bills.BILLS_TABLE+ "/#", URI_BILLS_ID);
-
-        uriMatcher.addURI(AUTHORITY, BillDetails.BILL_DETAIL_TABLE, URI_BILL_DETAILS);
-        uriMatcher.addURI(AUTHORITY, BillDetails.BILL_DETAIL_TABLE+ "/#", URI_BILL_DETAILS_ID);
-        uriMatcher.addURI(AUTHORITY, BillDetails.BILL_DETAIL_TABLE+ "/bill/#", URI_BILL_DETAILS_GET_BILL_DETAILS);
 
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE, URI_DEBTS);
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE+ "/#", URI_DEBTS_ID);
@@ -127,24 +119,17 @@ public class EverContentProvider extends ContentProvider {
             case URI_GROUPS_ID:
                 return GROUPS_CONTENT_ITEM_TYPE;
 
-            case URI_GROUP_DETAILS:
-                return GROUP_DETAILS_CONTENT_TYPE;
-            case URI_GROUP_DETAILS_ID:
-                return GROUP_DETAILS_CONTENT_ITEM_TYPE;
-            case URI_GROUP_DETAILS_GET_GROUP_USERS:
-                return GROUP_DETAILS_CONTENT_TYPE;
+            case URI_GROUP_MEMBERS:
+                return GROUP_MEMBERS_CONTENT_TYPE;
+            case URI_GROUP_MEMBERS_ID:
+                return GROUP_MEMBERS_CONTENT_ITEM_TYPE;
+            case URI_GROUP_MEMBERS_GET_GROUP_USERS:
+                return GROUP_MEMBERS_CONTENT_TYPE;
 
             case URI_BILLS:
                 return BILLS_CONTENT_TYPE;
             case URI_BILLS_ID:
                 return BILLS_CONTENT_ITEM_TYPE;
-
-            case URI_BILL_DETAILS:
-                return BILL_DETAILS_CONTENT_TYPE;
-            case URI_BILL_DETAILS_ID:
-                return BILL_DETAILS_CONTENT_ITEM_TYPE;
-            case URI_BILL_DETAILS_GET_BILL_DETAILS:
-                return BILL_DETAILS_CONTENT_TYPE;
 
             case URI_DEBTS:
                 return DEBTS_CONTENT_TYPE;
@@ -194,19 +179,19 @@ public class EverContentProvider extends ContentProvider {
                 break;
 
 
-            case URI_GROUP_DETAILS:
-                table = GroupDetails.GROUP_DETAILS_TABLE;
+            case URI_GROUP_MEMBERS:
+                table = GroupMembers.GROUP_MEMBERS_TABLE;
                 break;
 
-            case URI_GROUP_DETAILS_ID: //!! ITEM в запросе или нет!?
+            case URI_GROUP_MEMBERS_ID: //!! ITEM в запросе или нет!?
                 id = uri.getLastPathSegment();
-                table = GroupDetails.GROUP_DETAILS_TABLE;
+                table = GroupMembers.GROUP_MEMBERS_TABLE;
                 // добавляем ID к условию выборки
                 if (TextUtils.isEmpty(selection)) {
-                    selection = GroupDetails.ITEM_ID + " = " + id;
-                } else selection = selection + " AND " + GroupDetails.ITEM_ID + " = " + id;
+                    selection = GroupMembers.ITEM_ID + " = " + id;
+                } else selection = selection + " AND " + GroupMembers.ITEM_ID + " = " + id;
                 break;
-            case URI_GROUP_DETAILS_GET_GROUP_USERS: {
+            case URI_GROUP_MEMBERS_GET_GROUP_USERS: {
                 id = uri.getLastPathSegment();
                 Cursor c = db.rawQuery("select users._id as _id, users.user_name as user_name, users.img as img from users, group_details where group_details.user_id = users._id and group_details.group_id = " + id, null);
                 return c;
@@ -224,17 +209,6 @@ public class EverContentProvider extends ContentProvider {
                 } else selection = selection + " AND " + Bills.BILL_ID + " = " + id;
                 break;
 
-            case URI_BILL_DETAILS:
-                table = BillDetails.BILL_DETAIL_TABLE;
-                break;
-            case URI_BILL_DETAILS_ID:
-                id = uri.getLastPathSegment();
-                table = BillDetails.BILL_DETAIL_TABLE;
-                // добавляем ID к условию выборки
-                if (TextUtils.isEmpty(selection)) {
-                    selection = BillDetails.BILL_DETAIL_TABLE + " = " + id;
-                } else selection = selection + " AND " + BillDetails.BILL_DETAIL_TABLE + " = " + id;
-                break;
             case URI_BILL_DETAILS_GET_BILL_DETAILS: {
                 id = uri.getLastPathSegment();
                 Cursor c = db.rawQuery("select users._id as _id, users.user_name as user_name, users.img as img, bill_details.debt_sum as debt_sum, bill_details.invest_sum as invest_sum from users, bill_details where bill_details.user_id = users._id and bill_details.bill_id = " + id, null);
@@ -282,9 +256,6 @@ public class EverContentProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case URI_BILLS:
                 table = Bills.BILLS_TABLE;
-                break;
-            case URI_BILL_DETAILS:
-                table = BillDetails.BILL_DETAIL_TABLE;
                 break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);

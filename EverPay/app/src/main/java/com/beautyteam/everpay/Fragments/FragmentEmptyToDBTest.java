@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Database.BillDetails;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
@@ -53,8 +52,11 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
     private static final String[] PROJECTION = new String[] {
             Bills.BILL_ID,
             Bills.TITLE,
+            Bills.GROUP_ID,
             Bills.USER_ID,
-            Bills.GROUP_ID
+            Bills.USER_NAME,
+            Bills.INVEST_SUM,
+            Bills.NEED_SUM
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -66,7 +68,16 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             case LOADER_ID:
                 if (c.moveToFirst() && c.getCount() != 0) {
                     while (!c.isAfterLast()) {
-                        String newText = textView.getText().toString()+"\n"+c.getString(c.getColumnIndex(Bills.TITLE));
+                        String billId = c.getString(c.getColumnIndex(Bills.BILL_ID));
+                        String billTitle = c.getString(c.getColumnIndex(Bills.TITLE));
+                        String groupId = c.getString(c.getColumnIndex(Bills.GROUP_ID));
+                        String userId = c.getString(c.getColumnIndex(Bills.USER_ID));
+                        String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));
+                        String need = c.getString(c.getColumnIndex(Bills.NEED_SUM));
+                        String invest = c.getString(c.getColumnIndex(Bills.INVEST_SUM));
+
+                        String oldText = textView.getText().toString();
+                        String newText = oldText + "\n" + billId + "  " + billTitle + "  " + groupId + "  " + userId + "  " + userName + "   " + invest + "   " + need;
                         textView.setText(newText);
                         c.moveToNext();
                     }
@@ -80,7 +91,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
         Users.USER_ID_VK,
         Users.NAME,
         Users.IMG,
-        BillDetails.DEBT_SUM,
+        BillDetails.NEED_SUM,
         BillDetails.INVEST_SUM
     };
 

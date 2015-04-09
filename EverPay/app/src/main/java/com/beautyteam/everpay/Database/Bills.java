@@ -9,14 +9,18 @@ public class Bills {
     static public final String BILL_ID = "_id";
     static public final String TITLE = "title_id";
     static public final String USER_ID = "user_id";
+    static public final String USER_NAME = "user_name";
     static public final String GROUP_ID = "group_id";
+    static public final String NEED_SUM = "need";
+    static public final String INVEST_SUM = "invest";
 
     static public final String CREATE_TABLE = "create table " + BILLS_TABLE + "("
             + BILL_ID + " integer primary key autoincrement, "
             + TITLE + " CHAR(50),"
             + USER_ID + " integer, "
+            + USER_NAME + " char(70), "
             + GROUP_ID + " integer,"
-            + "FOREIGN KEY(" + USER_ID + ") REFERENCES " + Users.USERS_TABLE + "(" + Users.USER_ID_VK + ")"
-            + "FOREIGN KEY(" + GROUP_ID + ") REFERENCES " + Groups.GROUPS_TABLE + "(" + Groups.GROUP_ID + ")"
+            + NEED_SUM + " integer, "
+            + INVEST_SUM + " integer "
             + ")";
 }

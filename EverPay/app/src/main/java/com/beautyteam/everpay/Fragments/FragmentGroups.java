@@ -64,7 +64,8 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     private static final String[] PROJECTION = new String[] {
         Groups.GROUP_ID,
         Groups.TITLE,
-        Groups.USER_ID
+        Groups.UPDATE_TIME,
+        Groups.IS_CALCULATED
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

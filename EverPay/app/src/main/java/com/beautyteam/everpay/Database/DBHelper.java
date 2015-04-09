@@ -25,16 +25,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(Groups.CREATE_TABLE);
         db.execSQL(Debts.CREATE_TABLE);
         db.execSQL(Calculation.CREATE_TABLE);
-        db.execSQL(GroupDetails.CREATE_TABLE);
+        db.execSQL(GroupMembers.CREATE_TABLE);
         db.execSQL(Bills.CREATE_TABLE);
-        db.execSQL(BillDetails.CREATE_TABLE);
 
-        String calc = Calculation.CREATE_TABLE;
+        Log.e("SQL", Bills.CREATE_TABLE);
 
-        Log.e("TABLE = ", Calculation.CREATE_TABLE);
         // Users
-        ContentValues cv = new ContentValues();
+        ContentValues cv;
         for (int i = 1; i <= 10; i++) {
+            cv = new ContentValues();
             cv.put(Users.USER_ID_VK, i);
             cv.put(Users.NAME, "Name LastName" + i);
             cv.put(Users.IMG, i + ".png");
@@ -42,11 +41,11 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         // Groups
-        cv = new ContentValues();
         for (int i = 1; i <= 10; i++) {
+            cv = new ContentValues();
             cv.put(Groups.GROUP_ID, i);
             cv.put(Groups.TITLE, "group ololo " + i);
-            cv.put(Groups.USER_ID, i );
+            cv.put(Groups.IS_CALCULATED, new Random().nextBoolean() ? 1:0);
             db.insert(Groups.GROUPS_TABLE, null, cv);
         }
 
@@ -69,38 +68,32 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
 
-        // GroupDetails
+        // GroupMembers
         for (int i=0; i <= 10; i++) {
             cv = new ContentValues();
-            cv.put(GroupDetails.GROUP_ID, i);
+            cv.put(GroupMembers.GROUP_ID, i);
             int length = new Random().nextInt(7)+4;
-            for (int j=0; j<length; j++) {
-                cv.put(GroupDetails.USER_ID, j%10);
-                db.insert(GroupDetails.GROUP_DETAILS_TABLE, null, cv);
+            for (int j=1; j<length; j++) {
+                int id = j%10;
+                cv.put(GroupMembers.USER_ID, id);
+                cv.put(GroupMembers.USER_NAME, "Name LastName" + id);
+                db.insert(GroupMembers.GROUP_MEMBERS_TABLE, null, cv);
             }
         }
 
 
         // Bills
-        cv = new ContentValues();
-        for (int i=0; i<=10; i++) {
+        for (int i=1; i<=10; i++) {
+            cv = new ContentValues();
             cv.put(Bills.BILL_ID, i);
             cv.put(Bills.TITLE, "bill #" + i);
             cv.put(Bills.USER_ID, i);
+            cv.put(Bills.USER_NAME, "Name LastName" + i);
             cv.put(Bills.GROUP_ID, i);
+            int coef = new Random().nextInt(100);
+            cv.put(Bills.INVEST_SUM, i*coef);
+            cv.put(Bills.NEED_SUM, i*coef);
             db.insert(Bills.BILLS_TABLE, null, cv);
-        }
-
-        // BillDetails
-        cv = new ContentValues();
-        for (int i=0; i<=10; i++) {
-            cv.put(BillDetails.BILL_ID, i);
-            for (int j=0; j<=4; j++) {
-                cv.put(BillDetails.USER_ID, j);
-                cv.put(BillDetails.DEBT_SUM, j);
-                cv.put(BillDetails.INVEST_SUM, j);
-                db.insert(BillDetails.BILL_DETAIL_TABLE, null, cv);
-            }
         }
 
         // Calculation

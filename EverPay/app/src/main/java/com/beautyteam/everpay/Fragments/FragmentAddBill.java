@@ -2,7 +2,6 @@ package com.beautyteam.everpay.Fragments;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -11,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,10 +29,9 @@ import android.widget.Toast;
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.Database.BillDetails;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
-import com.beautyteam.everpay.Database.Users;
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
@@ -191,16 +188,15 @@ public class FragmentAddBill extends Fragment implements
 
 
     private static final String[] PROJECTION = new String[] {
-            Users.USER_ID_VK,
-            Users.NAME,
-            Users.IMG
+            GroupMembers.ITEM_ID,
+            GroupMembers.GROUP_ID,
+            GroupMembers.USER_ID,
+            GroupMembers.USER_NAME,
     };
 
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri uri= Uri.withAppendedPath(EverContentProvider.GROUP_DETAILS_CONTENT_URI, "users");
-        uri= Uri.withAppendedPath(uri, groupId+"");
-        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION, GroupMembers.GROUP_ID + "=" + groupId, null, null);
     }
 
 
@@ -212,9 +208,9 @@ public class FragmentAddBill extends Fragment implements
                     int i = 0;
                     if (c.moveToFirst() && c.getCount() != 0) {
                         while (!c.isAfterLast()) {
-                            String id = c.getString(c.getColumnIndex(Users.USER_ID_VK));
-                            String name = c.getString(c.getColumnIndex(Users.NAME));
-                            String img = c.getString(c.getColumnIndex(Users.IMG));
+                            String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                            String name = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
+                            String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID))  + ".png";
                             int need = 0;
                             int invest = 0;
                             boolean isRemoved = false;
@@ -317,21 +313,17 @@ public class FragmentAddBill extends Fragment implements
 
     private void insertToDB() {
         ContentValues cv = new ContentValues();
-        cv.put(Bills.TITLE, titleEditText.getText().toString());
+        cv.put(Bills.TITLE, titleEditText.getText().toString()); // Нужно ли заносить в базу???
         cv.put(Bills.GROUP_ID, groupId);
-        cv.put(Bills.USER_ID, 4);
-        Uri uri = getActivity().getContentResolver().insert(EverContentProvider.BILLS_CONTENT_URI, cv);
-        String tmpBill = uri.getLastPathSegment();
 
-        cv = new ContentValues();
-        cv.put(BillDetails.BILL_ID, tmpBill);
         for (int i=0; i<billArrayList.size(); i++) {
             BillListItem item = billArrayList.get(i);
             if (!item.isRemoved && !((item.invest == 0) && (item.need == 0))) { // Если не удалено и одновременно не равны нулю
-                cv.put(BillDetails.USER_ID, billArrayList.get(i).id);
-                cv.put(BillDetails.INVEST_SUM, billArrayList.get(i).invest);
-                cv.put(BillDetails.DEBT_SUM, billArrayList.get(i).need);
-                uri = getActivity().getContentResolver().insert(EverContentProvider.BILL_DETAILS_CONTENT_URI, cv);
+                cv.put(Bills.USER_ID, billArrayList.get(i).id);
+                cv.put(Bills.USER_NAME, billArrayList.get(i).name.replace("\n", " "));
+                cv.put(Bills.INVEST_SUM, billArrayList.get(i).invest);
+                cv.put(Bills.NEED_SUM, billArrayList.get(i).need);
+                getActivity().getContentResolver().insert(EverContentProvider.BILLS_CONTENT_URI, cv);
             }
         }
     }
