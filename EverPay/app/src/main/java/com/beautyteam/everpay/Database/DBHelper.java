@@ -30,9 +30,27 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d("SQL", Users.CREATE_TABLE + "\n" + Groups.CREATE_TABLE + "\n" + GroupDetails.CREATE_TABLE + "\n");
 
         ContentValues cv = new ContentValues();
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 5; i++) {
             cv.put(Users.USER_ID_VK, i);
-            cv.put(Users.NAME, "name ololo " + i);
+            cv.put(Users.NAME, "Lame ololo " + i);
+            cv.put(Users.IMG, i + ".png");
+            db.insert(Users.USERS_TABLE, null, cv);
+        }
+        for (int i = 6; i <= 10; i++) {
+            cv.put(Users.USER_ID_VK, i);
+            cv.put(Users.NAME, "Nlolo " + i);
+            cv.put(Users.IMG, i + ".png");
+            db.insert(Users.USERS_TABLE, null, cv);
+        }
+        for (int i = 11; i <= 15; i++) {
+            cv.put(Users.USER_ID_VK, i);
+            cv.put(Users.NAME, "Oolo " + i);
+            cv.put(Users.IMG, i + ".png");
+            db.insert(Users.USERS_TABLE, null, cv);
+        }
+        for (int i = 16; i <= 25; i++) {
+            cv.put(Users.USER_ID_VK, i);
+            cv.put(Users.NAME, "" + "PPPP " + i);
             cv.put(Users.IMG, i + ".png");
             db.insert(Users.USERS_TABLE, null, cv);
         }
