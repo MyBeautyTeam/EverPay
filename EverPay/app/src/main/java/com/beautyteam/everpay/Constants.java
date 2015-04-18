@@ -17,6 +17,16 @@ public class Constants {
         public final static String DOWNLOAD_IMG = "DOWNLOAD_IMG";
     }
 
+    public class Titles {
+        public final static String ADD_BILL = "Добавление счета";
+        public final static String FRIENDS = "Друзья";
+        public final static String ADD_GROUP = "Создание группы";
+        public final static String CALCULATION = "Расчет";
+        public final static String GROUPS = "Группы";
+
+
+    }
+
     public class State {
         public final static int IN_PROCESS = 1;
         public final static int ENDS = -1;

@@ -21,11 +21,12 @@ public class PageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return FragmentIDebt.getInstance();
+                return FragmentIDebt.getInstance(FragmentIDebt.LOADER_ID_I_DEBT);
             case 1:
-                return FragmentIDebt.getInstance();
+                return FragmentIDebt.getInstance(FragmentIDebt.LOADER_ID_DEBT_FOR_ME);
         }
-        return FragmentIDebt.getInstance();
+        // Не достижимо!
+        return FragmentIDebt.getInstance(FragmentIDebt.LOADER_ID_I_DEBT);
     }
 
     @Override

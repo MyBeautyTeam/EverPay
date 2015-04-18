@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -12,9 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.Views.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -55,6 +60,7 @@ public class AddBillListAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+
     public void refreshAvaliableList() {
         billAvailableArrayList = new ArrayList<BillListItem>(); // Собираем новый список доступных пользователей
         for (int i = 0; i < billFullArrayList.size(); i++) {
@@ -66,24 +72,39 @@ public class AddBillListAdapter extends BaseAdapter {
         } else {
             mFragmentAddBill.addFooterBtn();
         }
-
         /*
         Если ввод поля Должен доступен, то определяем дог каждого по общему
          */
         if (mode == TEXT_VIEW_MODE) {
             int needSummaPerUser;
             int count = billAvailableArrayList.size();
-            if (count != 0) // чтобы избежать деления на ноль, когда всех пользователей удалили
+            int ostatok = 0;
+            if (count != 0) { // чтобы избежать деления на ноль, когда всех пользователей удалили
                 needSummaPerUser = needSumma / billAvailableArrayList.size();
+                ostatok = needSumma % count;
+            }
             else
                 needSummaPerUser = 0;
-            for (int i=0; i<billAvailableArrayList.size(); i++)
-                billAvailableArrayList.get(i).need = needSummaPerUser;
+
+            for (int i=0; i<billAvailableArrayList.size(); i++) {
+                int correct = 0;
+                if (ostatok != 0) {
+                    ostatok--;
+                    correct = 1;
+                }
+                billAvailableArrayList.get(i).need = needSummaPerUser + correct;
+            }
         }
 
         notifyDataSetChanged();
         mFragmentAddBill.setNeedSumma(getNeedSumma());
         mFragmentAddBill.setLeftSumma(getInvestSumma());
+    }
+
+
+
+    public int getCountAvailable() {
+        return billAvailableArrayList.size();
     }
 
     @Override
@@ -108,6 +129,7 @@ public class AddBillListAdapter extends BaseAdapter {
             convertView = inflater.from(context).inflate(R.layout.item_add_bill, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.name = (TextView) convertView.findViewById(R.id.add_bill_list_name);
+            viewHolder.avatar = (RoundedImageView) convertView.findViewById(R.id.add_bill_item_avatar);
             viewHolder.textNeed = (TextView) convertView.findViewById(R.id.add_bill_list_need_text);
 
             viewHolder.editNeed = (EditText) convertView.findViewById(R.id.add_bill_list_need_edit);
@@ -169,13 +191,21 @@ public class AddBillListAdapter extends BaseAdapter {
             viewHolder.editNeed.setVisibility(View.VISIBLE);
         }
 
+        // АВАТАРКА
+        String fileName = billListItem.id; // Возможно, в дальнейшем будет id
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                Constants.FILE_DIRECTORY + '/' + fileName +
+                ".png"; // !!!!!!!!!
+        File file = new File(filePath);
+        Picasso.with(context).load(file).resize(200, 200).centerInside().into(viewHolder.avatar);
+
         return convertView;
     }
 
     /*
     Считает сумму колонки Внес
      */
-    private int getInvestSumma() {
+    public int getInvestSumma() {
         int summa = 0;
         for (int i=0; i< billAvailableArrayList.size(); i++) {
             summa += billAvailableArrayList.get(i).invest;
@@ -186,7 +216,7 @@ public class AddBillListAdapter extends BaseAdapter {
     /*
     Считает сумму колонки Должен
      */
-    private int getNeedSumma() {
+    public int getNeedSumma() {
         int summa = 0;
         for (int i=0; i< billAvailableArrayList.size(); i++) {
             summa += billAvailableArrayList.get(i).need;
@@ -202,6 +232,7 @@ public class AddBillListAdapter extends BaseAdapter {
         TextView textNeed;
         EditText put;
         ImageView remove;
+        RoundedImageView avatar;
         int position;
     }
 

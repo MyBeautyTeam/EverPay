@@ -17,6 +17,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -47,14 +48,14 @@ import java.util.Iterator;
 public class MainActivity extends ActionBarActivity {//} implements MaterialTabListener {
 
 
-    String TITLES[] = {"Главная" ,"Группы", "Выход"};
+    String TITLES[] = {"Главная" ,"Группы", "Выход", "ТЕСТ"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
     //Similarly we Create a String Resource for the name and email in the header view
     //And we also create a int resource for profile picture in the header view
 
-    String NAME = "Egor Rakitsky";
-    String EMAIL = "Rakitsky@brazzers.com";
+    String NAME = "Alexander Gornii";
+    String EMAIL = "gornii@mail.ru";
     int PROFILE = R.drawable.avatar;
 
     private Toolbar toolbar;                              // Declaring the Toolbar Object
@@ -117,7 +118,10 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                             replaceAllFragment(FragmentGroups.getInstance());
                             break;
                         case 2:
-                            replaceAllFragment(FragmentCalculation.getInstance());
+                            finish();
+                            break;
+                        case 3:
+                            replaceAllFragment(FragmentEmptyToDBTest.getInstance());
                             break;
                     }
                     return true;
@@ -198,6 +202,10 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                 Log.d("VkDemoApp", "onError: " + error);
             }
         });
+    }
+
+    public void setTitle(String title) {
+        this.toolbar.setTitle(title);
     }
 
     public void replaceAllFragment(Fragment fragment) {

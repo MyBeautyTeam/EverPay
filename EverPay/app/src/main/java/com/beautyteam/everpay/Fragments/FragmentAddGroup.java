@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import com.beautyteam.everpay.Adapters.AddGroupAdapter;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
@@ -86,5 +87,11 @@ public class FragmentAddGroup extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mainActivity = (MainActivity)activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_GROUP);
     }
 }

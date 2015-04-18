@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
-
 import com.beautyteam.everpay.Adapters.AddFriendsToGroupAdapter;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
@@ -73,6 +73,13 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.FRIENDS);
+    }
+
 
     private static final String[] PROJECTION = new String[] {
             Users.USER_ID_VK,

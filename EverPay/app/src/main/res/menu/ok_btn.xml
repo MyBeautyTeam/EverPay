@@ -6,7 +6,7 @@
         android:id="@+id/action_apply"
         android:orderInCategory="200"
         android:title="Готово"
-        android:icon="@drawable/ic_check_black_18dp"
+        android:icon="@drawable/ic_check_white_24dp"
         app:showAsAction="ifRoom">
     </item>
 </menu>

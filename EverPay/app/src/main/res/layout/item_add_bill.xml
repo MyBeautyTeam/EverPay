@@ -3,17 +3,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="16dp"
     >
-    <TextView
-        android:id="@+id/add_bill_list_name"
+    <LinearLayout
         android:layout_weight="1.25"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Костян Фетисов"
-        android:textSize="16dp"
-        android:gravity="center"
-        />
+        android:layout_height="match_parent">
+        <com.beautyteam.everpay.Views.RoundedImageView
+            android:id="@+id/add_bill_item_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            />
+        <TextView
+            android:id="@+id/add_bill_list_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Костян Фетисов"
+            android:textSize="16dp"
+            android:gravity="center"
+            />
+    </LinearLayout>
     <TextView
         android:id="@+id/add_bill_list_need_text"
         android:layout_weight="1.8"
@@ -34,6 +45,7 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLines="1"
+        android:maxLength="8"
         />
     <EditText
         android:id="@+id/add_bill_list_put"
@@ -44,6 +56,7 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLines="1"
+        android:maxLength="8"
         />
 
     <ImageView
