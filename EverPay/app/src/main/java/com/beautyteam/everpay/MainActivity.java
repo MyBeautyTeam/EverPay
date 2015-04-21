@@ -208,7 +208,6 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                         ContentValues wq = new ContentValues();
                         wq.put(Debts.SUMMA, new Random().nextInt(500));
                         wq.put(Debts.USER_ID, friends.id);
-                        wq.put(Debts.USER_IMG, friends.photo_100);
                         wq.put(Debts.USER_NAME, friends.last_name+ " " +friends.first_name);
                         wq.put(Debts.GROUP_TITLE, "МОЯ ГРУППА");
                         wq.put(Debts.IS_I_DEBT, new Random().nextBoolean()? 1:0);

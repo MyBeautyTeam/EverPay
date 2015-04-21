@@ -71,7 +71,7 @@ public class DebtorsListAdapter extends CursorAdapter {
                 VKList<VKApiUser> userList = (VKList<VKApiUser>) responses[0].parsedModel;
                 int count = userList.size();
                 for (int i=0; i<count; i++)
-                    mapIdToAvatar.put(userList.get(i).id + "", userList.get(i).photo_50);
+                    mapIdToAvatar.put(userList.get(i).id + "", userList.get(i).photo_100);
 
                 notifyDataSetChanged();
             }

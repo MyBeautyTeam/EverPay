@@ -71,7 +71,6 @@ public class DBHelper extends SQLiteOpenHelper {
             if (new Random().nextBoolean()) {
                 cv.put(Debts.USER_ID, i%10 + 1 );
                 cv.put(Debts.USER_NAME, "USER №" + i);
-                cv.put(Debts.USER_IMG, "http://antif.ru/uploads/posts/2009-07/1246421633_5.jpg");
             }
 
             cv.put(Debts.GROUP_TITLE, "group №" + i);
