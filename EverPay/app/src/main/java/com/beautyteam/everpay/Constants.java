@@ -41,7 +41,7 @@ public class Constants {
 
     public final static String LOG = "MyProgram";
 
-    public final static Uri CONTACT_URI = Uri.parse("content://com.beautyteam.everpay.AdressBook/contacts");
+
 
     public final static String FILE_DIRECTORY = "/.EverPay";
 
