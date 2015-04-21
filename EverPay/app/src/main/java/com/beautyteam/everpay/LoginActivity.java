@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,14 +44,17 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View view) {
                 VKSdk.authorize(sMyScope, true, false);
+                Log.d("vk", " click");
             }
         });
 
         if (VKSdk.wakeUpSession()) {
+            Log.d("vk", " wake up ");
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
             this.finish();
         } else {
+            Log.d("vk", " no wake up");
             loginButton.setVisibility(View.VISIBLE);
         }
     }
@@ -59,28 +63,33 @@ public class LoginActivity extends Activity {
     protected void onResume() {
         super.onResume();
         VKUIHelper.onResume(this);
+        Log.d("vk", " resume");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         VKUIHelper.onDestroy(this);
+        Log.d("vk", " destry");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         VKUIHelper.onActivityResult(requestCode, resultCode, data);
+        Log.d("vk", " onactivity result");
     }
 
     private VKSdkListener sdkListener = new VKSdkListener() {
         @Override
         public void onCaptchaError(VKError captchaError) {
             new VKCaptchaDialog(captchaError).show();
+            Log.d("vk", " oncaptcha");
         }
 
         @Override
         public void onTokenExpired(VKAccessToken expiredToken) {
             VKSdk.authorize(sMyScope);
+            Log.d("vk", " ontoken expired");
         }
 
         @Override
@@ -88,7 +97,7 @@ public class LoginActivity extends Activity {
             //new AlertDialog.Builder(LoginActivity.this)
             //        .setMessage("Необходимо авторизоваться")
             //        .show();
-
+            Log.d("vk", " ondenied");
 
         }
 
@@ -98,6 +107,7 @@ public class LoginActivity extends Activity {
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
             LoginActivity.this.finish();
+            Log.d("vk", " onreceive");
         }
 
         @Override
@@ -105,6 +115,7 @@ public class LoginActivity extends Activity {
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
             LoginActivity.this.finish();
+            Log.d("vk", " onaccept");
         }
     };
 }

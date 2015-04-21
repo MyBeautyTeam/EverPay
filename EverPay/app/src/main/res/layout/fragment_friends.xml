@@ -12,9 +12,10 @@
         android:dividerHeight="16dp"
         android:divider="@null"
         android:paddingTop="8dp"
+        android:fastScrollEnabled="true"
         />
     <Button
-        android:id="@+id/save_btn_group"
+        android:id="@+id/save_btn_friends_in_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="50dp"

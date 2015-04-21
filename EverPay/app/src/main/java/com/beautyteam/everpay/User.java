@@ -1,13 +1,16 @@
 package com.beautyteam.everpay;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by asus on 09.03.2015.
  */
-public class User {
-    private final int id;
-    private final String name;
-    private final String last_name;
-    private final String photo;
+public class User implements Parcelable {
+    private int id;
+    private String name;
+    private String last_name;
+    private String photo;
 
     public User(int id, String name, String last_name, String photo) {
         this.id = id;
@@ -29,4 +32,30 @@ public class User {
     public String getLast_name() {
         return last_name;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeString(last_name);
+        parcel.writeString(photo);
+
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source.readInt(), source.readString(), source.readString(), source.readString());
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }
