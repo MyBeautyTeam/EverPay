@@ -2,6 +2,7 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Path;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class DebtorsListAdapter extends CursorAdapter {
 
         String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
         String group = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
+        String img = cursor.getString(cursor.getColumnIndex(Debts.USER_IMG));
 
         if (userName == null) {
             holder.discript.setText(group);
@@ -59,13 +61,12 @@ public class DebtorsListAdapter extends CursorAdapter {
         }
         else {
             holder.discript.setText(userName + ", " + group);
-            String fileName = cursor.getString(cursor.getColumnIndex(Debts.USER_ID)); // Возможно, в дальнейшем будет id
+            /*String fileName = cursor.getString(cursor.getColumnIndex(Debts.USER_ID)); // Возможно, в дальнейшем будет id
             String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
                     Constants.FILE_DIRECTORY + '/' + fileName +
-                    ".png"; // !!!!!!!!!
+                    ".png"; // !!!!!!!!!*/
 
-            File file = new File(filePath);
-            Picasso.with(context).load(file).resize(200, 200).centerInside().into(holder.avatar);
+            Picasso.with(context).load(img).resize(200, 200).centerInside().into(holder.avatar);
         }
 
     }

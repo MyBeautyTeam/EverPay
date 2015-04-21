@@ -1,5 +1,6 @@
 package com.beautyteam.everpay;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.beautyteam.everpay.Database.Debts;
+import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.vk.sdk.api.VKApi;
@@ -40,6 +44,7 @@ import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
 
 import java.util.Iterator;
+import java.util.Random;
 
 
 /**
@@ -189,12 +194,29 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                 VKApiUserFull userFull = ((VKList<VKApiUserFull>) responses[0].parsedModel).get(0);
                 User user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
 
-                final List<User> users = new ArrayList<User>();
                 Log.d("vksdk", responses[1].parsedModel.toString());
                 VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
+
+                ContentValues cv = new ContentValues();
                 for (VKApiUserFull friends : usersArray) {
-                    users.add(new User(friends.id, friends.first_name, friends.last_name, friends.photo_100));
+                    cv.put(Users.USER_ID_VK, friends.id);
+                    cv.put(Users.NAME, friends.last_name+ " " +friends.first_name);
+                    cv.put(Users.IMG, friends.photo_100);
+                    getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
+
+                    if (new Random().nextFloat() > 0.95) {
+                        ContentValues wq = new ContentValues();
+                        wq.put(Debts.SUMMA, new Random().nextInt(500));
+                        wq.put(Debts.USER_ID, friends.id);
+                        wq.put(Debts.USER_IMG, friends.photo_100);
+                        wq.put(Debts.USER_NAME, friends.last_name+ " " +friends.first_name);
+                        wq.put(Debts.GROUP_TITLE, "МОЯ ГРУППА");
+                        wq.put(Debts.IS_I_DEBT, new Random().nextBoolean()? 1:0);
+                        getContentResolver().insert(EverContentProvider.DEBTS_CONTENT_URI, wq);
+                    }
                 }
+
+
             }
 
 

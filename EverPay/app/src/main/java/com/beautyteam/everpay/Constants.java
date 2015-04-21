@@ -41,8 +41,6 @@ public class Constants {
 
     public final static String LOG = "MyProgram";
 
-
-
     public final static String FILE_DIRECTORY = "/.EverPay";
 
     public final static String[] SCREEN_NAMES = {"Я должен", "Мне должны"};

@@ -12,6 +12,7 @@ public class Debts {
     static public final String SUMMA = "summa";
     static public final String USER_ID = "user_id";
     static public final String USER_NAME = "user_name";
+    static public final String USER_IMG = "user_img";
     static public final String GROUP_TITLE = "group_title";
     static public final String IS_I_DEBT = "is_i_debt";
 
@@ -21,6 +22,7 @@ public class Debts {
             + ITEM_ID + " integer primary key autoincrement, "
             + USER_ID + " integer, "
             + USER_NAME + " CHAR(70), "
+            + USER_IMG + " CHAR(70), "
             + GROUP_TITLE + " CHAR(50), "
             + SUMMA + " integer, "
             + IS_I_DEBT + " integer "

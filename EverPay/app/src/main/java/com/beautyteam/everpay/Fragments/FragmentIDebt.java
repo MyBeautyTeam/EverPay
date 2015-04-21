@@ -64,6 +64,7 @@ public class FragmentIDebt extends Fragment implements
         Debts.ITEM_ID,
         Debts.SUMMA,
         Debts.USER_ID,
+        Debts.USER_IMG,
         Debts.USER_NAME,
         Debts.GROUP_TITLE,
         Debts.IS_I_DEBT

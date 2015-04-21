@@ -88,7 +88,7 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, Users.NAME);
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {

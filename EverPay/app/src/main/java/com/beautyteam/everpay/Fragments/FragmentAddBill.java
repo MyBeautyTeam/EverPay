@@ -270,6 +270,7 @@ public class FragmentAddBill extends Fragment implements
     private boolean isCorrectData() {
         if (titleEditText.getText().toString().length() < 6) {
             Toast.makeText(getActivity(), "Слишком короткое название", Toast.LENGTH_SHORT).show();
+            titleEditText.requestFocus();
             return false;
         }
 
