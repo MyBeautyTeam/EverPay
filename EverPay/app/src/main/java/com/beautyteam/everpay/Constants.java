@@ -33,7 +33,7 @@ public class Constants {
 
     public class IntentParams {
         public final static String URL = "URL";
-        public final static String NAME = "NAME";
+        public final static String NAME = "USER_NAME";
     }
 
     public final static String RECEIVER = "RECEIVER";

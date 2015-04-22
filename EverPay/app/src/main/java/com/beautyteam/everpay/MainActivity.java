@@ -1,12 +1,12 @@
 package com.beautyteam.everpay;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,8 +22,8 @@ import android.view.View;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
-import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
+import com.beautyteam.everpay.Fragments.FragmentLoading;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKBatchRequest;
@@ -35,17 +35,12 @@ import com.vk.sdk.api.model.VKApiUserFull;
 import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.api.model.VKUsersArray;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
-import com.beautyteam.everpay.Adapters.PageAdapter;
-import com.beautyteam.everpay.Fragments.FragmentAddBill;
-import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
 
-import java.util.Iterator;
 import java.util.Random;
+
+import static android.content.SharedPreferences.*;
 
 
 /**
@@ -54,14 +49,17 @@ import java.util.Random;
 public class MainActivity extends ActionBarActivity {//} implements MaterialTabListener {
 
 
-    String TITLES[] = {"Главная" ,"Группы", "Выход", "ТЕСТ"};
+    String TITLES[] = {"Главная" ,"Группы", "Выход"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
     //Similarly we Create a String Resource for the name and email in the header view
     //And we also create a int resource for profile picture in the header view
 
-    String NAME = "Alexander Gornii";
-    String EMAIL = "gornii@mail.ru";
+    final String USER_NAME = "USER_NAME";
+    final String IMG_URL = "IMG_URL";
+    final String EMAIL = "Да прибудет с тобой сила";
+
+    User user;
     int PROFILE = R.drawable.avatar;
 
     private Toolbar toolbar;                              // Declaring the Toolbar Object
@@ -74,20 +72,34 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     ActionBarDrawerToggle mDrawerToggle;
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
+    private final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
+    private SharedPreferences sPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                //startLoading();
-            }
-        });
-        //setupViewPager(); // ViewPager
-        setupDrawer();
-        replaceFragment(FragmentViewPager.getInstance());
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        sPref = getPreferences(MODE_PRIVATE);
+        boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
+        if (isFirstLaunch) {
+
+            replaceFragment(new FragmentLoading());
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    startLoading();
+                }
+            });
+
+        } else {
+            setupDrawer();
+            replaceFragment(FragmentViewPager.getInstance());
+        }
 
     }
 
@@ -95,10 +107,9 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
         mRecyclerView.setHasFixedSize(true);                             // Letting the system know that the list objects are of fixed size
 
-        mAdapter = new DrawerAdapter(TITLES,ICONS,NAME,EMAIL,PROFILE);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+        mAdapter = new DrawerAdapter(this,TITLES,ICONS, sPref.getString(USER_NAME, "Ваше имя"),EMAIL, sPref.getString(IMG_URL, "http://cs9591.vk.me/v9591001/74/bGqB3eciXRc.jpg"));       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,header view name, header view email,
         // and header view profile picture
         mRecyclerView.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
@@ -131,11 +142,11 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                         case 2:
                             finish();
                             break;
-
+                        /*
                         case 3:
                             replaceAllFragment(FragmentEmptyToDBTest.getInstance());
                             break;
-
+                        */
                     }
                     return true;
                 }
@@ -195,8 +206,13 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                 super.onComplete(responses);
                 Log.d("VkDemoApp", "onComplete " + responses);
 
+
                 VKApiUserFull userFull = ((VKList<VKApiUserFull>) responses[0].parsedModel).get(0);
-                User user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
+                user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
+                Editor editor = sPref.edit();
+                editor.putString(USER_NAME, userFull.last_name + " " + userFull.first_name);
+                editor.putString(IMG_URL,userFull.photo_100);
+                editor.commit();
 
                 Log.d("vksdk", responses[1].parsedModel.toString());
                 VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
@@ -219,6 +235,11 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                     }
                 }
 
+                Editor edit = sPref.edit();
+                edit.putBoolean(IS_FIRST_LAUNCH, false);
+                edit.commit();
+                setupDrawer();
+                replaceFragment(FragmentViewPager.getInstance());
 
             }
 
