@@ -35,8 +35,11 @@ public class FragmentShowBill extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOADER_ID = 2;
-    private static final String BILL_ID = "ITEM_ID";
+    private static final String BILL_ID = "BILL_ID";
+    private static final String GROUP_ID = "GROUP_ID";
 
+    private int billId;
+    private int groupId;
 
     private TextView billTitleView;
     private SwitchCompat switchCompat;
@@ -47,10 +50,11 @@ public class FragmentShowBill extends Fragment implements
     private ListView billList;
     private DialogWindow dialogWindow;
 
-    public static FragmentShowBill getInstance(int billId) {
+    public static FragmentShowBill getInstance(int groupId, int billId) {
         FragmentShowBill fragmentShowBill = new FragmentShowBill();
 
         Bundle bundle = new Bundle();
+        bundle.putInt(GROUP_ID, groupId);
         bundle.putInt(BILL_ID, billId);
         fragmentShowBill.setArguments(bundle);
 
@@ -67,6 +71,9 @@ public class FragmentShowBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        billId = getArguments().getInt(BILL_ID);
+        groupId = getArguments().getInt(GROUP_ID);
 
         billTitleView = (TextView)view.findViewById(R.id.show_bill_title);
         eqText = (TextView) view.findViewById(R.id.show_bill_equally_text);
@@ -104,6 +111,7 @@ public class FragmentShowBill extends Fragment implements
 
     private static final String[] PROJECTION = new String[] {
         Bills.ITEM_ID,
+        Bills.BILL_ID,
         Bills.TITLE,
         Bills.USER_ID,
         Bills.USER_NAME,
@@ -167,6 +175,7 @@ public class FragmentShowBill extends Fragment implements
         switch (item.getItemId()) {
             case R.id.edit_bill:
 
+                ((MainActivity)getActivity()).replaceFragment(FragmentAddBill.getInstance(groupId, billId));
                 break;
 
             case R.id.remove_bill:
@@ -184,14 +193,13 @@ public class FragmentShowBill extends Fragment implements
             public void onClick(View view) {
                 dialogWindow.dismiss();
                 removeBill(getArguments().getInt(BILL_ID));
+                ((MainActivity)getActivity()).removeFragment();
             }
         });
     }
 
     private void removeBill(int billId) {
         //TODO удалить из БД billID
-
-        ((MainActivity)getActivity()).removeFragment();
     }
 
 }

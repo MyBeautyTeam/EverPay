@@ -74,7 +74,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                 mainActivity.addFragment(FragmentCalculation.getInstance(groupId));
                 break;
             case R.id.group_show_bill_btn:
-                mainActivity.addFragment(FragmentShowBill.getInstance(groupId)); // Потом заменить на номер счета!
+                mainActivity.addFragment(FragmentShowBill.getInstance(groupId, 2)); // Потом заменить на номер счета!
                 break;
         }
     }

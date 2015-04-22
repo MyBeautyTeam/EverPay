@@ -54,7 +54,7 @@ import java.util.Random;
 public class MainActivity extends ActionBarActivity {//} implements MaterialTabListener {
 
 
-    String TITLES[] = {"Главная" ,"Группы", "Выход"};
+    String TITLES[] = {"Главная" ,"Группы", "Выход", "ТЕСТ"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
     //Similarly we Create a String Resource for the name and email in the header view
@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-            //    startLoading();
+                //startLoading();
             }
         });
         //setupViewPager(); // ViewPager
@@ -131,11 +131,11 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                         case 2:
                             finish();
                             break;
-                        /*
+
                         case 3:
                             replaceAllFragment(FragmentEmptyToDBTest.getInstance());
                             break;
-                         */
+
                     }
                     return true;
                 }
@@ -174,10 +174,8 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     }
 
     public void replaceFragment(Fragment fragment) {
-        FragmentTransaction fTran = fragmentManager.beginTransaction();
-        //fTran.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
-        fTran.replace(R.id.main_container, fragment);
-        fTran.commit();
+        removeFragment();
+        addFragment(fragment);
     }
 
     public void addFragment(Fragment fragment) {

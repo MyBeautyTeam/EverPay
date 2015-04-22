@@ -104,12 +104,13 @@ public class DBHelper extends SQLiteOpenHelper {
             cv.put(Bills.BILL_ID, i);
             cv.put(Bills.TITLE, "bill #" + i);
             cv.put(Bills.GROUP_ID, i);
-            for (int j=0; j<new Random().nextInt(10)+1; j++) {
-                cv.put(Bills.USER_ID, i);
-                cv.put(Bills.USER_NAME, "Name LastName" + i);
+            int count = new Random().nextInt(10)+1;
+            for (int j=1; j<count; j++) {
+                cv.put(Bills.USER_ID, j);
+                cv.put(Bills.USER_NAME, "Name LastName" + j);
                 int coef = new Random().nextInt(100);
-                cv.put(Bills.INVEST_SUM, i * coef);
-                cv.put(Bills.NEED_SUM, i * coef);
+                cv.put(Bills.INVEST_SUM, j * coef);
+                cv.put(Bills.NEED_SUM, j * coef);
                 db.insert(Bills.BILLS_TABLE, null, cv);
             }
         }
