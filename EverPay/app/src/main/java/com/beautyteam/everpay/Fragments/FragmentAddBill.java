@@ -80,6 +80,8 @@ public class FragmentAddBill extends Fragment implements
         return fragmentAddBill;
     }
 
+    
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -227,11 +229,6 @@ public class FragmentAddBill extends Fragment implements
                 addBillList.setAdapter(mAdapter);
                 break;
         }
-    }
-
-    public void showDialog() {
-        DialogWindow dialogWindow = new DialogWindow(getActivity());
-        dialogWindow.show();
     }
 
     public void addFooterBtn() {

@@ -8,16 +8,22 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Adapters.ShowBillListAdapter;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.DialogWindow;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
 
@@ -31,6 +37,7 @@ public class FragmentShowBill extends Fragment implements
     private static final int LOADER_ID = 2;
     private static final String BILL_ID = "ITEM_ID";
 
+
     private TextView billTitleView;
     private SwitchCompat switchCompat;
     private TextView eqText;
@@ -38,6 +45,7 @@ public class FragmentShowBill extends Fragment implements
     private TextView needSumma;
     private ShowBillListAdapter mAdapter;
     private ListView billList;
+    private DialogWindow dialogWindow;
 
     public static FragmentShowBill getInstance(int billId) {
         FragmentShowBill fragmentShowBill = new FragmentShowBill();
@@ -59,8 +67,8 @@ public class FragmentShowBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        billTitleView = (TextView)view.findViewById(R.id.show_bill_title);
 
+        billTitleView = (TextView)view.findViewById(R.id.show_bill_title);
         eqText = (TextView) view.findViewById(R.id.show_bill_equally_text);
         notEqText = (TextView) view.findViewById(R.id.show_bill_not_equally_text);
 
@@ -70,6 +78,7 @@ public class FragmentShowBill extends Fragment implements
         needSumma = (TextView) view.findViewById(R.id.show_bill_need_summa_text);
 
         billList = (ListView) view.findViewById(R.id.show_bill_list);
+
     }
 
     private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
@@ -119,19 +128,19 @@ public class FragmentShowBill extends Fragment implements
 
                 int needOne = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
                 int needGeneral = 0;
-                boolean isEquals = true;
+                boolean isNotEquals = false;
                 if (c.moveToFirst() && c.getCount() != 0) {
                     while (!c.isAfterLast()) {
                         int curNeed = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
                         if (Math.abs(curNeed - needOne) > 1)
-                            isEquals = false;
+                            isNotEquals = true;
                         needOne = curNeed;
                         needGeneral += curNeed;
                         c.moveToNext();
                     }
                 }
 
-                switchCompat.setChecked(isEquals);
+                switchCompat.setChecked(isNotEquals);
                 needSumma.setText(needGeneral + "");
 
                 c.moveToFirst();
@@ -147,5 +156,42 @@ public class FragmentShowBill extends Fragment implements
         mAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.show_bill, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_bill:
+
+                break;
+
+            case R.id.remove_bill:
+                showDialog();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialog() {
+        dialogWindow = new DialogWindow(getActivity());
+        dialogWindow.show();
+        dialogWindow.setOnYesClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogWindow.dismiss();
+                removeBill(getArguments().getInt(BILL_ID));
+            }
+        });
+    }
+
+    private void removeBill(int billId) {
+        //TODO удалить из БД billID
+
+        ((MainActivity)getActivity()).removeFragment();
+    }
 
 }

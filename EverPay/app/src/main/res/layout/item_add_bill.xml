@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
     <LinearLayout
@@ -20,7 +21,7 @@
             android:id="@+id/add_bill_list_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Костян Фетисов"
+            android:text="Костян\nФетисов"
             android:textSize="16dp"
             android:gravity="center"
             />

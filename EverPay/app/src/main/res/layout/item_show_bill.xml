@@ -20,12 +20,13 @@
         <TextView
             android:id="@+id/show_bill_list_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Костян Фетисов"
+            android:layout_height="wrap_content"
+            android:text="Костян\nФетисов"
             android:textSize="16dp"
             android:gravity="center"
             />
     </LinearLayout>
+
     <TextView
         android:id="@+id/show_bill_list_need"
         android:layout_weight="1.8"
@@ -46,8 +47,5 @@
         android:textSize="16dp"
         android:text="0"
         />
-
-
-
 
 </LinearLayout>
