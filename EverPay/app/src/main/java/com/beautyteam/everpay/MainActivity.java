@@ -204,7 +204,7 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
                     cv.put(Users.IMG, friends.photo_100);
                     getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
 
-                    if (new Random().nextFloat() > 0.95) {
+                    if (new Random().nextFloat() > 0.98) {
                         ContentValues wq = new ContentValues();
                         wq.put(Debts.SUMMA, new Random().nextInt(500));
                         wq.put(Debts.USER_ID, friends.id);

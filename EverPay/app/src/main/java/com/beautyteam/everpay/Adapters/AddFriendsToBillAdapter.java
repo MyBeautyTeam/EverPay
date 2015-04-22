@@ -2,6 +2,7 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,19 @@ import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKBatchRequest;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Admin on 06.04.2015.
@@ -25,6 +36,7 @@ public class AddFriendsToBillAdapter extends BaseAdapter{
     private LayoutInflater inflater;
     private ArrayList<BillListItem> billFullArrayList;
     public ArrayList<BillListItem> billDeletedArrayList;
+    private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
 
     public AddFriendsToBillAdapter(Context _context, ArrayList<BillListItem> billFullArrayList) {
         this.context = _context;
@@ -34,6 +46,39 @@ public class AddFriendsToBillAdapter extends BaseAdapter{
             if (billFullArrayList.get(i).isRemoved)
                 billDeletedArrayList.add(billFullArrayList.get(i));
         }
+
+        loadAvatarsFromVK();
+    }
+
+    private void loadAvatarsFromVK() {
+        String usersId = "";
+        int count = billDeletedArrayList.size();
+        for (int i=0; i<count; i++) {
+            String id = billDeletedArrayList.get(i).id;
+            usersId += id + ",";
+        }
+
+        VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, usersId, VKApiConst.FIELDS, "photo_100"));
+        VKBatchRequest batch = new VKBatchRequest(request);
+
+        batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
+            @Override
+            public void onComplete(VKResponse[] responses) {
+                super.onComplete(responses);
+                VKList<VKApiUser> userList = (VKList<VKApiUser>) responses[0].parsedModel;
+                int count = userList.size();
+                for (int i=0; i<count; i++)
+                    mapIdToAvatar.put(userList.get(i).id + "", userList.get(i).photo_100);
+
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+                Log.d("VkDemoApp", "onError: " + error);
+            }
+        });
     }
 
 
@@ -66,11 +111,9 @@ public class AddFriendsToBillAdapter extends BaseAdapter{
         }
 
         viewHolder.name.setText(billDeletedArrayList.get(position).name);
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                Constants.FILE_DIRECTORY + '/' + billDeletedArrayList.get(position).img;
 
-        File file = new File(filePath);
-        Picasso.with(context).load(file).resize(200, 200).centerInside().into(viewHolder.avatar);
+        String avatarUrl = mapIdToAvatar.get(billDeletedArrayList.get(position).id);
+        Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(viewHolder.avatar);
 
         return convertView;
     }

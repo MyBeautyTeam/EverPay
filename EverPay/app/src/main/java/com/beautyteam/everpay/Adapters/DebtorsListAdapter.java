@@ -51,7 +51,11 @@ public class DebtorsListAdapter extends CursorAdapter {
     public DebtorsListAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loadAvatarsFromVK(c);
+    }
 
+
+    private void loadAvatarsFromVK(Cursor c) {
         String usersId = "";
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
@@ -61,6 +65,7 @@ public class DebtorsListAdapter extends CursorAdapter {
                 c.moveToNext();
             }
         }
+
         VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, usersId, VKApiConst.FIELDS, "photo_100"));
         VKBatchRequest batch = new VKBatchRequest(request);
 
@@ -82,7 +87,6 @@ public class DebtorsListAdapter extends CursorAdapter {
                 Log.d("VkDemoApp", "onError: " + error);
             }
         });
-
     }
 
     @Override
@@ -116,7 +120,7 @@ public class DebtorsListAdapter extends CursorAdapter {
             String id = cursor.getString(cursor.getColumnIndex(Debts.USER_ID));
             String img = mapIdToAvatar.get(id);
 
-            Picasso.with(context).load(img).resize(50,50).centerInside().into(holder.avatar);
+            Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
 
         }
     }
