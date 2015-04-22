@@ -24,7 +24,6 @@ public class Constants {
         public final static String CALCULATION = "Расчет";
         public final static String GROUPS = "Группы";
 
-
     }
 
     public class State {

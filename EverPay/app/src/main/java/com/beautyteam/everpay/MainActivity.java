@@ -2,6 +2,7 @@ package com.beautyteam.everpay;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -78,7 +79,12 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        startLoading();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+            //    startLoading();
+            }
+        });
         //setupViewPager(); // ViewPager
         setupDrawer();
         replaceFragment(FragmentViewPager.getInstance());

@@ -21,6 +21,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     private Button addBillBtn;
     private Button calcBtn;
+    private Button showBillBtn;
     private TextView discriptGroup;
     private MainActivity mainActivity;
     private int groupId;
@@ -49,11 +50,15 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
         super.onViewCreated(view, savedInstanceState);
+
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
 
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);
+
+        showBillBtn = (Button) view.findViewById(R.id.group_show_bill_btn);
+        showBillBtn.setOnClickListener(this);
 
         discriptGroup =(TextView) view.findViewById(R.id.group_discript);
         discriptGroup.setText(groupTitle);
@@ -67,6 +72,9 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                 break;
             case R.id.group_calc_btn:
                 mainActivity.addFragment(FragmentCalculation.getInstance(groupId));
+                break;
+            case R.id.group_show_bill_btn:
+                mainActivity.addFragment(FragmentShowBill.getInstance(groupId)); // Потом заменить на номер счета!
                 break;
         }
     }

@@ -38,6 +38,7 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Admin on 15.03.2015.
@@ -131,7 +132,6 @@ public class FragmentAddBill extends Fragment implements
         switchCompat.setOnCheckedChangeListener(new SwitchChangeListener());
 
         eqText = (TextView) view.findViewById(R.id.add_bill_equally_text);
-
         eqText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,11 +195,12 @@ public class FragmentAddBill extends Fragment implements
     };
 
 
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(), EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION, GroupMembers.GROUP_ID + "=" + groupId, null, null);
     }
 
-
+    @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
             case LOADER_ID:
@@ -313,9 +314,16 @@ public class FragmentAddBill extends Fragment implements
     }
 
     private void insertToDB() {
+
+        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String [] {"MAX("+Bills.BILL_ID+")"}, null, null, null);
+        maxCursor.moveToFirst();
+        int max = maxCursor.getInt(0);
+
         ContentValues cv = new ContentValues();
         cv.put(Bills.TITLE, titleEditText.getText().toString()); // Нужно ли заносить в базу???
         cv.put(Bills.GROUP_ID, groupId);
+        cv.put(Bills.BILL_ID, max+1);
+
 
         for (int i=0; i<billArrayList.size(); i++) {
             BillListItem item = billArrayList.get(i);
