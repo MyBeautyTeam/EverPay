@@ -7,19 +7,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/add_bill_title"
+        <TextView
+            android:id="@+id/show_bill_title"
+            android:text="Счет за что-нибудь"
             android:layout_width="match_parent"
-            android:hint="Название счета"
             android:gravity="center"
             android:layout_height="wrap_content"
             android:textSize="20dp"
+            android:layout_marginTop="16dp"
             android:maxLines="1"
-            android:maxLength="50"
             />
     </LinearLayout>
     <LinearLayout
-        android:layout_weight="1.8"
+        android:layout_weight="2.1"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -31,7 +31,7 @@
             android:layout_weight="1"
             >
             <TextView
-                android:id="@+id/add_bill_equally_text"
+                android:id="@+id/show_bill_equally_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -47,14 +47,15 @@
                 android:gravity="center"
                 >
                 <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/add_bill_switch"
+                    android:id="@+id/show_bill_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@style/SwitchCompat"
+                    android:enabled="false"
                     />
             </LinearLayout>
             <TextView
-                android:id="@+id/add_bill_not_equally_text"
+                android:id="@+id/show_bill_not_equally_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -68,84 +69,39 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-            <LinearLayout
-                android:layout_weight="1.2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Должны"
-                android:textSize="16dp"
-                />
-
-            <TextView
-                android:id="@+id/add_bill_need_summa_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="0"
-                android:textSize="16dp"
-                android:visibility="gone"
-                />
-
-            <EditText
-                android:id="@+id/add_bill_need_summa_edit"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:gravity="center"
-                android:textSize="16dp"
-                android:maxLines="1"
-                android:inputType="number"
-                android:maxLength="9"
-                />
-            <LinearLayout
-                android:layout_weight="1.2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="1"
-            android:id="@+id/add_bill_left_summa_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_weight="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Внесли"
+                android:text="Сумма счета"
                 android:textSize="16dp"
                 />
+
             <TextView
-                android:id="@+id/add_bill_left_summa"
-                android:layout_weight="1"
+                android:id="@+id/show_bill_need_summa_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="9942"
+                android:text="5000"
                 android:textSize="16dp"
-                android:textColor="@color/red_text"
                 />
+
             <LinearLayout
                 android:layout_weight="1.2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </LinearLayout>
+
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -180,19 +136,15 @@
             android:drawableBottom="@drawable/package_down"
             android:textSize="14dp"
             />
-        <LinearLayout
-            android:layout_weight="2.1"
-            android:layout_marginRight="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+
     </LinearLayout>
     <ListView
         android:layout_weight="1"
-        android:id="@+id/add_bill_list"
+        android:id="@+id/show_bill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        android:dividerHeight="7dp"
+        android:dividerHeight="10dp"
         >
     </ListView>
 

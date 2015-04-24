@@ -30,9 +30,12 @@ public class DialogWindow extends Dialog implements View.OnClickListener{
         no.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View view) {
         dismiss();
+    }
+
+    public void setOnYesClickListener(View.OnClickListener onClickListener) {
+        yes.setOnClickListener(onClickListener);
     }
 }

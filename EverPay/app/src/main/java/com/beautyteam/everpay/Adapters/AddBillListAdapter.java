@@ -1,9 +1,11 @@
 package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +16,24 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKBatchRequest;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Admin on 06.04.2015.
@@ -29,6 +42,7 @@ public class AddBillListAdapter extends BaseAdapter {
 
     private ArrayList<BillListItem> billFullArrayList;
     private ArrayList<BillListItem> billAvailableArrayList;
+    private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
     private Context context;
     private LayoutInflater inflater;
     private int needSumma = 0;
@@ -45,6 +59,9 @@ public class AddBillListAdapter extends BaseAdapter {
         context = _context;
         this.billFullArrayList = billFullArrayList;
         mFragmentAddBill = fragmentAddBill;
+
+        loadAvatarsFromVK();
+
         this.mode = mode;
         if (needEditValue.isEmpty())
             needSumma = 0;
@@ -99,6 +116,37 @@ public class AddBillListAdapter extends BaseAdapter {
         notifyDataSetChanged();
         mFragmentAddBill.setNeedSumma(getNeedSumma());
         mFragmentAddBill.setLeftSumma(getInvestSumma());
+    }
+
+    private void loadAvatarsFromVK() {
+        String usersId = "";
+        int count = billFullArrayList.size();
+        for (int i=0; i<count; i++) {
+            String id = billFullArrayList.get(i).id;
+            usersId += id + ",";
+        }
+
+        VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, usersId, VKApiConst.FIELDS, "photo_100"));
+        VKBatchRequest batch = new VKBatchRequest(request);
+
+        batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
+            @Override
+            public void onComplete(VKResponse[] responses) {
+                super.onComplete(responses);
+                VKList<VKApiUser> userList = (VKList<VKApiUser>) responses[0].parsedModel;
+                int count = userList.size();
+                for (int i=0; i<count; i++)
+                    mapIdToAvatar.put(userList.get(i).id + "", userList.get(i).photo_100);
+
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+                Log.d("VkDemoApp", "onError: " + error);
+            }
+        });
     }
 
 
@@ -192,12 +240,13 @@ public class AddBillListAdapter extends BaseAdapter {
         }
 
         // АВАТАРКА
-        String fileName = billListItem.id; // Возможно, в дальнейшем будет id
+        /*String fileName = billListItem.id; // Возможно, в дальнейшем будет id
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 Constants.FILE_DIRECTORY + '/' + fileName +
                 ".png"; // !!!!!!!!!
-        File file = new File(filePath);
-        Picasso.with(context).load(file).resize(200, 200).centerInside().into(viewHolder.avatar);
+        File file = new File(filePath);*/
+        String avatarUrl = mapIdToAvatar.get(billAvailableArrayList.get(position).id);
+        Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(viewHolder.avatar);
 
         return convertView;
     }
@@ -301,3 +350,4 @@ public class AddBillListAdapter extends BaseAdapter {
         }
     }
 }
+

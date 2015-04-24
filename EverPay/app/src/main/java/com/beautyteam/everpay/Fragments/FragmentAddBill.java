@@ -32,7 +32,6 @@ import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
-import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
@@ -46,7 +45,9 @@ public class FragmentAddBill extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String GROUP_ID = "GROUP_ID";
+    private static final String BILL_ID = "BILL_ID";
     private int groupId;
+    private int billId;
 
     private AddBillListAdapter mAdapter;
     private ListView addBillList;
@@ -67,8 +68,12 @@ public class FragmentAddBill extends Fragment implements
 
     private ArrayList<BillListItem> billArrayList;
 
-    private static final int LOADER_ID = 2;
+    private static final int LOADER_ADD = 2;
+    private static final int LOADER_EDIT = 3;
 
+    /*
+    Для добавления счета
+     */
     public static FragmentAddBill getInstance(int groupId) {
         FragmentAddBill fragmentAddBill = new FragmentAddBill();
 
@@ -79,11 +84,30 @@ public class FragmentAddBill extends Fragment implements
         return fragmentAddBill;
     }
 
+    /*
+    Для редактирования счета
+     */
+    public static FragmentAddBill getInstance(int groupId, int billId) {
+        FragmentAddBill fragmentAddBill = new FragmentAddBill();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(GROUP_ID, groupId);
+        bundle.putInt(BILL_ID, billId);
+        fragmentAddBill.setArguments(bundle);
+
+        return fragmentAddBill;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        billId = getArguments().getInt(BILL_ID, -1);
+        if (billId == -1)
+            getLoaderManager().initLoader(LOADER_ADD, null, this);
+        else
+            getLoaderManager().initLoader(LOADER_EDIT, null, this);
+
         return inflater.inflate(R.layout.fragment_add_bill, null);
     }
 
@@ -131,7 +155,6 @@ public class FragmentAddBill extends Fragment implements
         switchCompat.setOnCheckedChangeListener(new SwitchChangeListener());
 
         eqText = (TextView) view.findViewById(R.id.add_bill_equally_text);
-
         eqText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,50 +210,114 @@ public class FragmentAddBill extends Fragment implements
     }
 
 
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION_ADD = new String[] {
             GroupMembers.ITEM_ID,
             GroupMembers.GROUP_ID,
             GroupMembers.USER_ID,
             GroupMembers.USER_NAME,
     };
 
+    private static final String[] PROJECTION_EDIT = new String[] {
+            Bills.ITEM_ID,
+            Bills.TITLE,
+            Bills.USER_ID,
+            Bills.USER_NAME,
+            Bills.GROUP_ID,
+            Bills.NEED_SUM,
+            Bills.INVEST_SUM
+    };
 
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION, GroupMembers.GROUP_ID + "=" + groupId, null, null);
+        if (id == LOADER_ADD)
+            return new CursorLoader(getActivity(), EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" + groupId, null, null);
+        else
+            return new CursorLoader(getActivity(), EverContentProvider.BILLS_CONTENT_URI, PROJECTION_EDIT, Bills.BILL_ID + "=" + billId, null, null);
     }
 
-
+    @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
-            case LOADER_ID:
+            case LOADER_ADD: {
                 if (billArrayList == null) {
-                    billArrayList = new ArrayList<BillListItem>();
-                    int i = 0;
-                    if (c.moveToFirst() && c.getCount() != 0) {
-                        while (!c.isAfterLast()) {
-                            String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
-                            String name = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
-                            String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID))  + ".png";
-                            int need = 0;
-                            int invest = 0;
-                            boolean isRemoved = false;
-                            BillListItem billItem = new BillListItem(id, name, img, need, invest, isRemoved);
-                            c.moveToNext();
-                            i++;
-                            billArrayList.add(billItem);
-                        }
-                    }
+                    fillBillList(c);
                 }
                 int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
                 mAdapter = new AddBillListAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
                 addBillList.setAdapter(mAdapter);
                 break;
+            }
+
+            case LOADER_EDIT: {
+                if (billArrayList == null) {
+                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" + groupId, null, null);
+                    fillBillList(usersCursor);
+
+                    for (int i = 0; i < billArrayList.size(); i++) {
+                        billArrayList.get(i).isRemoved = true;
+                    }
+
+                    c.moveToFirst();
+                    int needPrev = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
+                    String billTitle = c.getString(c.getColumnIndex(Bills.TITLE));
+                    titleEditText.setText(billTitle);
+
+                    int generalSumm = 0;
+                    boolean isNotEquals = false;
+
+                    if (c.moveToFirst() && c.getCount() != 0) {
+                        while (!c.isAfterLast()) {
+
+                            int need = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
+                            int invest = c.getInt(c.getColumnIndex(Bills.INVEST_SUM));
+                            String id = c.getString(c.getColumnIndex(Bills.USER_ID));
+                            for (int i = 0; i < billArrayList.size(); i++) {
+                                if (billArrayList.get(i).id.equals(id)) {
+                                    billArrayList.get(i).need = need;
+                                    billArrayList.get(i).invest = invest;
+                                    billArrayList.get(i).isRemoved = false;
+                                }
+
+                            }
+                            if (Math.abs(need - needPrev) > 1)
+                                isNotEquals = true;
+                            generalSumm += need;
+
+                            c.moveToNext();
+
+                        }
+                    }
+
+                    leftSumma.setText(generalSumm + "");
+                    switchCompat.setChecked(isNotEquals);
+                }
+                int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
+                mAdapter = new AddBillListAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
+                addBillList.setAdapter(mAdapter);
+                break;
+            }
         }
     }
 
-    public void showDialog() {
-        DialogWindow dialogWindow = new DialogWindow(getActivity());
-        dialogWindow.show();
+
+    private void fillBillList(Cursor c) {
+        billArrayList = new ArrayList<BillListItem>();
+        int i = 0;
+        if (c.moveToFirst() && c.getCount() != 0) {
+            while (!c.isAfterLast()) {
+                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                String name = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
+                String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID)) + ".png";
+                int need = 0;
+                int invest = 0;
+                boolean isRemoved = false;
+                BillListItem billItem = new BillListItem(id, name, img, need, invest, isRemoved);
+                c.moveToNext();
+                i++;
+                billArrayList.add(billItem);
+            }
+        }
     }
 
     public void addFooterBtn() {
@@ -243,7 +330,6 @@ public class FragmentAddBill extends Fragment implements
 
 
     public void onLoaderReset(Loader<Cursor> loader) {
-        //mAdapter.swapCursor(null);
     }
 
     @Override
@@ -258,7 +344,10 @@ public class FragmentAddBill extends Fragment implements
             case R.id.action_apply:
                 if (isCorrectData()) {
                     insertToDB();
-                    Toast.makeText(getActivity(), "Счет был добавлен", Toast.LENGTH_SHORT).show();
+                    if (billId < 0)
+                        Toast.makeText(getActivity(), "Счет был добавлен", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getActivity(), "Счет был изменен", Toast.LENGTH_SHORT).show();
                     ((MainActivity)getActivity()).removeFragment();
 
                 }
@@ -270,6 +359,7 @@ public class FragmentAddBill extends Fragment implements
     private boolean isCorrectData() {
         if (titleEditText.getText().toString().length() < 6) {
             Toast.makeText(getActivity(), "Слишком короткое название", Toast.LENGTH_SHORT).show();
+            titleEditText.requestFocus();
             return false;
         }
 
@@ -312,9 +402,16 @@ public class FragmentAddBill extends Fragment implements
     }
 
     private void insertToDB() {
+
+        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String [] {"MAX("+Bills.BILL_ID+")"}, null, null, null);
+        maxCursor.moveToFirst();
+        int max = maxCursor.getInt(0);
+
         ContentValues cv = new ContentValues();
         cv.put(Bills.TITLE, titleEditText.getText().toString()); // Нужно ли заносить в базу???
         cv.put(Bills.GROUP_ID, groupId);
+        cv.put(Bills.BILL_ID, max+1);
+
 
         for (int i=0; i<billArrayList.size(); i++) {
             BillListItem item = billArrayList.get(i);
@@ -361,13 +458,17 @@ public class FragmentAddBill extends Fragment implements
         }
 
         private void hideListTextViews() {
-            mAdapter.setItemMode(AddBillListAdapter.EDIT_TEXT_MODE);
-            mAdapter.refreshAvaliableList();
+            if (mAdapter != null) {
+                mAdapter.setItemMode(AddBillListAdapter.EDIT_TEXT_MODE);
+                mAdapter.refreshAvaliableList();
+            }
         }
 
         private void hideListEditTextViews() {
-            mAdapter.setItemMode(AddBillListAdapter.TEXT_VIEW_MODE);
-            mAdapter.refreshAvaliableList();
+            if (mAdapter != null) {
+                mAdapter.setItemMode(AddBillListAdapter.TEXT_VIEW_MODE);
+                mAdapter.refreshAvaliableList();
+            }
         }
     }
 

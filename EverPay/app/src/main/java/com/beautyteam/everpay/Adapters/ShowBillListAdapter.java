@@ -1,26 +1,19 @@
 package com.beautyteam.everpay.Adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Path;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.Database.Debts;
-import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.GroupMembers;
-import com.beautyteam.everpay.Database.MyContentProvider;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
-import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
@@ -31,27 +24,24 @@ import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
-import com.vk.sdk.api.model.VKApiUserFull;
 import com.vk.sdk.api.model.VKList;
-import com.vk.sdk.api.model.VKUsersArray;
 
-import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
 
 /**
- * Created by Admin on 10.03.2015.
+ * Created by Admin on 22.04.2015.
  */
-public class DebtorsListAdapter extends CursorAdapter {
+public class ShowBillListAdapter extends CursorAdapter {
 
     private final LayoutInflater inflater;
+    private Context context;
+    private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
 
-    HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
-
-    public DebtorsListAdapter(Context context, final Cursor c, int flags) {
+    public ShowBillListAdapter(Context context, final Cursor c, int flags) {
         super(context, c, flags);
+        this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -59,7 +49,6 @@ public class DebtorsListAdapter extends CursorAdapter {
             }
         });
     }
-
 
     private void loadAvatarsFromVK(Cursor c) {
         String usersId = "";
@@ -97,51 +86,40 @@ public class DebtorsListAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View itemLayout = inflater.inflate(R.layout.item_debtors, viewGroup, false);
+        View itemLayout = inflater.inflate(R.layout.item_show_bill, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.summa = (TextView) itemLayout.findViewById(R.id.debtors_list_item_summa);
-        holder.discript = (TextView) itemLayout.findViewById(R.id.debtors_list_item_discript);
-        holder.avatar = (RoundedImageView) itemLayout.findViewById(R.id.debtors_list_item_avatar);
+
+        holder.name = (TextView) itemLayout.findViewById(R.id.show_bill_list_name);
+        holder.need = (TextView) itemLayout.findViewById(R.id.show_bill_list_need);
+        holder.invest = (TextView) itemLayout.findViewById(R.id.show_bill_list_invest);
+        holder.avatar = (RoundedImageView) itemLayout.findViewById(R.id.show_bill_item_avatar);
+
         itemLayout.setTag(holder);
         return itemLayout;
     }
 
-
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
-        final ViewHolder holder = (ViewHolder) view.getTag();
+    public void bindView(View view, Context context, Cursor cursor) {
+        ViewHolder holder = (ViewHolder) view.getTag();
 
-        //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
-        holder.summa.setText(cursor.getString(cursor.getColumnIndex(Debts.SUMMA)));
+        String userName = cursor.getString(cursor.getColumnIndex(Bills.USER_NAME));
+        userName = userName.replace(" ", "\n");
+        holder.name.setText(userName);
+        holder.need.setText(cursor.getString(cursor.getColumnIndex(Bills.NEED_SUM)));
+        holder.invest.setText(cursor.getString(cursor.getColumnIndex(Bills.INVEST_SUM)));
 
-        String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
-        String group = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
-
-        if (userName == null) {
-            holder.discript.setText(group);
-            Picasso.with(context).load(R.drawable.group_icon).resize(200, 200).centerInside().into(holder.avatar);
-        }
-        else {
-            holder.discript.setText(userName + ", " + group);
-            String id = cursor.getString(cursor.getColumnIndex(Debts.USER_ID));
-            String img = mapIdToAvatar.get(id);
-
-            Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
-
-        }
-    }
+        String userId = cursor.getString(cursor.getColumnIndex(Bills.USER_ID));
+        String img = mapIdToAvatar.get(userId);
+        Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
 
 
-
-    @Override
-    public int getCount() {
-        return getCursor() == null ? 0 : super.getCount();
     }
 
     private static class ViewHolder {
-        TextView summa;
-        TextView discript;
+        TextView name;
+        TextView need;
+        TextView invest;
         RoundedImageView avatar;
     }
-}
 
+}

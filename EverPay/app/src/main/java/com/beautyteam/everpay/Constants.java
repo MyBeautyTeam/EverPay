@@ -24,7 +24,6 @@ public class Constants {
         public final static String CALCULATION = "Расчет";
         public final static String GROUPS = "Группы";
 
-
     }
 
     public class State {
@@ -34,14 +33,12 @@ public class Constants {
 
     public class IntentParams {
         public final static String URL = "URL";
-        public final static String NAME = "NAME";
+        public final static String NAME = "USER_NAME";
     }
 
     public final static String RECEIVER = "RECEIVER";
 
     public final static String LOG = "MyProgram";
-
-    public final static Uri CONTACT_URI = Uri.parse("content://com.beautyteam.everpay.AdressBook/contacts");
 
     public final static String FILE_DIRECTORY = "/.EverPay";
 

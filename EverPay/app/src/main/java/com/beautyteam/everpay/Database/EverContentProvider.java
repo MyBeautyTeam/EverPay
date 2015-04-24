@@ -140,8 +140,11 @@ public class EverContentProvider extends ContentProvider {
             case URI_BILLS:
                 table = Bills.BILLS_TABLE;
                 break;
-            case URI_GROUP_MEMBERS:
-                table = GroupMembers.GROUP_MEMBERS_TABLE;
+            case URI_USERS:
+                table = Users.USERS_TABLE;
+                break;
+            case URI_DEBTS:
+                table = Debts.DEBTS_TABLE;
                 break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);

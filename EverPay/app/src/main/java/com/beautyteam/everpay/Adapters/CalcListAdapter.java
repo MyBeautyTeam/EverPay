@@ -3,6 +3,7 @@ package com.beautyteam.everpay.Adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,15 @@ import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKBatchRequest;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKList;
 
 import java.io.File;
 import java.util.HashMap;
@@ -31,15 +41,27 @@ public class CalcListAdapter extends CursorAdapter {
     private HashMap<String, Integer> mapIdToIsdeleted = new HashMap<String, Integer>();
     private HashMap<Integer, Boolean> mapPositionToIsOpenFirstAvatar = new HashMap<Integer, Boolean>();
     private HashMap<Integer, Boolean> mapPositionToIsOpenSecondAvatar = new HashMap<Integer, Boolean>();
+    private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
 
     public CalcListAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        String usersId = "";
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
                 String id = c.getString(c.getColumnIndex(Calculation.CALC_ID));
+
+                String userId = "";
+                userId = c.getString(c.getColumnIndex(Calculation.WHO_ID));
+                if (!usersId.contains(","+userId+","))
+                    usersId += userId + ",";
+
+                userId = c.getString(c.getColumnIndex(Calculation.WHOM_ID));
+                if (!usersId.contains(","+userId+","))
+                    usersId += userId + ",";
+
                 Integer value = c.getInt(c.getColumnIndex(Calculation.IS_DELETED));
                 mapIdToIsdeleted.put(id, value);
 
@@ -50,6 +72,34 @@ public class CalcListAdapter extends CursorAdapter {
             }
         }
         c.moveToFirst();
+
+        loadAvatarsFromVK(usersId);
+
+    }
+
+    private void loadAvatarsFromVK(String usersId) {
+
+        VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, usersId, VKApiConst.FIELDS, "photo_100"));
+        VKBatchRequest batch = new VKBatchRequest(request);
+
+        batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
+            @Override
+            public void onComplete(VKResponse[] responses) {
+                super.onComplete(responses);
+                VKList<VKApiUser> userList = (VKList<VKApiUser>) responses[0].parsedModel;
+                int count = userList.size();
+                for (int i = 0; i < count; i++)
+                    mapIdToAvatar.put(userList.get(i).id + "", userList.get(i).photo_100);
+
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+                Log.d("VkDemoApp", "onError: " + error);
+            }
+        });
     }
 
     public HashMap<String, Integer> getMapIdToIsdeleted() {
@@ -175,11 +225,10 @@ public class CalcListAdapter extends CursorAdapter {
 
                     view.setVisibility(View.GONE);
                     viewHolder.firstLayout.setVisibility(View.VISIBLE);
-                    filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                            Constants.FILE_DIRECTORY + '/' + whoUserId +
-                            ".png"; // !!!!!!!!!
-                    file = new File(filePath);
-                    Picasso.with(context).load(file).resize(200, 200).centerInside().into(viewHolder.firstAvatar);
+
+                    String firstAvatarUrl = mapIdToAvatar.get(whoUserId);
+                    Picasso.with(context).load(firstAvatarUrl).resize(100, 100).centerInside().into(viewHolder.firstAvatar);
+
                     break;
                 // Кликаем на первый layout
                 case R.id.item_calc_first_layout:
@@ -194,11 +243,8 @@ public class CalcListAdapter extends CursorAdapter {
 
                     view.setVisibility(View.GONE);
                     viewHolder.secondLayout.setVisibility(View.VISIBLE);
-                    filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                            Constants.FILE_DIRECTORY + '/' + whomUserId +
-                            ".png"; // !!!!!!!!!
-                    file = new File(filePath);
-                    Picasso.with(context).load(file).resize(200, 200).centerInside().into(viewHolder.secondAvatar);
+                    String secondAvatarUrl = mapIdToAvatar.get(whomUserId);
+                    Picasso.with(context).load(secondAvatarUrl).resize(100, 100).centerInside().into(viewHolder.secondAvatar);
                     break;
                 // Кликаем на второй layout
                 case R.id.item_calc_second_layout:

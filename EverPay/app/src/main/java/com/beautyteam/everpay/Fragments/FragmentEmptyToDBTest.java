@@ -2,7 +2,6 @@ package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -50,7 +48,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
     }
 
     private static final String[] PROJECTION = new String[] {
-            Bills.BILL_ID,
+            Bills.ITEM_ID,
             Bills.TITLE,
             Bills.GROUP_ID,
             Bills.USER_ID,
@@ -68,7 +66,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             case LOADER_ID:
                 if (c.moveToFirst() && c.getCount() != 0) {
                     while (!c.isAfterLast()) {
-                        String billId = c.getString(c.getColumnIndex(Bills.BILL_ID));
+                        String billId = c.getString(c.getColumnIndex(Bills.ITEM_ID));
                         String billTitle = c.getString(c.getColumnIndex(Bills.TITLE));
                         String groupId = c.getString(c.getColumnIndex(Bills.GROUP_ID));
                         String userId = c.getString(c.getColumnIndex(Bills.USER_ID));

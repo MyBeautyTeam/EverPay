@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.beautyteam.everpay.Views.RoundedImageView
-            android:id="@+id/add_bill_item_avatar"
+            android:id="@+id/show_bill_item_avatar"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
@@ -18,61 +18,34 @@
             android:layout_marginRight="4dp"
             />
         <TextView
-            android:id="@+id/add_bill_list_name"
+            android:id="@+id/show_bill_list_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Костян\nФетисов"
             android:textSize="16dp"
             android:gravity="center"
             />
     </LinearLayout>
+
     <TextView
-        android:id="@+id/add_bill_list_need_text"
+        android:id="@+id/show_bill_list_need"
         android:layout_weight="1.8"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="16dp"
         android:text="0"
-        android:visibility="gone"
-        />
-    <EditText
-        android:id="@+id/add_bill_list_need_edit"
+    />
+    <TextView
+        android:id="@+id/show_bill_list_invest"
         android:layout_weight="1.8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:inputType="number"
-        android:maxLines="1"
-        android:maxLength="8"
-        />
-    <EditText
-        android:id="@+id/add_bill_list_put"
-        android:layout_weight="1.8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:inputType="number"
-        android:maxLines="1"
-        android:maxLength="8"
-        />
-
-    <ImageView
-        android:id="@+id/add_bill_list_remove"
-        android:layout_weight="2.1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:clickable="true"
-        android:src="@drawable/ic_clear_black_18dp"
-        android:background="@drawable/on_btn_pressed_selector"
-        android:padding="5dp"
+        android:textSize="16dp"
+        android:text="0"
         />
-
 
 </LinearLayout>
