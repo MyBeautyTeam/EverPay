@@ -55,8 +55,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);
 
-        discriptGroup =(TextView) view.findViewById(R.id.group_discript);
-        discriptGroup.setText(groupTitle);
+//        discriptGroup =(TextView) view.findViewById(R.id.group_discript);
+//        discriptGroup.setText(groupTitle);
     }
 
     @Override

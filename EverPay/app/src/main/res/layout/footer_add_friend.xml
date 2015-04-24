@@ -8,8 +8,6 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:gravity="center"
-        android:layout_gravity="center"
         android:textColor="@color/dark_primary"
         android:background="@drawable/btn_add_friend_style"
         android:drawableLeft="@drawable/account_plus"

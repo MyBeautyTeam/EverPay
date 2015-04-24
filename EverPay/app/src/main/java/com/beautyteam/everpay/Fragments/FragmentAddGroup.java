@@ -11,7 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.beautyteam.everpay.Adapters.AddGroupAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.MainActivity;
@@ -33,6 +36,7 @@ public class FragmentAddGroup extends Fragment
     private ArrayList<User> arrayList = new ArrayList<User>();
     private ListView friendsList;
     private AddGroupAdapter mAdapter;
+    private EditText groupName;
 
     public static FragmentAddGroup getInstance() {
         FragmentAddGroup fragmentAddGroup = new FragmentAddGroup();
@@ -52,6 +56,7 @@ public class FragmentAddGroup extends Fragment
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
         addBtn = (Button) footerView.findViewById(R.id.add_btn_friend_foot);
+        groupName = (EditText) view.findViewById(R.id.group_name);
         friendsList.addFooterView(footerView);
         self = this;
         saveBtn = (Button) view.findViewById(R.id.save_btn_group);
@@ -79,6 +84,12 @@ public class FragmentAddGroup extends Fragment
                 mainActivity.addFragment(frag);
                 break;
             case R.id.save_btn_group:
+                if( (arrayList.size()>1)&&(!groupName.getText().equals(""))) {
+                    FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, String.valueOf(groupName.getText()));
+                    mainActivity.addFragment(fragmentGroupDetails);
+                } else {
+                    Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников",Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
