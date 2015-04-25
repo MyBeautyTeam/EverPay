@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddGroupAdapter;
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
@@ -87,12 +89,14 @@ public class FragmentAddGroup extends Fragment
                 break;
             case R.id.save_btn_group:
                 Log.d("button", "push button save group");
-                if(!groupName.getText().toString().equals("")) {
-                    Log.d("groupname", groupName.getText().toString());
+                String title = groupName.getText().toString();
+                if(!title.equals("")) {
+                    Log.d("groupname", title.toString());
                     if (arrayList.size()>0) {
                         Log.d("groupsize", String.valueOf(arrayList.size()));
-                        FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, String.valueOf(groupName.getText()));
-                        mainActivity.addFragment(fragmentGroupDetails);
+
+                        FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, title);
+                        mainActivity.replaceFragment(fragmentGroupDetails);
                     }  else {
                         Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников", Toast.LENGTH_SHORT).show();
                     }
@@ -102,6 +106,7 @@ public class FragmentAddGroup extends Fragment
                 break;
         }
     }
+
 
     @Override
     public void onAttach(Activity activity) {

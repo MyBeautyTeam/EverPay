@@ -2,6 +2,7 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +45,10 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
                 c.getColumnIndex(Users.NAME)," "+
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
         indexer.setCursor(c);
+//        c.moveToPosition(-1);
+//        while(c.moveToNext()) {
+//            Log.d("cur",c.getString(c.getColumnIndex(Users.NAME)));
+//        }
         this.arrayList = arrayList;
         Iterator <User> itr = this.arrayList.iterator();
         while(itr.hasNext()) {
@@ -65,7 +71,7 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
             if (set.contains(idName)) {
                 name = cursor.getString(cursor.getColumnIndex(Users.NAME));
                 img = cursor.getString(cursor.getColumnIndex(Users.IMG));
-                user = new User(Integer.valueOf(idName), name, img, "");
+                user = new User(Integer.valueOf(idName), name, "", img);
                 arrayList.add(user);
             }
         }
@@ -79,6 +85,9 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         ViewHolder holder = new ViewHolder();
         holder.firstName = (TextView) view.findViewById(R.id.friends_list_item_discript);
         holder.checkBox = (CheckBox) view.findViewById(R.id.friends_checkbox);
+        holder.avatar = (RoundedImageView) view.findViewById(R.id.friends_list_item_avatar);
+
+
         view.setTag(holder);
         return view;
     }
@@ -107,6 +116,9 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
                 }
             }
         });
+
+        String avatarUrl = cursor.getString(cursor.getColumnIndex(Users.IMG));
+        Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(holder.avatar);
     }
 
     @Override
@@ -124,20 +136,22 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         return indexer.getSectionForPosition(i);
     }
 
-    public Cursor swapCursor(Cursor c) {
-        if(c!= null) {
-            indexer = new AlphabetIndexer(c,
-                    c.getColumnIndex(Users.NAME),
-                    " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        }
-        return super.swapCursor(c);
-    }
+//    public Cursor swapCursor(Cursor c) {
+//        if(c!= null) {
+//            indexer = new AlphabetIndexer(c,
+//                    c.getColumnIndex(Users.NAME),
+//                    " ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
+//            indexer.setCursor(c);
+//        }
+//        return super.swapCursor(c);
+//    }
 
     private static class ViewHolder {
         TextView firstName;
         RoundedImageView avatar;
         CheckBox checkBox;
     }
+
 
 
 }

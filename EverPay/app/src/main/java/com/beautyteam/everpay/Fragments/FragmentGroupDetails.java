@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.MainActivity;
@@ -26,6 +27,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     private MainActivity mainActivity;
     private int groupId;
     private String groupTitle;
+    private ListView historyList;
 
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
         FragmentGroupDetails fragmentGroupDetails = new FragmentGroupDetails();
@@ -50,6 +52,9 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
         super.onViewCreated(view, savedInstanceState);
+
+        historyList = (ListView) view.findViewById(R.id.group_detail_history);
+
 
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
