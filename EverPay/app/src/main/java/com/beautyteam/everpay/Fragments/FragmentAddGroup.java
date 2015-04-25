@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,6 +61,7 @@ public class FragmentAddGroup extends Fragment
         friendsList.addFooterView(footerView);
         self = this;
         saveBtn = (Button) view.findViewById(R.id.save_btn_group);
+        saveBtn.setOnClickListener(this);
         addBtn.setOnClickListener(this);
         mAdapter = new AddGroupAdapter(getActivity(), arrayList);
         friendsList.setAdapter(mAdapter);
@@ -84,11 +86,18 @@ public class FragmentAddGroup extends Fragment
                 mainActivity.addFragment(frag);
                 break;
             case R.id.save_btn_group:
-                if( (arrayList.size()>1)&&(!groupName.getText().equals(""))) {
-                    FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, String.valueOf(groupName.getText()));
-                    mainActivity.addFragment(fragmentGroupDetails);
+                Log.d("button", "push button save group");
+                if(!groupName.getText().toString().equals("")) {
+                    Log.d("groupname", groupName.getText().toString());
+                    if (arrayList.size()>0) {
+                        Log.d("groupsize", String.valueOf(arrayList.size()));
+                        FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, String.valueOf(groupName.getText()));
+                        mainActivity.addFragment(fragmentGroupDetails);
+                    }  else {
+                        Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Введите название группы",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

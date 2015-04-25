@@ -40,8 +40,8 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         indexer = new AlphabetIndexer(c,
-                c.getColumnIndex(Users.NAME),
-                " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                c.getColumnIndex(Users.NAME)," "+
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
         indexer.setCursor(c);
         this.arrayList = arrayList;
         Iterator <User> itr = this.arrayList.iterator();
