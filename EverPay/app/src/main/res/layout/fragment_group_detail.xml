@@ -44,13 +44,4 @@
         android:drawablePadding="8dp"
         android:layout_weight="0"
         />
-    <Button
-        android:id="@+id/group_show_bill_btn"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Просмотр счета"
-        />
-
-
 </LinearLayout>

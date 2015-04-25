@@ -42,18 +42,19 @@ public class GroupDetailsAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
-//        final String groupTitle = cursor.getString(cursor.getColumnIndex(Groups.TITLE));
-//        holder.discript.setText(groupTitle);
-//
-//        final String id = cursor.getString(cursor.getColumnIndex(Groups.GROUP_ID));
+        final String groupTitle = cursor.getString(cursor.getColumnIndex(Groups.TITLE));
+        holder.discript.setText(groupTitle);
 
-
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//               // mainActivity.addFragment(FragmentShowBill.getInstance(groupId, groupId));
-//            }
-//        });
+        final String id = cursor.getString(cursor.getColumnIndex(Groups.GROUP_ID));
+        if ( Integer.valueOf(id) % 2 == 1 ) {
+            view.setBackgroundResource(R.drawable.history_style);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                     mainActivity.addFragment(FragmentShowBill.getInstance(Integer.valueOf(id), Integer.valueOf(id)));
+                }
+            });
+        }
     }
 
     @Override
