@@ -24,6 +24,8 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
+import com.beautyteam.everpay.REST.ActivityCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKBatchRequest;
@@ -41,12 +43,15 @@ import com.beautyteam.everpay.Fragments.FragmentViewPager;
 import java.util.Random;
 
 import static android.content.SharedPreferences.*;
+import static com.beautyteam.everpay.Constants.*;
+import static com.beautyteam.everpay.Constants.Action.*;
 
 
 /**
  * Created by Admin on 07.03.2015.
  */
-public class MainActivity extends ActionBarActivity {//} implements MaterialTabListener {
+public class MainActivity extends ActionBarActivity
+    implements ActivityCallback {
 
 
     String TITLES[] = {"Главная" ,"Группы", "Выход"};
@@ -75,32 +80,44 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
     private final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
     private SharedPreferences sPref;
 
+    private ServiceHelper serviceHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        serviceHelper = new ServiceHelper(this, this);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
+        serviceHelper.onResume();
         sPref = getPreferences(MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
         if (isFirstLaunch) {
 
             replaceFragment(new FragmentLoading());
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    startLoading();
-                }
-            });
+            serviceHelper.initVKUsers();
 
         } else {
             setupDrawer();
             replaceFragment(FragmentViewPager.getInstance());
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        serviceHelper.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
     }
 
     private void setupDrawer(){
@@ -196,62 +213,6 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         fTran.commit();
     }
 
-    public void startLoading() {
-        VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100"));
-        VKRequest request2 = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100"));
-        VKBatchRequest batch = new VKBatchRequest(request1, request2);
-        batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
-            @Override
-            public void onComplete(VKResponse[] responses) {
-                super.onComplete(responses);
-                Log.d("VkDemoApp", "onComplete " + responses);
-
-
-                VKApiUserFull userFull = ((VKList<VKApiUserFull>) responses[0].parsedModel).get(0);
-                user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
-                Editor editor = sPref.edit();
-                editor.putString(USER_NAME, userFull.last_name + " " + userFull.first_name);
-                editor.putString(IMG_URL,userFull.photo_100);
-                editor.commit();
-
-                Log.d("vksdk", responses[1].parsedModel.toString());
-                VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
-
-                ContentValues cv = new ContentValues();
-                for (VKApiUserFull friends : usersArray) {
-                    cv.put(Users.USER_ID_VK, friends.id);
-                    cv.put(Users.NAME, friends.last_name+ " " +friends.first_name);
-                    cv.put(Users.IMG, friends.photo_100);
-                    getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
-
-                    if (new Random().nextFloat() > 0.98) {
-                        ContentValues wq = new ContentValues();
-                        wq.put(Debts.SUMMA, new Random().nextInt(500));
-                        wq.put(Debts.USER_ID, friends.id);
-                        wq.put(Debts.USER_NAME, friends.last_name+ " " +friends.first_name);
-                        wq.put(Debts.GROUP_TITLE, "МОЯ ГРУППА");
-                        wq.put(Debts.IS_I_DEBT, new Random().nextBoolean()? 1:0);
-                        getContentResolver().insert(EverContentProvider.DEBTS_CONTENT_URI, wq);
-                    }
-                }
-
-                Editor edit = sPref.edit();
-                edit.putBoolean(IS_FIRST_LAUNCH, false);
-                edit.commit();
-                setupDrawer();
-                replaceFragment(FragmentViewPager.getInstance());
-
-            }
-
-
-            @Override
-            public void onError(VKError error) {
-                super.onError(error);
-                Log.d("VkDemoApp", "onError: " + error);
-            }
-        });
-    }
-
     public void setTitle(String title) {
         this.toolbar.setTitle(title);
     }
@@ -280,4 +241,21 @@ public class MainActivity extends ActionBarActivity {//} implements MaterialTabL
         fTran.commit();
     }
 
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(INIT_VK_USERS)) {
+            if (result == Constants.Result.OK) {
+                Editor editor = sPref.edit();
+                editor.putString(USER_NAME, data.getString(USER_NAME));
+                editor.putString(IMG_URL, data.getString(IMG_URL));
+                editor.putBoolean(IS_FIRST_LAUNCH, false);
+                editor.commit();
+                setupDrawer();
+                replaceFragment(FragmentViewPager.getInstance());
+            } else {
+                // ???
+            }
+        }
+    }
 }

@@ -71,6 +71,8 @@ public class FragmentAddBill extends Fragment implements
     private static final int LOADER_ADD = 2;
     private static final int LOADER_EDIT = 3;
 
+    String title = "";
+
     /*
     Для добавления счета
      */
@@ -205,7 +207,8 @@ public class FragmentAddBill extends Fragment implements
         int summa;
         if (value.isEmpty()) summa = 0;
         else  summa = Integer.parseInt(value);
-        mAdapter.setNeedSumma(summa);
+        if (mAdapter!=null)
+            mAdapter.setNeedSumma(summa);
 
     }
 
@@ -240,6 +243,8 @@ public class FragmentAddBill extends Fragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
             case LOADER_ADD: {
+                title = Constants.Titles.ADD_BILL;
+                updateTitle();
                 if (billArrayList == null) {
                     fillBillList(c);
                 }
@@ -250,6 +255,8 @@ public class FragmentAddBill extends Fragment implements
             }
 
             case LOADER_EDIT: {
+                title = Constants.Titles.EDIT_BILL;
+                updateTitle();
                 if (billArrayList == null) {
                     Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" + groupId, null, null);
                     fillBillList(usersCursor);
@@ -290,6 +297,8 @@ public class FragmentAddBill extends Fragment implements
                     }
 
                     leftSumma.setText(generalSumm + "");
+                    needSummaEdit.setText(generalSumm + "");
+                    needSummaText.setText(generalSumm + "");
                     switchCompat.setChecked(isNotEquals);
                 }
                 int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
@@ -506,7 +515,10 @@ public class FragmentAddBill extends Fragment implements
 
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_BILL);
+    }
+
+    private void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(title);
     }
 
 }

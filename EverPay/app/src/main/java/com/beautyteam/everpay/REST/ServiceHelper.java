@@ -51,9 +51,18 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
         Log.d(Constants.LOG, "ServiceHelper, send()");
     }
+
+    public void initVKUsers() {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.INIT_VK_USERS);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+
+        activity.startService(intentService);
+    }
+
     @Override
     public void onReceiveResult(int resultCode, Bundle data) {
         Log.d(Constants.LOG, "ServiceHelper, onReceiveResult()");
-        activityCallback.onRequestEnd(resultCode);
+        activityCallback.onRequestEnd(resultCode, data);
     }
 }

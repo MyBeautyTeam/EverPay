@@ -12,6 +12,7 @@ public class Constants {
     }
 
     public class Action {
+        public final static String INIT_VK_USERS = "INIT_VK_USERS";
         public final static String ADD_CONTACT = "ADD_CONTACT";
         public final static String ANY_ACTION_WITH_POST = "POST_ACTION";
         public final static String DOWNLOAD_IMG = "DOWNLOAD_IMG";
@@ -19,11 +20,17 @@ public class Constants {
 
     public class Titles {
         public final static String ADD_BILL = "Добавление счета";
+        public final static String EDIT_BILL = "Редактирование счета";
         public final static String FRIENDS = "Друзья";
         public final static String ADD_GROUP = "Создание группы";
         public final static String CALCULATION = "Расчет";
         public final static String GROUPS = "Группы";
+    }
 
+    public class Preference {
+        public final static String USER_NAME = "USER_NAME";
+        public final static String IMG_URL = "IMG_URL";
+        public final static String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
     }
 
     public class State {
@@ -43,4 +50,6 @@ public class Constants {
     public final static String FILE_DIRECTORY = "/.EverPay";
 
     public final static String[] SCREEN_NAMES = {"Я должен", "Мне должны"};
+
+    public final static String ACTION = "ACTION";
 }
