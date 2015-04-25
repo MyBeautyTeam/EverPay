@@ -20,7 +20,6 @@ public class FragmentLoading extends Fragment {
 
     private TextView loadingText;
     Animation loopAppear;
-    Button button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,13 +30,6 @@ public class FragmentLoading extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         loadingText = (TextView) view.findViewById(R.id.loading_text);
         loopAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_animation);
-        button = (Button) view.findViewById(R.id.loading_btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("TAG", "CLICK!");
-            }
-        });
     }
 
     @Override

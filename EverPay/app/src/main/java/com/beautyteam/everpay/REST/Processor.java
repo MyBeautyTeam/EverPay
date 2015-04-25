@@ -49,6 +49,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static com.beautyteam.everpay.Constants.Action.*;
 import static com.beautyteam.everpay.Constants.Preference.*;
@@ -219,7 +220,7 @@ public class Processor {
                 //user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
 
                 intent.putExtra(USER_NAME, userFull.last_name + " " + userFull.first_name);
-                intent.putExtra(IMG_URL,userFull.photo_100);
+                intent.putExtra(IMG_URL, userFull.photo_100);
 
                 Log.d("vksdk", responses[1].parsedModel.toString());
                 VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;

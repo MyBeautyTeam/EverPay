@@ -25,6 +25,8 @@ public class Service extends IntentService implements ServiceCallback {
     }
 
 
+
+
     @Override
     public void onRequestEnd(int resultCode, Intent intent) {
         final ResultReceiver receiver = intent.getParcelableExtra(Constants.RECEIVER);

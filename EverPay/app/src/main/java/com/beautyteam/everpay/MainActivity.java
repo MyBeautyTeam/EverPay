@@ -247,8 +247,8 @@ public class MainActivity extends ActionBarActivity
         if (action.equals(INIT_VK_USERS)) {
             if (result == Constants.Result.OK) {
                 Editor editor = sPref.edit();
-                editor.putString(USER_NAME, data.getString(USER_NAME));
-                editor.putString(IMG_URL, data.getString(IMG_URL));
+                editor.putString(USER_NAME, data.getString(USER_NAME, "Самый Красивый"));
+                editor.putString(IMG_URL, data.getString(IMG_URL, "IMG"));
                 editor.putBoolean(IS_FIRST_LAUNCH, false);
                 editor.commit();
                 setupDrawer();
