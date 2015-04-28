@@ -20,7 +20,6 @@ public class EverContentProvider extends ContentProvider {
     static final String AUTHORITY = "com.beautyteam.everpay.EverpayDB";
 
 
-
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
@@ -141,7 +140,13 @@ public class EverContentProvider extends ContentProvider {
 
         Cursor cursor = db.query(table, projection, selection,
                 selectionArgs, null, null, sortOrder);
+        cursor.setNotificationUri(getContext().getContentResolver(), USERS_CONTENT_URI);
         cursor.setNotificationUri(getContext().getContentResolver(), GROUPS_CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), DEBTS_CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), CALCULATION_CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), GROUP_MEMBERS_CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), BILLS_CONTENT_URI);
+
         return cursor;
     }
 
@@ -167,10 +172,6 @@ public class EverContentProvider extends ContentProvider {
         db = dbHelper.getWritableDatabase();
         long rowID = db.insert(table, null, contentValues);
         Uri resultUri = ContentUris.withAppendedId(uri, rowID);
-        String path = resultUri.toString();
-        path = path.substring(0, path.lastIndexOf("/"));
-
-        Uri notifyURI = Uri.parse(path);
         getContext().getContentResolver().notifyChange(uri, null);
         return resultUri;
     }
