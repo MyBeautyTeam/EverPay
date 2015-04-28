@@ -102,7 +102,10 @@ public class Processor {
                                 cv.put(Groups.IS_CALCULATED, 0);
                             service.getContentResolver().insert(EverContentProvider.GROUPS_CONTENT_URI, cv);
                         }
-                    } catch (JSONException e) {}
+                        service.onRequestEnd(Constants.Result.OK, intent);
+                    } catch (JSONException e) {
+                        service.onRequestEnd(Constants.Result.ERROR, intent);
+                    }
                 }
 
             } else {

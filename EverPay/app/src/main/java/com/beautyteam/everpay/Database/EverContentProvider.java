@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.net.URI;
+
 /**
  * Created by Admin on 27.02.2015.
  */
@@ -139,6 +141,7 @@ public class EverContentProvider extends ContentProvider {
 
         Cursor cursor = db.query(table, projection, selection,
                 selectionArgs, null, null, sortOrder);
+        cursor.setNotificationUri(getContext().getContentResolver(), GROUPS_CONTENT_URI);
         return cursor;
     }
 
@@ -164,6 +167,10 @@ public class EverContentProvider extends ContentProvider {
         db = dbHelper.getWritableDatabase();
         long rowID = db.insert(table, null, contentValues);
         Uri resultUri = ContentUris.withAppendedId(uri, rowID);
+        String path = resultUri.toString();
+        path = path.substring(0, path.lastIndexOf("/"));
+
+        Uri notifyURI = Uri.parse(path);
         getContext().getContentResolver().notifyChange(uri, null);
         return resultUri;
     }
