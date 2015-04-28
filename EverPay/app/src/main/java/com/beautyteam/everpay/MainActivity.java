@@ -120,6 +120,10 @@ public class MainActivity extends ActionBarActivity
         serviceHelper.onPause();
     }
 
+    public ServiceHelper getServiceHelper() {
+        return serviceHelper;
+    }
+
     private void setupDrawer(){
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
@@ -154,6 +158,7 @@ public class MainActivity extends ActionBarActivity
                             replaceAllFragment(FragmentViewPager.getInstance());
                             break;
                         case 1:
+                            serviceHelper.getGroups();
                             replaceAllFragment(FragmentGroups.getInstance());
                             break;
                         case 2:
@@ -256,6 +261,8 @@ public class MainActivity extends ActionBarActivity
             } else {
                 // ???
             }
+        } else if (action.equals(CALCULATE)){
+
         }
     }
 }

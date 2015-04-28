@@ -1,22 +1,23 @@
 package com.beautyteam.everpay.REST;
 
 import android.content.ContentValues;
+import android.content.Entity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.MyContentProvider;
 import com.beautyteam.everpay.Database.Users;
-import com.beautyteam.everpay.Fragments.FragmentViewPager;
-import com.beautyteam.everpay.User;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKBatchRequest;
@@ -37,9 +38,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,7 +53,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +70,7 @@ import static com.beautyteam.everpay.Constants.Preference.*;
 public class Processor {
 
     public void request(Intent intent, Service service) {
+        LinkedList<NameValuePair> params = new LinkedList<NameValuePair>();
         Log.d(Constants.LOG, "Processor, request()");
         String action = intent.getAction();
         int result = -999; // Должно быть изменено. Написал, чтобы не ругалась IDE
@@ -67,8 +78,45 @@ public class Processor {
         if (INIT_VK_USERS.equals(action)) {
             initVKUsers(service, intent);
         }
+        else if (GET_GROUPS.equals(action)) {
+            params.add(new BasicNameValuePair("users_id", "8"));
+            params.add(new BasicNameValuePair("access_token", "wjekwewue"));
+            String response = get(Constants.URL.GET_GROUPS, params);
+            if (response != null) {
+                if (response.contains("200")) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        jsonObject = jsonObject.getJSONObject("response");
+                        jsonObject = jsonObject.getJSONObject("groups");
+
+                        ContentValues cv;
+                        JSONObject group;
+                        for (int i=0; (group=jsonObject.getJSONObject(i + "")) != null; i++) {
+                            cv = new ContentValues();
+                            cv.put(Groups.GROUP_ID, group.getString("groups_id"));
+                            cv.put(Groups.TITLE, group.getString("title"));
+                            //cv.put(Groups.UPDATE_TIME, group.getString("update_datetime"));
+                            if (group.getBoolean("is_calculated"))
+                                cv.put(Groups.IS_CALCULATED, 1);
+                            else
+                                cv.put(Groups.IS_CALCULATED, 0);
+                            service.getContentResolver().insert(EverContentProvider.GROUPS_CONTENT_URI, cv);
+                        }
+                    } catch (JSONException e) {}
+                }
+
+            } else {
+
+            }
+        }
+        else if (CALCULATE.equals(action)) {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e){};
+            service.onRequestEnd(Constants.Result.OK, intent);
+        }
         else if (ADD_CONTACT.equals(action)) {
-            ContentValues cv = new ContentValues();
+            /*ContentValues cv = new ContentValues();
             cv.put(MyContentProvider.CONTACT_NAME, intent.getStringExtra("name"));
             cv.put(MyContentProvider.CONTACT_EMAIL, intent.getStringExtra("email"));
             cv.put(MyContentProvider.STATE, Constants.State.IN_PROCESS);
@@ -84,7 +132,7 @@ public class Processor {
                 cv.put(MyContentProvider.STATE, Constants.State.ENDS);
                 cv.put(MyContentProvider.RESULT, Constants.Result.ERROR);
             }
-            service.getContentResolver().update(uriOfInsertedRow, cv, null, null);
+            service.getContentResolver().update(uriOfInsertedRow, cv, null, null);*/
         }
         else if (DOWNLOAD_IMG.equals(action)) {
             String url = intent.getStringExtra(Constants.IntentParams.URL);
@@ -114,11 +162,17 @@ public class Processor {
         //service.onRequestEnd(result, intent);
     }
 
-    private String get(String url) {
+    private String get(String stringUrl, LinkedList<NameValuePair> params) {
+
         Log.d(Constants.LOG, "Processor, request()");
 
+        String paramString = URLEncodedUtils.format(params, "utf-8");
+        if(!stringUrl.endsWith("?"))
+            stringUrl += "?";
+        stringUrl += paramString;
+
         HttpClient httpClient = new DefaultHttpClient(); // должен быть один в классе или несколько???
-        HttpGet request = new HttpGet(url);
+        HttpGet request = new HttpGet(stringUrl);
 
         try {
             HttpResponse response = httpClient.execute(request);
@@ -136,6 +190,7 @@ public class Processor {
         } catch (IOException e) {
             return null;
         }
+
     }
 
     private String post(String url, List<NameValuePair> nameValuePairs) {
@@ -206,8 +261,10 @@ public class Processor {
 
 
     private void initVKUsers(final Service service, final Intent intent) {
-        VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100"));
-        VKRequest request2 = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100"));
+
+        final VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
+        VKRequest request2 = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
+
         VKBatchRequest batch = new VKBatchRequest(request1, request2);
         batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
             @Override
@@ -224,6 +281,7 @@ public class Processor {
 
                 Log.d("vksdk", responses[1].parsedModel.toString());
                 VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
+
 
                 ContentValues cv = new ContentValues();
                 for (VKApiUserFull friends : usersArray) {

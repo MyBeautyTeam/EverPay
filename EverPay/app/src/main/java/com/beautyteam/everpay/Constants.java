@@ -11,11 +11,18 @@ public class Constants {
         public final static int ERROR = -1;
     }
 
+    public class URL {
+        public final static String BASE_URL = "http://everpay.cloudapp.net/";
+        public final static String GET_GROUPS = "http://everpay.cloudapp.net/groups/";
+    }
+
     public class Action {
         public final static String INIT_VK_USERS = "INIT_VK_USERS";
         public final static String ADD_CONTACT = "ADD_CONTACT";
         public final static String ANY_ACTION_WITH_POST = "POST_ACTION";
         public final static String DOWNLOAD_IMG = "DOWNLOAD_IMG";
+        public final static String CALCULATE = "CALCULATE";
+        public final static String GET_GROUPS = "GET_GROUPS";
     }
 
     public class Titles {

@@ -29,7 +29,10 @@ public class EverContentProvider extends ContentProvider {
 
 
     static final String USERS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Users.USERS_TABLE;
+
     static final String GROUPS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
+    static final String GROUPS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
+
     static final String GROUP_MEMBERS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + GroupMembers.GROUP_MEMBERS_TABLE;
     static final String BILLS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Bills.BILLS_TABLE;
     static final String DEBTS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
@@ -43,11 +46,14 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_DEBTS = 5;
     static final int URI_CALCULATION = 6;
 
+    static final int URI_GROUPS_ID = 7;
+
     private static final UriMatcher uriMatcher;
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE, URI_USERS);
         uriMatcher.addURI(AUTHORITY, Groups.GROUPS_TABLE, URI_GROUPS);
+        uriMatcher.addURI(AUTHORITY, Groups.GROUPS_TABLE+ "/#", URI_GROUPS_ID);
         uriMatcher.addURI(AUTHORITY, GroupMembers.GROUP_MEMBERS_TABLE, URI_GROUP_MEMBERS);
         uriMatcher.addURI(AUTHORITY, Bills.BILLS_TABLE, URI_BILLS);
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE, URI_DEBTS);
@@ -74,6 +80,9 @@ public class EverContentProvider extends ContentProvider {
 
             case URI_GROUPS:
                 return GROUPS_CONTENT_TYPE;
+
+            case URI_GROUPS_ID:
+                return GROUPS_CONTENT_ITEM_TYPE;
 
             case URI_GROUP_MEMBERS:
                 return GROUP_MEMBERS_CONTENT_TYPE;
@@ -145,6 +154,9 @@ public class EverContentProvider extends ContentProvider {
                 break;
             case URI_DEBTS:
                 table = Debts.DEBTS_TABLE;
+                break;
+            case URI_GROUPS:
+                table = Groups.GROUPS_TABLE;
                 break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);

@@ -47,6 +47,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        mAdapter = null;
         return inflater.inflate(R.layout.fragment_groups, null);
     }
 
@@ -112,7 +113,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_group_button:
-                FragmentAddGroup frag= FragmentAddGroup.getInstance();
+                FragmentAddGroup frag = FragmentAddGroup.getInstance();
                 mainActivity.addFragment(frag);
         }
     }

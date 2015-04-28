@@ -65,4 +65,20 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         Log.d(Constants.LOG, "ServiceHelper, onReceiveResult()");
         activityCallback.onRequestEnd(resultCode, data);
     }
+
+    public void calculate(int groupID) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.CALCULATE);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+
+        activity.startService(intentService);
+    }
+
+    public void getGroups() {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_GROUPS);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
 }
