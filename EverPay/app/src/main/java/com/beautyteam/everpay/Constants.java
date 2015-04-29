@@ -16,6 +16,7 @@ public class Constants {
         public final static String GET_GROUPS = BASE_URL + "groups/";
         public final static String GET_GROUP_MEMBERS = BASE_URL + "groups/members/";
         public final static String GET_DEBTS = BASE_URL + "debts/";
+        public final static String GET_BILL = BASE_URL + "bills/details/";
     }
 
     public class Action {
@@ -27,6 +28,7 @@ public class Constants {
         public final static String GET_GROUPS = "GET_GROUPS";
         public final static String GET_GROUP_MEMBERS = "GET_GROUP_MEMBERS";
         public final static String GET_DEBTS = "GET_DEBTS";
+        public final static String GET_BILL = "GET_BILL";
     }
 
     public class Titles {
@@ -56,6 +58,7 @@ public class Constants {
         public final static String URL = "URL";
         public final static String NAME = "USER_NAME";
         public final static String GROUP_ID = "GROUP_ID";
+        public final static String BILL_ID = "BILL_ID";
     }
 
     public final static String RECEIVER = "RECEIVER";

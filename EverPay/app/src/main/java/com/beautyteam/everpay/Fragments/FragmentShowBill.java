@@ -64,6 +64,8 @@ public class FragmentShowBill extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        billId = getArguments().getInt(BILL_ID);
+        groupId = getArguments().getInt(GROUP_ID);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_show_bill, null);
     }
@@ -71,9 +73,8 @@ public class FragmentShowBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity)getActivity()).getServiceHelper().getBill(billId, groupId);
 
-        billId = getArguments().getInt(BILL_ID);
-        groupId = getArguments().getInt(GROUP_ID);
 
         billTitleView = (TextView)view.findViewById(R.id.show_bill_title);
         eqText = (TextView) view.findViewById(R.id.show_bill_equally_text);
@@ -131,20 +132,22 @@ public class FragmentShowBill extends Fragment implements
         switch (loader.getId()) {
             case LOADER_ID:
                 c.moveToFirst();
-                String billTitle = c.getString(c.getColumnIndex(Bills.TITLE));
-                billTitleView.setText(billTitle);
-
-                int needOne = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
                 int needGeneral = 0;
                 boolean isNotEquals = false;
-                if (c.moveToFirst() && c.getCount() != 0) {
-                    while (!c.isAfterLast()) {
-                        int curNeed = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
-                        if (Math.abs(curNeed - needOne) > 1)
-                            isNotEquals = true;
-                        needOne = curNeed;
-                        needGeneral += curNeed;
-                        c.moveToNext();
+                if (c.getCount() > 0) {
+                    String billTitle = c.getString(c.getColumnIndex(Bills.TITLE));
+                    billTitleView.setText(billTitle);
+
+                    int needOne = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
+                    if (c.moveToFirst() && c.getCount() != 0) {
+                        while (!c.isAfterLast()) {
+                            int curNeed = c.getInt(c.getColumnIndex(Bills.NEED_SUM));
+                            if (Math.abs(curNeed - needOne) > 1)
+                                isNotEquals = true;
+                            needOne = curNeed;
+                            needGeneral += curNeed;
+                            c.moveToNext();
+                        }
                     }
                 }
 

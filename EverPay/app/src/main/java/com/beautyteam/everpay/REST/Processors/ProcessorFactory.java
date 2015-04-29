@@ -13,7 +13,8 @@ public class ProcessorFactory {
         if      (
                 Constants.Action.GET_GROUPS.equals(action) ||
                 Constants.Action.GET_GROUP_MEMBERS.equals(action) ||
-                Constants.Action.GET_DEBTS.equals(action)
+                Constants.Action.GET_DEBTS.equals(action) ||
+                Constants.Action.GET_BILL.equals(action)
                 ) {
             return new GetProcessors();
         } else

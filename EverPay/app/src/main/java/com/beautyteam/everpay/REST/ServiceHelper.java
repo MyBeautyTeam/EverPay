@@ -98,4 +98,14 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }
+
+    public void getBill(int billId, int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_BILL);
+        intentService.putExtra(Constants.IntentParams.BILL_ID, billId + "");
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId + "");
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
 }

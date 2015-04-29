@@ -27,18 +27,17 @@ public class EverContentProvider extends ContentProvider {
     public static final Uri CALCULATION_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Calculation.CALCULATION_TABLE);
     public static final Uri GROUP_MEMBERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupMembers.GROUP_MEMBERS_TABLE);
     public static final Uri BILLS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Bills.BILLS_TABLE);
+    public static final Uri HISTORY_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + History.HISTORY_TABLE);
 
 
 
     static final String USERS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Users.USERS_TABLE;
-
     static final String GROUPS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
-    static final String GROUPS_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
-
     static final String GROUP_MEMBERS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + GroupMembers.GROUP_MEMBERS_TABLE;
     static final String BILLS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Bills.BILLS_TABLE;
     static final String DEBTS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
     static final String CALCULATION_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Calculation.CALCULATION_TABLE;
+    static final String HISTORY_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + History.HISTORY_TABLE;
 
 
     static final int URI_USERS = 1;
@@ -47,20 +46,20 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_BILLS = 4;
     static final int URI_DEBTS = 5;
     static final int URI_CALCULATION = 6;
+    static final int URI_HISTORY = 7;
 
-    static final int URI_GROUPS_ID = 7;
 
     private static final UriMatcher uriMatcher;
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE, URI_USERS);
         uriMatcher.addURI(AUTHORITY, Groups.GROUPS_TABLE, URI_GROUPS);
-        uriMatcher.addURI(AUTHORITY, Groups.GROUPS_TABLE+ "/#", URI_GROUPS_ID);
         uriMatcher.addURI(AUTHORITY, GroupMembers.GROUP_MEMBERS_TABLE, URI_GROUP_MEMBERS);
         uriMatcher.addURI(AUTHORITY, Bills.BILLS_TABLE, URI_BILLS);
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE, URI_DEBTS);
         uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE, URI_CALCULATION);
         uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE+ "/#", URI_CALCULATION);
+        uriMatcher.addURI(AUTHORITY, History.HISTORY_TABLE, URI_HISTORY);
     }
 
 
@@ -83,9 +82,6 @@ public class EverContentProvider extends ContentProvider {
             case URI_GROUPS:
                 return GROUPS_CONTENT_TYPE;
 
-            case URI_GROUPS_ID:
-                return GROUPS_CONTENT_ITEM_TYPE;
-
             case URI_GROUP_MEMBERS:
                 return GROUP_MEMBERS_CONTENT_TYPE;
 
@@ -97,6 +93,9 @@ public class EverContentProvider extends ContentProvider {
 
             case URI_CALCULATION:
                 return CALCULATION_CONTENT_TYPE;
+
+            case URI_HISTORY:
+                return HISTORY_CONTENT_TYPE;
 
         }
         return null;
@@ -141,6 +140,11 @@ public class EverContentProvider extends ContentProvider {
                 notifyUri = CALCULATION_CONTENT_URI;
                 break;
 
+            case URI_HISTORY:
+                table = History.HISTORY_TABLE;
+                notifyUri = HISTORY_CONTENT_URI;
+                break;
+
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
 
@@ -174,6 +178,9 @@ public class EverContentProvider extends ContentProvider {
             case URI_CALCULATION:
                 table = Calculation.CALCULATION_TABLE;
                 break;
+            case URI_HISTORY:
+                table = History.HISTORY_TABLE;
+                break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
         }
@@ -186,19 +193,67 @@ public class EverContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String s, String[] strings) {
-        return 0;
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        Log.d(LOG_TAG, "delete, " + uri.toString());
+        String table;
+        switch (uriMatcher.match(uri)) {
+            case URI_BILLS:
+                table = Bills.BILLS_TABLE;
+                break;
+            case URI_USERS:
+                table = Users.USERS_TABLE;
+                break;
+            case URI_DEBTS:
+                table = Debts.DEBTS_TABLE;
+                break;
+            case URI_GROUPS:
+                table = Groups.GROUPS_TABLE;
+                break;
+            case URI_GROUP_MEMBERS:
+                table = GroupMembers.GROUP_MEMBERS_TABLE;
+                break;
+            case URI_CALCULATION:
+                table = Calculation.CALCULATION_TABLE;
+                break;
+            case URI_HISTORY:
+                table = History.HISTORY_TABLE;
+                break;
+            default:
+                throw new IllegalArgumentException("Wrong URI: " + uri);
+        }
+        db = dbHelper.getWritableDatabase();
+        int cnt = db.delete(table, selection, selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return cnt;
     }
+
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
         String table;
         switch (uriMatcher.match(uri)) {
+            case URI_BILLS:
+                table = Bills.BILLS_TABLE;
+                break;
+            case URI_USERS:
+                table = Users.USERS_TABLE;
+                break;
+            case URI_DEBTS:
+                table = Debts.DEBTS_TABLE;
+                break;
+            case URI_GROUPS:
+                table = Groups.GROUPS_TABLE;
+                break;
+            case URI_GROUP_MEMBERS:
+                table = GroupMembers.GROUP_MEMBERS_TABLE;
+                break;
             case URI_CALCULATION:
                 table = Calculation.CALCULATION_TABLE;
                 break;
-
+            case URI_HISTORY:
+                table = History.HISTORY_TABLE;
+                break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
         }
