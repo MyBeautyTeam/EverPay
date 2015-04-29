@@ -1,12 +1,15 @@
 package com.beautyteam.everpay.REST;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Entity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.net.MalformedURLException;
@@ -61,13 +64,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import static android.content.Context.*;
 import static com.beautyteam.everpay.Constants.Action.*;
 import static com.beautyteam.everpay.Constants.Preference.*;
 
 /**
  * Created by Admin on 27.02.2015.
  */
-public class Processor {
+public class Processor_TO_DELETE {
 
     public void request(Intent intent, Service service) {
         LinkedList<NameValuePair> params = new LinkedList<NameValuePair>();
@@ -79,8 +83,9 @@ public class Processor {
             initVKUsers(service, intent);
         }
         else if (GET_GROUPS.equals(action)) {
-            params.add(new BasicNameValuePair("users_id", "8"));
-            params.add(new BasicNameValuePair("access_token", "wjekwewue"));
+            SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
+            params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID, "0")*/));
+            params.add(new BasicNameValuePair("access_token", sPref.getString(ACCESS_TOKEN, "0")));
             String response = get(Constants.URL.GET_GROUPS, params);
             if (response != null) {
                 if (response.contains("200")) {
@@ -109,7 +114,7 @@ public class Processor {
                 }
 
             } else {
-
+                service.onRequestEnd(Constants.Result.ERROR, intent);
             }
         }
         else if (CALCULATE.equals(action)) {
@@ -278,7 +283,8 @@ public class Processor {
 
                 VKApiUserFull userFull = ((VKList<VKApiUserFull>) responses[0].parsedModel).get(0);
                 //user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
-
+                intent.putExtra(ACCESS_TOKEN, "wjekwewue");
+                intent.putExtra(USER_ID, userFull.id + "");
                 intent.putExtra(USER_NAME, userFull.last_name + " " + userFull.first_name);
                 intent.putExtra(IMG_URL, userFull.photo_100);
 

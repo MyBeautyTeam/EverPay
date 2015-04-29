@@ -35,6 +35,9 @@ public class Constants {
     }
 
     public class Preference {
+        public final static String SHARED_PREFERENCES = "SHARED_PREFERENCES";
+        public final static String ACCESS_TOKEN = "ACCESS_TOKEN";
+        public final static String USER_ID = "USER_ID";
         public final static String USER_NAME = "USER_NAME";
         public final static String IMG_URL = "IMG_URL";
         public final static String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";

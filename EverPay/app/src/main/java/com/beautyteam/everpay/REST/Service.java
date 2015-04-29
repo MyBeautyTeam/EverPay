@@ -7,6 +7,8 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.REST.Processors.*;
+import com.beautyteam.everpay.REST.Processors.Processor;
 
 /**
  * Created by Admin on 27.02.2015.
@@ -20,8 +22,9 @@ public class Service extends IntentService implements ServiceCallback {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(Constants.LOG, "Service, onHandleIntent()");
-        Processor processor = new Processor();
-        processor.request(intent, this);
+        Processor processor = ProcessorFactory.getProcessor(intent);
+        if (processor != null)
+            processor.request(intent, this);
     }
 
 

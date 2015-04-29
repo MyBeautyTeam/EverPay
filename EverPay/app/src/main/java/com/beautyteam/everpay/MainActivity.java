@@ -1,9 +1,11 @@
 package com.beautyteam.everpay;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -45,6 +47,9 @@ import java.util.Random;
 import static android.content.SharedPreferences.*;
 import static com.beautyteam.everpay.Constants.*;
 import static com.beautyteam.everpay.Constants.Action.*;
+import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
+import static com.beautyteam.everpay.Constants.Preference.USER_ID;
 
 
 /**
@@ -93,7 +98,7 @@ public class MainActivity extends ActionBarActivity
         mRecyclerView.setLayoutManager(layoutManager);
 
         serviceHelper.onResume();
-        sPref = getPreferences(MODE_PRIVATE);
+        sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
         if (isFirstLaunch) {
 
@@ -252,6 +257,8 @@ public class MainActivity extends ActionBarActivity
         if (action.equals(INIT_VK_USERS)) {
             if (result == Constants.Result.OK) {
                 Editor editor = sPref.edit();
+                editor.putString(Constants.Preference.USER_ID, data.getString(USER_ID, "5"));
+                editor.putString(Constants.Preference.ACCESS_TOKEN, data.getString(ACCESS_TOKEN, "5"));
                 editor.putString(USER_NAME, data.getString(USER_NAME, "Самый Красивый"));
                 editor.putString(IMG_URL, data.getString(IMG_URL, "IMG"));
                 editor.putBoolean(IS_FIRST_LAUNCH, false);

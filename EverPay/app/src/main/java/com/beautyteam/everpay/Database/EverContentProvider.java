@@ -20,6 +20,7 @@ public class EverContentProvider extends ContentProvider {
     static final String AUTHORITY = "com.beautyteam.everpay.EverpayDB";
 
 
+
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
@@ -104,6 +105,7 @@ public class EverContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
+        Uri notifyUri;
         db = dbHelper.getWritableDatabase();
         String id;
         String table;
@@ -111,26 +113,32 @@ public class EverContentProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case URI_USERS:
                 table = Users.USERS_TABLE;
+                notifyUri = USERS_CONTENT_URI;
                 break;
 
             case URI_GROUPS:
                 table = Groups.GROUPS_TABLE;
+                notifyUri = GROUPS_CONTENT_URI;
                 break;
 
             case URI_GROUP_MEMBERS:
                 table = GroupMembers.GROUP_MEMBERS_TABLE;
+                notifyUri = GROUP_MEMBERS_CONTENT_URI;
                 break;
 
             case URI_BILLS:
                 table = Bills.BILLS_TABLE;
+                notifyUri = BILLS_CONTENT_URI;
                 break;
 
             case URI_DEBTS:
                 table = Debts.DEBTS_TABLE;
+                notifyUri = DEBTS_CONTENT_URI;
                 break;
 
             case URI_CALCULATION:
                 table = Calculation.CALCULATION_TABLE;
+                notifyUri = CALCULATION_CONTENT_URI;
                 break;
 
             default:
@@ -140,13 +148,7 @@ public class EverContentProvider extends ContentProvider {
 
         Cursor cursor = db.query(table, projection, selection,
                 selectionArgs, null, null, sortOrder);
-        cursor.setNotificationUri(getContext().getContentResolver(), USERS_CONTENT_URI);
-        cursor.setNotificationUri(getContext().getContentResolver(), GROUPS_CONTENT_URI);
-        cursor.setNotificationUri(getContext().getContentResolver(), DEBTS_CONTENT_URI);
-        cursor.setNotificationUri(getContext().getContentResolver(), CALCULATION_CONTENT_URI);
-        cursor.setNotificationUri(getContext().getContentResolver(), GROUP_MEMBERS_CONTENT_URI);
-        cursor.setNotificationUri(getContext().getContentResolver(), BILLS_CONTENT_URI);
-
+        cursor.setNotificationUri(getContext().getContentResolver(), notifyUri);
         return cursor;
     }
 
