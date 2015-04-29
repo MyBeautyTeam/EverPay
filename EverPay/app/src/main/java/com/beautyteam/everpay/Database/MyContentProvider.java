@@ -41,7 +41,8 @@ public class MyContentProvider extends ContentProvider {
             + CONTACT_EMAIL + " text,"
             + IMG_NAME + " text,"
             + STATE + " integer,"
-            + RESULT + " integer" + ");";
+            + RESULT + " integer"
+            + ");";
     // // Uri
 // authority
     static final String AUTHORITY = "com.beautyteam.everpay.AdressBook";

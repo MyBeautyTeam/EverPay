@@ -20,7 +20,9 @@ public class History {
     static public final String TEXT_SAY = "text_say";
     static public final String TEXT_WHO = "text_who";
     static public final String TEXT_DESCRIPTION ="text_description";
-    static public final String TEXT_WHAT_WHOM ="text_description";
+    static public final String TEXT_WHAT_WHOM ="text_what_whom";
+    public static final String STATE = "state";
+    public static final String RESULT = "result";
 
     static public final String CREATE_TABLE = "create table " + HISTORY_TABLE + "("
             + ITEM_ID + " integer primary key autoincrement, "
@@ -37,7 +39,9 @@ public class History {
             + TEXT_SAY + " char(70), "
             + TEXT_WHO + " char(70), "
             + TEXT_DESCRIPTION + " char(200), "
-            + TEXT_WHAT_WHOM + " char(200) "
+            + TEXT_WHAT_WHOM + " char(200), "
+            + STATE + " integer,"
+            + RESULT + " integer"
             + ")";
 
 }

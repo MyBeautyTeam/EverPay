@@ -15,6 +15,8 @@ public class Debts {
     static public final String GROUP_TITLE = "group_title";
     static public final String GROUP_ID = "GROUP_ID";
     static public final String IS_I_DEBT = "is_i_debt";
+    public static final String STATE = "state";
+    public static final String RESULT = "result";
 
 
     // Скрипт создания таблицы
@@ -25,6 +27,8 @@ public class Debts {
             + GROUP_ID + " integer, "
             + GROUP_TITLE + " CHAR(50), "
             + SUMMA + " integer, "
-            + IS_I_DEBT + " integer "
+            + IS_I_DEBT + " integer, "
+            + STATE + " integer, "
+            + RESULT + " integer"
             + ")";
 }

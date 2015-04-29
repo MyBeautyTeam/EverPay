@@ -14,6 +14,9 @@ public class Calculation {
     static public final String NAME_WHOM = "whom_name";
     static public final String SUMMA = "summa";
     static public final String IS_DELETED = "is_deleted";
+    public static final String STATE = "state";
+    public static final String RESULT = "result";
+
 
     static public final String CREATE_TABLE = "create table " + CALCULATION_TABLE + "("
             + CALC_ID + " integer primary key, "
@@ -23,7 +26,9 @@ public class Calculation {
             + WHOM_ID + " integer, "
             + NAME_WHOM + " char(70), "
             + SUMMA + " integer, "
-            + IS_DELETED + " integer "
+            + IS_DELETED + " integer, "
+            + STATE + " integer, "
+            + RESULT + " integer"
             + ")";
 
 }

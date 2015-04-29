@@ -14,6 +14,8 @@ public class Bills {
     static public final String GROUP_ID = "group_id";
     static public final String NEED_SUM = "need";
     static public final String INVEST_SUM = "invest";
+    public static final String STATE = "state";
+    public static final String RESULT = "result";
 
     static public final String CREATE_TABLE = "create table " + BILLS_TABLE + "("
             + ITEM_ID + " integer primary key autoincrement, "
@@ -23,6 +25,8 @@ public class Bills {
             + USER_NAME + " char(70), "
             + GROUP_ID + " integer,"
             + NEED_SUM + " integer, "
-            + INVEST_SUM + " integer "
+            + INVEST_SUM + " integer, "
+            + STATE + " integer,"
+            + RESULT + " integer"
             + ")";
 }
