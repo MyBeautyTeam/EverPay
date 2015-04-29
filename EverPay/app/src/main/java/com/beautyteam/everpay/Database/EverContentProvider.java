@@ -168,9 +168,16 @@ public class EverContentProvider extends ContentProvider {
             case URI_GROUPS:
                 table = Groups.GROUPS_TABLE;
                 break;
+            case URI_GROUP_MEMBERS:
+                table = GroupMembers.GROUP_MEMBERS_TABLE;
+                break;
+            case URI_CALCULATION:
+                table = Calculation.CALCULATION_TABLE;
+                break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
         }
+
         db = dbHelper.getWritableDatabase();
         long rowID = db.insert(table, null, contentValues);
         Uri resultUri = ContentUris.withAppendedId(uri, rowID);

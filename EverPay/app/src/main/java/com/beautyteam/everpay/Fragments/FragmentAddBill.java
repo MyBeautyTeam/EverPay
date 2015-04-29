@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -105,6 +106,7 @@ public class FragmentAddBill extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         billId = getArguments().getInt(BILL_ID, -1);
+        groupId = getArguments().getInt(GROUP_ID, -1);
         if (billId == -1)
             getLoaderManager().initLoader(LOADER_ADD, null, this);
         else
@@ -121,8 +123,6 @@ public class FragmentAddBill extends Fragment implements
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
 
         titleEditText = (EditText) view.findViewById(R.id.add_bill_title);
-
-        groupId = getArguments().getInt(GROUP_ID);
 
         addBillList = (ListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -173,6 +173,8 @@ public class FragmentAddBill extends Fragment implements
         });
 
         initializeAnimate();
+
+        Log.d(Constants.LOG, "GROUP_ID =" + groupId);
 
         footerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,7 +244,8 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
-            case LOADER_ADD: {
+                case LOADER_ADD: {
+                    int count = c.getCount();
                 title = Constants.Titles.ADD_BILL;
                 updateTitle();
                 if (billArrayList == null) {
@@ -258,7 +261,7 @@ public class FragmentAddBill extends Fragment implements
                 title = Constants.Titles.EDIT_BILL;
                 updateTitle();
                 if (billArrayList == null) {
-                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" + groupId, null, null);
+                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, null/*GroupMembers.GROUP_ID + "=" +groupId*/, null, null);
                     fillBillList(usersCursor);
 
                     for (int i = 0; i < billArrayList.size(); i++) {

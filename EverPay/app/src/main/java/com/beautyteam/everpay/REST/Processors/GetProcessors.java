@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.REST.Service;
 
@@ -26,7 +28,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
+import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
+import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
 import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
@@ -42,10 +46,11 @@ public class GetProcessors extends Processor {
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
         String action = intent.getAction();
 
+        SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
+        params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID, "0")*/));
+        params.add(new BasicNameValuePair("access_token", sPref.getString(ACCESS_TOKEN, "0")));
+
         if (GET_GROUPS.equals(action)) {
-            SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-            params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID, "0")*/));
-            params.add(new BasicNameValuePair("access_token", sPref.getString(ACCESS_TOKEN, "0")));
             String response = get(Constants.URL.GET_GROUPS, params);
             if (response != null) {
                 if (response.contains("200")) {
@@ -75,8 +80,98 @@ public class GetProcessors extends Processor {
                     result = Constants.Result.ERROR;
                 }
             }
-        } else if (false) {
 
+        }
+        else if (GET_GROUP_MEMBERS.equals(action)) {
+            params.add(new BasicNameValuePair("groups_id", intent.getStringExtra(Constants.IntentParams.GROUP_ID)));
+            String response = get(Constants.URL.GET_GROUP_MEMBERS, params);
+            if ((response != null) && (response.contains("200"))) {
+                result = Constants.Result.OK;
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonObject = jsonObject.getJSONObject("response");
+                    JSONObject group = jsonObject.getJSONObject("group");
+                    JSONObject members = jsonObject.getJSONObject("members");
+                    JSONObject member;
+                    for (int i = 0; i<members.length(); i++) {
+                        member = members.getJSONObject(i + "");
+                        ContentValues cv = new ContentValues();
+                        cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
+                        cv.put(GroupMembers.USER_ID, member.getString("vk_id"));
+                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
+
+                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
+                    }
+                } catch (JSONException e) {
+                    result = Constants.Result.ERROR;
+                }
+            }
+            else {
+                result = Constants.Result.ERROR;
+            }
+        }
+        else if (GET_DEBTS.equals(action)) {
+            String response = get(Constants.URL.GET_DEBTS, params);
+            if ((response != null) && (response.contains("200"))) {
+                result = Constants.Result.OK;
+                JSONObject debtsWhom = null;
+                JSONObject debtsWho = null;
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonObject = jsonObject.getJSONObject("response");
+                    debtsWhom = jsonObject.getJSONObject("debts_whom");
+                    debtsWho = jsonObject.getJSONObject("debts_who");
+
+                } catch (JSONException e) {
+                    result = Constants.Result.ERROR;
+                    service.onRequestEnd(result, intent);
+                    return;
+                }
+                ContentValues cv;
+                JSONObject debt;
+
+                try {
+                    for (int i = 0; (debt = debtsWho.getJSONObject(i + "")) != null; i++) {
+                        cv = new ContentValues();
+                        try {
+                        JSONObject user = debt.getJSONObject("user");
+                            cv.put(Debts.USER_ID, user.getString("vk_id"));
+                            cv.put(Debts.USER_NAME, user.getString("last_name") + " " + user.getString("name"));
+                        } catch (JSONException e) {}
+
+                        JSONObject group = debt.getJSONObject("group");
+                        cv.put(Debts.GROUP_TITLE, group.getString("title"));
+                        cv.put(Debts.GROUP_ID, group.getString("groups_id"));
+                        cv.put(Debts.SUMMA, debt.getString("sum"));
+                        cv.put(Debts.IS_I_DEBT, "1");
+
+                        service.getContentResolver().insert(EverContentProvider.DEBTS_CONTENT_URI, cv);
+                    }
+                } catch (JSONException e) {};
+
+                try {
+                    for (int i = 0; (debt = debtsWhom.getJSONObject(i + "")) != null; i++) {
+                        cv = new ContentValues();
+                        try {
+                            JSONObject user = debt.getJSONObject("user");
+                            cv.put(Debts.USER_ID, user.getString("vk_id"));
+                            cv.put(Debts.USER_NAME, user.getString("last_name") + " " + user.getString("name"));
+                        }catch (JSONException e) {};
+
+                        JSONObject group = debt.getJSONObject("group");
+                        cv.put(Debts.GROUP_TITLE, group.getString("title"));
+                        cv.put(Debts.GROUP_ID, group.getString("groups_id"));
+                        cv.put(Debts.SUMMA, debt.getString("sum"));
+                        cv.put(Debts.IS_I_DEBT, "0");
+
+                        service.getContentResolver().insert(EverContentProvider.DEBTS_CONTENT_URI, cv);
+                    }
+                } catch (JSONException e) {};
+                result = Constants.Result.OK;
+            }
+            else {
+                result = Constants.Result.ERROR;
+            }
         }
 
         service.onRequestEnd(result, intent);

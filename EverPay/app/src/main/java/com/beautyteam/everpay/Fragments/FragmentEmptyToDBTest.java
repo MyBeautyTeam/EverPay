@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -47,6 +48,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
         textView = (TextView)view.findViewById(R.id.test_text_view);
     }
 
+    /*
     private static final String[] PROJECTION = new String[] {
             Bills.ITEM_ID,
             Bills.TITLE,
@@ -56,9 +58,17 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             Bills.INVEST_SUM,
             Bills.NEED_SUM
     };
+    */
+
+    private static final String[] PROJECTION = new String[] {
+            GroupMembers.ITEM_ID,
+            GroupMembers.GROUP_ID,
+            GroupMembers.USER_ID,
+            GroupMembers.USER_NAME,
+    };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.BILLS_CONTENT_URI, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION, GroupMembers.GROUP_ID + "=" + 4, null, null);
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
@@ -66,16 +76,16 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             case LOADER_ID:
                 if (c.moveToFirst() && c.getCount() != 0) {
                     while (!c.isAfterLast()) {
-                        String billId = c.getString(c.getColumnIndex(Bills.ITEM_ID));
-                        String billTitle = c.getString(c.getColumnIndex(Bills.TITLE));
-                        String groupId = c.getString(c.getColumnIndex(Bills.GROUP_ID));
-                        String userId = c.getString(c.getColumnIndex(Bills.USER_ID));
-                        String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));
+                        String billId = c.getString(c.getColumnIndex(GroupMembers.ITEM_ID));
+                        String billTitle = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
+                        String groupId = c.getString(c.getColumnIndex(GroupMembers.GROUP_ID));
+                        String userId = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                        /*String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));
                         String need = c.getString(c.getColumnIndex(Bills.NEED_SUM));
-                        String invest = c.getString(c.getColumnIndex(Bills.INVEST_SUM));
+                        String invest = c.getString(c.getColumnIndex(Bills.INVEST_SUM));*/
 
                         String oldText = textView.getText().toString();
-                        String newText = oldText + "\n" + billId + "  " + billTitle + "  " + groupId + "  " + userId + "  " + userName + "   " + invest + "   " + need;
+                        String newText = oldText + "\n" + billId + "  " + billTitle + "  " + groupId + "  ";// + userId + "  " + userName + "   " + invest + "   " + need;
                         textView.setText(newText);
                         c.moveToNext();
                     }

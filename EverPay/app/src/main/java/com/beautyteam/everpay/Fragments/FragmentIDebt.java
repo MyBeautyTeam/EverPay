@@ -18,6 +18,7 @@ import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
 /**
@@ -31,6 +32,7 @@ public class FragmentIDebt extends Fragment implements
     public static final int LOADER_ID_I_DEBT = 1;
     public static final int LOADER_ID_DEBT_FOR_ME = 0;
     private DebtorsListAdapter mAdapter;
+    int loader;
 
     public static final String LOADER = "LOADER";
 
@@ -46,7 +48,7 @@ public class FragmentIDebt extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int loader = getArguments().getInt(LOADER);
+        loader = getArguments().getInt(LOADER);
         getLoaderManager().initLoader(loader, null, this);
         return inflater.inflate(R.layout.fragment_i_debts, null);
     }
@@ -56,6 +58,8 @@ public class FragmentIDebt extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
         debtorsList = (ListView) view.findViewById(R.id.debtors_fragment_list);
 
+        if (loader == LOADER_ID_I_DEBT)
+            ((MainActivity)getActivity()).getServiceHelper().getDebts();
 
 
     }

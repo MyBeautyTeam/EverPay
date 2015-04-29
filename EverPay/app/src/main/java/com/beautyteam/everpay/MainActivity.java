@@ -24,6 +24,7 @@ import android.view.View;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
+import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
 import com.beautyteam.everpay.REST.ActivityCallback;
@@ -59,7 +60,7 @@ public class MainActivity extends ActionBarActivity
     implements ActivityCallback {
 
 
-    String TITLES[] = {"Главная" ,"Группы", "Выход"};
+    String TITLES[] = {"Главная" ,"Группы", "Выход", "ТЕСТ"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
     //Similarly we Create a String Resource for the name and email in the header view
@@ -169,11 +170,11 @@ public class MainActivity extends ActionBarActivity
                         case 2:
                             finish();
                             break;
-                        /*
+
                         case 3:
                             replaceAllFragment(FragmentEmptyToDBTest.getInstance());
                             break;
-                        */
+
                     }
                     return true;
                 }

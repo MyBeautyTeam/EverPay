@@ -13,7 +13,9 @@ public class Constants {
 
     public class URL {
         public final static String BASE_URL = "http://everpay.cloudapp.net/";
-        public final static String GET_GROUPS = "http://everpay.cloudapp.net/groups/";
+        public final static String GET_GROUPS = BASE_URL + "groups/";
+        public final static String GET_GROUP_MEMBERS = BASE_URL + "groups/members/";
+        public final static String GET_DEBTS = BASE_URL + "debts/";
     }
 
     public class Action {
@@ -23,6 +25,8 @@ public class Constants {
         public final static String DOWNLOAD_IMG = "DOWNLOAD_IMG";
         public final static String CALCULATE = "CALCULATE";
         public final static String GET_GROUPS = "GET_GROUPS";
+        public final static String GET_GROUP_MEMBERS = "GET_GROUP_MEMBERS";
+        public final static String GET_DEBTS = "GET_DEBTS";
     }
 
     public class Titles {
@@ -51,6 +55,7 @@ public class Constants {
     public class IntentParams {
         public final static String URL = "URL";
         public final static String NAME = "USER_NAME";
+        public final static String GROUP_ID = "GROUP_ID";
     }
 
     public final static String RECEIVER = "RECEIVER";

@@ -10,7 +10,11 @@ import com.beautyteam.everpay.Constants;
 public class ProcessorFactory {
     public static Processor getProcessor(Intent intent) {
         String action = intent.getAction();
-        if (Constants.Action.GET_GROUPS.equals(action)) {
+        if      (
+                Constants.Action.GET_GROUPS.equals(action) ||
+                Constants.Action.GET_GROUP_MEMBERS.equals(action) ||
+                Constants.Action.GET_DEBTS.equals(action)
+                ) {
             return new GetProcessors();
         } else
         if (Constants.Action.INIT_VK_USERS.equals(action)) {
