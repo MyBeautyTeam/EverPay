@@ -20,6 +20,9 @@ public class ProcessorFactory {
         } else
         if (Constants.Action.INIT_VK_USERS.equals(action)) {
             return new VKProcessor();
+        } else
+        if (Constants.Action.ADD_BILL.equals(action)) {
+            return new PostProcessor();
         }
         return null;
     }

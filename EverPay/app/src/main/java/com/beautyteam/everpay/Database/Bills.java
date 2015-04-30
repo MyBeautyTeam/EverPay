@@ -9,6 +9,7 @@ public class Bills {
     static public final String ITEM_ID = "_id";
     static public final String BILL_ID = "bill_id";
     static public final String TITLE = "title";
+    static public final String USER_ID_VK = "user_id_vk";
     static public final String USER_ID = "user_id";
     static public final String USER_NAME = "user_name";
     static public final String GROUP_ID = "group_id";
@@ -22,6 +23,7 @@ public class Bills {
             + BILL_ID + " integer, "
             + TITLE + " CHAR(50), "
             + USER_ID + " integer, "
+            + USER_ID_VK + " integer, "
             + USER_NAME + " char(70), "
             + GROUP_ID + " integer,"
             + NEED_SUM + " integer, "

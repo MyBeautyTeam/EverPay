@@ -16,9 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Adapters.ShowBillListAdapter;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -114,7 +112,7 @@ public class FragmentShowBill extends Fragment implements
         Bills.ITEM_ID,
         Bills.BILL_ID,
         Bills.TITLE,
-        Bills.USER_ID,
+        Bills.USER_ID_VK,
         Bills.USER_NAME,
         Bills.GROUP_ID,
         Bills.NEED_SUM,

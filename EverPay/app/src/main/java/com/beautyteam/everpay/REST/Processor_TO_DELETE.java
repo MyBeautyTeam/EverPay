@@ -84,7 +84,7 @@ public class Processor_TO_DELETE {
         }
         else if (GET_GROUPS.equals(action)) {
             SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-            params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID, "0")*/));
+            params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID_VK, "0")*/));
             params.add(new BasicNameValuePair("access_token", sPref.getString(ACCESS_TOKEN, "0")));
             String response = get(Constants.URL.GET_GROUPS, params);
             if (response != null) {

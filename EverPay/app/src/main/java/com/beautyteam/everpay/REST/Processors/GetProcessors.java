@@ -33,7 +33,6 @@ import static com.beautyteam.everpay.Constants.Action.GET_BILL;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
-import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
@@ -49,8 +48,8 @@ public class GetProcessors extends Processor {
         String action = intent.getAction();
 
         SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-        params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID, "0")*/));
-        params.add(new BasicNameValuePair("access_token", sPref.getString(ACCESS_TOKEN, "0")));
+        params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID_VK, "0")*/));
+        params.add(new BasicNameValuePair("access_token", "wjekwewue"/*sPref.getString(ACCESS_TOKEN, "0"))*/));
 
         if (GET_GROUPS.equals(action)) {
             String response = get(Constants.URL.GET_GROUPS, params);
@@ -103,7 +102,7 @@ public class GetProcessors extends Processor {
                         member = members.getJSONObject(i + "");
                         ContentValues cv = new ContentValues();
                         cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
-                        cv.put(GroupMembers.USER_ID, member.getString("vk_id"));
+                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
                         cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
 
                         service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
@@ -205,7 +204,7 @@ public class GetProcessors extends Processor {
 
                         cv.put(Bills.BILL_ID, bill.getString("bills_id"));
                         cv.put(Bills.TITLE, bill.getString("title"));
-                        cv.put(Bills.USER_ID, user.getString("vk_id"));
+                        cv.put(Bills.USER_ID_VK, user.getString("vk_id"));
                         cv.put(Bills.USER_NAME, user.getString("last_name") + " " + user.getString("name"));
                         cv.put(Bills.GROUP_ID, groupId);
                         cv.put(Bills.NEED_SUM, billItem.getString("debt_sum"));

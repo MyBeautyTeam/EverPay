@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.MainActivity;
@@ -53,7 +52,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             Bills.ITEM_ID,
             Bills.TITLE,
             Bills.GROUP_ID,
-            Bills.USER_ID,
+            Bills.USER_ID_VK,
             Bills.USER_NAME,
             Bills.INVEST_SUM,
             Bills.NEED_SUM
@@ -63,7 +62,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
     private static final String[] PROJECTION = new String[] {
             GroupMembers.ITEM_ID,
             GroupMembers.GROUP_ID,
-            GroupMembers.USER_ID,
+            GroupMembers.USER_ID_VK,
             GroupMembers.USER_NAME,
     };
 
@@ -79,7 +78,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
                         String billId = c.getString(c.getColumnIndex(GroupMembers.ITEM_ID));
                         String billTitle = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
                         String groupId = c.getString(c.getColumnIndex(GroupMembers.GROUP_ID));
-                        String userId = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                        String userId = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
                         /*String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));
                         String need = c.getString(c.getColumnIndex(Bills.NEED_SUM));
                         String invest = c.getString(c.getColumnIndex(Bills.INVEST_SUM));*/

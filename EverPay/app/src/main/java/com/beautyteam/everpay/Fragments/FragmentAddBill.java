@@ -218,7 +218,7 @@ public class FragmentAddBill extends Fragment implements
     private static final String[] PROJECTION_ADD = new String[] {
             GroupMembers.ITEM_ID,
             GroupMembers.GROUP_ID,
-            GroupMembers.USER_ID,
+            GroupMembers.USER_ID_VK,
             GroupMembers.USER_NAME,
     };
 
@@ -226,6 +226,7 @@ public class FragmentAddBill extends Fragment implements
             Bills.ITEM_ID,
             Bills.TITLE,
             Bills.USER_ID,
+            Bills.USER_ID_VK,
             Bills.USER_NAME,
             Bills.GROUP_ID,
             Bills.NEED_SUM,
@@ -318,9 +319,9 @@ public class FragmentAddBill extends Fragment implements
         int i = 0;
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
-                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
                 String name = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
-                String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID)) + ".png";
+                String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK)) + ".png";
                 int need = 0;
                 int invest = 0;
                 boolean isRemoved = false;
@@ -355,9 +356,11 @@ public class FragmentAddBill extends Fragment implements
         switch (item.getItemId()) {
             case R.id.action_apply:
                 if (isCorrectData()) {
-                    insertToDB();
-                    if (billId < 0)
+                    int billID = insertToDB();
+                    if (billId < 0) {
+                        ((MainActivity)getActivity()).getServiceHelper().addBill(billID, groupId);
                         Toast.makeText(getActivity(), "Счет был добавлен", Toast.LENGTH_SHORT).show();
+                    }
                     else
                         Toast.makeText(getActivity(), "Счет был изменен", Toast.LENGTH_SHORT).show();
                     ((MainActivity)getActivity()).removeFragment();
@@ -413,28 +416,33 @@ public class FragmentAddBill extends Fragment implements
 
     }
 
-    private void insertToDB() {
+    /*
+    Возвращает ID счета
+     */
+    private int insertToDB() {
 
         Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String [] {"MAX("+Bills.BILL_ID+")"}, null, null, null);
         maxCursor.moveToFirst();
         int max = maxCursor.getInt(0);
-
+        int billID = max+1;
         ContentValues cv = new ContentValues();
         cv.put(Bills.TITLE, titleEditText.getText().toString()); // Нужно ли заносить в базу???
         cv.put(Bills.GROUP_ID, groupId);
-        cv.put(Bills.BILL_ID, max+1);
+        cv.put(Bills.BILL_ID, billID);
 
 
         for (int i=0; i<billArrayList.size(); i++) {
             BillListItem item = billArrayList.get(i);
             if (!item.isRemoved && !((item.invest == 0) && (item.need == 0))) { // Если не удалено и одновременно не равны нулю
-                cv.put(Bills.USER_ID, billArrayList.get(i).id);
+                cv.put(Bills.USER_ID_VK, billArrayList.get(i).id);
                 cv.put(Bills.USER_NAME, billArrayList.get(i).name.replace("\n", " "));
                 cv.put(Bills.INVEST_SUM, billArrayList.get(i).invest);
                 cv.put(Bills.NEED_SUM, billArrayList.get(i).need);
+                cv.put(Bills.STATE, Constants.State.READY_TO_SEND);
                 getActivity().getContentResolver().insert(EverContentProvider.BILLS_CONTENT_URI, cv);
             }
         }
+        return billID;
     }
 
     private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {

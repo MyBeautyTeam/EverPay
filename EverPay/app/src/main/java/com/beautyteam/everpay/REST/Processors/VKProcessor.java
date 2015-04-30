@@ -2,6 +2,9 @@ package com.beautyteam.everpay.REST.Processors;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
@@ -20,12 +23,24 @@ import com.vk.sdk.api.model.VKApiUserFull;
 import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.api.model.VKUsersArray;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.Random;
 
 import static com.beautyteam.everpay.Constants.Action.INIT_VK_USERS;
 import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
 import static com.beautyteam.everpay.Constants.Preference.IMG_URL;
 import static com.beautyteam.everpay.Constants.Preference.USER_ID;
+import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
 import static com.beautyteam.everpay.Constants.Preference.USER_NAME;
 
 /**
@@ -33,8 +48,13 @@ import static com.beautyteam.everpay.Constants.Preference.USER_NAME;
  */
 public class VKProcessor extends Processor {
 
+    private Intent mIntent;
+    private Service mService;
+
     @Override
     public void request(Intent intent, Service service) {
+        mIntent = intent;
+        mService = service;
         String action = intent.getAction();
         if (INIT_VK_USERS.equals(action)) {
             initVKUsers(service, intent);
@@ -56,34 +76,62 @@ public class VKProcessor extends Processor {
 
                 VKApiUserFull userFull = ((VKList<VKApiUserFull>) responses[0].parsedModel).get(0);
                 //user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
-                intent.putExtra(ACCESS_TOKEN, "wjekwewue");
-                intent.putExtra(USER_ID, userFull.id + "");
+                intent.putExtra(ACCESS_TOKEN, "wjekwewue12345");
+                intent.putExtra(USER_ID_VK, userFull.id );
                 intent.putExtra(USER_NAME, userFull.last_name + " " + userFull.first_name);
                 intent.putExtra(IMG_URL, userFull.photo_100);
 
-                Log.d("vksdk", responses[1].parsedModel.toString());
-                VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
+                JSONObject jsonObject = new JSONObject();
+                JSONObject user = new JSONObject();
+                JSONObject friends = new JSONObject();
+                try {
+                    user.put("vk_id", /*userFull.id +*/ new Random().nextInt(100000));
+                    user.put("last_name", userFull.last_name);
+                    user.put("name", userFull.first_name);
+                    user.put("sex", Math.abs(userFull.sex-2));
+                    user.put("access_token", "wjekwewue12345");
+                    jsonObject.put("user", user);
+
+                    Log.d("vksdk", responses[1].parsedModel.toString());
+                    VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
+
+                    ContentValues cv = new ContentValues();
+                    for (VKApiUserFull vkFriend : usersArray) {
+                        cv.put(Users.USER_ID_VK, vkFriend.id);
+                        cv.put(Users.NAME, vkFriend.last_name + " " + vkFriend.first_name);
+                        cv.put(Users.IMG, vkFriend.photo_100);
+                        Uri uri = service.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
+                        String id = uri.getLastPathSegment();
+
+                        JSONObject friend = new JSONObject();
+                        friend.put("vk_id", vkFriend.id);
+                        friend.put("last_name", vkFriend.last_name);
+                        friend.put("name", vkFriend.first_name);
+                        friend.put("sex", Math.abs(vkFriend.sex-2));
+                        friends.put(id, friend);
 
 
-                ContentValues cv = new ContentValues();
-                for (VKApiUserFull friends : usersArray) {
-                    cv.put(Users.USER_ID_VK, friends.id);
-                    cv.put(Users.NAME, friends.last_name+ " " +friends.first_name);
-                    cv.put(Users.IMG, friends.photo_100);
-                    service.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
-
-                    if (new Random().nextFloat() > 0.98) {
-                        ContentValues wq = new ContentValues();
-                        wq.put(Debts.SUMMA, new Random().nextInt(500));
-                        wq.put(Debts.USER_ID, friends.id);
-                        wq.put(Debts.USER_NAME, friends.last_name+ " " +friends.first_name);
-                        wq.put(Debts.GROUP_TITLE, "МОЯ ГРУППА");
-                        wq.put(Debts.IS_I_DEBT, new Random().nextBoolean()? 1:0);
-                        service.getContentResolver().insert(EverContentProvider.DEBTS_CONTENT_URI, wq);
+                        /*if (new Random().nextFloat() > 0.98) {
+                            ContentValues wq = new ContentValues();
+                            wq.put(Debts.SUMMA, new Random().nextInt(500));
+                            wq.put(Debts.USER_ID_VK, vkFriend.id);
+                            wq.put(Debts.USER_NAME, vkFriend.last_name + " " + vkFriend.first_name);
+                            wq.put(Debts.GROUP_TITLE, "МОЯ ГРУППА");
+                            wq.put(Debts.IS_I_DEBT, new Random().nextBoolean() ? 1 : 0);
+                            service.getContentResolver().insert(EverContentProvider.DEBTS_CONTENT_URI, wq);
+                        }*/
                     }
+
+                    jsonObject.put("friends", friends);
+
+
+
+
+                } catch (JSONException e) {
+
                 }
 
-                service.onRequestEnd(Constants.Result.OK, intent);
+                new RetrieveFeedTask().execute(jsonObject.toString());
 
             }
 
@@ -95,6 +143,78 @@ public class VKProcessor extends Processor {
                 Log.d("VkDemoApp", "onError: " + error);
             }
         });
+    }
+
+    public String urlConnectionPost(String strUrl, String urlParameters) {
+        HttpURLConnection connection = null;
+        String str = "";
+        try {
+            URL url = new URL(strUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.connect();
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(urlParameters);
+            writer.flush();
+            int code = connection.getResponseCode();
+            if (code == 200) {
+                InputStream in = connection.getInputStream();
+                str = handleInputStream(in);
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return str;
+    }
+
+    private String handleInputStream(InputStream in) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String result = "", line = "";
+        while ((line = reader.readLine()) != null) {
+            result += line;
+        }
+        Log.e("", result);
+        return result;
+    }
+
+    private class RetrieveFeedTask extends AsyncTask<String, Void, String> {
+
+        private Exception exception;
+
+        @Override
+        protected String doInBackground(String... params) {
+            String response = urlConnectionPost(Constants.URL.SIGNUP, params[0]);
+            if ((response != null)&&(response.contains("200"))) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonObject = jsonObject.getJSONObject("response");
+                    int userId = jsonObject.getInt("users_id");
+                    JSONObject friendsId = jsonObject.getJSONObject("friends_ids");
+                    Iterator<String> iterator = friendsId.keys();
+                    while (iterator.hasNext()) {
+                        String key = iterator.next();
+                        String value = friendsId.getString(key);
+                        ContentValues cv = new ContentValues();
+                        cv.put(Users.USER_ID, value);
+                        mService.getContentResolver().update(EverContentProvider.USERS_CONTENT_URI, cv, Users.USER_ID +"=" + key, null);
+                    }
+                    mIntent.putExtra(USER_ID, userId);
+                    mService.onRequestEnd(Constants.Result.OK, mIntent);
+                } catch (JSONException e) {}
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String feed) {
+
+        }
     }
 
 }
