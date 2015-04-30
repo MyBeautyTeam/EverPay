@@ -43,8 +43,8 @@ public class PostProcessor extends Processor {
         LinkedList<NameValuePair> params = new LinkedList<NameValuePair>();
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
         SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-        int userId = sPref.getInt(Constants.Preference.USER_ID, 0);
-        String accessToken = sPref.getString(ACCESS_TOKEN, "0");
+        int userId = 8;//sPref.getInt(Constants.Preference.USER_ID, 0);
+        String accessToken = "wjekwewue";//sPref.getString(ACCESS_TOKEN, "0");
         String action = intent.getAction();
 
         if (ADD_BILL.equals(action)) {
@@ -66,7 +66,7 @@ public class PostProcessor extends Processor {
                 c.moveToFirst();
                 for (int i=0; i<c.getCount(); i++) {
                     JSONObject userDetail = new JSONObject();
-                    userDetail.put("users_id", c.getInt(c.getColumnIndex(Bills.USER_ID_VK)));
+                    userDetail.put("users_id", c.getInt(c.getColumnIndex(Bills.USER_ID)));
                     userDetail.put("debt_sum", c.getInt(c.getColumnIndex(Bills.NEED_SUM)));
                     userDetail.put("investment_sum", c.getInt(c.getColumnIndex(Bills.INVEST_SUM)));
 
@@ -158,6 +158,7 @@ public class PostProcessor extends Processor {
             Bills.BILL_ID,
             Bills.TITLE,
             Bills.USER_ID_VK,
+            Bills.USER_ID,
             Bills.USER_NAME,
             Bills.GROUP_ID,
             Bills.NEED_SUM,

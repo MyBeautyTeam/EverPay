@@ -196,11 +196,7 @@ public class FragmentAddBill extends Fragment implements
 
     private void initializeAnimate() {
         alphaAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_appear);
-        //alphaAppear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_APPEAR));
-
         alphaDisappear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_disappear);
-        //alphaDisappear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_DISAPPEAR));
-
     }
 
 
@@ -219,6 +215,7 @@ public class FragmentAddBill extends Fragment implements
             GroupMembers.ITEM_ID,
             GroupMembers.GROUP_ID,
             GroupMembers.USER_ID_VK,
+            GroupMembers.USER_ID,
             GroupMembers.USER_NAME,
     };
 
@@ -319,13 +316,14 @@ public class FragmentAddBill extends Fragment implements
         int i = 0;
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
-                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
+                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                String vkid = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
                 String name = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
                 String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK)) + ".png";
                 int need = 0;
                 int invest = 0;
                 boolean isRemoved = false;
-                BillListItem billItem = new BillListItem(id, name, img, need, invest, isRemoved);
+                BillListItem billItem = new BillListItem(id, vkid, name, img, need, invest, isRemoved);
                 c.moveToNext();
                 i++;
                 billArrayList.add(billItem);
@@ -434,7 +432,8 @@ public class FragmentAddBill extends Fragment implements
         for (int i=0; i<billArrayList.size(); i++) {
             BillListItem item = billArrayList.get(i);
             if (!item.isRemoved && !((item.invest == 0) && (item.need == 0))) { // Если не удалено и одновременно не равны нулю
-                cv.put(Bills.USER_ID_VK, billArrayList.get(i).id);
+                cv.put(Bills.USER_ID, billArrayList.get(i).id);
+                cv.put(Bills.USER_ID_VK, billArrayList.get(i).vkid);
                 cv.put(Bills.USER_NAME, billArrayList.get(i).name.replace("\n", " "));
                 cv.put(Bills.INVEST_SUM, billArrayList.get(i).invest);
                 cv.put(Bills.NEED_SUM, billArrayList.get(i).need);

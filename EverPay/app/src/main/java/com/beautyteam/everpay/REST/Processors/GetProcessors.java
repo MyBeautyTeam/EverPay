@@ -48,7 +48,7 @@ public class GetProcessors extends Processor {
         String action = intent.getAction();
 
         SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-        params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID_VK, "0")*/));
+        params.add(new BasicNameValuePair("users_id", 8 + ""/*sPref.getString(USER_ID, "0")*/));
         params.add(new BasicNameValuePair("access_token", "wjekwewue"/*sPref.getString(ACCESS_TOKEN, "0"))*/));
 
         if (GET_GROUPS.equals(action)) {
@@ -103,7 +103,7 @@ public class GetProcessors extends Processor {
                         ContentValues cv = new ContentValues();
                         cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
                         cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
-                        cv.put(GroupMembers.USER_ID_VK, member.getString("users_id"));
+                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
                         cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
 
                         service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);

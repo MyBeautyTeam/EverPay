@@ -53,7 +53,7 @@ public class ShowBillListAdapter extends CursorAdapter {
         String usersId = "";
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
-                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
+                String id = c.getString(c.getColumnIndex(Bills.USER_ID_VK));
                 if (id != null)
                     usersId += id + ",";
                 c.moveToNext();

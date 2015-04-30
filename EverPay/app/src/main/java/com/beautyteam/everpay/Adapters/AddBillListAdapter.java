@@ -122,8 +122,8 @@ public class AddBillListAdapter extends BaseAdapter {
         String usersId = "";
         int count = billFullArrayList.size();
         for (int i=0; i<count; i++) {
-            String id = billFullArrayList.get(i).id;
-            usersId += id + ",";
+            String vkid = billFullArrayList.get(i).vkid;
+            usersId += vkid + ",";
         }
 
         VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, usersId, VKApiConst.FIELDS, "photo_100"));
@@ -245,7 +245,7 @@ public class AddBillListAdapter extends BaseAdapter {
                 Constants.FILE_DIRECTORY + '/' + fileName +
                 ".png"; // !!!!!!!!!
         File file = new File(filePath);*/
-        String avatarUrl = mapIdToAvatar.get(billAvailableArrayList.get(position).id);
+        String avatarUrl = mapIdToAvatar.get(billAvailableArrayList.get(position).vkid);
         Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(viewHolder.avatar);
 
         return convertView;

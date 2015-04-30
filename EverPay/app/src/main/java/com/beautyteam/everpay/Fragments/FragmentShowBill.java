@@ -113,6 +113,7 @@ public class FragmentShowBill extends Fragment implements
         Bills.BILL_ID,
         Bills.TITLE,
         Bills.USER_ID_VK,
+        Bills.USER_ID,
         Bills.USER_NAME,
         Bills.GROUP_ID,
         Bills.NEED_SUM,
