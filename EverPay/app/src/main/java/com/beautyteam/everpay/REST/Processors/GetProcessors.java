@@ -103,6 +103,7 @@ public class GetProcessors extends Processor {
                         ContentValues cv = new ContentValues();
                         cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
                         cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
+                        cv.put(GroupMembers.USER_ID_VK, member.getString("users_id"));
                         cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
 
                         service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
@@ -141,7 +142,8 @@ public class GetProcessors extends Processor {
                         cv = new ContentValues();
                         try {
                         JSONObject user = debt.getJSONObject("user");
-                            cv.put(Debts.USER_ID, user.getString("vk_id"));
+                            cv.put(Debts.USER_ID, user.getString("users_id"));
+                            cv.put(Debts.USER_VK_ID, user.getString("vk_id"));
                             cv.put(Debts.USER_NAME, user.getString("last_name") + " " + user.getString("name"));
                         } catch (JSONException e) {}
 
@@ -161,7 +163,8 @@ public class GetProcessors extends Processor {
                         cv = new ContentValues();
                         try {
                             JSONObject user = debt.getJSONObject("user");
-                            cv.put(Debts.USER_ID, user.getString("vk_id"));
+                            cv.put(Debts.USER_ID, user.getString("users_id"));
+                            cv.put(Debts.USER_VK_ID, user.getString("vk_id"));
                             cv.put(Debts.USER_NAME, user.getString("last_name") + " " + user.getString("name"));
                         }catch (JSONException e) {};
 
@@ -204,6 +207,7 @@ public class GetProcessors extends Processor {
 
                         cv.put(Bills.BILL_ID, bill.getString("bills_id"));
                         cv.put(Bills.TITLE, bill.getString("title"));
+                        cv.put(Bills.USER_ID, user.getString("users_id"));
                         cv.put(Bills.USER_ID_VK, user.getString("vk_id"));
                         cv.put(Bills.USER_NAME, user.getString("last_name") + " " + user.getString("name"));
                         cv.put(Bills.GROUP_ID, groupId);

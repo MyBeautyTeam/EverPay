@@ -52,7 +52,7 @@ public class DebtorsListAdapter extends CursorAdapter {
         String usersId = "";
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
-                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
+                String id = c.getString(c.getColumnIndex(Debts.USER_VK_ID));
                 if (id != null)
                     usersId += id + ",";
                 c.moveToNext();
@@ -110,7 +110,7 @@ public class DebtorsListAdapter extends CursorAdapter {
         }
         else {
             holder.discript.setText(userName + ", " + group);
-            String id = cursor.getString(cursor.getColumnIndex(Debts.USER_ID));
+            String id = cursor.getString(cursor.getColumnIndex(Debts.USER_VK_ID));
             String img = mapIdToAvatar.get(id);
 
             Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);

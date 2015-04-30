@@ -1,21 +1,17 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
-import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.MainActivity;
@@ -68,6 +64,7 @@ public class FragmentIDebt extends Fragment implements
         Debts.ITEM_ID,
         Debts.SUMMA,
         Debts.USER_ID,
+        Debts.USER_VK_ID,
         Debts.USER_NAME,
         Debts.GROUP_TITLE,
         Debts.IS_I_DEBT

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -16,9 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
@@ -102,7 +99,7 @@ public class FragmentViewPager extends Fragment implements
     private static final String[] PROJECTION = new String[] {
             Debts.ITEM_ID,
             Debts.SUMMA,
-            Debts.USER_ID,
+            Debts.USER_VK_ID,
             Debts.USER_NAME,
             Debts.GROUP_TITLE,
             Debts.IS_I_DEBT

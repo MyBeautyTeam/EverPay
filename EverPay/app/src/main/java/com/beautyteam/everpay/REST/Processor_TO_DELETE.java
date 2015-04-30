@@ -2,18 +2,13 @@ package com.beautyteam.everpay.REST;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Entity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
@@ -42,11 +37,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,15 +49,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import static android.content.Context.*;
 import static com.beautyteam.everpay.Constants.Action.*;
 import static com.beautyteam.everpay.Constants.Preference.*;
 
@@ -302,7 +291,7 @@ public class Processor_TO_DELETE {
                     if (new Random().nextFloat() > 0.98) {
                         ContentValues wq = new ContentValues();
                         wq.put(Debts.SUMMA, new Random().nextInt(500));
-                        wq.put(Debts.USER_ID, friends.id);
+                        wq.put(Debts.USER_VK_ID, friends.id);
                         wq.put(Debts.USER_NAME, friends.last_name+ " " +friends.first_name);
                         wq.put(Debts.GROUP_TITLE, "МОЯ ГРУППА");
                         wq.put(Debts.IS_I_DEBT, new Random().nextBoolean()? 1:0);
