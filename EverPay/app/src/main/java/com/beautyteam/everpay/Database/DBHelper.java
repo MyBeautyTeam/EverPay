@@ -137,10 +137,12 @@ public class DBHelper extends SQLiteOpenHelper {
             for (int j=1; j<=count; j++) {
                 int who = new Random().nextInt(10) + 1;
                 cv.put(Calculation.WHO_ID, who);
+                cv.put(Calculation.WHO_ID_VK, new Random().nextInt(100000));
                 cv.put(Calculation.NAME_WHO, "Name LastName" + who);
 
                 int whom = new Random().nextInt(10) + 1;
                 cv.put(Calculation.WHOM_ID, whom);
+                cv.put(Calculation.WHOM_ID_VK, new Random().nextInt(100000));
                 cv.put(Calculation.NAME_WHOM, "Name LastName" + whom);
 
                 cv.put(Calculation.SUMMA, new Random().nextInt(5000));

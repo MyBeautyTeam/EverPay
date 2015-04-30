@@ -54,11 +54,11 @@ public class CalcListAdapter extends CursorAdapter {
                 String id = c.getString(c.getColumnIndex(Calculation.CALC_ID));
 
                 String userId = "";
-                userId = c.getString(c.getColumnIndex(Calculation.WHO_ID));
+                userId = c.getString(c.getColumnIndex(Calculation.WHO_ID_VK));
                 if (!usersId.contains(","+userId+","))
                     usersId += userId + ",";
 
-                userId = c.getString(c.getColumnIndex(Calculation.WHOM_ID));
+                userId = c.getString(c.getColumnIndex(Calculation.WHOM_ID_VK));
                 if (!usersId.contains(","+userId+","))
                     usersId += userId + ",";
 
@@ -160,11 +160,11 @@ public class CalcListAdapter extends CursorAdapter {
             }
         });
 
-        String userWho = cursor.getString(cursor.getColumnIndex(Calculation.WHO_ID));
-        String userWhom = cursor.getString(cursor.getColumnIndex(Calculation.WHOM_ID));
+        String userWhoVK = cursor.getString(cursor.getColumnIndex(Calculation.WHO_ID_VK));
+        String userWhomVK = cursor.getString(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
 
         OnTextClickListener textListener = new OnTextClickListener();
-        textListener.setParams(holder, userWho, userWhom, cursor.getPosition());
+        textListener.setParams(holder, userWhoVK, userWhomVK, cursor.getPosition());
         holder.firstName.setOnClickListener(textListener);
         holder.firstLayout.setOnClickListener(textListener);
         holder.secondName.setOnClickListener(textListener);
