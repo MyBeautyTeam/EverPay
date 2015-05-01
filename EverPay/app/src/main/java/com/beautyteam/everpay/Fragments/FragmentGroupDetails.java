@@ -59,16 +59,18 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        Bundle arg = getArguments();
+        groupId = arg.getInt(GROUP_ID);
+        groupTitle = arg.getString(GROUP_TITLE);
         return inflater.inflate(R.layout.fragment_group_detail, null);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Bundle arg = getArguments();
-        groupId = arg.getInt(GROUP_ID);
-        groupTitle = arg.getString(GROUP_TITLE);
         super.onViewCreated(view, savedInstanceState);
         historyList = (ListView) view.findViewById(R.id.group_detail_history);
+
+        ((MainActivity)getActivity()).getServiceHelper().getHistory(groupId);
         ((MainActivity)getActivity()).getServiceHelper().getGroupMembers(groupId);
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);

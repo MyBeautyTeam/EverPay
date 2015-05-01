@@ -31,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.beautyteam.everpay.Constants.Action.*;
-import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
 
 /**
  * Created by Admin on 29.04.2015.
@@ -76,20 +75,50 @@ public class PostProcessor extends Processor {
                 jsonObject.put("bills_details", billDetails);
 
             } catch (JSONException e) {}
-            String UrlParams = jsonObject.toString();
             String response = urlConnectionPost(Constants.URL.ADD_BILL, jsonObject.toString());
-            JSONObject jsonObject1;
+            JSONObject responseJSON;
             try {
-                jsonObject1 = new JSONObject(response);
+                responseJSON = new JSONObject(response);
+                responseJSON = responseJSON.getJSONObject("response");
+                JSONObject history = responseJSON.getJSONObject("history");
             } catch (JSONException asdw) {
 
             }
-            int a = 10;
-            a++;
-            int d = 10;
 
+        } else
+        if (ADD_MEMBER_TO_GROUP.equals(action)) {
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            int userIdWhom = intent.getIntExtra(Constants.IntentParams.USER_ID, 0);
+            try {
+                JSONObject paramsJSON = new JSONObject();
+                paramsJSON.put("users_id", userId);
+                paramsJSON.put("access_token", accessToken);
+                paramsJSON.put("groups_id", groupId);
+                paramsJSON.put("title", userIdWhom);
+                String response = urlConnectionPost(Constants.URL.ADD_BILL, paramsJSON.toString());
+                if ((response != null) && response.contains("200")) {
 
+                }
+            } catch (JSONException e) {
 
+            }
+        } else
+        if (REMOVE_MEMBER_FROM_GROUP.equals(action)) {
+            try {
+                int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+                int userIdWhom = intent.getIntExtra(Constants.IntentParams.USER_ID, 0);
+                JSONObject paramsJSON = new JSONObject();
+                paramsJSON.put("users_id", userId);
+                paramsJSON.put("access_token", accessToken);
+                paramsJSON.put("groups_id", groupId);
+                paramsJSON.put("title", userIdWhom);
+                String response = urlConnectionPost(Constants.URL.ADD_BILL, paramsJSON.toString());
+                if ((response != null) && response.contains("200")) {
+
+                }
+            } catch (JSONException e) {
+
+            }
         }
     }
 

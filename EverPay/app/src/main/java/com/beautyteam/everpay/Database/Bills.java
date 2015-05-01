@@ -8,6 +8,7 @@ public class Bills {
 
     static public final String ITEM_ID = "_id";
     static public final String BILL_ID = "bill_id";
+    static public final String BILL_EDITED_ID = "edited_bill_id";
     static public final String TITLE = "title";
     static public final String USER_ID_VK = "user_id_vk";
     static public final String USER_ID = "user_id";
@@ -21,6 +22,7 @@ public class Bills {
     static public final String CREATE_TABLE = "create table " + BILLS_TABLE + "("
             + ITEM_ID + " integer primary key autoincrement, "
             + BILL_ID + " integer, "
+            + BILL_EDITED_ID + " integer, "
             + TITLE + " CHAR(50), "
             + USER_ID + " integer, "
             + USER_ID_VK + " integer, "

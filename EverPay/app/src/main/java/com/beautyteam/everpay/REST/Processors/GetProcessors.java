@@ -12,7 +12,9 @@ import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
+import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.REST.Service;
+import com.beautyteam.everpay.Utils.DateFormetter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,12 +29,15 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 import static com.beautyteam.everpay.Constants.Action.GET_BILL;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
+import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
@@ -86,8 +91,8 @@ public class GetProcessors extends Processor {
 
         }
         else if (GET_GROUP_MEMBERS.equals(action)) {
-            String groupId = intent.getStringExtra(Constants.IntentParams.GROUP_ID);
-            params.add(new BasicNameValuePair("groups_id", groupId));
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            params.add(new BasicNameValuePair("groups_id", groupId+""));
             String response = get(Constants.URL.GET_GROUP_MEMBERS, params);
             if ((response != null) && (response.contains("200"))) {
                 result = Constants.Result.OK;
@@ -184,13 +189,13 @@ public class GetProcessors extends Processor {
             }
         }
         else if (GET_BILL.equals(action)) {
-            String groupId = intent.getStringExtra(Constants.IntentParams.GROUP_ID);
-            String billId = intent.getStringExtra(Constants.IntentParams.BILL_ID);
-            params.add(new BasicNameValuePair("groups_id", groupId));
-            params.add(new BasicNameValuePair("bills_id", billId));
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            int billId = intent.getIntExtra(Constants.IntentParams.BILL_ID, 0);
+            params.add(new BasicNameValuePair("groups_id", groupId + ""));
+            params.add(new BasicNameValuePair("bills_id", billId + ""));
 
             String response = get(Constants.URL.GET_BILL, params);
-            if (response != null) {
+            if ((response != null) && (response.contains("200"))) {
                 service.getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, Bills.BILL_ID + "=" + billId , null);
 
                 try {
@@ -222,6 +227,77 @@ public class GetProcessors extends Processor {
                 } catch (JSONException e) {
                     result = Constants.Result.ERROR;
                 }
+            } else {
+                result = Constants.Result.ERROR;
+            }
+
+        } else
+        if (GET_HISTORY.equals(action)) {
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            params.add(new BasicNameValuePair("groups_id", groupId + ""));
+
+            String response = get(Constants.URL.GET_HISTORY, params);
+            if ((response != null) && (response.contains("200"))) {
+                service.getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+
+                try {
+                    JSONObject responseJSON = new JSONObject(response);
+                    responseJSON = responseJSON.getJSONObject("response");
+                    JSONObject history = responseJSON.getJSONObject("history");
+
+                    JSONObject historyItem;
+                    for (int i=0; i<history.length(); i++) {
+                        historyItem = history.getJSONObject(i + "");
+                        ContentValues cv = new ContentValues();
+                        try {
+                            cv.put(History.USERS_ID_WHO_SAY, historyItem.getString("users_id_who_say"));
+                        } catch (JSONException e) {}
+                        cv.put(History.USERS_ID_WHO, historyItem.getString("users_id_who"));
+                        try {
+                            cv.put(History.USERS_ID_WHOM, historyItem.getString("users_id_whom"));
+                        } catch (JSONException e){}
+
+                        cv.put(History.GROUP_ID, historyItem.getString("groups_id"));
+                        try {
+                            cv.put(History.BILL_ID, historyItem.getString("bills_id"));
+                        } catch (JSONException e) {}
+
+                        try {
+                            cv.put(History.EDITED_BILL_ID, historyItem.getString("edited_bills_id"));
+                        } catch (JSONException e) {}
+
+                        try {
+                            cv.put(History.DEBTS_ID, historyItem.getString("debts_id"));
+                        } catch (JSONException e) {}
+
+
+                        cv.put(History.ACTION, historyItem.getString("action"));
+
+                        String date = historyItem.getString("action_datetime");
+                        String formatedDate = DateFormetter.formatDateTime(service, date);
+                        cv.put(History.ACTION_DATETIME, formatedDate);
+                        try {
+                            cv.put(History.TEXT_WHO_SAY, historyItem.getString("text_who_say"));
+                        } catch (JSONException e) {}
+
+                        try {
+                        cv.put(History.TEXT_SAY, historyItem.getString("text_say"));
+                        } catch (JSONException e) {}
+                        cv.put(History.TEXT_WHO, historyItem.getString("text_who"));
+                        cv.put(History.TEXT_DESCRIPTION, historyItem.getString("text_description"));
+                        cv.put(History.TEXT_WHAT_WHOM, historyItem.getString("text_what_whom"));
+
+                        cv.put(History.STATE, Constants.State.ENDS);
+                        cv.put(History.RESULT, Constants.Result.OK);
+
+
+                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+
+                    }
+                    result = Constants.Result.OK;
+
+                } catch (JSONException e) {}
+
             } else {
                 result = Constants.Result.ERROR;
             }
