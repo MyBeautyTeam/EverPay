@@ -34,7 +34,7 @@ public class History {
             + EDITED_BILL_ID + " integer, "
             + DEBTS_ID + " integer, "
             + ACTION + " integer, "
-            + ACTION_DATETIME + " date, "
+            + ACTION_DATETIME + " char(70), "
             + TEXT_WHO_SAY + " char(70), "
             + TEXT_SAY + " char(70), "
             + TEXT_WHO + " char(70), "

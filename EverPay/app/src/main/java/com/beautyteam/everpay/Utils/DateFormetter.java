@@ -15,10 +15,29 @@ public class DateFormetter {
 
         String finalDateTime = "";
 
-        SimpleDateFormat iso8601Format = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss");
+        String day = timeToFormat.substring(0, timeToFormat.indexOf(" "));
 
-        Date date = null;
+        String dateWithoutDay = timeToFormat.substring(timeToFormat.indexOf(" ")+1);
+        String month = dateWithoutDay.substring(0, dateWithoutDay.indexOf(" "));
+
+        String dateWithoutMonth = dateWithoutDay.substring(dateWithoutDay.indexOf(month));
+        String year = dateWithoutMonth.substring(dateWithoutMonth.indexOf(" "), dateWithoutMonth.lastIndexOf(" "));
+
+        String time = timeToFormat.substring(timeToFormat.lastIndexOf(" "));
+
+        String monthDigit = "";
+        if (month.equals("April")) {
+            monthDigit = "04";
+        } else
+        if (month.equals("May")) {
+            monthDigit = "05";
+        }
+        String result = year + "-" + monthDigit + "-" + day + " " + time;
+        return result;
+        /*SimpleDateFormat iso8601Format = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+*/
+        /*Date date = null;
         if (timeToFormat != null) {
             try {
                 date = iso8601Format.parse(timeToFormat);
@@ -37,7 +56,9 @@ public class DateFormetter {
                 finalDateTime = android.text.format.DateUtils.formatDateTime(context,
                         when + TimeZone.getDefault().getOffset(when), flags);
             }
-        }
-        return finalDateTime;
+        }*/
+
+
+        //return finalDateTime;
     }
 }
