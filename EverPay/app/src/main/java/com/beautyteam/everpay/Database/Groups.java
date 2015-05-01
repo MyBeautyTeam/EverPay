@@ -16,7 +16,7 @@ public class Groups {
     static public final String CREATE_TABLE = "create table " + GROUPS_TABLE + "("
             + GROUP_ID + " integer primary key autoincrement, "
             + TITLE + " CHAR(50),"
-            + UPDATE_TIME + " integer, "
+            + UPDATE_TIME + " char(30), "
             + IS_CALCULATED + " integer, "
             + STATE + " integer, "
             + RESULT + " integer"

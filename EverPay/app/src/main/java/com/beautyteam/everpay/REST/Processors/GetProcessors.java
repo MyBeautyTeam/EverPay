@@ -73,7 +73,7 @@ public class GetProcessors extends Processor {
                             cv = new ContentValues();
                             cv.put(Groups.GROUP_ID, group.getString("groups_id"));
                             cv.put(Groups.TITLE, group.getString("title"));
-                            //cv.put(Groups.UPDATE_TIME, group.getString("update_datetime"));
+                            cv.put(Groups.UPDATE_TIME, DateFormetter.formatDateTime(group.getString("update_datetime")));
                             if (group.getBoolean("is_calculated"))
                                 cv.put(Groups.IS_CALCULATED, 1);
                             else
@@ -274,7 +274,7 @@ public class GetProcessors extends Processor {
                         cv.put(History.ACTION, historyItem.getString("action"));
 
                         String date = historyItem.getString("action_datetime");
-                        String formatedDate = DateFormetter.formatDateTime(service, date);
+                        String formatedDate = DateFormetter.formatDateTime(date);
                         cv.put(History.ACTION_DATETIME, formatedDate);
                         try {
                             cv.put(History.TEXT_WHO_SAY, historyItem.getString("text_who_say"));

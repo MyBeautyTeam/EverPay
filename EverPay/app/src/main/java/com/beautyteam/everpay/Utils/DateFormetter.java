@@ -11,9 +11,7 @@ import java.util.TimeZone;
  * Created by Admin on 01.05.2015.
  */
 public class DateFormetter {
-    public static String formatDateTime(Context context, String timeToFormat) {
-
-        String finalDateTime = "";
+    public static String formatDateTime(String timeToFormat) {
 
         String day = timeToFormat.substring(0, timeToFormat.indexOf(" "));
 
@@ -26,12 +24,43 @@ public class DateFormetter {
         String time = timeToFormat.substring(timeToFormat.lastIndexOf(" "));
 
         String monthDigit = "";
+        if (month.equals("January")) {
+            monthDigit = "01";
+        } else
+        if (month.equals("February")) {
+            monthDigit = "02";
+        } else
+        if (month.equals("March")) {
+            monthDigit = "03";
+        } else
         if (month.equals("April")) {
             monthDigit = "04";
         } else
         if (month.equals("May")) {
             monthDigit = "05";
+        } else
+        if (month.equals("June")) {
+            monthDigit = "06";
+        } else
+        if (month.equals("July")) {
+            monthDigit = "07";
+        } else
+        if (month.equals("August")) {
+            monthDigit = "08";
+        } else
+        if (month.equals("September")) {
+            monthDigit = "09";
         }
+        if (month.equals("October")) {
+            monthDigit = "10";
+        } else
+        if (month.equals("November")) {
+            monthDigit = "11";
+        } else
+        if (month.equals("December")) {
+            monthDigit = "12";
+        }
+
         String result = year + "-" + monthDigit + "-" + day + " " + time;
         return result;
         /*SimpleDateFormat iso8601Format = new SimpleDateFormat(
