@@ -8,14 +8,16 @@ import android.os.Parcelable;
  */
 public class BillListItem implements Parcelable {
     public String id;
+    public String vkid;
     public String name;
     public String img;
     public int need;
     public int invest;
     public boolean isRemoved;
 
-    public BillListItem(String id, String name, String img,int need, int invest, boolean isRemoved) {
+    public BillListItem(String id, String vkId, String name, String img,int need, int invest, boolean isRemoved) {
         this.id = id;
+        this.vkid = vkId;
         this.name = name;
         this.img = img;
         this.need = need;
@@ -33,6 +35,7 @@ public class BillListItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
+        parcel.writeString(vkid);
         parcel.writeString(name);
         parcel.writeString(img);
         parcel.writeInt(need);
@@ -44,7 +47,7 @@ public class BillListItem implements Parcelable {
 
         @Override
         public BillListItem createFromParcel(Parcel source) {
-            BillListItem billListItem = new BillListItem(source.readString(),source.readString(), source.readString(), source.readInt(), source.readInt(), source.readByte() == 1);
+            BillListItem billListItem = new BillListItem(source.readString(), source.readString(),source.readString(), source.readString(), source.readInt(), source.readInt(), source.readByte() == 1);
             return billListItem;
         }
 

@@ -3,6 +3,7 @@ package com.beautyteam.everpay.Adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class GroupsListAdapter  extends CursorAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(Constants.LOG, "GROUP_ID =" + id);
                 mainActivity.addFragment(FragmentGroupDetails.getInstance(Integer.parseInt(id), groupTitle));
             }
         });

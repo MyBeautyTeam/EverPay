@@ -51,9 +51,71 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
         Log.d(Constants.LOG, "ServiceHelper, send()");
     }
+
+    public void initVKUsers() {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.INIT_VK_USERS);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+
+        activity.startService(intentService);
+    }
+
     @Override
     public void onReceiveResult(int resultCode, Bundle data) {
         Log.d(Constants.LOG, "ServiceHelper, onReceiveResult()");
-        activityCallback.onRequestEnd(resultCode);
+        activityCallback.onRequestEnd(resultCode, data);
+    }
+
+    public void calculate(int groupID) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.CALCULATE);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+
+        activity.startService(intentService);
+    }
+
+    public void getGroups() {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_GROUPS);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    public void getGroupMembers(int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_GROUP_MEMBERS);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId + "");
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    public void getDebts() {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_DEBTS);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    public void getBill(int billId, int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_BILL);
+        intentService.putExtra(Constants.IntentParams.BILL_ID, billId + "");
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId + "");
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    public void addBill(int billId, int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.ADD_BILL);
+        intentService.putExtra(Constants.IntentParams.BILL_ID, billId);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
     }
 }

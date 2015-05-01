@@ -10,12 +10,16 @@ public class Groups {
     static public final String TITLE = "title";
     static public final String UPDATE_TIME = "update_time";
     static public final String IS_CALCULATED = "is_calculated";
+    public static final String STATE = "state";
+    public static final String RESULT = "result";
 
     static public final String CREATE_TABLE = "create table " + GROUPS_TABLE + "("
             + GROUP_ID + " integer primary key autoincrement, "
             + TITLE + " CHAR(50),"
             + UPDATE_TIME + " integer, "
-            + IS_CALCULATED + " integer "
+            + IS_CALCULATED + " integer, "
+            + STATE + " integer, "
+            + RESULT + " integer"
             + ")";
 
 }

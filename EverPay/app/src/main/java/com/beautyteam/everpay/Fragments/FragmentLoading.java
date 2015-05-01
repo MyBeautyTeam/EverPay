@@ -2,11 +2,13 @@ package com.beautyteam.everpay.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.R;
@@ -17,6 +19,7 @@ import com.beautyteam.everpay.R;
 public class FragmentLoading extends Fragment {
 
     private TextView loadingText;
+    Animation loopAppear;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,11 +29,13 @@ public class FragmentLoading extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         loadingText = (TextView) view.findViewById(R.id.loading_text);
+        loopAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_animation);
+    }
 
-        Animation loopAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_animation);
-
+    @Override
+    public void onResume() {
+        super.onResume();
         loadingText.startAnimation(loopAppear);
-
     }
 
 

@@ -1,10 +1,7 @@
 package com.beautyteam.everpay.Adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Path;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +10,9 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
-import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
-import com.beautyteam.everpay.Database.MyContentProvider;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
-import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
@@ -31,14 +23,9 @@ import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
-import com.vk.sdk.api.model.VKApiUserFull;
 import com.vk.sdk.api.model.VKList;
-import com.vk.sdk.api.model.VKUsersArray;
 
-import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
 
 /**
  * Created by Admin on 10.03.2015.
@@ -65,7 +52,7 @@ public class DebtorsListAdapter extends CursorAdapter {
         String usersId = "";
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
-                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                String id = c.getString(c.getColumnIndex(Debts.USER_VK_ID));
                 if (id != null)
                     usersId += id + ",";
                 c.moveToNext();
@@ -123,7 +110,7 @@ public class DebtorsListAdapter extends CursorAdapter {
         }
         else {
             holder.discript.setText(userName + ", " + group);
-            String id = cursor.getString(cursor.getColumnIndex(Debts.USER_ID));
+            String id = cursor.getString(cursor.getColumnIndex(Debts.USER_VK_ID));
             String img = mapIdToAvatar.get(id);
 
             Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);

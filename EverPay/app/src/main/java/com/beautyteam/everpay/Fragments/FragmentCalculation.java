@@ -73,8 +73,10 @@ public class FragmentCalculation extends Fragment implements
             Calculation.CALC_ID,
             Calculation.GROUPS_ID,
             Calculation.WHO_ID,
+            Calculation.WHO_ID_VK,
             Calculation.NAME_WHO,
             Calculation.WHOM_ID,
+            Calculation.WHOM_ID_VK,
             Calculation.NAME_WHOM,
             Calculation.SUMMA,
             Calculation.IS_DELETED

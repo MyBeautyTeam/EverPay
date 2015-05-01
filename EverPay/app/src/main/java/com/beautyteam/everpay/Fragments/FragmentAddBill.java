@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,6 +72,8 @@ public class FragmentAddBill extends Fragment implements
     private static final int LOADER_ADD = 2;
     private static final int LOADER_EDIT = 3;
 
+    String title = "";
+
     /*
     Для добавления счета
      */
@@ -103,6 +106,7 @@ public class FragmentAddBill extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         billId = getArguments().getInt(BILL_ID, -1);
+        groupId = getArguments().getInt(GROUP_ID, -1);
         if (billId == -1)
             getLoaderManager().initLoader(LOADER_ADD, null, this);
         else
@@ -119,8 +123,6 @@ public class FragmentAddBill extends Fragment implements
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
 
         titleEditText = (EditText) view.findViewById(R.id.add_bill_title);
-
-        groupId = getArguments().getInt(GROUP_ID);
 
         addBillList = (ListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -172,6 +174,8 @@ public class FragmentAddBill extends Fragment implements
 
         initializeAnimate();
 
+        Log.d(Constants.LOG, "GROUP_ID =" + groupId);
+
         footerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,11 +196,7 @@ public class FragmentAddBill extends Fragment implements
 
     private void initializeAnimate() {
         alphaAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_appear);
-        //alphaAppear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_APPEAR));
-
         alphaDisappear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_disappear);
-        //alphaDisappear.setAnimationListener(new AnimationListenerImpl(leftSummaLayout, AnimationListenerImpl.ACTION_DISAPPEAR));
-
     }
 
 
@@ -205,7 +205,8 @@ public class FragmentAddBill extends Fragment implements
         int summa;
         if (value.isEmpty()) summa = 0;
         else  summa = Integer.parseInt(value);
-        mAdapter.setNeedSumma(summa);
+        if (mAdapter!=null)
+            mAdapter.setNeedSumma(summa);
 
     }
 
@@ -213,6 +214,7 @@ public class FragmentAddBill extends Fragment implements
     private static final String[] PROJECTION_ADD = new String[] {
             GroupMembers.ITEM_ID,
             GroupMembers.GROUP_ID,
+            GroupMembers.USER_ID_VK,
             GroupMembers.USER_ID,
             GroupMembers.USER_NAME,
     };
@@ -221,6 +223,7 @@ public class FragmentAddBill extends Fragment implements
             Bills.ITEM_ID,
             Bills.TITLE,
             Bills.USER_ID,
+            Bills.USER_ID_VK,
             Bills.USER_NAME,
             Bills.GROUP_ID,
             Bills.NEED_SUM,
@@ -239,7 +242,10 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
-            case LOADER_ADD: {
+                case LOADER_ADD: {
+                    int count = c.getCount();
+                title = Constants.Titles.ADD_BILL;
+                updateTitle();
                 if (billArrayList == null) {
                     fillBillList(c);
                 }
@@ -250,8 +256,10 @@ public class FragmentAddBill extends Fragment implements
             }
 
             case LOADER_EDIT: {
+                title = Constants.Titles.EDIT_BILL;
+                updateTitle();
                 if (billArrayList == null) {
-                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" + groupId, null, null);
+                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, null/*GroupMembers.GROUP_ID + "=" +groupId*/, null, null);
                     fillBillList(usersCursor);
 
                     for (int i = 0; i < billArrayList.size(); i++) {
@@ -290,6 +298,8 @@ public class FragmentAddBill extends Fragment implements
                     }
 
                     leftSumma.setText(generalSumm + "");
+                    needSummaEdit.setText(generalSumm + "");
+                    needSummaText.setText(generalSumm + "");
                     switchCompat.setChecked(isNotEquals);
                 }
                 int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
@@ -307,12 +317,13 @@ public class FragmentAddBill extends Fragment implements
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
                 String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                String vkid = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
                 String name = c.getString(c.getColumnIndex(GroupMembers.USER_NAME));
-                String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID)) + ".png";
+                String img = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK)) + ".png";
                 int need = 0;
                 int invest = 0;
                 boolean isRemoved = false;
-                BillListItem billItem = new BillListItem(id, name, img, need, invest, isRemoved);
+                BillListItem billItem = new BillListItem(id, vkid, name, img, need, invest, isRemoved);
                 c.moveToNext();
                 i++;
                 billArrayList.add(billItem);
@@ -343,9 +354,11 @@ public class FragmentAddBill extends Fragment implements
         switch (item.getItemId()) {
             case R.id.action_apply:
                 if (isCorrectData()) {
-                    insertToDB();
-                    if (billId < 0)
+                    int billID = insertToDB();
+                    if (billId < 0) {
+                        ((MainActivity)getActivity()).getServiceHelper().addBill(billID, groupId);
                         Toast.makeText(getActivity(), "Счет был добавлен", Toast.LENGTH_SHORT).show();
+                    }
                     else
                         Toast.makeText(getActivity(), "Счет был изменен", Toast.LENGTH_SHORT).show();
                     ((MainActivity)getActivity()).removeFragment();
@@ -401,28 +414,35 @@ public class FragmentAddBill extends Fragment implements
 
     }
 
-    private void insertToDB() {
+    /*
+    Возвращает ID счета
+     */
+    private int insertToDB() {
 
         Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String [] {"MAX("+Bills.BILL_ID+")"}, null, null, null);
         maxCursor.moveToFirst();
         int max = maxCursor.getInt(0);
+        int billID = max+1;
 
         ContentValues cv = new ContentValues();
         cv.put(Bills.TITLE, titleEditText.getText().toString()); // Нужно ли заносить в базу???
         cv.put(Bills.GROUP_ID, groupId);
-        cv.put(Bills.BILL_ID, max+1);
+        cv.put(Bills.BILL_ID, billID);
 
 
         for (int i=0; i<billArrayList.size(); i++) {
             BillListItem item = billArrayList.get(i);
             if (!item.isRemoved && !((item.invest == 0) && (item.need == 0))) { // Если не удалено и одновременно не равны нулю
                 cv.put(Bills.USER_ID, billArrayList.get(i).id);
+                cv.put(Bills.USER_ID_VK, billArrayList.get(i).vkid);
                 cv.put(Bills.USER_NAME, billArrayList.get(i).name.replace("\n", " "));
                 cv.put(Bills.INVEST_SUM, billArrayList.get(i).invest);
                 cv.put(Bills.NEED_SUM, billArrayList.get(i).need);
+                cv.put(Bills.STATE, Constants.State.READY_TO_SEND);
                 getActivity().getContentResolver().insert(EverContentProvider.BILLS_CONTENT_URI, cv);
             }
         }
+        return billID;
     }
 
     private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
@@ -506,7 +526,10 @@ public class FragmentAddBill extends Fragment implements
 
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_BILL);
+    }
+
+    private void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(title);
     }
 
 }

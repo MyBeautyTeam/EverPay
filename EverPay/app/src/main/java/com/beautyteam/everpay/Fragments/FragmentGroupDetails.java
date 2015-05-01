@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,10 +17,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Groups;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -67,10 +68,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
         super.onViewCreated(view, savedInstanceState);
-
         historyList = (ListView) view.findViewById(R.id.group_detail_history);
-
-
+        ((MainActivity)getActivity()).getServiceHelper().getGroupMembers(groupId);
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
 
@@ -85,6 +84,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.group_add_bill_btn:
+                Log.d(Constants.LOG, "GROUP_ID =" + groupId);
                 mainActivity.addFragment(FragmentAddBill.getInstance(groupId));
                 break;
             case R.id.group_calc_btn:

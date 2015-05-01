@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.Bills;
@@ -54,7 +53,7 @@ public class ShowBillListAdapter extends CursorAdapter {
         String usersId = "";
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
-                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
+                String id = c.getString(c.getColumnIndex(Bills.USER_ID_VK));
                 if (id != null)
                     usersId += id + ",";
                 c.moveToNext();
@@ -108,7 +107,7 @@ public class ShowBillListAdapter extends CursorAdapter {
         holder.need.setText(cursor.getString(cursor.getColumnIndex(Bills.NEED_SUM)));
         holder.invest.setText(cursor.getString(cursor.getColumnIndex(Bills.INVEST_SUM)));
 
-        String userId = cursor.getString(cursor.getColumnIndex(Bills.USER_ID));
+        String userId = cursor.getString(cursor.getColumnIndex(Bills.USER_ID_VK));
         String img = mapIdToAvatar.get(userId);
         Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
 
