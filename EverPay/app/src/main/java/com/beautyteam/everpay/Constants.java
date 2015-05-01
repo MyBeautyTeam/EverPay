@@ -22,7 +22,8 @@ public class Constants {
 
         public final static String ADD_BILL = BASE_URL + "bills/add/";
         public final static String ADD_GROUP_MEMBER = BASE_URL + "groups/members/add/";
-        public final static String DELETE_GROUP_MEMBER = BASE_URL + "groups/members/remove/";
+        public final static String REMOVE_GROUP_MEMBER = BASE_URL + "groups/members/remove/";
+        public final static String ADD_GROUP = BASE_URL + "groups/add/";
 
         public final static String SIGNUP = BASE_URL + "signup/";
     }
@@ -45,7 +46,8 @@ public class Constants {
 
         public final static String ADD_BILL = "ADD_BILL";
         public final static String ADD_MEMBER_TO_GROUP = "ADD_MEMBER_TO_GROUP";
-        public final static String REMOVE_MEMBER_FROM_GROUP = "DELETE_GROUP_MEMBER";
+        public final static String REMOVE_MEMBER_FROM_GROUP = "REMOVE_GROUP_MEMBER";
+        public final static String ADD_GROUP = "ADD_GROUP";
     }
 
     public class Titles {

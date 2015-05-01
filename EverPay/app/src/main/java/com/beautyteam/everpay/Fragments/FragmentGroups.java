@@ -69,7 +69,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.GROUPS_CONTENT_URI, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), EverContentProvider.GROUPS_CONTENT_URI, PROJECTION, null, null, Groups.UPDATE_TIME + " desc");
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
@@ -127,6 +127,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).setTitle(Constants.Titles.GROUPS);
+        ((MainActivity) getActivity()).getServiceHelper().getGroups();
     }
 
 }

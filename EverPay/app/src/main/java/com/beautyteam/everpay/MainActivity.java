@@ -118,7 +118,6 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
         serviceHelper.onResume();
-
     }
 
     @Override

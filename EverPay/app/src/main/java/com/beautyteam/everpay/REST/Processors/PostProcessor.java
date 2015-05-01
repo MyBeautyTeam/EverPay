@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.REST.Processors;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +10,11 @@ import android.util.Log;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.GroupMembers;
+import com.beautyteam.everpay.Database.Groups;
+import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.REST.Service;
+import com.beautyteam.everpay.Utils.DateFormetter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -49,7 +54,7 @@ public class PostProcessor extends Processor {
         if (ADD_BILL.equals(action)) {
             int billId = intent.getIntExtra(Constants.IntentParams.BILL_ID, 0);
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
-            Cursor c = service.getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_ADD_BILL, Bills.BILL_ID +"=" + billId, null, null );
+            Cursor c = service.getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_BILL, Bills.BILL_ID + "=" + billId, null, null);
             c.moveToFirst();
             int count = c.getCount();
             String title = c.getString(c.getColumnIndex(Bills.TITLE));
@@ -76,13 +81,24 @@ public class PostProcessor extends Processor {
 
             } catch (JSONException e) {}
             String response = urlConnectionPost(Constants.URL.ADD_BILL, jsonObject.toString());
-            JSONObject responseJSON;
-            try {
-                responseJSON = new JSONObject(response);
-                responseJSON = responseJSON.getJSONObject("response");
-                JSONObject history = responseJSON.getJSONObject("history");
-            } catch (JSONException asdw) {
+            if (response !=null && response.contains("200")) {
+                JSONObject responseJSON;
+                try {
+                    responseJSON = new JSONObject(response);
+                    responseJSON = responseJSON.getJSONObject("response");
+                    JSONObject history = responseJSON.getJSONObject("history");
+                    ContentValues cv = readHistory(history);
+                    if (cv != null)
+                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    else
+                        result = Constants.Result.ERROR;
 
+                    result = Constants.Result.OK;
+                } catch (JSONException asdw) {
+                    result = Constants.Result.ERROR;
+                }
+            } else {
+                result = Constants.Result.ERROR;
             }
 
         } else
@@ -94,32 +110,106 @@ public class PostProcessor extends Processor {
                 paramsJSON.put("users_id", userId);
                 paramsJSON.put("access_token", accessToken);
                 paramsJSON.put("groups_id", groupId);
-                paramsJSON.put("title", userIdWhom);
-                String response = urlConnectionPost(Constants.URL.ADD_BILL, paramsJSON.toString());
+                paramsJSON.put("users_id_whom", userIdWhom);
+                String response = urlConnectionPost(Constants.URL.ADD_GROUP_MEMBER, paramsJSON.toString());
                 if ((response != null) && response.contains("200")) {
 
+                    result = Constants.Result.OK;
+                } else {
+                    result = Constants.Result.ERROR;
                 }
             } catch (JSONException e) {
-
+                result = Constants.Result.ERROR;
             }
         } else
         if (REMOVE_MEMBER_FROM_GROUP.equals(action)) {
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            int userIdWhom = intent.getIntExtra(Constants.IntentParams.USER_ID, 0);
             try {
-                int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
-                int userIdWhom = intent.getIntExtra(Constants.IntentParams.USER_ID, 0);
                 JSONObject paramsJSON = new JSONObject();
                 paramsJSON.put("users_id", userId);
                 paramsJSON.put("access_token", accessToken);
                 paramsJSON.put("groups_id", groupId);
-                paramsJSON.put("title", userIdWhom);
-                String response = urlConnectionPost(Constants.URL.ADD_BILL, paramsJSON.toString());
+                paramsJSON.put("users_id_whom", userIdWhom);
+                String response = urlConnectionPost(Constants.URL.REMOVE_GROUP_MEMBER, paramsJSON.toString());
+
                 if ((response != null) && response.contains("200")) {
 
+                    result = Constants.Result.OK;
+                } else {
+                    result = Constants.Result.ERROR;
                 }
             } catch (JSONException e) {
+                result = Constants.Result.ERROR;
+            }
+        } else
+        if (ADD_GROUP.equals(action)) {
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            try {
+                Cursor groupCursor = service.getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, PROJECTION_GROUPS, Groups.GROUP_ID +"="+groupId, null, null);
+                groupCursor.moveToFirst();
+                String groupTitle = groupCursor.getString(groupCursor.getColumnIndex(Groups.TITLE));
 
+                JSONObject paramsJSON = new JSONObject();
+                paramsJSON.put("users_id", userId);
+                paramsJSON.put("access_token", accessToken);
+                paramsJSON.put("id", groupId);
+                paramsJSON.put("title", "ХНЫЩУЙ"/*groupTitle*/);
+
+                Cursor groupMembersCursor = service.getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_GROUP_MEMBERS, GroupMembers.GROUP_ID +"="+groupId, null, null);
+                JSONObject groupMembers = new JSONObject();
+                int i = 1;
+                if (groupMembersCursor.moveToFirst() && groupMembersCursor.getCount() != 0) {
+                    while (!groupMembersCursor.isAfterLast()) {
+                        int memberId = groupMembersCursor.getInt(groupMembersCursor.getColumnIndex(GroupMembers.USER_ID));
+                        groupMembers.put(i+"", memberId);
+                        i++;
+                        groupMembersCursor.moveToNext();
+                    }
+                    paramsJSON.put("users_id_members", groupMembers);
+
+                    String jsonParams = paramsJSON.toString();
+                    String response = urlConnectionPost(Constants.URL.ADD_GROUP, paramsJSON.toString());
+                    if (response != null && response.contains("200")) {
+                        result = Constants.Result.OK;
+
+                        JSONObject responseJSON = new JSONObject(response);
+                        responseJSON = responseJSON.getJSONObject("response");
+                        String newGroupId = responseJSON.getString("groups_id");
+                        String oldGroupId = responseJSON.getString("id");
+
+                        ContentValues cv = new ContentValues();
+
+                        cv.put(Groups.GROUP_ID, newGroupId);
+                        cv.put(Groups.RESULT, Constants.Result.OK);
+                        cv.put(Groups.STATE, Constants.State.ENDS);
+                        service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + oldGroupId, null);
+
+                        cv = new ContentValues();
+                        cv.put(GroupMembers.GROUP_ID, newGroupId);
+                        cv.put(Groups.RESULT, Constants.Result.OK);
+                        cv.put(Groups.STATE, Constants.State.ENDS);
+                        service.getContentResolver().update(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv, GroupMembers.GROUP_ID + "=" + oldGroupId, null);
+
+
+                        JSONObject history = responseJSON.getJSONObject("history");
+                        cv = readHistory(history);
+                        if (cv != null)
+                            service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                        else
+                            result = Constants.Result.ERROR;
+                        // ====================
+                    } else {
+                        result = Constants.Result.ERROR;
+                    }
+
+                }
+
+            } catch (JSONException e) {
+                result = Constants.Result.ERROR;
             }
         }
+        service.onRequestEnd(result, intent);
     }
 
     private String post(String url, List<NameValuePair> nameValuePairs) {
@@ -182,7 +272,64 @@ public class PostProcessor extends Processor {
         return result;
     }
 
-    private static final String[] PROJECTION_ADD_BILL = new String[] {
+    private ContentValues readHistory(JSONObject history) {
+        try {
+            // ===================
+            ContentValues cv = new ContentValues();
+            try {
+                cv.put(History.USERS_ID_WHO_SAY, history.getString("users_id_who_say"));
+            } catch (JSONException e) {
+            }
+            cv.put(History.USERS_ID_WHO, history.getString("users_id_who"));
+            try {
+                cv.put(History.USERS_ID_WHOM, history.getString("users_id_whom"));
+            } catch (JSONException e) {
+            }
+
+            cv.put(History.GROUP_ID, history.getString("groups_id"));
+            try {
+                cv.put(History.BILL_ID, history.getString("bills_id"));
+            } catch (JSONException e) {
+            }
+
+            try {
+                cv.put(History.EDITED_BILL_ID, history.getString("edited_bills_id"));
+            } catch (JSONException e) {
+            }
+
+            try {
+                cv.put(History.DEBTS_ID, history.getString("debts_id"));
+            } catch (JSONException e) {
+            }
+
+
+            cv.put(History.ACTION, history.getString("action"));
+
+            String date = history.getString("action_datetime");
+            String formatedDate = DateFormetter.formatDateTime(date);
+            cv.put(History.ACTION_DATETIME, formatedDate);
+            try {
+                cv.put(History.TEXT_WHO_SAY, history.getString("text_who_say"));
+            } catch (JSONException e) {
+            }
+
+            try {
+                cv.put(History.TEXT_SAY, history.getString("text_say"));
+            } catch (JSONException e) {
+            }
+            cv.put(History.TEXT_WHO, history.getString("text_who"));
+            cv.put(History.TEXT_DESCRIPTION, history.getString("text_description"));
+            cv.put(History.TEXT_WHAT_WHOM, history.getString("text_what_whom"));
+
+            cv.put(History.STATE, Constants.State.ENDS);
+            cv.put(History.RESULT, Constants.Result.OK);
+            return cv;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    private static final String[] PROJECTION_BILL = new String[] {
             Bills.ITEM_ID,
             Bills.BILL_ID,
             Bills.TITLE,
@@ -192,6 +339,22 @@ public class PostProcessor extends Processor {
             Bills.GROUP_ID,
             Bills.NEED_SUM,
             Bills.INVEST_SUM
+    };
+
+    private static final String[] PROJECTION_GROUPS = new String[] {
+            Groups.GROUP_ID,
+            Groups.TITLE,
+            Groups.UPDATE_TIME,
+            Groups.IS_CALCULATED
+    };
+
+
+    private static final String[] PROJECTION_GROUP_MEMBERS = new String[] {
+            GroupMembers.ITEM_ID,
+            GroupMembers.GROUP_ID,
+            GroupMembers.USER_ID_VK,
+            GroupMembers.USER_ID,
+            GroupMembers.USER_NAME,
     };
 
 

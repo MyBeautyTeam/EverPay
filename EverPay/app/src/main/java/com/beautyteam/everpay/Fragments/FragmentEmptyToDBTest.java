@@ -59,21 +59,22 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             Bills.NEED_SUM
     };
     */
-    /*
+
     private static final String[] PROJECTION = new String[] {
             GroupMembers.ITEM_ID,
             GroupMembers.GROUP_ID,
             GroupMembers.USER_ID_VK,
+            GroupMembers.USER_ID,
             GroupMembers.USER_NAME,
     };
-    */
+    /*
     private static final String[] PROJECTION = new String[] {
             History.TEXT_DESCRIPTION,
             History.ACTION_DATETIME
     };
-
+    */
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.HISTORY_CONTENT_URI, PROJECTION, null, null, History.ACTION_DATETIME);
+        return new CursorLoader(getActivity(), EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION, null, null, null);
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
@@ -81,8 +82,8 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             case LOADER_ID:
                 if (c.moveToFirst() && c.getCount() != 0) {
                     while (!c.isAfterLast()) {
-                        String billId = c.getString(c.getColumnIndex(History.TEXT_DESCRIPTION));
-                        String billTitle = c.getString(c.getColumnIndex(History.ACTION_DATETIME));
+                        String billId = c.getString(c.getColumnIndex(GroupMembers.GROUP_ID));
+                        String billTitle = c.getString(c.getColumnIndex(GroupMembers.USER_ID));
                         //String groupId = c.getString(c.getColumnIndex(GroupMembers.GROUP_ID));
                         //String userId = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
                         /*String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));

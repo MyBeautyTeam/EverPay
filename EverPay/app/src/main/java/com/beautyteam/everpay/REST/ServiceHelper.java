@@ -74,6 +74,9 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Получить список групп
+     */
     public void getGroups() {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_GROUPS);
@@ -82,6 +85,9 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Получить список пользователей группы (при заходе в группу)
+     */
     public void getGroupMembers(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_GROUP_MEMBERS);
@@ -91,6 +97,9 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Получить долги (главный экран)
+     */
     public void getDebts() {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_DEBTS);
@@ -99,6 +108,9 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Долучить счет (экран просмотра счета)
+     */
     public void getBill(int billId, int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_BILL);
@@ -109,6 +121,9 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Добавить счет
+     */
     public void addBill(int billId, int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.ADD_BILL);
@@ -121,6 +136,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     /*
     НЕ ОТТЕСТИРОВАНО!
+    Добавить полькозателя в группу
      */
     public void addMemberToGroup(int userId, int groupId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -134,6 +150,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     /*
     НЕ ОТТЕСТИРОВАНО!
+    Удалить пользователя из группы
      */
     public void removeMemberFromGroup(int userId, int groupId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -145,6 +162,9 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Запросить историю группы
+     */
     public void getHistory(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_HISTORY);
@@ -154,5 +174,16 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Создать группу
+     */
+    public void addGroup(int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.ADD_GROUP);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
 
 }
