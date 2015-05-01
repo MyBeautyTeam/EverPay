@@ -17,24 +17,35 @@ public class Constants {
         public final static String GET_GROUP_MEMBERS = BASE_URL + "groups/members/";
         public final static String GET_DEBTS = BASE_URL + "debts/";
         public final static String GET_BILL = BASE_URL + "bills/details/";
+        public final static String GET_HISTORY = BASE_URL + "groups/history/";
+
 
         public final static String ADD_BILL = BASE_URL + "bills/add/";
+        public final static String ADD_GROUP_MEMBER = BASE_URL + "groups/members/add/";
+        public final static String DELETE_GROUP_MEMBER = BASE_URL + "groups/members/remove/";
 
         public final static String SIGNUP = BASE_URL + "signup/";
     }
 
     public class Action {
-        public final static String INIT_VK_USERS = "INIT_VK_USERS";
+        //===
         public final static String ADD_CONTACT = "ADD_CONTACT";
         public final static String ANY_ACTION_WITH_POST = "POST_ACTION";
         public final static String DOWNLOAD_IMG = "DOWNLOAD_IMG";
+        //===
+
+
+        public final static String INIT_VK_USERS = "INIT_VK_USERS";
         public final static String CALCULATE = "CALCULATE";
         public final static String GET_GROUPS = "GET_GROUPS";
         public final static String GET_GROUP_MEMBERS = "GET_GROUP_MEMBERS";
         public final static String GET_DEBTS = "GET_DEBTS";
         public final static String GET_BILL = "GET_BILL";
+        public final static String GET_HISTORY = "GET_HISTORY";
 
         public final static String ADD_BILL = "ADD_BILL";
+        public final static String ADD_MEMBER_TO_GROUP = "ADD_MEMBER_TO_GROUP";
+        public final static String REMOVE_MEMBER_FROM_GROUP = "DELETE_GROUP_MEMBER";
     }
 
     public class Titles {
@@ -67,6 +78,7 @@ public class Constants {
         public final static String NAME = "USER_NAME";
         public final static String GROUP_ID = "GROUP_ID";
         public final static String BILL_ID = "BILL_ID";
+        public final static String USER_ID = "USER_ID";
     }
 
     public final static String RECEIVER = "RECEIVER";

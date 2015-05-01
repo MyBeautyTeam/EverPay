@@ -85,7 +85,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     public void getGroupMembers(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_GROUP_MEMBERS);
-        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId + "");
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
 
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
@@ -102,8 +102,8 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     public void getBill(int billId, int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_BILL);
-        intentService.putExtra(Constants.IntentParams.BILL_ID, billId + "");
-        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId + "");
+        intentService.putExtra(Constants.IntentParams.BILL_ID, billId);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
 
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
@@ -118,4 +118,41 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }
+
+    /*
+    НЕ ОТТЕСТИРОВАНО!
+     */
+    public void addMemberToGroup(int userId, int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.ADD_MEMBER_TO_GROUP);
+        intentService.putExtra(Constants.IntentParams.USER_ID, userId);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    /*
+    НЕ ОТТЕСТИРОВАНО!
+     */
+    public void removeMemberFromGroup(int userId, int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.REMOVE_MEMBER_FROM_GROUP);
+        intentService.putExtra(Constants.IntentParams.USER_ID, userId);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    public void getHistory(int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_HISTORY);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+
 }
