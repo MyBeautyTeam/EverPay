@@ -14,6 +14,7 @@
     <color name="accent">#03a9f4</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
+    <color name="text_history">#E0E0E0</color>
     <color name="divider_text">#B6B6B6</color>
 
     <color name="drawer_background">#3c4a55</color>

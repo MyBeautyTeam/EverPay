@@ -1,7 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddGroupAdapter;
 import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
@@ -84,7 +82,7 @@ public class FragmentAddGroup extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_btn_friend_foot:
-                FragmentAddFriends frag= FragmentAddFriends.getInstance(arrayList);
+                FragmentAddFriendsToGroup frag= FragmentAddFriendsToGroup.getInstance(arrayList);
                 mainActivity.addFragment(frag);
                 break;
             case R.id.save_btn_group:

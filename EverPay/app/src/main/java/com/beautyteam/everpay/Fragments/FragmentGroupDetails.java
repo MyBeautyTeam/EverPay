@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
-import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.MainActivity;
@@ -116,12 +115,12 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-//        switch (id) {
-//            case R.id.add_group_tlb:
-//                FragmentAddGroup frag= FragmentAddGroup.getInstance();
-//                mainActivity.addFragment(frag);
-//                return true;
-//        }
+        switch (id) {
+            case R.id.edit_group_tlb:
+                FragmentEditGroup frag= FragmentEditGroup.getInstance(groupId);
+                mainActivity.addFragment(frag);
+                return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

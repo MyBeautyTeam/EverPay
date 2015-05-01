@@ -14,6 +14,8 @@
         android:layout_weight="1"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
+        android:layout_margin="5dp"
+        android:dividerHeight="2dp"
         />
     <Button
         android:id="@+id/group_add_bill_btn"

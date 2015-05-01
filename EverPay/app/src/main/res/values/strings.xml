@@ -8,6 +8,7 @@
     <string name="title_login">ВОЙТИ ЧЕРЕЗ ВКОНТАКТЕ</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="edit_group">Участники</string>
     <string name="add_group">ДОБАВИТЬ ГРУППУ</string>
     <string name="ready">Готово</string>
     <string name="add_friend">ДОБАВИТЬ УЧАСТНИКА</string>

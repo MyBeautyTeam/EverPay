@@ -23,14 +23,13 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by asus on 16.03.2015.
  */
 
 
-public class FragmentAddFriends extends Fragment implements View.OnClickListener,
+public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     private ListView friendsList;
     private static final int LOADER_ID = 0;
@@ -38,12 +37,12 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     private static final String FRIENDS = "FRIENDS";
     private Button saveBtn;
 
-    public static FragmentAddFriends getInstance(ArrayList<User> arrayList) {
-        FragmentAddFriends fragmentAddFriends = new FragmentAddFriends();
+    public static FragmentAddFriendsToGroup getInstance(ArrayList<User> arrayList) {
+        FragmentAddFriendsToGroup fragmentAddFriendsToGroup = new FragmentAddFriendsToGroup();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(FRIENDS,arrayList);
-        fragmentAddFriends.setArguments(bundle);
-        return fragmentAddFriends;
+        fragmentAddFriendsToGroup.setArguments(bundle);
+        return fragmentAddFriendsToGroup;
     }
 
     @Override
@@ -57,8 +56,8 @@ public class FragmentAddFriends extends Fragment implements View.OnClickListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         friendsList = (ListView) view.findViewById(R.id.friends_list);
-        friendsList.setFastScrollEnabled(true);
-        friendsList.setScrollingCacheEnabled(true);
+        //friendsList.setFastScrollEnabled(true);
+        //friendsList.setScrollingCacheEnabled(true);
         saveBtn = (Button) view.findViewById(R.id.save_btn_friends_in_group);
         saveBtn.setOnClickListener(this);
     }

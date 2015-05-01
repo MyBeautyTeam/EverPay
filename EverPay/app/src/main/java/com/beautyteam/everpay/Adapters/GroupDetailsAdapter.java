@@ -46,8 +46,9 @@ public class GroupDetailsAdapter extends CursorAdapter {
         holder.discript.setText(groupTitle);
 
         final String id = cursor.getString(cursor.getColumnIndex(Groups.GROUP_ID));
-        if ( Integer.valueOf(id) % 2 == 1 ) {
-            view.setBackgroundResource(R.drawable.history_style);
+        if ( Integer.valueOf(id) % 2 == 0 ) {
+  //          holder.discript.setBackgroundResource(R.drawable.history_style);
+              view.setBackgroundResource(R.drawable.history_style);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
