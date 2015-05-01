@@ -34,7 +34,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
         cv.put(Users.USER_ID, 1500);
+        cv.put(Users.USER_ID_VK, 2500);
+        cv.put(Users.NAME, "ЖИРНЫЙ НЕПРИЯТЕЛЬ");
+        cv.put(Users.IMG, "http://cs14113.vk.me/c540104/v540104654/293e4/oqmgTryKZgM.jpg");
         db.insert(Users.USERS_TABLE, null, cv);
+        cv = new ContentValues();
         /*
         //for (int i = 1; i <= 5; i++) {
             cv.put(Users.USER_ID_VK, i);

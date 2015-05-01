@@ -35,7 +35,6 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     private static final int LOADER_ID = 0;
     private EditFriendsToGroupAdapter mAdapter;
     private static final String FRIENDS = "FRIENDS";
-    private Button saveBtn;
     private MainActivity mainActivity;
 
     public static FragmentEditFriendsInGroup getInstance() {
@@ -77,6 +76,7 @@ public class FragmentEditFriendsInGroup extends Fragment implements
 
 
     private static final String[] PROJECTION = new String[] {
+            Users.USER_ID,
             Users.USER_ID_VK,
             Users.NAME,
             Users.IMG

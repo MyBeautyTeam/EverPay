@@ -1,8 +1,6 @@
 package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
-import com.vk.sdk.api.VKBatchRequest;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.api.model.VKApiUser;
-import com.vk.sdk.api.model.VKList;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -63,7 +50,7 @@ public class AddGroupAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, final ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = inflater.from(context).inflate(R.layout.item_add_friends_to_group, parent, false);
+            convertView = inflater.from(context).inflate(R.layout.item_add_group, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.name = (TextView) convertView.findViewById(R.id.item_add_friends_to_group_name);
             viewHolder.avatar = (RoundedImageView) convertView.findViewById(R.id.item_add_friends_to_group_avatar);

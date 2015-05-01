@@ -49,7 +49,7 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
-        return inflater.inflate(R.layout.fragment_friends, null);
+        return inflater.inflate(R.layout.fragment_add_friends, null);
     }
 
     @Override
@@ -81,6 +81,7 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
 
 
     private static final String[] PROJECTION = new String[] {
+            Users.USER_ID,
             Users.USER_ID_VK,
             Users.NAME,
             Users.IMG

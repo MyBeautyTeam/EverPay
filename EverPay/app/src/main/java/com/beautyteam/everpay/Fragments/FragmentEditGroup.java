@@ -61,21 +61,19 @@ public static FragmentEditGroup getInstance(int groupId) {
 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
-        return inflater.inflate(R.layout.fragment_add_group, null);
+        return inflater.inflate(R.layout.fragment_edit_group, null);
         }
 
 @Override
 public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        friendsList = (ListView) view.findViewById(R.id.add_group_friends_list);
+        friendsList = (ListView) view.findViewById(R.id.edit_group_friends_list);
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
         addBtn = (Button) footerView.findViewById(R.id.add_btn_friend_foot);
         groupName = (EditText) view.findViewById(R.id.group_name);
         friendsList.addFooterView(footerView);
         self = this;
-        saveBtn = (Button) view.findViewById(R.id.save_btn_group);
-        saveBtn.setOnClickListener(this);
         addBtn.setOnClickListener(this);
         }
 

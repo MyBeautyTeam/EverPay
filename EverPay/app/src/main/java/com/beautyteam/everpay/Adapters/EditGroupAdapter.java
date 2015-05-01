@@ -2,22 +2,17 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.Users;
-import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by asus on 29.04.2015.
@@ -35,7 +30,7 @@ public class EditGroupAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View view = inflater.inflate(R.layout.item_add_friends_to_group, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_add_group, viewGroup, false);
         ViewHolder holder = new ViewHolder();
         holder.firstName = (TextView) view.findViewById(R.id.item_add_friends_to_group_name);
         holder.avatar = (RoundedImageView) view.findViewById(R.id.item_add_friends_to_group_avatar);

@@ -12,22 +12,17 @@ import android.widget.CursorAdapter;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.util.TreeMap;
 
 
 /**
@@ -42,6 +37,28 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
 
     public AddFriendsToGroupAdapter(Context context, Cursor c, int flags,ArrayList <User> arrayList) {
         super(context, c, flags);
+
+
+        int count = c.getCount();
+        if (c.moveToFirst() && c.getCount() != 0) {
+            while (!c.isAfterLast()) {
+                String billId = c.getString(c.getColumnIndex(Users.USER_ID));
+                String billTitle = c.getString(c.getColumnIndex(Users.USER_ID_VK));
+                String groupId = c.getString(c.getColumnIndex(Users.IMG));
+                String userId = c.getString(c.getColumnIndex(Users.NAME));
+                        /*String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));
+                        String need = c.getString(c.getColumnIndex(Bills.NEED_SUM));
+                        String invest = c.getString(c.getColumnIndex(Bills.INVEST_SUM));*/
+
+                //String oldText = textView.getText().toString();
+               // S.ring newText = oldText + "\n" + billId + "  " + billTitle + "  " + groupId + "  ";// + userId + "  " + userName + "   " + invest + "   " + need;
+                //textView.setText(newText);
+                c.moveToNext();
+            }
+        }
+
+
+
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         indexer = new AlphabetIndexer(c,
                 c.getColumnIndex(Users.NAME)," "+
@@ -83,13 +100,13 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View view = inflater.inflate(R.layout.item_friend, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_add_friend, viewGroup, false);
         ViewHolder holder = new ViewHolder();
         holder.firstName = (TextView) view.findViewById(R.id.friends_list_item_discript);
         holder.checkBox = (CheckBox) view.findViewById(R.id.friends_checkbox);
         holder.avatar = (RoundedImageView) view.findViewById(R.id.friends_list_item_avatar);
         holder.separator = (TextView) view.findViewById(R.id.separator);
-        holder.separator.setVisibility(View.INVISIBLE);
+        holder.separator.setVisibility(View.GONE);
 
         view.setTag(holder);
         return view;
@@ -110,10 +127,10 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         holder.checkBox.setChecked(isChecked);
         Log.d("pos cursor","name= " +name +" cursor=" + String.valueOf(cursor.getPosition())+" section="+ String.valueOf(getSectionForPosition(cursor.getPosition())));
 
-        if (getSectionForPosition(cursor.getPosition())==0)
-            holder.separator.setText(name.subSequence(0,1));
-        else
+        if (getSectionForPosition(cursor.getPosition())==0) {
+            holder.separator.setText(name.subSequence(0, 1));
             holder.separator.setVisibility(View.VISIBLE);
+        }
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
