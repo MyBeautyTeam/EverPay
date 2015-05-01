@@ -14,6 +14,7 @@ import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.REST.Service;
+import com.beautyteam.everpay.Utils.DateFormetter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -28,6 +29,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 import static com.beautyteam.everpay.Constants.Action.GET_BILL;
@@ -269,7 +272,10 @@ public class GetProcessors extends Processor {
 
 
                         cv.put(History.ACTION, historyItem.getString("action"));
-                        cv.put(History.ACTION_DATETIME, historyItem.getString("action_datetime"));
+
+                        String date = historyItem.getString("action_datetime");
+                        String formatedDate = DateFormetter.formatDateTime(service, date);
+                        cv.put(History.ACTION_DATETIME, formatedDate);
                         try {
                             cv.put(History.TEXT_WHO_SAY, historyItem.getString("text_who_say"));
                         } catch (JSONException e) {}
