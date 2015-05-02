@@ -21,6 +21,7 @@ import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -58,10 +59,10 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
         Bundle arg = getArguments();
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_group_detail, null);
     }
 
@@ -128,14 +129,26 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     }
 
     private static final String[] PROJECTION = new String[] {
-            Groups.GROUP_ID,
-            Groups.TITLE,
-            Groups.UPDATE_TIME,
-            Groups.IS_CALCULATED
+            History.ITEM_ID,
+            History.GROUP_ID,
+            History.BILL_ID,
+            History.ACTION,
+            History.ACTION_DATETIME,
+            History.DEBTS_ID,
+            History.EDITED_BILL_ID,
+            History.USERS_ID_WHO,
+            History.USERS_ID_WHO_SAY,
+            History.USERS_ID_WHOM,
+            History.TEXT_WHO,
+            History.TEXT_SAY,
+            History.TEXT_WHO_SAY,
+            History.TEXT_WHAT_WHOM,
+            History.TEXT_DESCRIPTION,
+
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.GROUPS_CONTENT_URI, PROJECTION, null, null, null);
+        return new CursorLoader(getActivity(), EverContentProvider.HISTORY_CONTENT_URI, PROJECTION, History.GROUP_ID + "=" + groupId, null, History.ACTION_DATETIME + " asc");
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {

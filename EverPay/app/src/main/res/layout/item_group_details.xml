@@ -9,7 +9,7 @@
         android:textSize="16dip"
         android:fontFamily="sans-serif-light"
         android:text="Поход в кино"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_margin="@dimen/activity_horizontal_margin"
         />
 </LinearLayout>
