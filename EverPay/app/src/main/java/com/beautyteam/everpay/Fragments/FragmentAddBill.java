@@ -259,7 +259,7 @@ public class FragmentAddBill extends Fragment implements
                 title = Constants.Titles.EDIT_BILL;
                 updateTitle();
                 if (billArrayList == null) {
-                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, null/*GroupMembers.GROUP_ID + "=" +groupId*/, null, null);
+                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" +groupId, null, null);
                     fillBillList(usersCursor);
 
                     for (int i = 0; i < billArrayList.size(); i++) {

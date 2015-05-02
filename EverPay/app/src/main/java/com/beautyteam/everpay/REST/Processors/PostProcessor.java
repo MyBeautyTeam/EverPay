@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
+import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
@@ -32,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,8 +91,17 @@ public class PostProcessor extends Processor {
                     //
                     responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
+
+                    int newBillId = responseJSON.getInt("bills_id");
+                    int oldBillId = responseJSON.getInt("id");
+                    ContentValues cv = new ContentValues();
+                    cv.put(Bills.BILL_ID, newBillId);
+                    cv.put(Bills.STATE, Constants.State.ENDS);
+                    cv.put(Bills.RESULT, Constants.Result.OK);
+                    service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + oldBillId, null);
+
                     JSONObject history = responseJSON.getJSONObject("history");
-                    ContentValues cv = readHistory(history);
+                    cv = readHistory(history);
                     if (cv != null)
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     else
@@ -102,6 +113,11 @@ public class PostProcessor extends Processor {
                 }
             } else {
                 result = Constants.Result.ERROR;
+                ContentValues cv = new ContentValues();
+                cv.put(Bills.STATE, Constants.State.ENDS);
+                cv.put(Bills.RESULT, Constants.Result.ERROR);
+                service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + billId, null);
+                // ДОБАВИТЬ ИСТОРИЮ С ОШИБКОЙ4
             }
 
         } else
@@ -223,18 +239,53 @@ public class PostProcessor extends Processor {
                 if (response != null && response.contains("200")) {
                     result = Constants.Result.OK;
 
+                    service.getContentResolver().delete(EverContentProvider.CALCULATION_CONTENT_URI, Calculation.GROUPS_ID + "=" + groupId, null);
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
 
                     JSONObject groupJSON = responseJSON.getJSONObject("group");
+                    int groupIdFromResponse = groupJSON.getInt("groups_id");
+
                     JSONObject debtsJSOB = responseJSON.getJSONObject("debts");
-                    JSONObject debt;
                     ContentValues cv;
-                    for (int i = 0; i < debtsJSOB.length(); i++) {
-                        debt = debtsJSOB.getJSONObject(i + "");
+                    Iterator<String> iterator = debtsJSOB.keys();
+                    while (iterator.hasNext()) {
+                        String key = iterator.next();
+                        JSONObject debt = debtsJSOB.getJSONObject(key);
+
                         cv = new ContentValues();
                         int debtId = debt.getInt("debts_id");
-                        //int sum = debtId
+                        int sum = debt.getInt("sum");
+                        boolean isDeleted = debt.getBoolean("is_deleted");
+
+                        JSONObject userWhoJSON = debt.getJSONObject("user_who");
+
+                        int whoId = userWhoJSON.getInt("users_id");
+                        int whoIdVK = userWhoJSON.getInt("vk_id");
+                        String whoName = userWhoJSON.getString("last_name") + " " + userWhoJSON.getString("name") ;
+
+                        JSONObject userWhomJSON = debt.getJSONObject("user_whom");
+                        int whomId = userWhomJSON.getInt("users_id");
+                        int whomIdVK = userWhomJSON.getInt("vk_id");
+                        String whomName = userWhomJSON.getString("last_name") + " " + userWhoJSON.getString("name") ;
+
+                        cv.put(Calculation.CALC_ID, debtId);
+                        cv.put(Calculation.GROUPS_ID, groupIdFromResponse);
+                        cv.put(Calculation.WHO_ID, whoId);
+                        cv.put(Calculation.WHO_ID_VK, whoIdVK);
+                        cv.put(Calculation.NAME_WHO, whoName);
+
+                        cv.put(Calculation.WHOM_ID, whomId);
+                        cv.put(Calculation.WHOM_ID_VK, whomIdVK);
+                        cv.put(Calculation.NAME_WHOM, whomName);
+
+                        cv.put(Calculation.SUMMA, sum);
+                        cv.put(Calculation.IS_DELETED, isDeleted? 1:0);
+
+                        cv.put(Calculation.STATE, Constants.State.ENDS);
+                        cv.put(Calculation.RESULT, Constants.Result.OK);
+
+                        service.getContentResolver().insert(EverContentProvider.CALCULATION_CONTENT_URI, cv);
                     }
 
 
