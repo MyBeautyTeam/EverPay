@@ -46,7 +46,7 @@ public class PostProcessor extends Processor {
 
     @Override
     public void request(Intent intent, Service service) {
-        LinkedList<NameValuePair> params = new LinkedList<NameValuePair>();
+
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
         SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
         int userId = 8;//sPref.getInt(Constants.Preference.USER_ID, 0);
@@ -58,7 +58,7 @@ public class PostProcessor extends Processor {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
             Cursor c = service.getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_BILL, Bills.BILL_ID + "=" + billId, null, null);
             c.moveToFirst();
-            int count = c.getCount();
+
             String title = c.getString(c.getColumnIndex(Bills.TITLE));
             JSONObject jsonObject = new JSONObject();
             try {
@@ -86,9 +86,6 @@ public class PostProcessor extends Processor {
             if (response !=null && response.contains("200")) {
                 JSONObject responseJSON;
                 try {
-                    // !!!
-                    // НЕДОДЕЛАНО!!! НАДО ОБНОВЛЯТЬ BILL_ID
-                    //
                     responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
 
@@ -117,7 +114,7 @@ public class PostProcessor extends Processor {
                 cv.put(Bills.STATE, Constants.State.ENDS);
                 cv.put(Bills.RESULT, Constants.Result.ERROR);
                 service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + billId, null);
-                // ДОБАВИТЬ ИСТОРИЮ С ОШИБКОЙ4
+                // ДОБАВИТЬ ИСТОРИЮ С ОШИБКОЙ!
             }
 
         } else
@@ -323,7 +320,7 @@ public class PostProcessor extends Processor {
 
     public String urlConnectionPost(String strUrl, String urlParameters) {
         HttpURLConnection connection = null;
-        String str = "";
+        String str = null;
         try {
             URL url = new URL(strUrl);
             connection = (HttpURLConnection) url.openConnection();

@@ -30,7 +30,12 @@ public class ProcessorFactory {
             Constants.Action.CALCULATE.equals(action)
             ) {
             return new PostProcessor();
-        }
+        } else
+        if (
+            Constants.Action.EDIT_BILL.equals(action)
+            )
+            return new PutProcessor();
+
         return null;
     }
 }

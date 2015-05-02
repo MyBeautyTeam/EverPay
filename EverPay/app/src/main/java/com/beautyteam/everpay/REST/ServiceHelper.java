@@ -188,4 +188,13 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    public void editBill(int billId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.EDIT_BILL);
+        intentService.putExtra(Constants.IntentParams.BILL_ID, billId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
 }
