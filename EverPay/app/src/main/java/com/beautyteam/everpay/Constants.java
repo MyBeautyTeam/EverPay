@@ -22,13 +22,15 @@ public class Constants {
 
         public final static String ADD_BILL = BASE_URL + "bills/add/";
         public final static String ADD_GROUP_MEMBER = BASE_URL + "groups/members/add/";
-        public final static String REMOVE_GROUP_MEMBER = BASE_URL + "groups/members/remove/";
         public final static String ADD_GROUP = BASE_URL + "groups/add/";
         public final static String CALCULATE = BASE_URL + "debts/add/";
 
         public final static String EDIT_BILL = BASE_URL + "bills/edit/";
         public final static String EDIT_GROUP = BASE_URL + "groups/edit/";
         public final static String EDIT_CALCULATION = BASE_URL + "debts/edit/";
+
+        public final static String REMOVE_GROUP_MEMBER = BASE_URL + "groups/members/remove/";
+        public final static String REMOVE_BILL = BASE_URL + "bills/remove/";
 
         public final static String SIGNUP = BASE_URL + "signup/";
     }
@@ -40,7 +42,6 @@ public class Constants {
         public final static String DOWNLOAD_IMG = "DOWNLOAD_IMG";
         //===
 
-
         public final static String INIT_VK_USERS = "INIT_VK_USERS";
         public final static String GET_GROUPS = "GET_GROUPS";
         public final static String GET_GROUP_MEMBERS = "GET_GROUP_MEMBERS";
@@ -50,13 +51,15 @@ public class Constants {
 
         public final static String ADD_BILL = "ADD_BILL";
         public final static String ADD_MEMBER_TO_GROUP = "ADD_MEMBER_TO_GROUP";
-        public final static String REMOVE_MEMBER_FROM_GROUP = "REMOVE_GROUP_MEMBER";
         public final static String ADD_GROUP = "ADD_GROUP";
         public final static String CALCULATE = "CALCULATE";
 
         public final static String EDIT_BILL = "EDIT_BILL";
         public final static String EDIT_GROUP = "EDIT_GROUP";
         public final static String EDIT_CALCULATION = "EDIT_CALC";
+
+        public final static String REMOVE_BILL = "REMOVE_BILL";
+        public final static String REMOVE_MEMBER_FROM_GROUP = "REMOVE_GROUP_MEMBER";
     }
 
     public class Titles {

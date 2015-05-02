@@ -141,12 +141,11 @@ public class PutProcessor extends Processor{
                 String response = urlConnectionPut(Constants.URL.EDIT_GROUP, requestJSON.toString());
                 if (response != null && response.contains("200")) {
                     result = Constants.Result.OK;
-                    ContentValues cv = new ContentValues();
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
 
-                    cv = readHistory(history);
+                    ContentValues cv = readHistory(history);
                     service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                 } else {
                     /*
@@ -185,7 +184,7 @@ public class PutProcessor extends Processor{
                 }
                 requestJSON.put("debts", debts);
 
-                String response = urlConnectionPut(Constants.URL.EDIT_GROUP, requestJSON.toString());
+                String response = urlConnectionPut(Constants.URL.EDIT_CALCULATION, requestJSON.toString());
                 if (response != null && response.contains("200")) {
                     result = Constants.Result.OK;
                     JSONObject responseJSON = new JSONObject(response);
@@ -310,63 +309,6 @@ public class PutProcessor extends Processor{
         }
         Log.e("", result);
         return result;
-    }
-
-    private ContentValues readHistory(JSONObject history) {
-        try {
-            // ===================
-            ContentValues cv = new ContentValues();
-            try {
-                cv.put(History.USERS_ID_WHO_SAY, history.getString("users_id_who_say"));
-            } catch (JSONException e) {
-            }
-            cv.put(History.USERS_ID_WHO, history.getString("users_id_who"));
-            try {
-                cv.put(History.USERS_ID_WHOM, history.getString("users_id_whom"));
-            } catch (JSONException e) {
-            }
-
-            cv.put(History.GROUP_ID, history.getString("groups_id"));
-            try {
-                cv.put(History.BILL_ID, history.getString("bills_id"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.EDITED_BILL_ID, history.getString("edited_bills_id"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.DEBTS_ID, history.getString("debts_id"));
-            } catch (JSONException e) {
-            }
-
-
-            cv.put(History.ACTION, history.getString("action"));
-
-            String date = history.getString("action_datetime");
-            String formatedDate = DateFormetter.formatDateTime(date);
-            cv.put(History.ACTION_DATETIME, formatedDate);
-            try {
-                cv.put(History.TEXT_WHO_SAY, history.getString("text_who_say"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.TEXT_SAY, history.getString("text_say"));
-            } catch (JSONException e) {
-            }
-            cv.put(History.TEXT_WHO, history.getString("text_who"));
-            cv.put(History.TEXT_DESCRIPTION, history.getString("text_description"));
-            cv.put(History.TEXT_WHAT_WHOM, history.getString("text_what_whom"));
-
-            cv.put(History.STATE, Constants.State.ENDS);
-            cv.put(History.RESULT, Constants.Result.OK);
-            return cv;
-        } catch (JSONException e) {
-            return null;
-        }
     }
 
 }

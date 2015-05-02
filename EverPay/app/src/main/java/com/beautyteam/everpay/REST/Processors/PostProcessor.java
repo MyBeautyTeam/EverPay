@@ -138,27 +138,6 @@ public class PostProcessor extends Processor {
                 result = Constants.Result.ERROR;
             }
         } else
-        if (REMOVE_MEMBER_FROM_GROUP.equals(action)) {
-            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
-            int userIdWhom = intent.getIntExtra(Constants.IntentParams.USER_ID, 0);
-            try {
-                JSONObject paramsJSON = new JSONObject();
-                paramsJSON.put("users_id", userId);
-                paramsJSON.put("access_token", accessToken);
-                paramsJSON.put("groups_id", groupId);
-                paramsJSON.put("users_id_whom", userIdWhom);
-                String response = urlConnectionPost(Constants.URL.REMOVE_GROUP_MEMBER, paramsJSON.toString());
-
-                if ((response != null) && response.contains("200")) {
-
-                    result = Constants.Result.OK;
-                } else {
-                    result = Constants.Result.ERROR;
-                }
-            } catch (JSONException e) {
-                result = Constants.Result.ERROR;
-            }
-        } else
         if (ADD_GROUP.equals(action)) {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
             try {
@@ -354,63 +333,6 @@ public class PostProcessor extends Processor {
         }
         Log.e("", result);
         return result;
-    }
-
-    private ContentValues readHistory(JSONObject history) {
-        try {
-            // ===================
-            ContentValues cv = new ContentValues();
-            try {
-                cv.put(History.USERS_ID_WHO_SAY, history.getString("users_id_who_say"));
-            } catch (JSONException e) {
-            }
-            cv.put(History.USERS_ID_WHO, history.getString("users_id_who"));
-            try {
-                cv.put(History.USERS_ID_WHOM, history.getString("users_id_whom"));
-            } catch (JSONException e) {
-            }
-
-            cv.put(History.GROUP_ID, history.getString("groups_id"));
-            try {
-                cv.put(History.BILL_ID, history.getString("bills_id"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.EDITED_BILL_ID, history.getString("edited_bills_id"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.DEBTS_ID, history.getString("debts_id"));
-            } catch (JSONException e) {
-            }
-
-
-            cv.put(History.ACTION, history.getString("action"));
-
-            String date = history.getString("action_datetime");
-            String formatedDate = DateFormetter.formatDateTime(date);
-            cv.put(History.ACTION_DATETIME, formatedDate);
-            try {
-                cv.put(History.TEXT_WHO_SAY, history.getString("text_who_say"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.TEXT_SAY, history.getString("text_say"));
-            } catch (JSONException e) {
-            }
-            cv.put(History.TEXT_WHO, history.getString("text_who"));
-            cv.put(History.TEXT_DESCRIPTION, history.getString("text_description"));
-            cv.put(History.TEXT_WHAT_WHOM, history.getString("text_what_whom"));
-
-            cv.put(History.STATE, Constants.State.ENDS);
-            cv.put(History.RESULT, Constants.Result.OK);
-            return cv;
-        } catch (JSONException e) {
-            return null;
-        }
     }
 
     private static final String[] PROJECTION_BILL = new String[] {
