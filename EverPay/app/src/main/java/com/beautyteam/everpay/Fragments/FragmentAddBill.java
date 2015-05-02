@@ -243,7 +243,7 @@ public class FragmentAddBill extends Fragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
                 case LOADER_ADD: {
-                    int count = c.getCount();
+
                 title = Constants.Titles.ADD_BILL;
                 updateTitle();
                 if (billArrayList == null) {

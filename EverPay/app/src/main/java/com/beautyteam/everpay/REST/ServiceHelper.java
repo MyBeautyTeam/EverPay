@@ -188,6 +188,9 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Редактировать счет! НЕОТТЕСТИРОВАНО!
+     */
     public void editBill(int billId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.EDIT_BILL);
@@ -196,5 +199,28 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }
+
+    /*
+    Неоттестировано!!!
+     */
+    public void editGroup(int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.EDIT_GROUP);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    public void editCalculation(int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.EDIT_GROUP);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+
 
 }

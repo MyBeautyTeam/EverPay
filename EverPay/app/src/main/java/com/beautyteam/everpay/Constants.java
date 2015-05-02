@@ -27,6 +27,8 @@ public class Constants {
         public final static String CALCULATE = BASE_URL + "debts/add/";
 
         public final static String EDIT_BILL = BASE_URL + "bills/edit/";
+        public final static String EDIT_GROUP = BASE_URL + "groups/edit/";
+        public final static String EDIT_CALCULATION = BASE_URL + "debts/edit/";
 
         public final static String SIGNUP = BASE_URL + "signup/";
     }
@@ -53,6 +55,8 @@ public class Constants {
         public final static String CALCULATE = "CALCULATE";
 
         public final static String EDIT_BILL = "EDIT_BILL";
+        public final static String EDIT_GROUP = "EDIT_GROUP";
+        public final static String EDIT_CALCULATION = "EDIT_CALC";
     }
 
     public class Titles {
