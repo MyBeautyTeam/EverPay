@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/group_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:layout_gravity="center"
+            android:textSize="20dip"
+            android:fontFamily="sans-serif-light"
+            android:hint="Название группы"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Участники"
+            android:textSize="20dip"
+            android:drawableRight="@drawable/ic_group_black_18dp"
+            android:drawablePadding="8dp"
+            android:paddingBottom="10dip"
+            />
+
+        <ListView
+            android:id="@+id/edit_group_friends_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:layout_gravity="center"
+            android:listSelector="@android:color/transparent"
+            />
+    </LinearLayout>

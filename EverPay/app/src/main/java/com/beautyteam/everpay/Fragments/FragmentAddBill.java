@@ -423,6 +423,7 @@ public class FragmentAddBill extends Fragment implements
         maxCursor.moveToFirst();
         int max = maxCursor.getInt(0);
         int billID = max+1;
+
         ContentValues cv = new ContentValues();
         cv.put(Bills.TITLE, titleEditText.getText().toString()); // Нужно ли заносить в базу???
         cv.put(Bills.GROUP_ID, groupId);

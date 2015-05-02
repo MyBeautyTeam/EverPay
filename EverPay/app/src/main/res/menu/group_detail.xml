@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity" >
+    <item
+        android:id="@+id/edit_group_tlb"
+        android:orderInCategory="200"
+        android:title="@string/edit_group"
+        android:icon="@drawable/ic_group_white_24dp"
+        app:showAsAction="ifRoom">
+    </item>
+</menu>

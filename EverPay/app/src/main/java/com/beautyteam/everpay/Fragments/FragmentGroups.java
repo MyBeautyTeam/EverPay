@@ -18,11 +18,9 @@ import android.widget.ListView;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Groups;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Adapters.GroupsListAdapter;
-import com.beautyteam.everpay.Database.MyContentProvider;
 
 /**
  * Created by asus on 15.03.2015.

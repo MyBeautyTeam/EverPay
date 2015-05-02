@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,7 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.beautyteam.everpay.Adapters.AddGroupAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.MainActivity;
@@ -33,6 +37,7 @@ public class FragmentAddGroup extends Fragment
     private ArrayList<User> arrayList = new ArrayList<User>();
     private ListView friendsList;
     private AddGroupAdapter mAdapter;
+    private EditText groupName;
 
     public static FragmentAddGroup getInstance() {
         FragmentAddGroup fragmentAddGroup = new FragmentAddGroup();
@@ -52,9 +57,11 @@ public class FragmentAddGroup extends Fragment
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
         addBtn = (Button) footerView.findViewById(R.id.add_btn_friend_foot);
+        groupName = (EditText) view.findViewById(R.id.group_name);
         friendsList.addFooterView(footerView);
         self = this;
         saveBtn = (Button) view.findViewById(R.id.save_btn_group);
+        saveBtn.setOnClickListener(this);
         addBtn.setOnClickListener(this);
         mAdapter = new AddGroupAdapter(getActivity(), arrayList);
         friendsList.setAdapter(mAdapter);
@@ -75,13 +82,29 @@ public class FragmentAddGroup extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_btn_friend_foot:
-                FragmentAddFriends frag= FragmentAddFriends.getInstance(arrayList);
+                FragmentAddFriendsToGroup frag= FragmentAddFriendsToGroup.getInstance(arrayList);
                 mainActivity.addFragment(frag);
                 break;
             case R.id.save_btn_group:
+                Log.d("button", "push button save group");
+                String title = groupName.getText().toString();
+                if(!title.equals("")) {
+                    Log.d("groupname", title.toString());
+                    if (arrayList.size()>0) {
+                        Log.d("groupsize", String.valueOf(arrayList.size()));
+
+                        FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, title);
+                        mainActivity.replaceFragment(fragmentGroupDetails);
+                    }  else {
+                        Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Введите название группы",Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
+
 
     @Override
     public void onAttach(Activity activity) {
