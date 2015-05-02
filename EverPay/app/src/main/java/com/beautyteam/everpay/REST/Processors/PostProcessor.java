@@ -84,6 +84,9 @@ public class PostProcessor extends Processor {
             if (response !=null && response.contains("200")) {
                 JSONObject responseJSON;
                 try {
+                    // !!!
+                    // НЕДОДЕЛАНО!!! НАДО ОБНОВЛЯТЬ BILL_ID
+                    //
                     responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
@@ -154,7 +157,7 @@ public class PostProcessor extends Processor {
                 paramsJSON.put("users_id", userId);
                 paramsJSON.put("access_token", accessToken);
                 paramsJSON.put("id", groupId);
-                paramsJSON.put("title", "ХНЫЩУЙ"/*groupTitle*/);
+                paramsJSON.put("title", groupTitle);
 
                 Cursor groupMembersCursor = service.getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_GROUP_MEMBERS, GroupMembers.GROUP_ID +"="+groupId, null, null);
                 JSONObject groupMembers = new JSONObject();
@@ -205,6 +208,39 @@ public class PostProcessor extends Processor {
 
                 }
 
+            } catch (JSONException e) {
+                result = Constants.Result.ERROR;
+            }
+        } else
+        if (CALCULATE.equals(action)) {
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            try {
+                JSONObject paramsJSON = new JSONObject();
+                paramsJSON.put("users_id", userId);
+                paramsJSON.put("access_token", accessToken);
+                paramsJSON.put("groups_id", groupId);
+                String response = urlConnectionPost(Constants.URL.CALCULATE, paramsJSON.toString());
+                if (response != null && response.contains("200")) {
+                    result = Constants.Result.OK;
+
+                    JSONObject responseJSON = new JSONObject(response);
+                    responseJSON = responseJSON.getJSONObject("response");
+
+                    JSONObject groupJSON = responseJSON.getJSONObject("group");
+                    JSONObject debtsJSOB = responseJSON.getJSONObject("debts");
+                    JSONObject debt;
+                    ContentValues cv;
+                    for (int i = 0; i < debtsJSOB.length(); i++) {
+                        debt = debtsJSOB.getJSONObject(i + "");
+                        cv = new ContentValues();
+                        int debtId = debt.getInt("debts_id");
+                        //int sum = debtId
+                    }
+
+
+
+                } else
+                    result = Constants.Result.ERROR;
             } catch (JSONException e) {
                 result = Constants.Result.ERROR;
             }

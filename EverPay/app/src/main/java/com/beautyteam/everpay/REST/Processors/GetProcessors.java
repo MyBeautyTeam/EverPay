@@ -238,7 +238,7 @@ public class GetProcessors extends Processor {
 
             String response = get(Constants.URL.GET_HISTORY, params);
             if ((response != null) && (response.contains("200"))) {
-                service.getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
 
                 try {
                     JSONObject responseJSON = new JSONObject(response);

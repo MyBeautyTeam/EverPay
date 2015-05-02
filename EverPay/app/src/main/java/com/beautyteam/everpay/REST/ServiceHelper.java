@@ -66,9 +66,10 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activityCallback.onRequestEnd(resultCode, data);
     }
 
-    public void calculate(int groupID) {
+    public void calculate(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.CALCULATE);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
         intentService.putExtra(Constants.RECEIVER, mReceiver);
 
         activity.startService(intentService);

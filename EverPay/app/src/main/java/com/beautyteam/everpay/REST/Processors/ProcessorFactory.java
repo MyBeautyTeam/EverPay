@@ -26,7 +26,8 @@ public class ProcessorFactory {
             Constants.Action.ADD_BILL.equals(action) ||
             Constants.Action.ADD_MEMBER_TO_GROUP.equals(action) ||
             Constants.Action.REMOVE_MEMBER_FROM_GROUP.equals(action) ||
-            Constants.Action.ADD_GROUP.equals(action)
+            Constants.Action.ADD_GROUP.equals(action) ||
+            Constants.Action.CALCULATE.equals(action)
             ) {
             return new PostProcessor();
         }
