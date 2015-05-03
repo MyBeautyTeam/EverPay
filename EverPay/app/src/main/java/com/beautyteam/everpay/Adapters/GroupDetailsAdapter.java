@@ -3,6 +3,7 @@ package com.beautyteam.everpay.Adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.beautyteam.everpay.R;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Created by asus on 25.04.2015.
@@ -34,7 +36,6 @@ public class GroupDetailsAdapter extends CursorAdapter {
     private static final  int REMOVE_BILLS = 6;
     private static final  int ADD_DEBTS = 7;
     private static final  int EDIT_DEBTS = 8;
-    private HashSet<Integer> mapBackground = new HashSet<Integer>();
 
     public GroupDetailsAdapter(Context context, Cursor c, int flags, MainActivity mainActivity) {
         super(context, c, flags);
@@ -56,13 +57,11 @@ public class GroupDetailsAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        int value = 0;
+
         ViewHolder holder = (ViewHolder) view.getTag();
         final int groupId = cursor.getInt(cursor.getColumnIndex(History.GROUP_ID));
         final int billId = cursor.getInt(cursor.getColumnIndex(History.BILL_ID));
-        if  (!mapBackground.isEmpty())
-            if (mapBackground.contains(cursor.getInt(cursor.getColumnIndex(History.ITEM_ID))))
-                view.setBackgroundResource(R.drawable.history_style);
+        view.setBackgroundResource(0);
 
         switch (cursor.getInt(cursor.getColumnIndex(History.ACTION))) {
             case REMOVE_BILLS:
@@ -71,30 +70,28 @@ public class GroupDetailsAdapter extends CursorAdapter {
             case REMOVE_MEMBERS:
             case ADD_MEMBERS:
             case ADD_DEBTS:
-                holder.discript.setText(Html.fromHtml("<b>"+ cursor.getString(cursor.getColumnIndex(History.TEXT_WHO))+"</b>"+" "+
-                        cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION))+" "+
-                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM))+"</b>"));
+                holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" + " " +
+                        cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) + " " +
+                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
                 break;
             case ADD_BILLS:
             case EDIT_BILLS:
-                holder.discript.setText(Html.fromHtml("<b>"+ cursor.getString(cursor.getColumnIndex(History.TEXT_WHO))+"</b>"+" "+
-                        cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION))+" "+
-                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM))+"</b>"));
-                    view.setDrawingCacheEnabled(false);
-                    view.setBackgroundResource(R.drawable.history_style);
+                holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" + " " +
+                        cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) + " " +
+                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
+                view.setBackgroundResource(R.drawable.history_style);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mainActivity.addFragment(FragmentShowBill.getInstance(groupId, billId));
                     }
                 });
-                mapBackground.add(cursor.getInt(cursor.getColumnIndex(History.ITEM_ID)));
                 break;
             case EDIT_DEBTS:
-                holder.discript.setText(Html.fromHtml("<b>"+ cursor.getString(cursor.getColumnIndex(History.TEXT_WHO_SAY))+"</b>"+
+                holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO_SAY)) + "</b>" +
                         " " + cursor.getString(cursor.getColumnIndex(History.TEXT_SAY)) +
-                        " " + "<b>"+ cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" +
-                        " " + cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION))+
+                        " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" +
+                        " " + cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) +
                         " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
                 break;
         }

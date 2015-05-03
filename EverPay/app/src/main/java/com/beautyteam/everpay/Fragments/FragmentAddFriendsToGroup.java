@@ -56,8 +56,8 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         friendsList = (ListView) view.findViewById(R.id.friends_list);
-        //friendsList.setFastScrollEnabled(true);
-        //friendsList.setScrollingCacheEnabled(true);
+        friendsList.setFastScrollEnabled(true);
+        friendsList.setScrollingCacheEnabled(true);
         saveBtn = (Button) view.findViewById(R.id.save_btn_friends_in_group);
         saveBtn.setOnClickListener(this);
     }

@@ -188,7 +188,7 @@ public class FragmentShowBill extends Fragment implements
     }
 
     private void showDialog() {
-        dialogWindow = new DialogWindow(getActivity());
+        dialogWindow = new DialogWindow(getActivity(),R.layout.dialog_delete_bill);
         dialogWindow.show();
         dialogWindow.setOnYesClickListener(new View.OnClickListener() {
             @Override
