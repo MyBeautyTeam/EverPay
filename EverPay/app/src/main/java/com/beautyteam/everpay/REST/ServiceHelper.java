@@ -69,6 +69,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     public void calculate(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.CALCULATE);
+
         intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
         intentService.putExtra(Constants.RECEIVER, mReceiver);
 
@@ -186,5 +187,56 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }
+
+    /*
+    Редактировать счет! НЕОТТЕСТИРОВАНО!
+     */
+    public void editBill(int billId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.EDIT_BILL);
+        intentService.putExtra(Constants.IntentParams.BILL_ID, billId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    /*
+    Неоттестировано!!!
+     */
+    public void editGroup(int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.EDIT_GROUP);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+    /*
+    Неоттестировано!!!
+     */
+    public void editCalculation(int groupId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.EDIT_CALCULATION);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+
+    /*
+    Неоттестировано!!!
+     */
+    public void removeBill(int billId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.REMOVE_BILL);
+        intentService.putExtra(Constants.IntentParams.BILL_ID, billId);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+
 
 }

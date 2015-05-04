@@ -48,7 +48,7 @@ public class FragmentAddBill extends Fragment implements
     private static final String GROUP_ID = "GROUP_ID";
     private static final String BILL_ID = "BILL_ID";
     private int groupId;
-    private int billId;
+    private int billEditedId;
 
     private AddBillListAdapter mAdapter;
     private ListView addBillList;
@@ -105,9 +105,9 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        billId = getArguments().getInt(BILL_ID, -1);
+        billEditedId = getArguments().getInt(BILL_ID, -1);
         groupId = getArguments().getInt(GROUP_ID, -1);
-        if (billId == -1)
+        if (billEditedId == -1)
             getLoaderManager().initLoader(LOADER_ADD, null, this);
         else
             getLoaderManager().initLoader(LOADER_EDIT, null, this);
@@ -236,14 +236,14 @@ public class FragmentAddBill extends Fragment implements
         if (id == LOADER_ADD)
             return new CursorLoader(getActivity(), EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" + groupId, null, null);
         else
-            return new CursorLoader(getActivity(), EverContentProvider.BILLS_CONTENT_URI, PROJECTION_EDIT, Bills.BILL_ID + "=" + billId, null, null);
+            return new CursorLoader(getActivity(), EverContentProvider.BILLS_CONTENT_URI, PROJECTION_EDIT, Bills.BILL_ID + "=" + billEditedId, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
                 case LOADER_ADD: {
-                    int count = c.getCount();
+
                 title = Constants.Titles.ADD_BILL;
                 updateTitle();
                 if (billArrayList == null) {
@@ -259,7 +259,7 @@ public class FragmentAddBill extends Fragment implements
                 title = Constants.Titles.EDIT_BILL;
                 updateTitle();
                 if (billArrayList == null) {
-                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, null/*GroupMembers.GROUP_ID + "=" +groupId*/, null, null);
+                    Cursor usersCursor = getActivity().getContentResolver().query(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, PROJECTION_ADD, GroupMembers.GROUP_ID + "=" +groupId, null, null);
                     fillBillList(usersCursor);
 
                     for (int i = 0; i < billArrayList.size(); i++) {
@@ -355,12 +355,14 @@ public class FragmentAddBill extends Fragment implements
             case R.id.action_apply:
                 if (isCorrectData()) {
                     int billID = insertToDB();
-                    if (billId < 0) {
+                    if (billEditedId < 0) {
                         ((MainActivity)getActivity()).getServiceHelper().addBill(billID, groupId);
                         Toast.makeText(getActivity(), "Счет был добавлен", Toast.LENGTH_SHORT).show();
                     }
-                    else
+                    else {
+                        ((MainActivity)getActivity()).getServiceHelper().editBill(billID);
                         Toast.makeText(getActivity(), "Счет был изменен", Toast.LENGTH_SHORT).show();
+                    }
                     ((MainActivity)getActivity()).removeFragment();
 
                 }
@@ -429,6 +431,8 @@ public class FragmentAddBill extends Fragment implements
         cv.put(Bills.GROUP_ID, groupId);
         cv.put(Bills.BILL_ID, billID);
 
+        if (billEditedId > 0) // Если редактирование счета
+            cv.put(Bills.BILL_EDITED_ID, billEditedId);
 
         for (int i=0; i<billArrayList.size(); i++) {
             BillListItem item = billArrayList.get(i);

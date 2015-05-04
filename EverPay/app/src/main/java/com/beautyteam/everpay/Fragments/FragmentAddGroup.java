@@ -1,6 +1,8 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -18,10 +20,14 @@ import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddGroupAdapter;
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.GroupMembers;
+import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 /**
@@ -87,22 +93,57 @@ public class FragmentAddGroup extends Fragment
                 break;
             case R.id.save_btn_group:
                 Log.d("button", "push button save group");
-                String title = groupName.getText().toString();
-                if(!title.equals("")) {
-                    Log.d("groupname", title.toString());
-                    if (arrayList.size()>0) {
-                        Log.d("groupsize", String.valueOf(arrayList.size()));
 
-                        FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, title);
-                        mainActivity.replaceFragment(fragmentGroupDetails);
-                    }  else {
-                        Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "Введите название группы",Toast.LENGTH_SHORT).show();
+                if (isCorrectData()) {
+                    int groupId = insertToDB();
+                    String title = groupName.getText().toString();
+                    mainActivity.getServiceHelper().addGroup(groupId);
+                    FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(groupId, title);
+                    mainActivity.replaceFragment(fragmentGroupDetails);
                 }
                 break;
         }
+    }
+
+    private boolean isCorrectData() {
+        String title = groupName.getText().toString();
+        if(!title.equals("")) {
+            Log.d("groupname", title.toString());
+            if (arrayList.size()>0) {
+                Log.d("groupsize", String.valueOf(arrayList.size()));
+                return true;
+            }  else {
+                Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } else {
+            Toast.makeText(getActivity(), "Введите название группы",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    private int insertToDB() {
+        String title = groupName.getText().toString();
+
+        ContentValues cv = new ContentValues();
+        cv.put(Groups.TITLE, title);
+        cv.put(Groups.STATE, Constants.State.IN_PROCESS);
+        cv.put(Groups.IS_CALCULATED, 0);
+        Uri uri = getActivity().getContentResolver().insert(EverContentProvider.GROUPS_CONTENT_URI, cv);
+
+        String groupId = uri.getLastPathSegment();
+        for (int i=0; i<arrayList.size(); i++) {
+            User friend = arrayList.get(i);
+            cv = new ContentValues();
+            cv.put(GroupMembers.GROUP_ID, groupId);
+            cv.put(GroupMembers.USER_ID, friend.getId());
+            cv.put(GroupMembers.USER_ID_VK, "");
+            cv.put(GroupMembers.USER_NAME, friend.getLast_name() + " " + friend.getName());
+            cv.put(GroupMembers.STATE, Constants.State.IN_PROCESS);
+            getActivity().getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
+        }
+
+        return Integer.parseInt(groupId);
     }
 
 

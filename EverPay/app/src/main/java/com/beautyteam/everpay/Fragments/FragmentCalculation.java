@@ -40,6 +40,7 @@ public class FragmentCalculation extends Fragment implements
     private static final int LOADER_ID = 1;
     private ListView calcList;
     private Button calcBtn;
+    private int groupId;
 
     private CalcListAdapter mAdapter;
     private static final String GROUP_ID = "GROUP_ID";
@@ -56,6 +57,7 @@ public class FragmentCalculation extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        groupId = getArguments().getInt(GROUP_ID);
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_calculation, null);
@@ -70,6 +72,7 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private static final String[] PROJECTION = new String[] {
+            Calculation.ITEM_ID,
             Calculation.CALC_ID,
             Calculation.GROUPS_ID,
             Calculation.WHO_ID,
@@ -83,7 +86,6 @@ public class FragmentCalculation extends Fragment implements
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        int groupId = getArguments().getInt(GROUP_ID);
         return new CursorLoader(getActivity(), EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, Calculation.GROUPS_ID +" = " + groupId, null, /*SORT_ORDER*/null);
     }
 
@@ -117,6 +119,7 @@ public class FragmentCalculation extends Fragment implements
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
+        ((MainActivity) getActivity()).getServiceHelper().calculate(groupId);
     }
 
     @Override
@@ -142,6 +145,7 @@ public class FragmentCalculation extends Fragment implements
                 break;
         }
         Toast.makeText(getActivity(), "Изменения внесены", Toast.LENGTH_SHORT).show();
+        ((MainActivity) getActivity()).getServiceHelper().editCalculation(groupId);
         ((MainActivity) getActivity()).removeFragment();
     }
 }

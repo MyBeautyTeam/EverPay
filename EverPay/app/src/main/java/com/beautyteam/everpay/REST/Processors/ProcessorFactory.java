@@ -25,12 +25,24 @@ public class ProcessorFactory {
         if (
             Constants.Action.ADD_BILL.equals(action) ||
             Constants.Action.ADD_MEMBER_TO_GROUP.equals(action) ||
-            Constants.Action.REMOVE_MEMBER_FROM_GROUP.equals(action) ||
             Constants.Action.ADD_GROUP.equals(action) ||
             Constants.Action.CALCULATE.equals(action)
             ) {
             return new PostProcessor();
-        }
+        } else
+        if (
+            Constants.Action.EDIT_BILL.equals(action) ||
+            Constants.Action.EDIT_GROUP.equals(action) ||
+            Constants.Action.EDIT_CALCULATION.equals(action)
+            ) {
+            return new PutProcessor();
+        } else
+        if (
+            Constants.Action.REMOVE_MEMBER_FROM_GROUP.equals(action) ||
+            Constants.Action.REMOVE_BILL.equals(action)
+            )
+            return new DeleteProcessor();
+
         return null;
     }
 }

@@ -6,7 +6,8 @@ package com.beautyteam.everpay.Database;
 public class Calculation {
     static final String CALCULATION_TABLE = "calculations";
 
-    static public final String CALC_ID = "_id";
+    static public final String ITEM_ID = "_id";
+    static public final String CALC_ID = "calc_id";
     static public final String GROUPS_ID = "group_id";
     static public final String WHO_ID = "who_id";
     static public final String WHO_ID_VK = "who_id_vk";
@@ -21,7 +22,8 @@ public class Calculation {
 
 
     static public final String CREATE_TABLE = "create table " + CALCULATION_TABLE + "("
-            + CALC_ID + " integer primary key, "
+            + ITEM_ID + " integer primary key autoincrement, "
+            + CALC_ID + " integer, "
             + GROUPS_ID + " integer, "
             + WHO_ID + " integer, "
             + WHO_ID_VK + " integer, "

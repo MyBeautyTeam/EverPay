@@ -248,48 +248,7 @@ public class GetProcessors extends Processor {
                     JSONObject historyItem;
                     for (int i=0; i<history.length(); i++) {
                         historyItem = history.getJSONObject(i + "");
-                        ContentValues cv = new ContentValues();
-                        try {
-                            cv.put(History.USERS_ID_WHO_SAY, historyItem.getString("users_id_who_say"));
-                        } catch (JSONException e) {}
-                        cv.put(History.USERS_ID_WHO, historyItem.getString("users_id_who"));
-                        try {
-                            cv.put(History.USERS_ID_WHOM, historyItem.getString("users_id_whom"));
-                        } catch (JSONException e){}
-
-                        cv.put(History.GROUP_ID, historyItem.getString("groups_id"));
-                        try {
-                            cv.put(History.BILL_ID, historyItem.getString("bills_id"));
-                        } catch (JSONException e) {}
-
-                        try {
-                            cv.put(History.EDITED_BILL_ID, historyItem.getString("edited_bills_id"));
-                        } catch (JSONException e) {}
-
-                        try {
-                            cv.put(History.DEBTS_ID, historyItem.getString("debts_id"));
-                        } catch (JSONException e) {}
-
-
-                        cv.put(History.ACTION, historyItem.getString("action"));
-
-                        String date = historyItem.getString("action_datetime");
-                        String formatedDate = DateFormetter.formatDateTime(date);
-                        cv.put(History.ACTION_DATETIME, formatedDate);
-                        try {
-                            cv.put(History.TEXT_WHO_SAY, historyItem.getString("text_who_say"));
-                        } catch (JSONException e) {}
-
-                        try {
-                        cv.put(History.TEXT_SAY, historyItem.getString("text_say"));
-                        } catch (JSONException e) {}
-                        cv.put(History.TEXT_WHO, historyItem.getString("text_who"));
-                        cv.put(History.TEXT_DESCRIPTION, historyItem.getString("text_description"));
-                        cv.put(History.TEXT_WHAT_WHOM, historyItem.getString("text_what_whom"));
-
-                        cv.put(History.STATE, Constants.State.ENDS);
-                        cv.put(History.RESULT, Constants.Result.OK);
-
+                        ContentValues cv = readHistory(historyItem);
 
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
 

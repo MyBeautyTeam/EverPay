@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
+import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
@@ -32,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class PostProcessor extends Processor {
 
     @Override
     public void request(Intent intent, Service service) {
-        LinkedList<NameValuePair> params = new LinkedList<NameValuePair>();
+
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
         SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
         int userId = 8;//sPref.getInt(Constants.Preference.USER_ID, 0);
@@ -56,7 +58,7 @@ public class PostProcessor extends Processor {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
             Cursor c = service.getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_BILL, Bills.BILL_ID + "=" + billId, null, null);
             c.moveToFirst();
-            int count = c.getCount();
+
             String title = c.getString(c.getColumnIndex(Bills.TITLE));
             JSONObject jsonObject = new JSONObject();
             try {
@@ -84,13 +86,19 @@ public class PostProcessor extends Processor {
             if (response !=null && response.contains("200")) {
                 JSONObject responseJSON;
                 try {
-                    // !!!
-                    // НЕДОДЕЛАНО!!! НАДО ОБНОВЛЯТЬ BILL_ID
-                    //
                     responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
+
+                    int newBillId = responseJSON.getInt("bills_id");
+                    int oldBillId = responseJSON.getInt("id");
+                    ContentValues cv = new ContentValues();
+                    cv.put(Bills.BILL_ID, newBillId);
+                    cv.put(Bills.STATE, Constants.State.ENDS);
+                    cv.put(Bills.RESULT, Constants.Result.OK);
+                    service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + oldBillId, null);
+
                     JSONObject history = responseJSON.getJSONObject("history");
-                    ContentValues cv = readHistory(history);
+                    cv = readHistory(history);
                     if (cv != null)
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     else
@@ -102,6 +110,11 @@ public class PostProcessor extends Processor {
                 }
             } else {
                 result = Constants.Result.ERROR;
+                ContentValues cv = new ContentValues();
+                cv.put(Bills.STATE, Constants.State.ENDS);
+                cv.put(Bills.RESULT, Constants.Result.ERROR);
+                service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + billId, null);
+                // ДОБАВИТЬ ИСТОРИЮ С ОШИБКОЙ!
             }
 
         } else
@@ -115,27 +128,6 @@ public class PostProcessor extends Processor {
                 paramsJSON.put("groups_id", groupId);
                 paramsJSON.put("users_id_whom", userIdWhom);
                 String response = urlConnectionPost(Constants.URL.ADD_GROUP_MEMBER, paramsJSON.toString());
-                if ((response != null) && response.contains("200")) {
-
-                    result = Constants.Result.OK;
-                } else {
-                    result = Constants.Result.ERROR;
-                }
-            } catch (JSONException e) {
-                result = Constants.Result.ERROR;
-            }
-        } else
-        if (REMOVE_MEMBER_FROM_GROUP.equals(action)) {
-            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
-            int userIdWhom = intent.getIntExtra(Constants.IntentParams.USER_ID, 0);
-            try {
-                JSONObject paramsJSON = new JSONObject();
-                paramsJSON.put("users_id", userId);
-                paramsJSON.put("access_token", accessToken);
-                paramsJSON.put("groups_id", groupId);
-                paramsJSON.put("users_id_whom", userIdWhom);
-                String response = urlConnectionPost(Constants.URL.REMOVE_GROUP_MEMBER, paramsJSON.toString());
-
                 if ((response != null) && response.contains("200")) {
 
                     result = Constants.Result.OK;
@@ -223,18 +215,53 @@ public class PostProcessor extends Processor {
                 if (response != null && response.contains("200")) {
                     result = Constants.Result.OK;
 
+                    service.getContentResolver().delete(EverContentProvider.CALCULATION_CONTENT_URI, Calculation.GROUPS_ID + "=" + groupId, null);
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
 
                     JSONObject groupJSON = responseJSON.getJSONObject("group");
+                    int groupIdFromResponse = groupJSON.getInt("groups_id");
+
                     JSONObject debtsJSOB = responseJSON.getJSONObject("debts");
-                    JSONObject debt;
                     ContentValues cv;
-                    for (int i = 0; i < debtsJSOB.length(); i++) {
-                        debt = debtsJSOB.getJSONObject(i + "");
+                    Iterator<String> iterator = debtsJSOB.keys();
+                    while (iterator.hasNext()) {
+                        String key = iterator.next();
+                        JSONObject debt = debtsJSOB.getJSONObject(key);
+
                         cv = new ContentValues();
                         int debtId = debt.getInt("debts_id");
-                        //int sum = debtId
+                        int sum = debt.getInt("sum");
+                        boolean isDeleted = debt.getBoolean("is_deleted");
+
+                        JSONObject userWhoJSON = debt.getJSONObject("user_who");
+
+                        int whoId = userWhoJSON.getInt("users_id");
+                        int whoIdVK = userWhoJSON.getInt("vk_id");
+                        String whoName = userWhoJSON.getString("last_name") + " " + userWhoJSON.getString("name") ;
+
+                        JSONObject userWhomJSON = debt.getJSONObject("user_whom");
+                        int whomId = userWhomJSON.getInt("users_id");
+                        int whomIdVK = userWhomJSON.getInt("vk_id");
+                        String whomName = userWhomJSON.getString("last_name") + " " + userWhoJSON.getString("name") ;
+
+                        cv.put(Calculation.CALC_ID, debtId);
+                        cv.put(Calculation.GROUPS_ID, groupIdFromResponse);
+                        cv.put(Calculation.WHO_ID, whoId);
+                        cv.put(Calculation.WHO_ID_VK, whoIdVK);
+                        cv.put(Calculation.NAME_WHO, whoName);
+
+                        cv.put(Calculation.WHOM_ID, whomId);
+                        cv.put(Calculation.WHOM_ID_VK, whomIdVK);
+                        cv.put(Calculation.NAME_WHOM, whomName);
+
+                        cv.put(Calculation.SUMMA, sum);
+                        cv.put(Calculation.IS_DELETED, isDeleted? 1:0);
+
+                        cv.put(Calculation.STATE, Constants.State.ENDS);
+                        cv.put(Calculation.RESULT, Constants.Result.OK);
+
+                        service.getContentResolver().insert(EverContentProvider.CALCULATION_CONTENT_URI, cv);
                     }
 
 
@@ -272,7 +299,7 @@ public class PostProcessor extends Processor {
 
     public String urlConnectionPost(String strUrl, String urlParameters) {
         HttpURLConnection connection = null;
-        String str = "";
+        String str = null;
         try {
             URL url = new URL(strUrl);
             connection = (HttpURLConnection) url.openConnection();
@@ -306,63 +333,6 @@ public class PostProcessor extends Processor {
         }
         Log.e("", result);
         return result;
-    }
-
-    private ContentValues readHistory(JSONObject history) {
-        try {
-            // ===================
-            ContentValues cv = new ContentValues();
-            try {
-                cv.put(History.USERS_ID_WHO_SAY, history.getString("users_id_who_say"));
-            } catch (JSONException e) {
-            }
-            cv.put(History.USERS_ID_WHO, history.getString("users_id_who"));
-            try {
-                cv.put(History.USERS_ID_WHOM, history.getString("users_id_whom"));
-            } catch (JSONException e) {
-            }
-
-            cv.put(History.GROUP_ID, history.getString("groups_id"));
-            try {
-                cv.put(History.BILL_ID, history.getString("bills_id"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.EDITED_BILL_ID, history.getString("edited_bills_id"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.DEBTS_ID, history.getString("debts_id"));
-            } catch (JSONException e) {
-            }
-
-
-            cv.put(History.ACTION, history.getString("action"));
-
-            String date = history.getString("action_datetime");
-            String formatedDate = DateFormetter.formatDateTime(date);
-            cv.put(History.ACTION_DATETIME, formatedDate);
-            try {
-                cv.put(History.TEXT_WHO_SAY, history.getString("text_who_say"));
-            } catch (JSONException e) {
-            }
-
-            try {
-                cv.put(History.TEXT_SAY, history.getString("text_say"));
-            } catch (JSONException e) {
-            }
-            cv.put(History.TEXT_WHO, history.getString("text_who"));
-            cv.put(History.TEXT_DESCRIPTION, history.getString("text_description"));
-            cv.put(History.TEXT_WHAT_WHOM, history.getString("text_what_whom"));
-
-            cv.put(History.STATE, Constants.State.ENDS);
-            cv.put(History.RESULT, Constants.Result.OK);
-            return cv;
-        } catch (JSONException e) {
-            return null;
-        }
     }
 
     private static final String[] PROJECTION_BILL = new String[] {

@@ -84,6 +84,8 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
                 Log.d("onclick",holder.firstName.toString());
 
                                 //добавить в базу
+                mainActivity.getServiceHelper().addMemberToGroup(cursor.getInt(cursor.getColumnIndex(Users.USER_ID)), 8);
+                //
                 mainActivity.removeFragment();
 
             }
