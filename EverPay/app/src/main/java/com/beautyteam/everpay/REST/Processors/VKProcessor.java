@@ -85,7 +85,7 @@ public class VKProcessor extends Processor {
                 JSONObject user = new JSONObject();
                 JSONObject friends = new JSONObject();
                 try {
-                    user.put("vk_id", new Random().nextInt(100000) );
+                    user.put("vk_id", new Random().nextInt(1000000) + 100000 );
                     user.put("last_name", userFull.last_name);
                     user.put("name", userFull.first_name);
                     user.put("sex", Math.abs(userFull.sex-2));

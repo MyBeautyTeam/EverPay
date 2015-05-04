@@ -134,8 +134,24 @@ public class PostProcessor extends Processor {
                 paramsJSON.put("users_id_whom", userIdWhom);
                 String response = urlConnectionPost(Constants.URL.ADD_GROUP_MEMBER, paramsJSON.toString());
                 if ((response != null) && response.contains("200")) {
-
                     result = Constants.Result.OK;
+
+                    service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, GroupMembers.GROUP_ID + "=" +groupId, null );
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonObject = jsonObject.getJSONObject("response");
+                    JSONObject group = jsonObject.getJSONObject("group");
+                    JSONObject members = jsonObject.getJSONObject("members");
+                    JSONObject member;
+                    for (int i = 0; i<members.length(); i++) {
+                        member = members.getJSONObject(i + "");
+                        ContentValues cv = new ContentValues();
+                        cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
+                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
+                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
+                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
+
+                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
+                    }
                 } else {
                     result = Constants.Result.ERROR;
                 }

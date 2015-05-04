@@ -54,7 +54,7 @@ public class GetProcessors extends Processor {
 
         SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
         params.add(new BasicNameValuePair("users_id", 8 + ""));
-        params.add(new BasicNameValuePair("access_token", "wjekwewue"));
+        //params.add(new BasicNameValuePair("access_token", "wjekwewue"));
         /*
         params.add(new BasicNameValuePair("users_id", sPref.getInt(Constants.Preference.USER_ID, 0) + ""));
         params.add(new BasicNameValuePair("access_token", sPref.getString(Constants.Preference.ACCESS_TOKEN, "")));
