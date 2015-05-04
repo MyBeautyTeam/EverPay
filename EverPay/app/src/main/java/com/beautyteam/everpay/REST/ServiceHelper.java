@@ -177,7 +177,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
     /*
-    Создать группу
+    Создать группу (Вроде работает, черт знает, как проверить)
      */
     public void addGroup(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -201,7 +201,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
     /*
-    Неоттестировано!!!
+    Редактирование группы
      */
     public void editGroup(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -226,7 +226,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
 
     /*
-    Неоттестировано!!!
+    Удаление счета
      */
     public void removeBill(int billId) {
         Intent intentService = new Intent(activity, Service.class);

@@ -49,6 +49,8 @@ public class PostProcessor extends Processor {
 
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
         SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
+        //int userId = sPref.getInt(Constants.Preference.USER_ID, 0);
+        //String accessToken = sPref.getString(Constants.Preference.ACCESS_TOKEN, "0");
         int userId = 8;//sPref.getInt(Constants.Preference.USER_ID, 0);
         String accessToken = "wjekwewue";//sPref.getString(ACCESS_TOKEN, "0");
         String action = intent.getAction();

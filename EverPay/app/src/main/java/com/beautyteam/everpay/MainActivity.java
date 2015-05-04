@@ -2,6 +2,7 @@ package com.beautyteam.everpay;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -272,8 +273,12 @@ public class MainActivity extends ActionBarActivity
                 setupDrawer();
                 replaceFragment(FragmentViewPager.getInstance());
             } else {
-                Toast.makeText(this, "Проверьте соединение с интернетом", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
                 VKSdk.logout();
+                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(i);
+                // TODO МОЖЕТ НУЖНО ПОЧИСИТЬ БАЗУ?!
+                this.finish();
             }
         } else if (action.equals(CALCULATE)){
 

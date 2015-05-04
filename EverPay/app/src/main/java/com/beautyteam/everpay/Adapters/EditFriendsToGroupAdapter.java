@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.jar.Attributes;
 
 /**
  * Created by asus on 29.04.2015.
@@ -81,10 +82,9 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("onclick",holder.firstName.toString());
-
+                Log.d("onclick",holder.firstName.getText().toString());
                                 //добавить в базу
-                mainActivity.getServiceHelper().addMemberToGroup(cursor.getInt(cursor.getColumnIndex(Users.USER_ID)), 8);
+                String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
                 //
                 mainActivity.removeFragment();
 

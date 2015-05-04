@@ -73,10 +73,10 @@ public class FragmentAddGroup extends Fragment
         addBtn.setOnClickListener(this);
         SharedPreferences sPref = getActivity().getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
         User user  = new User(sPref.getInt(Constants.Preference.USER_ID, 0),
-                sPref.getInt(Constants.Preference.USER_ID_VK,0),
+                sPref.getInt(Constants.Preference.USER_ID_VK, 0),
                 sPref.getString(Constants.Preference.USER_NAME,""), "",
                 sPref.getString(Constants.Preference.IMG_URL,"") );
-        mAdapter = new AddGroupAdapter(getActivity(), arrayList,user);
+        mAdapter = new AddGroupAdapter(getActivity(), arrayList, user);
         friendsList.setAdapter(mAdapter);
     }
 
@@ -143,7 +143,7 @@ public class FragmentAddGroup extends Fragment
             cv = new ContentValues();
             cv.put(GroupMembers.GROUP_ID, groupId);
             cv.put(GroupMembers.USER_ID, friend.getId());
-            cv.put(GroupMembers.USER_ID_VK, "");
+            cv.put(GroupMembers.USER_ID_VK, friend.getId_vk());
             cv.put(GroupMembers.USER_NAME, friend.getLast_name() + " " + friend.getName());
             cv.put(GroupMembers.STATE, Constants.State.IN_PROCESS);
             getActivity().getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
