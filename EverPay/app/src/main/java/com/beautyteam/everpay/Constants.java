@@ -65,7 +65,7 @@ public class Constants {
     public class Titles {
         public final static String ADD_BILL = "Добавление счета";
         public final static String EDIT_BILL = "Редактирование счета";
-        public final static String FRIENDS = "Друзья";
+        public final static String FRIENDS = "Добавление участников";
         public final static String ADD_GROUP = "Создание группы";
         public final static String EDIT_GROUP = "Участники группы";
         public final static String CALCULATION = "Расчет";

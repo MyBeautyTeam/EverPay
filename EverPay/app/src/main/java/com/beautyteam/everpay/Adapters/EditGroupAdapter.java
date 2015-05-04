@@ -17,6 +17,7 @@ import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
@@ -40,8 +41,9 @@ public class EditGroupAdapter extends CursorAdapter {
     private MainActivity mainActivity;
     private DialogWindow dialogWindow;
     HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
+    private User creator;
 
-    public EditGroupAdapter(Context context,final Cursor c, int flags, MainActivity mainActivity) {
+    public EditGroupAdapter(Context context,final Cursor c, int flags, MainActivity mainActivity, User user) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mainActivity = mainActivity;
@@ -51,6 +53,7 @@ public class EditGroupAdapter extends CursorAdapter {
                 loadAvatarsFromVK(c);
             }
         });
+        creator = user;
     }
 
     private void loadAvatarsFromVK(Cursor c) {
@@ -101,14 +104,13 @@ public class EditGroupAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
         ViewHolder holder = (ViewHolder)view.getTag();
+        holder.remove.setVisibility(View.VISIBLE);
         String name = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_NAME));
         holder.firstName.setText(name);
         String id = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_ID_VK));
         String img = mapIdToAvatar.get(id);
         Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
-
-       // String avatarUrl = cursor.getString(cursor.getColumnIndex(Users.IMG));
-       // Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(holder.avatar);
+        if (creator.getId() == cursor.getInt(cursor.getColumnIndex(GroupMembers.USER_ID)))
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

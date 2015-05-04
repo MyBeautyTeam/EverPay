@@ -1,5 +1,6 @@
 package com.beautyteam.everpay;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,13 +31,11 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        VKUIHelper.onCreate(this);
          String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
-
         VKSdk.initialize(sdkListener, VK_APP_ID);
 
-        VKUIHelper.onCreate(this);
         setContentView(R.layout.activity_login);
 
         Button loginButton = (Button) findViewById(R.id.login_button);
@@ -103,7 +102,6 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
-            newToken.saveTokenToSharedPreferences(LoginActivity.this, sTokenKey);
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
             LoginActivity.this.finish();

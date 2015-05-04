@@ -58,17 +58,19 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
     public ArrayList<User> getArrayList() {
         Cursor cursor = getCursor();
         User user;
-        String idName;
+        String id;
+        String id_vk;
         String name;
         String img;
         arrayList.clear();
         cursor.moveToPosition(-1);
         while(cursor.moveToNext()) {
-            idName = cursor.getString(cursor.getColumnIndex(Users.USER_ID_VK));
-            if (set.contains(idName)) {
+            id = cursor.getString(cursor.getColumnIndex(Users.USER_ID));
+            if (set.contains(id)) {
+                id_vk = cursor.getString(cursor.getColumnIndex(Users.USER_ID_VK));
                 name = cursor.getString(cursor.getColumnIndex(Users.NAME));
                 img = cursor.getString(cursor.getColumnIndex(Users.IMG));
-                user = new User(Integer.valueOf(idName), name, "", img);
+                user = new User( Integer.valueOf(id),  Integer.valueOf(id_vk), name, "", img);
                 arrayList.add(user);
             }
         }
@@ -94,9 +96,9 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         ViewHolder holder = (ViewHolder)view.getTag();
         String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
         holder.firstName.setText(name);
-        final String idName = cursor.getString(cursor.getColumnIndex(Users.USER_ID_VK));
+        final String id = cursor.getString(cursor.getColumnIndex(Users.USER_ID));
         boolean isChecked = false;
-            if (set.contains(idName)) {
+            if (set.contains(id)) {
                 isChecked = true;
             }
         holder.checkBox.setChecked(isChecked);
@@ -119,9 +121,9 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
             public void onClick(View view) {
                 CheckBox c = (CheckBox) view;
                 if (!c.isChecked()) {
-                    set.remove(idName);
+                    set.remove(id);
                 } else {
-                    set.add(idName);
+                    set.add(id);
                 }
             }
         });

@@ -62,7 +62,7 @@ public class GroupDetailsAdapter extends CursorAdapter {
         final int groupId = cursor.getInt(cursor.getColumnIndex(History.GROUP_ID));
         final int billId = cursor.getInt(cursor.getColumnIndex(History.BILL_ID));
         view.setBackgroundResource(0);
-
+        view.setOnClickListener(null);
         switch (cursor.getInt(cursor.getColumnIndex(History.ACTION))) {
             case REMOVE_BILLS:
             case ADD_GROUPS:
