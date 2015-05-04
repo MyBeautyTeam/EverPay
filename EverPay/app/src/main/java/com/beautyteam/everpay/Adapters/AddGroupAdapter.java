@@ -32,7 +32,10 @@ public class AddGroupAdapter extends BaseAdapter {
         this.context = _context;
         friendsArrayList = arrayList;
         this.creator = user;
-        friendsArrayList.add(user);
+        if (friendsArrayList.isEmpty())
+            friendsArrayList.add(user);
+        else if (friendsArrayList.get(friendsArrayList.size()-1).getId() != user.getId())
+            friendsArrayList.add(user);
     }
 
 

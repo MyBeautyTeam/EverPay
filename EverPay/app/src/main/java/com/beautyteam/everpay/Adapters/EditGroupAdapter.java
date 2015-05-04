@@ -42,8 +42,9 @@ public class EditGroupAdapter extends CursorAdapter {
     private DialogWindow dialogWindow;
     HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
     private User creator;
+    private int groupId;
 
-    public EditGroupAdapter(Context context,final Cursor c, int flags, MainActivity mainActivity, User user) {
+    public EditGroupAdapter(Context context,final Cursor c, int flags, MainActivity mainActivity, User user, int groupId) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mainActivity = mainActivity;
@@ -54,6 +55,7 @@ public class EditGroupAdapter extends CursorAdapter {
             }
         });
         creator = user;
+        this.groupId = groupId;
     }
 
     private void loadAvatarsFromVK(Cursor c) {
@@ -107,10 +109,12 @@ public class EditGroupAdapter extends CursorAdapter {
         holder.remove.setVisibility(View.VISIBLE);
         String name = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_NAME));
         holder.firstName.setText(name);
-        String id = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_ID_VK));
-        String img = mapIdToAvatar.get(id);
+        final int id = cursor.getInt(cursor.getColumnIndex(GroupMembers.USER_ID));
+        int id_vk = cursor.getInt(cursor.getColumnIndex(GroupMembers.USER_ID_VK));
+        String img = mapIdToAvatar.get(id_vk);
         Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
         if (creator.getId() == cursor.getInt(cursor.getColumnIndex(GroupMembers.USER_ID)))
+            holder.remove.setVisibility(View.GONE);
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,7 +124,7 @@ public class EditGroupAdapter extends CursorAdapter {
                     @Override
                     public void onClick(View view) {
                         dialogWindow.dismiss();
-                        removeFriend(cursor.getInt(cursor.getColumnIndex(GroupMembers.ITEM_ID)));
+                        removeMemberFromGroup(id, groupId);
                         notifyDataSetChanged();
                     }
                 });
@@ -141,7 +145,7 @@ public class EditGroupAdapter extends CursorAdapter {
         ImageView remove;
     }
 
-    private void removeFriend(int itemId) {
-        //TODO удалить из БД itemId
+    private void removeMemberFromGroup (int id, int groupId) {
+        //TODO удалить из БД Id
     }
 }

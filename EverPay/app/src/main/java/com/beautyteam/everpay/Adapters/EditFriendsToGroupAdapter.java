@@ -33,9 +33,11 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
     private MainActivity mainActivity;
     private final LayoutInflater inflater;
     private String sections = "";
+    private int groupId;
 
-    public EditFriendsToGroupAdapter(Context context, Cursor c, int flags, MainActivity mainActivity) {
+    public EditFriendsToGroupAdapter(Context context, Cursor c, int flags, MainActivity mainActivity, int groupId) {
         super(context, c, flags);
+        this.groupId = groupId;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mainActivity = mainActivity;
         int i = 0;
@@ -64,6 +66,7 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
         final ViewHolder holder = (ViewHolder)view.getTag();
+        final int id = cursor.getInt(cursor.getColumnIndex(Users.USER_ID));
         String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
         holder.firstName.setText(name);
         holder.separator.setPadding(0,0,0,0);
@@ -82,18 +85,19 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("onclick",holder.firstName.getText().toString());
-                                //добавить в базу
-                String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
-                //
+                addMemberToGroup(id,groupId);
                 mainActivity.removeFragment();
-
             }
         });
 
         String avatarUrl = cursor.getString(cursor.getColumnIndex(Users.IMG));
         Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(holder.avatar);
         name = "";
+    }
+
+    private void addMemberToGroup(int id, int groupId) {
+        mainActivity.getServiceHelper().addMemberToGroup(id, groupId);
+
     }
 
     @Override

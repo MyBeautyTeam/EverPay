@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIndexer {
     private final LayoutInflater inflater;
-    private HashSet <String>  set = new HashSet<String>();
+    private HashSet <Integer>  set = new HashSet<Integer>();
     private ArrayList <User> arrayList;
     private String sections = "";
 
@@ -40,7 +40,7 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         this.arrayList = arrayList;
         Iterator <User> itr = this.arrayList.iterator();
         while(itr.hasNext()) {
-               set.add(String.valueOf(itr.next().getId()));
+               set.add(itr.next().getId());
         }
         int i = 0;
         c.moveToFirst();
@@ -53,21 +53,21 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         }
     }
 
-    public Set<String> getSet() { return set;}
+    public Set<Integer> getSet() { return set;}
 
     public ArrayList<User> getArrayList() {
         Cursor cursor = getCursor();
         User user;
-        String id;
-        String id_vk;
+        int id;
+        int id_vk;
         String name;
         String img;
         arrayList.clear();
         cursor.moveToPosition(-1);
         while(cursor.moveToNext()) {
-            id = cursor.getString(cursor.getColumnIndex(Users.USER_ID));
+            id = cursor.getInt(cursor.getColumnIndex(Users.USER_ID));
             if (set.contains(id)) {
-                id_vk = cursor.getString(cursor.getColumnIndex(Users.USER_ID_VK));
+                id_vk = cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK));
                 name = cursor.getString(cursor.getColumnIndex(Users.NAME));
                 img = cursor.getString(cursor.getColumnIndex(Users.IMG));
                 user = new User( Integer.valueOf(id),  Integer.valueOf(id_vk), name, "", img);
@@ -93,10 +93,10 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
 
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
-        ViewHolder holder = (ViewHolder)view.getTag();
+        final ViewHolder holder = (ViewHolder)view.getTag();
         String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
         holder.firstName.setText(name);
-        final String id = cursor.getString(cursor.getColumnIndex(Users.USER_ID));
+        final int id = cursor.getInt(cursor.getColumnIndex(Users.USER_ID));
         boolean isChecked = false;
             if (set.contains(id)) {
                 isChecked = true;
@@ -116,7 +116,21 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         } else {
             holder.separator.setText(name.subSequence(0, 1));
         }
-       holder.checkBox.setOnClickListener(new View.OnClickListener() {
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.checkBox.isChecked()) {
+                    holder.checkBox.setChecked(false);
+                    set.remove(id);
+                } else {
+                    holder.checkBox.setChecked(true);
+                    set.add(id);
+                }
+            }
+        });
+
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CheckBox c = (CheckBox) view;
