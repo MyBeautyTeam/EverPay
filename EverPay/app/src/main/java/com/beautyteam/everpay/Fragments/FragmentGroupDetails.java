@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
 import com.beautyteam.everpay.Database.EverContentProvider;
-import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.MainActivity;
@@ -45,6 +44,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     private static final int LOADER_ID = 0;
     private GroupDetailsAdapter mAdapter;
 
+    private boolean isFirstLaunch = true;
+
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
         FragmentGroupDetails fragmentGroupDetails = new FragmentGroupDetails();
 
@@ -63,6 +64,16 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
+        /*
+        ПОДХОДИТ ЛИ!? ПОДУМАТЬ!
+         */
+        if (isFirstLaunch) {
+            Log.d("GROUP_DETAILS!", "DETAILS");
+            ((MainActivity) getActivity()).getServiceHelper().getHistory(groupId);
+            ((MainActivity) getActivity()).getServiceHelper().getGroupMembers(groupId);
+            isFirstLaunch = false;
+        }
         return inflater.inflate(R.layout.fragment_group_detail, null);
     }
 
@@ -71,8 +82,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         super.onViewCreated(view, savedInstanceState);
         historyList = (ListView) view.findViewById(R.id.group_detail_history);
 
-        ((MainActivity)getActivity()).getServiceHelper().getHistory(groupId);
-        ((MainActivity)getActivity()).getServiceHelper().getGroupMembers(groupId);
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
 

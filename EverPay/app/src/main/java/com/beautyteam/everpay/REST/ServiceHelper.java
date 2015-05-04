@@ -213,7 +213,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
     /*
-    Неоттестировано!!!
+    Заявить о расчете
      */
     public void editCalculation(int groupId) {
         Intent intentService = new Intent(activity, Service.class);

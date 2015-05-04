@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ import com.beautyteam.everpay.Adapters.EditGroupAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
+import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
@@ -49,7 +51,7 @@ private TextView groupName;
 private EditGroupAdapter mAdapter;
 private static final int LOADER_ID = 0;
 private static final String GROUP_ID = "GROUP_ID";
-    private static final String GROUP_TITLE = "GROUP_TITLE";
+private static final String GROUP_TITLE = "GROUP_TITLE";
 
 
 public static FragmentEditGroup getInstance(int groupId, String groupTitle) {
@@ -66,7 +68,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle sa
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_edit_group, null);
-        }
+}
 
 @Override
 public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -81,29 +83,43 @@ public void onViewCreated(View view, Bundle savedInstanceState) {
         friendsList.addFooterView(footerView);
         self = this;
         addBtn.setOnClickListener(this);
-        }
+    }
 
-@Override
-public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.empty, menu);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.ok_btn, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_apply:
+                String oldTitle = getArguments().getString(GROUP_TITLE);
+                String newTitle = title.getText().toString();
+
+                if ( ! oldTitle.equals(newTitle)) {
+                    int groupId = getArguments().getInt(GROUP_ID);
+                    ContentValues cv = new ContentValues();
+                    cv.put(Groups.TITLE, newTitle);
+                    getActivity().getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+                    ((MainActivity)getActivity()).getServiceHelper().editGroup(groupId);
+                }
+                ((MainActivity)getActivity()).removeFragment();
+                break;
         }
-
-@Override
-public boolean onOptionsItemSelected(MenuItem item) {
-
         return super.onOptionsItemSelected(item);
-        }
+    }
 
-@Override
-public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_btn_friend_foot:
                FragmentEditFriendsInGroup frag = FragmentEditFriendsInGroup.getInstance();
                mainActivity.addFragment(frag);
                 break;
         }
-}
+    }
 
     @Override
     public void onResume() {

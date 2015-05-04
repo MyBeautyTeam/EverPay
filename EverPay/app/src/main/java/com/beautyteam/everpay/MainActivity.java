@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -29,6 +30,7 @@ import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
 import com.beautyteam.everpay.REST.ActivityCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKBatchRequest;
@@ -268,7 +270,8 @@ public class MainActivity extends ActionBarActivity
                 setupDrawer();
                 replaceFragment(FragmentViewPager.getInstance());
             } else {
-                // ???
+                Toast.makeText(this, "Проверьте соединение с интернетом", Toast.LENGTH_SHORT);
+                VKSdk.logout();
             }
         } else if (action.equals(CALCULATE)){
 

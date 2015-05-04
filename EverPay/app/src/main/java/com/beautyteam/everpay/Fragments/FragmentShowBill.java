@@ -201,7 +201,7 @@ public class FragmentShowBill extends Fragment implements
     }
 
     private void removeBill(int billId) {
-        //TODO удалить из БД billID
+        ((MainActivity)getActivity()).getServiceHelper().removeBill(billId);
     }
 
 }

@@ -74,6 +74,12 @@ public class FragmentViewPager extends Fragment implements
     }
 
     @Override
+    public void onResume() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.MAIN);
+        super.onResume();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(Constants.LOG, "DESTROY");

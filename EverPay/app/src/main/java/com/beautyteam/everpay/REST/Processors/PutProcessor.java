@@ -39,6 +39,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
 import static com.beautyteam.everpay.Constants.Action.EDIT_BILL;
 import static com.beautyteam.everpay.Constants.Action.EDIT_CALCULATION;
@@ -145,8 +146,14 @@ public class PutProcessor extends Processor{
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
 
-                    ContentValues cv = readHistory(history);
-                    service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+
+                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                    Iterator<String> historyKeys = history.keys();
+                    while (historyKeys.hasNext()) {
+                        JSONObject historyItem = history.getJSONObject(historyKeys.next());
+                        ContentValues cv = readHistory(historyItem);
+                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    }
                 } else {
                     /*
                     TODO ДОПИСАТЬ ИСТОРИЮ
@@ -191,8 +198,14 @@ public class PutProcessor extends Processor{
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
 
-                    ContentValues cv = readHistory(history);
-                    service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                    Iterator<String> historyKeys = history.keys();
+                    while (historyKeys.hasNext()) {
+                        JSONObject historyItem = history.getJSONObject(historyKeys.next());
+                        ContentValues cv = readHistory(historyItem);
+                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    }
+
                 } else {
                     /*
                     TODO ДОПИСАТЬ ИСТОРИЮ
@@ -206,37 +219,6 @@ public class PutProcessor extends Processor{
         }
         service.onRequestEnd(result, intent);
     }
-
-/*    private String put(String url, JSONObject body) {
-        HttpResponse response = null;
-        try {
-            HttpParams httpParameters = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParameters, 15);
-            HttpConnectionParams.setSoTimeout(httpParameters, 15);
-            HttpClient httpClient = new DefaultHttpClient(httpParameters);
-            HttpPut putConnection = new HttpPut(url);
-            StringEntity se = new StringEntity(body.toString(), "UTF-8");
-            se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,
-                    "application/json"));
-            putConnection.setEntity(se);
-            try {
-                response = httpClient.execute(putConnection);
-                String JSONString = EntityUtils.toString(response.getEntity(),
-                        "UTF-8");
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (response != null)
-            return response.getEntity().toString();
-        else
-            return null;
-    }
-*/
 
     private static final String[] PROJECTION_BILL = new String[] {
             Bills.ITEM_ID,

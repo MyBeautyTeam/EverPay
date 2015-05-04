@@ -98,11 +98,14 @@ public class PostProcessor extends Processor {
                     service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + oldBillId, null);
 
                     JSONObject history = responseJSON.getJSONObject("history");
-                    cv = readHistory(history);
-                    if (cv != null)
+
+                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                    Iterator<String> historyKeys = history.keys();
+                    while (historyKeys.hasNext()) {
+                        JSONObject historyItem = history.getJSONObject(historyKeys.next());
+                        cv = readHistory(historyItem);
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
-                    else
-                        result = Constants.Result.ERROR;
+                    }
 
                     result = Constants.Result.OK;
                 } catch (JSONException asdw) {

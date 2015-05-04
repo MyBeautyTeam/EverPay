@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.MainActivity;
@@ -60,7 +61,7 @@ public class FragmentIDebt extends Fragment implements
 
     }
 
-    private static final String[] PROJECTION = new String[] {
+        private static final String[] PROJECTION = new String[] {
         Debts.ITEM_ID,
         Debts.SUMMA,
         Debts.USER_ID,
