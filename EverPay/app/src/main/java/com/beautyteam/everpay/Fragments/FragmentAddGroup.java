@@ -2,6 +2,8 @@ package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -69,7 +71,12 @@ public class FragmentAddGroup extends Fragment
         saveBtn = (Button) view.findViewById(R.id.save_btn_group);
         saveBtn.setOnClickListener(this);
         addBtn.setOnClickListener(this);
-        mAdapter = new AddGroupAdapter(getActivity(), arrayList);
+        SharedPreferences sPref = getActivity().getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
+        User user  = new User(sPref.getInt(Constants.Preference.USER_ID, 0),
+                sPref.getInt(Constants.Preference.USER_ID_VK,0),
+                sPref.getString(Constants.Preference.USER_NAME,""), "",
+                sPref.getString(Constants.Preference.IMG_URL,"") );
+        mAdapter = new AddGroupAdapter(getActivity(), arrayList,user);
         friendsList.setAdapter(mAdapter);
     }
 
@@ -93,7 +100,6 @@ public class FragmentAddGroup extends Fragment
                 break;
             case R.id.save_btn_group:
                 Log.d("button", "push button save group");
-
                 if (isCorrectData()) {
                     int groupId = insertToDB();
                     String title = groupName.getText().toString();

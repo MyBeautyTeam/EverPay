@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
@@ -24,10 +26,13 @@ public class AddGroupAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<User> friendsArrayList;
     private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
+    private User creator;
 
-    public AddGroupAdapter(Context _context,ArrayList <User> arrayList) {
+    public AddGroupAdapter(Context _context,ArrayList <User> arrayList, User user) {
         this.context = _context;
-        friendsArrayList =arrayList;
+        friendsArrayList = arrayList;
+        this.creator = user;
+        friendsArrayList.add(user);
     }
 
 
@@ -59,12 +64,11 @@ public class AddGroupAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
+        viewHolder.remove.setVisibility(View.VISIBLE);
         final User user = friendsArrayList.get(position);
         viewHolder.name.setText(user.getName());
-//        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-//                Constants.FILE_DIRECTORY + '/' + user.getPhoto();
-
-
+        if(creator.getId() == user.getId())
+            viewHolder.remove.setVisibility(View.GONE);
         String avatarUrl = user.getPhoto();
         Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(viewHolder.avatar);
 

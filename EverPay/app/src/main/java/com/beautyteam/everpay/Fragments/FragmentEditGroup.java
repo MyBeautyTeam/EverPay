@@ -1,6 +1,8 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -126,7 +128,12 @@ public void onClick(View v) {
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOADER_ID:
-                mAdapter = new EditGroupAdapter(getActivity(), cursor, 0, mainActivity);
+                SharedPreferences sPref = getActivity().getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
+                User user  = new User(sPref.getInt(Constants.Preference.USER_ID, 0),
+                        sPref.getInt(Constants.Preference.USER_ID_VK,0),
+                        sPref.getString(Constants.Preference.USER_NAME,"0"), "",
+                        sPref.getString(Constants.Preference.IMG_URL,"0") );
+                mAdapter = new EditGroupAdapter(getActivity(), cursor, 0, mainActivity, user);
                 friendsList.setAdapter(mAdapter);
                 break;
         }
