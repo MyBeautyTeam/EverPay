@@ -5,6 +5,17 @@
     android:clickable="true"
     android:background="@drawable/on_group_pressed_selector"
     >
+    <TextView
+        android:id="@+id/separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:layout_gravity="center"
+        android:textSize="30dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/primary"
+        />
     <com.beautyteam.everpay.Views.RoundedImageView
         android:id="@+id/item_edit_friends_in_group_avatar"
         android:layout_width="40dp"
@@ -19,9 +30,8 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:text="Илья Абашин"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="5dp"
         android:textSize="16dp"
         android:fontFamily="sans-serif-light"
-
         />
 </LinearLayout>

@@ -2,6 +2,8 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +11,25 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Database.Debts;
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Users;
+import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
+import com.squareup.picasso.Picasso;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKBatchRequest;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKList;
+
+import java.util.HashMap;
 
 /**
  * Created by asus on 29.04.2015.
@@ -21,11 +38,53 @@ public class EditGroupAdapter extends CursorAdapter {
 
     private final LayoutInflater inflater;
     private MainActivity mainActivity;
+    private DialogWindow dialogWindow;
+    HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
 
-    public EditGroupAdapter(Context context, Cursor c, int flags, MainActivity mainActivity) {
+    public EditGroupAdapter(Context context,final Cursor c, int flags, MainActivity mainActivity) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mainActivity = mainActivity;
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                loadAvatarsFromVK(c);
+            }
+        });
+    }
+
+    private void loadAvatarsFromVK(Cursor c) {
+        String usersId = "";
+        if (c.moveToFirst() && c.getCount() != 0) {
+            while (!c.isAfterLast()) {
+                String id = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
+                if (id != null)
+                    usersId += id + ",";
+                c.moveToNext();
+            }
+        }
+
+        VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, usersId, VKApiConst.FIELDS, "photo_100"));
+        VKBatchRequest batch = new VKBatchRequest(request);
+
+        batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
+            @Override
+            public void onComplete(VKResponse[] responses) {
+                super.onComplete(responses);
+                VKList<VKApiUser> userList = (VKList<VKApiUser>) responses[0].parsedModel;
+                int count = userList.size();
+                for (int i=0; i<count; i++)
+                    mapIdToAvatar.put(userList.get(i).id + "", userList.get(i).photo_100);
+
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+                Log.d("VkDemoApp", "onError: " + error);
+            }
+        });
     }
 
     @Override
@@ -42,15 +101,28 @@ public class EditGroupAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
         ViewHolder holder = (ViewHolder)view.getTag();
-        String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
+        String name = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_NAME));
         holder.firstName.setText(name);
+        String id = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_ID_VK));
+        String img = mapIdToAvatar.get(id);
+        Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
+
        // String avatarUrl = cursor.getString(cursor.getColumnIndex(Users.IMG));
        // Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(holder.avatar);
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialogWindow = new DialogWindow(mainActivity,R.layout.dialog_delete_friend);
+                dialogWindow.show();
+                dialogWindow.setOnYesClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogWindow.dismiss();
+                        removeFriend(cursor.getInt(cursor.getColumnIndex(GroupMembers.ITEM_ID)));
+                        notifyDataSetChanged();
+                    }
+                });
                 //Удалить из базы
-                notifyDataSetChanged();
             }
         });
 
@@ -65,5 +137,9 @@ public class EditGroupAdapter extends CursorAdapter {
         TextView firstName;
         RoundedImageView avatar;
         ImageView remove;
+    }
+
+    private void removeFriend(int itemId) {
+        //TODO удалить из БД itemId
     }
 }

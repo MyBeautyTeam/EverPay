@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddFriendsToGroupAdapter;
@@ -40,19 +41,22 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 private Toolbar toolbar;
 private Button addBtn;
-private Button saveBtn;
 private Fragment self;
 private MainActivity mainActivity;
 private ListView friendsList;
+private TextView title;
+private TextView groupName;
 private EditGroupAdapter mAdapter;
-private EditText groupName;
 private static final int LOADER_ID = 0;
 private static final String GROUP_ID = "GROUP_ID";
+    private static final String GROUP_TITLE = "GROUP_TITLE";
 
-public static FragmentEditGroup getInstance(int groupId) {
+
+public static FragmentEditGroup getInstance(int groupId, String groupTitle) {
         FragmentEditGroup fragmentEditGroup = new FragmentEditGroup();
         Bundle bundle = new Bundle();
         bundle.putInt(GROUP_ID, groupId);
+        bundle.putString(GROUP_TITLE, groupTitle);
         fragmentEditGroup.setArguments(bundle);
         return fragmentEditGroup;
         }
@@ -70,6 +74,8 @@ public void onViewCreated(View view, Bundle savedInstanceState) {
         friendsList = (ListView) view.findViewById(R.id.edit_group_friends_list);
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
+        title = (TextView) view.findViewById(R.id.group_name);
+        title.setText(getArguments().getString(GROUP_TITLE));
         addBtn = (Button) footerView.findViewById(R.id.add_btn_friend_foot);
         groupName = (EditText) view.findViewById(R.id.group_name);
         friendsList.addFooterView(footerView);
@@ -96,25 +102,6 @@ public void onClick(View v) {
                FragmentEditFriendsInGroup frag = FragmentEditFriendsInGroup.getInstance();
                mainActivity.addFragment(frag);
                 break;
-            case R.id.save_btn_group:
-                // изменить базу????
-                mainActivity.removeFragment();
-//                Log.d("button", "push button save group");
-//                String title = groupName.getText().toString();
-//                if(!title.equals("")) {
-//                    Log.d("groupname", title.toString());
-//                    if (arrayList.size()>0) {
-//                        Log.d("groupsize", String.valueOf(arrayList.size()));
-//
-//                        FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(11, title);
-//                        mainActivity.replaceFragment(fragmentGroupDetails);
-//                    }  else {
-//                        Toast.makeText(getActivity(), "Слишком мало участников. Добавьте участников", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(getActivity(), "Введите название группы",Toast.LENGTH_SHORT).show();
-//                }
-            break;
         }
 }
 
@@ -128,6 +115,7 @@ public void onClick(View v) {
     private static final String[] PROJECTION = new String[] {
             GroupMembers.ITEM_ID,
             GroupMembers.USER_ID,
+            GroupMembers.USER_ID_VK,
             GroupMembers.USER_NAME
     };
 

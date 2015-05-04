@@ -29,49 +29,27 @@ import java.util.Set;
  * Created by asus on 26.03.2015.
  */
 public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIndexer {
-    private AlphabetIndexer indexer;
     private final LayoutInflater inflater;
-    private User userCheck;
     private HashSet <String>  set = new HashSet<String>();
-    ArrayList <User> arrayList;
+    private ArrayList <User> arrayList;
+    private String sections = "";
 
     public AddFriendsToGroupAdapter(Context context, Cursor c, int flags,ArrayList <User> arrayList) {
         super(context, c, flags);
-
-
-        int count = c.getCount();
-        if (c.moveToFirst() && c.getCount() != 0) {
-            while (!c.isAfterLast()) {
-                String billId = c.getString(c.getColumnIndex(Users.USER_ID));
-                String billTitle = c.getString(c.getColumnIndex(Users.USER_ID_VK));
-                String groupId = c.getString(c.getColumnIndex(Users.IMG));
-                String userId = c.getString(c.getColumnIndex(Users.NAME));
-                        /*String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));
-                        String need = c.getString(c.getColumnIndex(Bills.NEED_SUM));
-                        String invest = c.getString(c.getColumnIndex(Bills.INVEST_SUM));*/
-
-                //String oldText = textView.getText().toString();
-               // S.ring newText = oldText + "\n" + billId + "  " + billTitle + "  " + groupId + "  ";// + userId + "  " + userName + "   " + invest + "   " + need;
-                //textView.setText(newText);
-                c.moveToNext();
-            }
-        }
-
-
-
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        indexer = new AlphabetIndexer(c,
-                c.getColumnIndex(Users.NAME)," "+
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");//ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ
-        indexer.setCursor(c);
-//        c.moveToPosition(-1);
-//        while(c.moveToNext()) {
-//            Log.d("cur",c.getString(c.getColumnIndex(Users.NAME)));
-//        }
         this.arrayList = arrayList;
         Iterator <User> itr = this.arrayList.iterator();
         while(itr.hasNext()) {
                set.add(String.valueOf(itr.next().getId()));
+        }
+        int i = 0;
+        c.moveToFirst();
+        sections = "" + c.getString(c.getColumnIndex(Users.NAME)).charAt(0);
+        while(c.moveToNext()) {
+            if (c.getString(c.getColumnIndex(Users.NAME)).charAt(0) != sections.charAt(i)) {
+                sections += "" + c.getString(c.getColumnIndex(Users.NAME)).charAt(0);
+                i++;
+            }
         }
     }
 
@@ -106,7 +84,6 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         holder.checkBox = (CheckBox) view.findViewById(R.id.friends_checkbox);
         holder.avatar = (RoundedImageView) view.findViewById(R.id.friends_list_item_avatar);
         holder.separator = (TextView) view.findViewById(R.id.separator);
-        holder.separator.setVisibility(View.GONE);
 
         view.setTag(holder);
         return view;
@@ -117,21 +94,27 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         ViewHolder holder = (ViewHolder)view.getTag();
         String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
         holder.firstName.setText(name);
-        //final Integer position = cursor.getPosition();
         final String idName = cursor.getString(cursor.getColumnIndex(Users.USER_ID_VK));
         boolean isChecked = false;
             if (set.contains(idName)) {
                 isChecked = true;
             }
-
         holder.checkBox.setChecked(isChecked);
-        Log.d("pos cursor","name= " +name +" cursor=" + String.valueOf(cursor.getPosition())+" section="+ String.valueOf(getSectionForPosition(cursor.getPosition())));
 
-        if (getSectionForPosition(cursor.getPosition())==0) {
+        holder.separator.setPadding(0,0,0,0);
+        if(cursor.getPosition() != 0) {
+            cursor.moveToPrevious();
+            if (cursor.getString(cursor.getColumnIndex(Users.NAME)).charAt(0) != name.charAt(0)) {
+                holder.separator.setText(name.subSequence(0, 1));
+            } else {
+                holder.separator.setText("");
+                holder.separator.setPadding(32,0,0,0);
+            }
+            cursor.moveToNext();
+        } else {
             holder.separator.setText(name.subSequence(0, 1));
-            holder.separator.setVisibility(View.VISIBLE);
         }
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+       holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CheckBox c = (CheckBox) view;
@@ -145,34 +128,31 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
 
         String avatarUrl = cursor.getString(cursor.getColumnIndex(Users.IMG));
         Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(holder.avatar);
-        name = "";
     }
 
     @Override
     public Object[] getSections() {
-        return indexer.getSections();
-
+        String[] sectionsArr = new String[sections.length()];
+        for (int i=0; i < sections.length(); i++)
+            sectionsArr[i] = "" + sections.charAt(i);
+        return sectionsArr;
     }
 
     @Override
-    public int getPositionForSection(int i) {
-        return indexer.getPositionForSection(i);
+    public int getPositionForSection(int section) {
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(-1);
+        while(cursor.moveToNext()) {
+            if (cursor.getString(cursor.getColumnIndex(Users.NAME)).charAt(0) == sections.charAt(section))
+                return cursor.getPosition();
+        }
+        return 0;
     }
 
     @Override
     public int getSectionForPosition(int i) {
-        return indexer.getSectionForPosition(i);
+        return 0;
     }
-
-//    public Cursor swapCursor(Cursor c) {
-////        if(c!= null) {
-////            indexer = new AlphabetIndexer(c,
-////                    c.getColumnIndex(Users.NAME),
-////                    " ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
-////          //  indexer.setCursor(c);
-////        }
-//        return super.swapCursor(c);
-//    }
 
     private static class ViewHolder {
         TextView separator;

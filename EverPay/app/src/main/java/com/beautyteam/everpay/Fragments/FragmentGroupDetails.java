@@ -120,7 +120,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         int id = item.getItemId();
         switch (id) {
             case R.id.edit_group_tlb:
-                FragmentEditGroup frag= FragmentEditGroup.getInstance(groupId);
+                FragmentEditGroup frag= FragmentEditGroup.getInstance(groupId, groupTitle);
                 mainActivity.addFragment(frag);
                 return true;
         }
