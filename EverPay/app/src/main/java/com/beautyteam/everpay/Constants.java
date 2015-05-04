@@ -12,7 +12,7 @@ public class Constants {
     }
 
     public class URL {
-        public final static String BASE_URL = "http://everpay.cloudapp.net/";
+        public final static String BASE_URL = "http://188.166.89.182/";
         public final static String GET_GROUPS = BASE_URL + "groups/";
         public final static String GET_GROUP_MEMBERS = BASE_URL + "groups/members/";
         public final static String GET_DEBTS = BASE_URL + "debts/";

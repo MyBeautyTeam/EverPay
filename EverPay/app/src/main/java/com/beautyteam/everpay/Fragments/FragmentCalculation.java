@@ -145,6 +145,7 @@ public class FragmentCalculation extends Fragment implements
                 break;
         }
         Toast.makeText(getActivity(), "Изменения внесены", Toast.LENGTH_SHORT).show();
+        ((MainActivity) getActivity()).getServiceHelper().editCalculation(groupId);
         ((MainActivity) getActivity()).removeFragment();
     }
 }
