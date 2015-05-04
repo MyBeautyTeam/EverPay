@@ -76,7 +76,7 @@ public class FragmentAddGroup extends Fragment
                 sPref.getInt(Constants.Preference.USER_ID_VK,0),
                 sPref.getString(Constants.Preference.USER_NAME,""), "",
                 sPref.getString(Constants.Preference.IMG_URL,"") );
-        mAdapter = new AddGroupAdapter(getActivity(), arrayList,user);
+        mAdapter = new AddGroupAdapter(getActivity(), arrayList, user);
         friendsList.setAdapter(mAdapter);
     }
 

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.R;
+import com.vk.sdk.VKSdk;
 
 /**
  * Created by asus on 04.05.2015.
@@ -41,6 +42,7 @@ public class FragmentSettings  extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.quit_button:
+                VKSdk.logout();
                 getActivity().finish();
                 break;
         }

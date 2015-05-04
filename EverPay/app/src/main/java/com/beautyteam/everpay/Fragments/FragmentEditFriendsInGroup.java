@@ -36,9 +36,13 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     private EditFriendsToGroupAdapter mAdapter;
     private static final String FRIENDS = "FRIENDS";
     private MainActivity mainActivity;
+    private static final String GROUP_ID = "GROUP_ID";
 
-    public static FragmentEditFriendsInGroup getInstance() {
+    public static FragmentEditFriendsInGroup getInstance(int groupId) {
         FragmentEditFriendsInGroup fragmentEditFriendsInGroup = new FragmentEditFriendsInGroup();
+        Bundle bundle = new Bundle();
+        bundle.putInt(GROUP_ID, groupId);
+        fragmentEditFriendsInGroup.setArguments(bundle);
         return fragmentEditFriendsInGroup;
     }
 
@@ -89,7 +93,7 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOADER_ID:
-                mAdapter = new EditFriendsToGroupAdapter(getActivity(), cursor, 0, mainActivity);
+                mAdapter = new EditFriendsToGroupAdapter(getActivity(), cursor, 0, mainActivity, getArguments().getInt(GROUP_ID));
                 friendsList.setAdapter(mAdapter);
                 break;
         }

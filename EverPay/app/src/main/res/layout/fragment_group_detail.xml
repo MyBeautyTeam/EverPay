@@ -18,21 +18,6 @@
         android:dividerHeight="2dp"
         />
     <Button
-        android:id="@+id/group_add_bill_btn"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ДОБАВИТЬ СЧЕТ"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:textColor="@color/dark_primary"
-        android:background="@drawable/btn_add_friend_style"
-        android:drawableLeft="@drawable/cash"
-        android:drawablePadding="8dp"
-        android:layout_weight="0"
-        android:layout_marginBottom="5dp"
-        />
-    <Button
         android:id="@+id/group_calc_btn"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

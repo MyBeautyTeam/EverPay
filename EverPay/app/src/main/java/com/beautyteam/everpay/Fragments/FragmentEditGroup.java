@@ -101,7 +101,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_btn_friend_foot:
-               FragmentEditFriendsInGroup frag = FragmentEditFriendsInGroup.getInstance();
+               FragmentEditFriendsInGroup frag = FragmentEditFriendsInGroup.getInstance(getArguments().getInt(GROUP_ID));
                mainActivity.addFragment(frag);
                 break;
         }
@@ -133,7 +133,7 @@ public void onClick(View v) {
                         sPref.getInt(Constants.Preference.USER_ID_VK,0),
                         sPref.getString(Constants.Preference.USER_NAME,"0"), "",
                         sPref.getString(Constants.Preference.IMG_URL,"0") );
-                mAdapter = new EditGroupAdapter(getActivity(), cursor, 0, mainActivity, user);
+                mAdapter = new EditGroupAdapter(getActivity(), cursor, 0, mainActivity, user, getArguments().getInt(GROUP_ID));
                 friendsList.setAdapter(mAdapter);
                 break;
         }

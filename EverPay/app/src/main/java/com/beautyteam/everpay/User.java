@@ -15,6 +15,7 @@ public class User implements Parcelable {
 
     public User(int id,int id_vk, String name, String last_name, String photo) {
         this.id = id;
+        this.id_vk = id_vk;
         this.name = name;
         this.last_name = last_name;
         this.photo = photo;
