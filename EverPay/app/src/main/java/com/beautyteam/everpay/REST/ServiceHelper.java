@@ -238,5 +238,4 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
 
-
 }

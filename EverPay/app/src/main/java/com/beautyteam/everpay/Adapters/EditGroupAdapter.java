@@ -146,6 +146,6 @@ public class EditGroupAdapter extends CursorAdapter {
     }
 
     private void removeMemberFromGroup (int id, int groupId) {
-        //TODO удалить из БД Id
+        mainActivity.getServiceHelper().removeMemberFromGroup(id, groupId);
     }
 }

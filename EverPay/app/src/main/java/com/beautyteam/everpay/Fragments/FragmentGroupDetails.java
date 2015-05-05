@@ -81,15 +81,11 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         historyList = (ListView) view.findViewById(R.id.group_detail_history);
-<<<<<<< HEAD
-
-=======
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_bill, null);
         historyList.addFooterView(footerView);
         ((MainActivity)getActivity()).getServiceHelper().getHistory(groupId);
         ((MainActivity)getActivity()).getServiceHelper().getGroupMembers(groupId);
->>>>>>> origin/tanbranch
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
 
