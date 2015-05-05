@@ -2,7 +2,6 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +14,6 @@ import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
-import com.beautyteam.everpay.Views.RoundedImageView;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 /**
  * Created by asus on 15.03.2015.

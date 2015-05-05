@@ -91,6 +91,8 @@ public class GetProcessors extends Processor {
                 } else {
                     result = Constants.Result.ERROR;
                 }
+            } else {
+                result = Constants.Result.ERROR;
             }
 
         }

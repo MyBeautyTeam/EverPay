@@ -11,9 +11,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.GroupMembers;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;

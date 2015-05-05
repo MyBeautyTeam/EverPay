@@ -2,29 +2,18 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AlphabetIndexer;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.Users;
-import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
-import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.jar.Attributes;
 
 /**
  * Created by asus on 29.04.2015.

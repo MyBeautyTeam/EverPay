@@ -1,12 +1,9 @@
 package com.beautyteam.everpay;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,37 +14,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.beautyteam.everpay.Database.Debts;
-import com.beautyteam.everpay.Database.EverContentProvider;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
 import com.beautyteam.everpay.Fragments.FragmentSettings;
-import com.beautyteam.everpay.REST.ActivityCallback;
+import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
-import com.vk.sdk.api.VKBatchRequest;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.api.model.VKApiUserFull;
-import com.vk.sdk.api.model.VKList;
-import com.vk.sdk.api.model.VKUsersArray;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
-
-import java.util.Random;
 
 import static android.content.SharedPreferences.*;
 import static com.beautyteam.everpay.Constants.*;
@@ -62,7 +43,7 @@ import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
  * Created by Admin on 07.03.2015.
  */
 public class MainActivity extends ActionBarActivity
-    implements ActivityCallback {
+    implements RequestCallback {
 
 
     String TITLES[] = {"Главная" ,"Группы", "Настройки", "ТЕСТ"};

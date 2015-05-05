@@ -15,20 +15,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
 
 /**
  * Created by Admin on 05.04.2015.
  */
 public class FragmentGroupDetails extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback{
     private static final String GROUP_ID = "GROUP_ID";
     private static final String GROUP_TITLE = "GROUP_TITLE";
 
@@ -40,11 +49,13 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     private int groupId;
     private String groupTitle;
     private ListView historyList;
+    private LinearLayout loadingLayout;
 
     private static final int LOADER_ID = 0;
     private GroupDetailsAdapter mAdapter;
 
     private boolean isFirstLaunch = true;
+    ServiceHelper serviceHelper;
 
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
         FragmentGroupDetails fragmentGroupDetails = new FragmentGroupDetails();
@@ -61,17 +72,20 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         Bundle arg = getArguments();
+        serviceHelper = new ServiceHelper(getActivity(), this);
+        serviceHelper.onResume();
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         /*
         ПОДХОДИТ ЛИ!? ПОДУМАТЬ!
          */
         if (isFirstLaunch) {
             Log.d("GROUP_DETAILS!", "DETAILS");
-            ((MainActivity) getActivity()).getServiceHelper().getHistory(groupId);
-            ((MainActivity) getActivity()).getServiceHelper().getGroupMembers(groupId);
+            //((MainActivity) getActivity()).getServiceHelper().getHistory(groupId);
+            //((MainActivity) getActivity()).getServiceHelper().getGroupMembers(groupId);
+            //serviceHelper.getHistory(groupId);
+            //serviceHelper.getGroupMembers(groupId);
             isFirstLaunch = false;
         }
         return inflater.inflate(R.layout.fragment_group_detail, null);
@@ -81,17 +95,13 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         historyList = (ListView) view.findViewById(R.id.group_detail_history);
-<<<<<<< HEAD
-
-=======
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_bill, null);
         historyList.addFooterView(footerView);
-        ((MainActivity)getActivity()).getServiceHelper().getHistory(groupId);
-        ((MainActivity)getActivity()).getServiceHelper().getGroupMembers(groupId);
->>>>>>> origin/tanbranch
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
+
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
 
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);
@@ -122,7 +132,16 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
+        serviceHelper.onResume();
+        serviceHelper.getHistory(groupId);
+        serviceHelper.getGroupMembers(groupId);
         ((MainActivity) getActivity()).setTitle(groupTitle);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
     }
 
     @Override
@@ -169,6 +188,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        loadingLayout.setVisibility(View.GONE);
+        calcBtn.setVisibility(View.VISIBLE);
         switch (loader.getId()) {
             case LOADER_ID:
                 /*
@@ -184,4 +205,15 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         mAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(GET_HISTORY)) {
+            getLoaderManager().initLoader(LOADER_ID, null, this);
+            if (result == Constants.Result.OK) {
+            } else {
+                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

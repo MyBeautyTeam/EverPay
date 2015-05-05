@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Constants;
@@ -55,7 +56,6 @@ public class FragmentViewPager extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-
         PageAdapter pageAdapter = new PageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);
 

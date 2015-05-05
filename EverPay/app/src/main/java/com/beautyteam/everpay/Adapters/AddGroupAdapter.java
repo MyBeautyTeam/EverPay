@@ -1,7 +1,6 @@
 package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 import com.beautyteam.everpay.Views.RoundedImageView;

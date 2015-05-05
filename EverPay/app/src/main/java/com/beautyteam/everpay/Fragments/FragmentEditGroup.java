@@ -11,7 +11,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,21 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.beautyteam.everpay.Adapters.AddFriendsToGroupAdapter;
-import com.beautyteam.everpay.Adapters.AddGroupAdapter;
 import com.beautyteam.everpay.Adapters.EditGroupAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
-import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
-
-import java.util.ArrayList;
 
 /**
  * Created by asus on 28.04.2015.

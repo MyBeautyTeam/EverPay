@@ -13,7 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -21,12 +23,19 @@ import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Adapters.GroupsListAdapter;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
+import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
+import static com.beautyteam.everpay.Constants.LOG;
 
 /**
  * Created by asus on 15.03.2015.
  */
 public class FragmentGroups extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
 
     private ListView groupList;
     private Button addBtn;
@@ -35,6 +44,8 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
 
     private static final int LOADER_ID = 0;
     private GroupsListAdapter mAdapter;
+    ServiceHelper serviceHelper;
+    private LinearLayout loadingLayout;
 
     public static FragmentGroups getInstance() {
         FragmentGroups fragmentGroups = new FragmentGroups();
@@ -44,7 +55,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        serviceHelper = new ServiceHelper(getActivity(), this);
         mAdapter = null;
         return inflater.inflate(R.layout.fragment_groups, null);
     }
@@ -55,6 +66,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
         self=this;
         groupList = (ListView) view.findViewById(R.id.groups_list);
         addBtn = (Button) view.findViewById(R.id.add_group_button);
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         addBtn.setOnClickListener(this);
 
     }
@@ -71,6 +83,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        loadingLayout.setVisibility(View.GONE);
         switch (loader.getId()) {
             case LOADER_ID:
                 /*
@@ -124,8 +137,26 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.GROUPS);
-        ((MainActivity) getActivity()).getServiceHelper().getGroups();
+        serviceHelper.onResume();
+        serviceHelper.getGroups();
+        ((MainActivity)getActivity()).setTitle(Constants.Titles.GROUPS);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
+    }
+
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(GET_GROUPS)) {
+            getLoaderManager().initLoader(LOADER_ID, null, this);
+            if (result == Constants.Result.OK) {
+            } else {
+                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

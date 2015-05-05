@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.beautyteam.everpay.Adapters.EditFriendsToGroupAdapter;
@@ -22,9 +21,6 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
-import com.beautyteam.everpay.User;
-
-import java.util.ArrayList;
 
 /**
  * Created by asus on 29.04.2015.
