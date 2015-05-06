@@ -15,11 +15,11 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     private Activity activity;
     private AppResultsReceiver mReceiver;
-    private ActivityCallback activityCallback;
+    private RequestCallback requestCallback;
 
-    public ServiceHelper(Activity _activity, ActivityCallback _activityCallback) {
+    public ServiceHelper(Activity _activity, RequestCallback _requestCallback) {
         this.activity = _activity; // Подумать, может быть утечка памяти, если делать serviceHelper Singleton
-        this.activityCallback = _activityCallback;
+        this.requestCallback = _requestCallback;
     }
 
     public void onResume() {
@@ -63,7 +63,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     @Override
     public void onReceiveResult(int resultCode, Bundle data) {
         Log.d(Constants.LOG, "ServiceHelper, onReceiveResult()");
-        activityCallback.onRequestEnd(resultCode, data);
+        requestCallback.onRequestEnd(resultCode, data);
     }
 
     public void calculate(int groupId) {

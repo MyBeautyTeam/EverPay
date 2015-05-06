@@ -264,7 +264,7 @@ public class PostProcessor extends Processor {
                         JSONObject userWhomJSON = debt.getJSONObject("user_whom");
                         int whomId = userWhomJSON.getInt("users_id");
                         int whomIdVK = userWhomJSON.getInt("vk_id");
-                        String whomName = userWhomJSON.getString("last_name") + " " + userWhoJSON.getString("name") ;
+                        String whomName = userWhomJSON.getString("last_name") + " " + userWhomJSON.getString("name") ;
 
                         cv.put(Calculation.CALC_ID, debtId);
                         cv.put(Calculation.GROUPS_ID, groupIdFromResponse);

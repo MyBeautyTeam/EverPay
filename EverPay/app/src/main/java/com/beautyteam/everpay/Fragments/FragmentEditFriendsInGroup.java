@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.EditFriendsToGroupAdapter;
 import com.beautyteam.everpay.Constants;
@@ -22,21 +23,27 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
-import com.beautyteam.everpay.User;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
 
-import java.util.ArrayList;
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.ADD_MEMBER_TO_GROUP;
+import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
 
 /**
  * Created by asus on 29.04.2015.
  */
 public class FragmentEditFriendsInGroup extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
     private ListView friendsList;
     private static final int LOADER_ID = 0;
     private EditFriendsToGroupAdapter mAdapter;
     private static final String FRIENDS = "FRIENDS";
     private MainActivity mainActivity;
     private static final String GROUP_ID = "GROUP_ID";
+
+    private ServiceHelper serviceHelper;
+    private ProgressDialog progressDialog;
 
     public static FragmentEditFriendsInGroup getInstance(int groupId) {
         FragmentEditFriendsInGroup fragmentEditFriendsInGroup = new FragmentEditFriendsInGroup();
@@ -50,6 +57,7 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        serviceHelper = new ServiceHelper(getActivity(), this);
         return inflater.inflate(R.layout.fragment_edit_friends, null);
     }
 
@@ -75,9 +83,15 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        serviceHelper.onResume();
         ((MainActivity) getActivity()).setTitle(Constants.Titles.FRIENDS);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
+    }
 
     private static final String[] PROJECTION = new String[] {
             Users.USER_ID,
@@ -90,10 +104,17 @@ public class FragmentEditFriendsInGroup extends Fragment implements
         return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, Users.NAME);
     }
 
+    public void addMemberToGroup(int userId, int groupId) {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Добавление участника");
+        progressDialog.show();
+        serviceHelper.addMemberToGroup(userId, groupId);
+    }
+
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         switch (loader.getId()) {
             case LOADER_ID:
-                mAdapter = new EditFriendsToGroupAdapter(getActivity(), cursor, 0, mainActivity, getArguments().getInt(GROUP_ID));
+                mAdapter = new EditFriendsToGroupAdapter(getActivity(), cursor, 0, mainActivity, getArguments().getInt(GROUP_ID), this);
                 friendsList.setAdapter(mAdapter);
                 break;
         }
@@ -108,5 +129,18 @@ public class FragmentEditFriendsInGroup extends Fragment implements
 
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(ADD_MEMBER_TO_GROUP)) {
+            progressDialog.dismiss();
+            if (result == Constants.Result.OK) {
+                mainActivity.removeFragment();
+            } else {
+                Toast.makeText(getActivity(), "Ошибка добавления пользователя", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

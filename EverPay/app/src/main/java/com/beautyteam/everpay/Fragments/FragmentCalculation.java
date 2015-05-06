@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,16 +26,23 @@ import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.Service;
+import com.beautyteam.everpay.REST.ServiceHelper;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.CALCULATE;
+import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
+
 /**
  * Created by Admin on 14.03.2015.
  */
 public class FragmentCalculation extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+        LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, RequestCallback {
 
     private static final int LOADER_ID = 1;
     private ListView calcList;
@@ -44,6 +51,11 @@ public class FragmentCalculation extends Fragment implements
 
     private CalcListAdapter mAdapter;
     private static final String GROUP_ID = "GROUP_ID";
+
+    private LinearLayout loadingLayout;
+    private ServiceHelper serviceHelper;
+
+
 
     public static FragmentCalculation getInstance(int groupId) {
         FragmentCalculation fragmentCalculation = new FragmentCalculation();
@@ -59,13 +71,16 @@ public class FragmentCalculation extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         groupId = getArguments().getInt(GROUP_ID);
         setHasOptionsMenu(true);
+
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        serviceHelper = new ServiceHelper(getActivity(), this);
         return inflater.inflate(R.layout.fragment_calculation, null);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         calcList = (ListView) view.findViewById(R.id.calc_list);
         calcBtn = (Button) view.findViewById(R.id.calc_ok_btn);
         calcBtn.setOnClickListener(this);
@@ -119,7 +134,15 @@ public class FragmentCalculation extends Fragment implements
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
-        ((MainActivity) getActivity()).getServiceHelper().calculate(groupId);
+        loadingLayout.setVisibility(View.VISIBLE);
+        serviceHelper.onResume();
+        serviceHelper.calculate(groupId);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
     }
 
     @Override
@@ -148,4 +171,18 @@ public class FragmentCalculation extends Fragment implements
         ((MainActivity) getActivity()).getServiceHelper().editCalculation(groupId);
         ((MainActivity) getActivity()).removeFragment();
     }
+
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(CALCULATE)) {
+            loadingLayout.setVisibility(View.GONE);
+            if (result == Constants.Result.OK) {
+            } else {
+                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 }

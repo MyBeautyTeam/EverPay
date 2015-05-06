@@ -9,7 +9,9 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Constants;
@@ -17,12 +19,18 @@ import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
+import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
 
 /**
  * Created by Admin on 10.03.2015.
  */
 public class FragmentIDebt extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
 
     private ListView debtorsList;
 
@@ -30,6 +38,8 @@ public class FragmentIDebt extends Fragment implements
     public static final int LOADER_ID_DEBT_FOR_ME = 0;
     private DebtorsListAdapter mAdapter;
     int loader;
+    private LinearLayout loadingLayout;
+    private ServiceHelper serviceHelper;
 
     public static final String LOADER = "LOADER";
 
@@ -45,8 +55,8 @@ public class FragmentIDebt extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        serviceHelper = new ServiceHelper(getActivity(), this);
         loader = getArguments().getInt(LOADER);
-        getLoaderManager().initLoader(loader, null, this);
         return inflater.inflate(R.layout.fragment_i_debts, null);
     }
 
@@ -55,11 +65,27 @@ public class FragmentIDebt extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
         debtorsList = (ListView) view.findViewById(R.id.debtors_fragment_list);
 
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
+
         if (loader == LOADER_ID_I_DEBT)
             ((MainActivity)getActivity()).getServiceHelper().getDebts();
 
-
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        serviceHelper.onResume();
+        serviceHelper.getDebts();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
+    }
+
+
 
         private static final String[] PROJECTION = new String[] {
         Debts.ITEM_ID,
@@ -80,6 +106,7 @@ public class FragmentIDebt extends Fragment implements
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        loadingLayout.setVisibility(View.GONE);
         int summa = 0;
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
@@ -109,5 +136,15 @@ public class FragmentIDebt extends Fragment implements
     }
 
 
-
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(GET_DEBTS)) {
+            getLoaderManager().initLoader(loader, null, this);
+            if (result == Constants.Result.OK) {
+            } else {
+                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

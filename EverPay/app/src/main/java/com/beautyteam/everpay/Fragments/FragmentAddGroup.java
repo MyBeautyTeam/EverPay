@@ -29,7 +29,6 @@ import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 /**
