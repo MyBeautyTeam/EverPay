@@ -94,7 +94,10 @@ public class MainActivity extends ActionBarActivity
 
         } else {
             setupDrawer();
-            replaceFragment(FragmentViewPager.getInstance());
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.main_container,FragmentViewPager.getInstance());
+            fragmentTransaction.commit();
+            //replaceFragment(FragmentViewPager.getInstance());
         }
 
     }
@@ -149,7 +152,7 @@ public class MainActivity extends ActionBarActivity
                             replaceAllFragment(FragmentViewPager.getInstance());
                             break;
                         case 1:
-                            serviceHelper.getGroups();
+                            //serviceHelper.getGroups();
                             replaceAllFragment(FragmentGroups.getInstance());
                             break;
                         case 2:

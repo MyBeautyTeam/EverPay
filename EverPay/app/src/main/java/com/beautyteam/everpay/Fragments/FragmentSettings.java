@@ -2,16 +2,13 @@ package com.beautyteam.everpay.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.vk.sdk.VKSdk;
 
@@ -36,6 +33,7 @@ public class FragmentSettings  extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)getActivity()).setTitle(Constants.Titles.SETTINGS);
     }
 
     @Override

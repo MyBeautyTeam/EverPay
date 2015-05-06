@@ -10,6 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.Users;
+import com.beautyteam.everpay.Fragments.FragmentEditFriendsInGroup;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
@@ -23,12 +24,14 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
     private final LayoutInflater inflater;
     private String sections = "";
     private int groupId;
+    private FragmentEditFriendsInGroup friendsInGroup;
 
-    public EditFriendsToGroupAdapter(Context context, Cursor c, int flags, MainActivity mainActivity, int groupId) {
+    public EditFriendsToGroupAdapter(Context context, Cursor c, int flags, MainActivity mainActivity, int groupId, FragmentEditFriendsInGroup fragmentEditFriends) {
         super(context, c, flags);
         this.groupId = groupId;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mainActivity = mainActivity;
+        this.friendsInGroup = fragmentEditFriends;
         int i = 0;
         c.moveToFirst();
         sections = "" + c.getString(c.getColumnIndex(Users.NAME)).charAt(0);
@@ -74,8 +77,8 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addMemberToGroup(id,groupId);
-                mainActivity.removeFragment();
+                //addMemberToGroup(id,groupId);
+                friendsInGroup.addMemberToGroup(id, groupId);
             }
         });
 

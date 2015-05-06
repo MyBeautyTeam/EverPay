@@ -10,6 +10,7 @@ import android.util.Log;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.REST.Service;
 
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
 import static com.beautyteam.everpay.Constants.Action.REMOVE_BILL;
 import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
@@ -52,12 +54,27 @@ public class DeleteProcessor extends Processor {
                 String response = urlConnectionDelete(Constants.URL.REMOVE_GROUP_MEMBER, paramsJSON.toString());
 
                 if ((response != null) && response.contains("200")) {
+                    service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI,
+                            GroupMembers.GROUP_ID + "=" + groupId , null);
+
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
-                    JSONObject history = responseJSON.getJSONObject("history");
+                    JSONObject members = responseJSON.getJSONObject("members");
 
-                    ContentValues cv = readHistory(history);
-                    service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    Iterator<String> iterator = members.keys();
+                    while (iterator.hasNext()) {
+                        JSONObject member = members.getJSONObject(iterator.next());
+                        ContentValues cv = new ContentValues();
+                        cv.put(GroupMembers.GROUP_ID, groupId);
+                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
+                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
+                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
+
+                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
+                    }
+
+                    //ContentValues cv = readHistory(history);
+                    //service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     result = Constants.Result.OK;
                 } else {
                     result = Constants.Result.ERROR;

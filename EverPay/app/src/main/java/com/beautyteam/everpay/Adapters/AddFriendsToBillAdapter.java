@@ -54,8 +54,8 @@ public class AddFriendsToBillAdapter extends BaseAdapter{
         String usersId = "";
         int count = billDeletedArrayList.size();
         for (int i=0; i<count; i++) {
-            String id = billDeletedArrayList.get(i).id;
-            usersId += id + ",";
+            String vkid = billDeletedArrayList.get(i).vkid;
+            usersId += vkid + ",";
         }
 
         VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, usersId, VKApiConst.FIELDS, "photo_100"));
@@ -112,7 +112,7 @@ public class AddFriendsToBillAdapter extends BaseAdapter{
 
         viewHolder.name.setText(billDeletedArrayList.get(position).name);
 
-        String avatarUrl = mapIdToAvatar.get(billDeletedArrayList.get(position).id);
+        String avatarUrl = mapIdToAvatar.get(billDeletedArrayList.get(position).vkid);
         Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(viewHolder.avatar);
 
         return convertView;

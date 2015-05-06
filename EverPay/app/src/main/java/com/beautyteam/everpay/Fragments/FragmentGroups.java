@@ -47,6 +47,8 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     ServiceHelper serviceHelper;
     private LinearLayout loadingLayout;
 
+    private boolean isFirstLaunch = true;
+
     public static FragmentGroups getInstance() {
         FragmentGroups fragmentGroups = new FragmentGroups();
         return fragmentGroups;
@@ -57,6 +59,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
         setHasOptionsMenu(true);
         serviceHelper = new ServiceHelper(getActivity(), this);
         mAdapter = null;
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_groups, null);
     }
 
@@ -138,7 +141,12 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onResume() {
         super.onResume();
         serviceHelper.onResume();
+
+        loadingLayout.setVisibility(View.VISIBLE);
         serviceHelper.getGroups();
+
+        //}
+
         ((MainActivity)getActivity()).setTitle(Constants.Titles.GROUPS);
     }
 
@@ -152,7 +160,6 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
         if (action.equals(GET_GROUPS)) {
-            getLoaderManager().initLoader(LOADER_ID, null, this);
             if (result == Constants.Result.OK) {
             } else {
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();

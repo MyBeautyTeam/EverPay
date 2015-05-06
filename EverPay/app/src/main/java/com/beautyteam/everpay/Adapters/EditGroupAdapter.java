@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.DialogWindow;
+import com.beautyteam.everpay.Fragments.FragmentEditGroup;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.User;
@@ -41,8 +42,9 @@ public class EditGroupAdapter extends CursorAdapter {
     HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
     private User creator;
     private int groupId;
+    private FragmentEditGroup fragmentEditGroup;
 
-    public EditGroupAdapter(Context context,final Cursor c, int flags, MainActivity mainActivity, User user, int groupId) {
+    public EditGroupAdapter(Context context, final Cursor c, int flags, MainActivity mainActivity, User user, int groupId, FragmentEditGroup fragmentEditGroup) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mainActivity = mainActivity;
@@ -54,6 +56,7 @@ public class EditGroupAdapter extends CursorAdapter {
         });
         creator = user;
         this.groupId = groupId;
+        this.fragmentEditGroup = fragmentEditGroup;
     }
 
     private void loadAvatarsFromVK(Cursor c) {
@@ -122,8 +125,8 @@ public class EditGroupAdapter extends CursorAdapter {
                     @Override
                     public void onClick(View view) {
                         dialogWindow.dismiss();
-                        removeMemberFromGroup(id, groupId);
-                        notifyDataSetChanged();
+                        fragmentEditGroup.removeUserFromGroup(id, groupId);
+                        //notifyDataSetChanged();
                     }
                 });
                 //Удалить из базы
@@ -143,7 +146,5 @@ public class EditGroupAdapter extends CursorAdapter {
         ImageView remove;
     }
 
-    private void removeMemberFromGroup (int id, int groupId) {
-        //TODO удалить из БД Id
-    }
+
 }

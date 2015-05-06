@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import static com.beautyteam.everpay.Constants.Action.GET_BILL;
@@ -108,11 +109,11 @@ public class GetProcessors extends Processor {
                     jsonObject = jsonObject.getJSONObject("response");
                     JSONObject group = jsonObject.getJSONObject("group");
                     JSONObject members = jsonObject.getJSONObject("members");
-                    JSONObject member;
-                    for (int i = 0; i<members.length(); i++) {
-                        member = members.getJSONObject(i + "");
+                    Iterator<String> iterator = members.keys();
+                    while (iterator.hasNext()) {
+                        JSONObject member = members.getJSONObject(iterator.next());
                         ContentValues cv = new ContentValues();
-                        cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
+                        cv.put(GroupMembers.GROUP_ID, groupId);
                         cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
                         cv.put(GroupMembers.USER_ID, member.getString("users_id"));
                         cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));

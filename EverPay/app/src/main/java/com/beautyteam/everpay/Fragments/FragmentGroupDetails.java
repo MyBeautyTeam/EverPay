@@ -73,21 +73,14 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         setHasOptionsMenu(true);
         Bundle arg = getArguments();
         serviceHelper = new ServiceHelper(getActivity(), this);
-        serviceHelper.onResume();
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         /*
         ПОДХОДИТ ЛИ!? ПОДУМАТЬ!
          */
-        if (isFirstLaunch) {
-            Log.d("GROUP_DETAILS!", "DETAILS");
-            //((MainActivity) getActivity()).getServiceHelper().getHistory(groupId);
-            //((MainActivity) getActivity()).getServiceHelper().getGroupMembers(groupId);
-            //serviceHelper.getHistory(groupId);
-            //serviceHelper.getGroupMembers(groupId);
-            isFirstLaunch = false;
-        }
+
         return inflater.inflate(R.layout.fragment_group_detail, null);
     }
 
@@ -133,6 +126,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
         serviceHelper.onResume();
+        loadingLayout.setVisibility(View.VISIBLE);
+        calcBtn.setVisibility(View.GONE);
         serviceHelper.getHistory(groupId);
         serviceHelper.getGroupMembers(groupId);
         ((MainActivity) getActivity()).setTitle(groupTitle);
@@ -188,8 +183,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        loadingLayout.setVisibility(View.GONE);
-        calcBtn.setVisibility(View.VISIBLE);
+
         switch (loader.getId()) {
             case LOADER_ID:
                 /*
@@ -209,7 +203,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
         if (action.equals(GET_HISTORY)) {
-            getLoaderManager().initLoader(LOADER_ID, null, this);
+            loadingLayout.setVisibility(View.GONE);
+            calcBtn.setVisibility(View.VISIBLE);
             if (result == Constants.Result.OK) {
             } else {
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
