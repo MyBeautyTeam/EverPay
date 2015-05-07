@@ -93,6 +93,7 @@ public class FragmentViewPager extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.empty, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

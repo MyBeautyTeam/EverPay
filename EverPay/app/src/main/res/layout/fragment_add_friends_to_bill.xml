@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:background="@color/active_white"
+    android:background="@color/background_material_light"
     >
     <ListView
         android:id="@+id/add_friends_to_bill_list"

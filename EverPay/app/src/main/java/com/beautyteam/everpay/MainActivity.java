@@ -159,11 +159,6 @@ public class MainActivity extends ActionBarActivity
                             FragmentSettings fragmentSettings = new FragmentSettings();
                             replaceAllFragment(fragmentSettings);
                             break;
-                        /*
-                        case 3:
-                            replaceAllFragment(FragmentEmptyToDBTest.getInstance());
-                            break;
-                        */
 
                     }
                     return true;
@@ -209,7 +204,8 @@ public class MainActivity extends ActionBarActivity
 
     public void addFragment(Fragment fragment) {
         FragmentTransaction fTran = fragmentManager.beginTransaction();
-        fTran.replace(R.id.main_container, fragment);
+        fTran.setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left);
+        fTran.add(R.id.main_container, fragment);
         fTran.addToBackStack(null);
         fTran.commit();
     }

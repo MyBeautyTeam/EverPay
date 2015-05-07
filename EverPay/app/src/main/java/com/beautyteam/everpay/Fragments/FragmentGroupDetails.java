@@ -142,6 +142,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.group_detail, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

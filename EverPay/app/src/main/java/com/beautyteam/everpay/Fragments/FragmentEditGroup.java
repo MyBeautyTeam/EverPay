@@ -95,6 +95,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.ok_btn, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

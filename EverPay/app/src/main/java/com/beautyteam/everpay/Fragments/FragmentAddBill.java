@@ -345,6 +345,7 @@ public class FragmentAddBill extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.ok_btn, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -353,7 +354,8 @@ public class FragmentAddBill extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_apply:
-                if (isCorrectData()) {
+                if (isCorrectData())
+                {
                     int billID = insertToDB();
                     if (billEditedId < 0) {
                         ((MainActivity)getActivity()).getServiceHelper().addBill(billID, groupId);

@@ -7,6 +7,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -55,6 +57,7 @@ public class FragmentIDebt extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         serviceHelper = new ServiceHelper(getActivity(), this);
         loader = getArguments().getInt(LOADER);
         return inflater.inflate(R.layout.fragment_i_debts, null);
@@ -83,6 +86,13 @@ public class FragmentIDebt extends Fragment implements
     public void onPause() {
         super.onPause();
         serviceHelper.onPause();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.empty, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 
