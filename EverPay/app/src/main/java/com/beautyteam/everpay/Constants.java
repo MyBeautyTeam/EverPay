@@ -70,12 +70,14 @@ public class Constants {
         public final static String EDIT_GROUP = "Участники группы";
         public final static String CALCULATION = "Расчет";
         public final static String GROUPS = "Группы";
+        public final static String MAIN = "Главная";
+        public final static String SETTINGS = "Настройки";
     }
 
     public class Preference {
         public final static String SHARED_PREFERENCES = "SHARED_PREFERENCES";
         public final static String ACCESS_TOKEN = "ACCESS_TOKEN";
-        public final static String USER_ID = "USER_ID_VK";
+        public final static String USER_ID = "USER_ID";
         public final static String USER_ID_VK = "USER_ID_VK";
         public final static String USER_NAME = "USER_NAME";
         public final static String IMG_URL = "IMG_URL";

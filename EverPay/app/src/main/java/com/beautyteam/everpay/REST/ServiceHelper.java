@@ -15,11 +15,11 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     private Activity activity;
     private AppResultsReceiver mReceiver;
-    private ActivityCallback activityCallback;
+    private RequestCallback requestCallback;
 
-    public ServiceHelper(Activity _activity, ActivityCallback _activityCallback) {
+    public ServiceHelper(Activity _activity, RequestCallback _requestCallback) {
         this.activity = _activity; // Подумать, может быть утечка памяти, если делать serviceHelper Singleton
-        this.activityCallback = _activityCallback;
+        this.requestCallback = _requestCallback;
     }
 
     public void onResume() {
@@ -63,7 +63,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     @Override
     public void onReceiveResult(int resultCode, Bundle data) {
         Log.d(Constants.LOG, "ServiceHelper, onReceiveResult()");
-        activityCallback.onRequestEnd(resultCode, data);
+        requestCallback.onRequestEnd(resultCode, data);
     }
 
     public void calculate(int groupId) {
@@ -177,7 +177,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
     /*
-    Создать группу
+    Создать группу (Вроде работает, черт знает, как проверить)
      */
     public void addGroup(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -201,7 +201,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
     /*
-    Неоттестировано!!!
+    Редактирование группы
      */
     public void editGroup(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -213,7 +213,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     }
 
     /*
-    Неоттестировано!!!
+    Заявить о расчете
      */
     public void editCalculation(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -226,7 +226,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
 
     /*
-    Неоттестировано!!!
+    Удаление счета
      */
     public void removeBill(int billId) {
         Intent intentService = new Intent(activity, Service.class);
@@ -236,7 +236,6 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }
-
 
 
 }

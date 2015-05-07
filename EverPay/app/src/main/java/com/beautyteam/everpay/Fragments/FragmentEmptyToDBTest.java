@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
-import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -134,6 +133,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.empty, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

@@ -3,6 +3,8 @@ package com.beautyteam.everpay.Fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -48,6 +50,12 @@ public class FragmentAddFriendToBill extends Fragment {
         return inflater.inflate(R.layout.fragment_add_friends_to_bill, null);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.empty, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

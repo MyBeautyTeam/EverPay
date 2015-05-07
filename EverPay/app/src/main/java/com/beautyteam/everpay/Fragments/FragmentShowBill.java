@@ -14,23 +14,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.ShowBillListAdapter;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Utils.AnimUtils;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.GET_BILL;
+import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
 
 /**
  * Created by Admin on 22.04.2015.
  */
 
 public class FragmentShowBill extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
 
     private static final int LOADER_ID = 2;
     private static final String BILL_ID = "BILL_ID";
@@ -48,6 +57,9 @@ public class FragmentShowBill extends Fragment implements
     private ListView billList;
     private DialogWindow dialogWindow;
 
+    private LinearLayout loadingLayout;
+    private ServiceHelper serviceHelper;
+
     public static FragmentShowBill getInstance(int groupId, int billId) {
         FragmentShowBill fragmentShowBill = new FragmentShowBill();
 
@@ -64,6 +76,7 @@ public class FragmentShowBill extends Fragment implements
         setHasOptionsMenu(true);
         billId = getArguments().getInt(BILL_ID);
         groupId = getArguments().getInt(GROUP_ID);
+        serviceHelper = new ServiceHelper(getActivity(), this);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_show_bill, null);
     }
@@ -71,8 +84,9 @@ public class FragmentShowBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity)getActivity()).getServiceHelper().getBill(billId, groupId);
+        //((MainActivity)getActivity()).getServiceHelper().getBill(billId, groupId);
 
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
 
         billTitleView = (TextView)view.findViewById(R.id.show_bill_title);
         eqText = (TextView) view.findViewById(R.id.show_bill_equally_text);
@@ -85,6 +99,38 @@ public class FragmentShowBill extends Fragment implements
 
         billList = (ListView) view.findViewById(R.id.show_bill_list);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        serviceHelper.onResume();
+
+        loadingLayout.setVisibility(View.VISIBLE);
+        serviceHelper.getBill(billId, groupId);
+
+        //}
+
+        //((MainActivity)getActivity()).setTitle(Constants.Titles.GROUPS);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
+    }
+
+
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(GET_BILL)) {
+            loadingLayout.setVisibility(View.GONE);
+            if (result == Constants.Result.OK) {
+            } else {
+                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
@@ -168,6 +214,7 @@ public class FragmentShowBill extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.show_bill, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -201,7 +248,7 @@ public class FragmentShowBill extends Fragment implements
     }
 
     private void removeBill(int billId) {
-        //TODO удалить из БД billID
+        ((MainActivity)getActivity()).getServiceHelper().removeBill(billId);
     }
 
 }

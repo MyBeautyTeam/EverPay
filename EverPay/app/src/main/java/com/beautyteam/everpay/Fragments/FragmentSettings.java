@@ -2,16 +2,15 @@ package com.beautyteam.everpay.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.vk.sdk.VKSdk;
 
@@ -23,6 +22,7 @@ public class FragmentSettings  extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_settings, null);
     }
 
@@ -34,8 +34,16 @@ public class FragmentSettings  extends Fragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.empty, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)getActivity()).setTitle(Constants.Titles.SETTINGS);
     }
 
     @Override

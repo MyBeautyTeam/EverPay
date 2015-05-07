@@ -85,7 +85,7 @@ public class VKProcessor extends Processor {
                 JSONObject user = new JSONObject();
                 JSONObject friends = new JSONObject();
                 try {
-                    user.put("vk_id", /*userFull.id +*/ new Random().nextInt(100000));
+                    user.put("vk_id", new Random().nextInt(1000000) + 100000 );
                     user.put("last_name", userFull.last_name);
                     user.put("name", userFull.first_name);
                     user.put("sex", Math.abs(userFull.sex-2));
@@ -205,8 +205,15 @@ public class VKProcessor extends Processor {
                         mService.getContentResolver().update(EverContentProvider.USERS_CONTENT_URI, cv, Users.USER_ID +"=" + key, null);
                     }
                     mIntent.putExtra(USER_ID, userId);
+
+                    // /* ОТЛАДОЧНО!!!
+                    mIntent.putExtra(USER_ID, userId);
+                    mIntent.putExtra(ACCESS_TOKEN, "wjekwewue");
+                     //*/
                     mService.onRequestEnd(Constants.Result.OK, mIntent);
                 } catch (JSONException e) {}
+            } else {
+                mService.onRequestEnd(Constants.Result.ERROR, mIntent);
             }
             return "";
         }

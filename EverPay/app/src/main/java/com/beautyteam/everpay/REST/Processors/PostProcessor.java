@@ -49,6 +49,8 @@ public class PostProcessor extends Processor {
 
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
         SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
+        //int userId = sPref.getInt(Constants.Preference.USER_ID, 0);
+        //String accessToken = sPref.getString(Constants.Preference.ACCESS_TOKEN, "0");
         int userId = 8;//sPref.getInt(Constants.Preference.USER_ID, 0);
         String accessToken = "wjekwewue";//sPref.getString(ACCESS_TOKEN, "0");
         String action = intent.getAction();
@@ -98,11 +100,14 @@ public class PostProcessor extends Processor {
                     service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + oldBillId, null);
 
                     JSONObject history = responseJSON.getJSONObject("history");
-                    cv = readHistory(history);
-                    if (cv != null)
+
+                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                    Iterator<String> historyKeys = history.keys();
+                    while (historyKeys.hasNext()) {
+                        JSONObject historyItem = history.getJSONObject(historyKeys.next());
+                        cv = readHistory(historyItem);
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
-                    else
-                        result = Constants.Result.ERROR;
+                    }
 
                     result = Constants.Result.OK;
                 } catch (JSONException asdw) {
@@ -129,8 +134,24 @@ public class PostProcessor extends Processor {
                 paramsJSON.put("users_id_whom", userIdWhom);
                 String response = urlConnectionPost(Constants.URL.ADD_GROUP_MEMBER, paramsJSON.toString());
                 if ((response != null) && response.contains("200")) {
-
                     result = Constants.Result.OK;
+
+                    service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, GroupMembers.GROUP_ID + "=" +groupId, null );
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonObject = jsonObject.getJSONObject("response");
+                    JSONObject group = jsonObject.getJSONObject("group");
+                    JSONObject members = jsonObject.getJSONObject("members");
+                    JSONObject member;
+                    for (int i = 0; i<members.length(); i++) {
+                        member = members.getJSONObject(i + "");
+                        ContentValues cv = new ContentValues();
+                        cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
+                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
+                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
+                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
+
+                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
+                    }
                 } else {
                     result = Constants.Result.ERROR;
                 }
@@ -243,7 +264,7 @@ public class PostProcessor extends Processor {
                         JSONObject userWhomJSON = debt.getJSONObject("user_whom");
                         int whomId = userWhomJSON.getInt("users_id");
                         int whomIdVK = userWhomJSON.getInt("vk_id");
-                        String whomName = userWhomJSON.getString("last_name") + " " + userWhoJSON.getString("name") ;
+                        String whomName = userWhomJSON.getString("last_name") + " " + userWhomJSON.getString("name") ;
 
                         cv.put(Calculation.CALC_ID, debtId);
                         cv.put(Calculation.GROUPS_ID, groupIdFromResponse);

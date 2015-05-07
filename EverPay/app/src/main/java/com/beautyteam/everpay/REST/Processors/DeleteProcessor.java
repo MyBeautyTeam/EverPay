@@ -10,6 +10,7 @@ import android.util.Log;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.REST.Service;
 
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
 import static com.beautyteam.everpay.Constants.Action.REMOVE_BILL;
 import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
@@ -52,12 +54,27 @@ public class DeleteProcessor extends Processor {
                 String response = urlConnectionDelete(Constants.URL.REMOVE_GROUP_MEMBER, paramsJSON.toString());
 
                 if ((response != null) && response.contains("200")) {
+                    service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI,
+                            GroupMembers.GROUP_ID + "=" + groupId , null);
+
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
-                    JSONObject history = responseJSON.getJSONObject("history");
+                    JSONObject members = responseJSON.getJSONObject("members");
 
-                    ContentValues cv = readHistory(history);
-                    service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    Iterator<String> iterator = members.keys();
+                    while (iterator.hasNext()) {
+                        JSONObject member = members.getJSONObject(iterator.next());
+                        ContentValues cv = new ContentValues();
+                        cv.put(GroupMembers.GROUP_ID, groupId);
+                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
+                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
+                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
+
+                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
+                    }
+
+                    //ContentValues cv = readHistory(history);
+                    //service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     result = Constants.Result.OK;
                 } else {
                     result = Constants.Result.ERROR;
@@ -67,10 +84,9 @@ public class DeleteProcessor extends Processor {
             }
         } else
         if (REMOVE_BILL.equals(action)) {
-            result = Constants.Result.OK;
             int billId = intent.getIntExtra(Constants.IntentParams.BILL_ID, 0);
             Cursor c = service.getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_BILL, Bills.BILL_ID + "=" + billId, null, null);
-
+            int count = c.getCount();
             c.moveToFirst();
             int groupId = c.getInt(c.getColumnIndex(Bills.GROUP_ID));
             JSONObject requestJSON = new JSONObject();
@@ -78,7 +94,7 @@ public class DeleteProcessor extends Processor {
                 requestJSON.put("users_id", userId);
                 requestJSON.put("access_token", accessToken);
                 requestJSON.put("groups_id", groupId);
-                requestJSON.put("id", billId);
+                requestJSON.put("bills_id", billId);
                 String response = urlConnectionDelete(Constants.URL.REMOVE_BILL, requestJSON.toString());
                 if ((response != null) && response.contains("200")) {
                     result = Constants.Result.OK;
@@ -104,7 +120,7 @@ public class DeleteProcessor extends Processor {
         try {
             URL url = new URL(strUrl);
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("PUT");
+            connection.setRequestMethod("DELETE");
             connection.setDoOutput(true);
             connection.connect();
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
