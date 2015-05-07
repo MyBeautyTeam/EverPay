@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +45,7 @@ import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
  */
 public class MainActivity extends ActionBarActivity
     implements RequestCallback {
+
 
 
     String TITLES[] = {"Главная" ,"Группы", "Настройки"};
@@ -79,6 +81,8 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
+
+
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -204,8 +208,8 @@ public class MainActivity extends ActionBarActivity
 
     public void addFragment(Fragment fragment) {
         FragmentTransaction fTran = fragmentManager.beginTransaction();
-        fTran.setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left);
-        fTran.add(R.id.main_container, fragment);
+        //fTran.setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left);
+        fTran.replace(R.id.main_container, fragment);
         fTran.addToBackStack(null);
         fTran.commit();
     }
@@ -265,5 +269,6 @@ public class MainActivity extends ActionBarActivity
 
         }
     }
+
 }
 
