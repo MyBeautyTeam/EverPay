@@ -39,6 +39,7 @@ import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
 import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
+
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
@@ -241,25 +242,34 @@ public class GetProcessors extends Processor {
         } else
         if (GET_HISTORY.equals(action)) {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            int count = intent.getIntExtra(Constants.IntentParams.HISTORY_COUNT, 0);
+
             params.add(new BasicNameValuePair("groups_id", groupId + ""));
+            if (count != 0)
+                params.add(new BasicNameValuePair("number", count + ""));
 
             String response = get(Constants.URL.GET_HISTORY, params);
             if ((response != null) && (response.contains("200"))) {
-                service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                if (count < 21)
+                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
 
+                intent.putExtra(Constants.IntentParams.IS_ENDS, false);
                 try {
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
 
-                    JSONObject historyItem;
-                    for (int i=0; i<history.length(); i++) {
-                        historyItem = history.getJSONObject(i + "");
+                    JSONObject historyItem = null;
+                    Iterator<String> iterator = history.keys();
+                    while (iterator.hasNext()) {
+                        historyItem = history.getJSONObject(iterator.next());
                         ContentValues cv = readHistory(historyItem);
-
+                        String histo =  historyItem.toString();
+                        if (historyItem.toString().contains("создал"))
+                            intent.putExtra(Constants.IntentParams.IS_ENDS, true);
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
-
                     }
+
                     result = Constants.Result.OK;
 
                 } catch (JSONException e) {}

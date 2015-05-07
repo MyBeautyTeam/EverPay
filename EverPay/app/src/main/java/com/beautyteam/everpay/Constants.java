@@ -96,6 +96,8 @@ public class Constants {
         public final static String GROUP_ID = "GROUP_ID";
         public final static String BILL_ID = "BILL_ID";
         public final static String USER_ID = "USER_ID";
+        public final static String HISTORY_COUNT = "HISTORY_COUNT";
+        public final static String IS_ENDS = "IS_ENDS";
     }
 
     public final static String RECEIVER = "RECEIVER";

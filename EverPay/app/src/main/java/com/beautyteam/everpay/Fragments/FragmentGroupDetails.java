@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +36,7 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
  * Created by Admin on 05.04.2015.
  */
 public class FragmentGroupDetails extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback{
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
     private static final String GROUP_ID = "GROUP_ID";
     private static final String GROUP_TITLE = "GROUP_TITLE";
 
@@ -56,6 +55,13 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     private boolean isFirstLaunch = true;
     ServiceHelper serviceHelper;
+
+    private LinearLayout loadHistoryLayout;
+    private Button loadHistoryBtn;
+
+    private boolean isAllHistoryLoaded = true;
+    private int countOfLoadedItem = 20;
+
 
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
         FragmentGroupDetails fragmentGroupDetails = new FragmentGroupDetails();
@@ -77,6 +83,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         groupTitle = arg.getString(GROUP_TITLE);
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
+        loadHistoryLayout = (LinearLayout) inflater.inflate(R.layout.header_load_history, null);
+        loadHistoryBtn = (Button) loadHistoryLayout.findViewById(R.id.load_history_btn);
         /*
         ПОДХОДИТ ЛИ!? ПОДУМАТЬ!
          */
@@ -91,17 +99,17 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_bill, null);
         historyList.addFooterView(footerView);
+        historyList.addHeaderView(loadHistoryLayout);
 
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
 
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
+        loadHistoryBtn.setOnClickListener(this);
 
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);
 
-//        discriptGroup =(TextView) view.findViewById(R.id.group_discript);
-//        discriptGroup.setText(groupTitle);
     }
 
     @Override
@@ -114,6 +122,11 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
             case R.id.group_calc_btn:
                 mainActivity.addFragment(FragmentCalculation.getInstance(groupId));
                 break;
+
+            case R.id.load_history_btn:
+                countOfLoadedItem += 20;
+                serviceHelper.getHistory(groupId, countOfLoadedItem);
+
         }
     }
 
@@ -129,7 +142,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         serviceHelper.onResume();
         loadingLayout.setVisibility(View.VISIBLE);
         calcBtn.setVisibility(View.GONE);
-        serviceHelper.getHistory(groupId);
+        serviceHelper.getHistory(groupId, 0);
         serviceHelper.getGroupMembers(groupId);
         ((MainActivity) getActivity()).setTitle(groupTitle);
     }
@@ -204,7 +217,16 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
+
         if (action.equals(GET_HISTORY)) {
+
+            if (data.getBoolean(Constants.IntentParams.IS_ENDS)) {
+                historyList.removeHeaderView(loadHistoryLayout);
+                isAllHistoryLoaded = true;
+            } else {
+                isAllHistoryLoaded = false;
+            }
+
             loadingLayout.setVisibility(View.GONE);
             calcBtn.setVisibility(View.VISIBLE);
             if (result == Constants.Result.OK) {
@@ -213,4 +235,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
             }
         }
     }
+
+
 }
