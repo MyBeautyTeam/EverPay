@@ -65,13 +65,13 @@ public class GroupDetailsAdapter extends CursorAdapter {
             case ADD_DEBTS:
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" + " " +
                         cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) + " " +
-                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
+                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"+ " "));
                 break;
             case ADD_BILLS:
             case EDIT_BILLS:
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" + " " +
                         cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) + " " +
-                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
+                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"+ " "));
                 view.setBackgroundResource(R.drawable.history_style);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -83,9 +83,9 @@ public class GroupDetailsAdapter extends CursorAdapter {
             case EDIT_DEBTS:
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO_SAY)) + "</b>" +
                         " " + cursor.getString(cursor.getColumnIndex(History.TEXT_SAY)) +
-                        " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" +
-                        " " + cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) +
-                        " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
+                        " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO))+ "</b>" +
+                        "&nbsp;&nbsp;" + cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) +
+                        " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"+"&nbsp"));
                 break;
         }
     }
