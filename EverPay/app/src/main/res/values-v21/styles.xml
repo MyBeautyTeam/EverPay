@@ -19,6 +19,11 @@
 
         <item name="android:textColorSecondary">@color/secondary_text</item> <!-- Цвет инпутов-->
 
+
+
+        <item name="android:colorBackground">@color/active_white</item>
+        <item name="android:windowBackground">@color/active_white</item>
+
     </style>
 
     <style name="SwitchCompat" parent="Theme.AppCompat.Light.NoActionBar">

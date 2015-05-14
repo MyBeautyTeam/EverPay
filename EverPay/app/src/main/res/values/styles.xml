@@ -16,6 +16,7 @@
         <!-- colorAccent is used as the default value for colorControlActivated
         which is used to tint widgets -->
 
+
         <item name="colorAccent">@color/dark_primary</item>
         <item name="android:textColorSecondary">@color/secondary_text_default_material_light</item>
 
@@ -27,5 +28,7 @@
         <item name="android:windowBackground">@color/active_white</item>
         <item name = "android:textColor">@color/primary</item>
     </style>
+
+
 
 </resources>

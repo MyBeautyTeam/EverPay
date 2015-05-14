@@ -237,5 +237,17 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    /*
+    Запросить историю группы
+     */
+    public void getHistory(int groupId, int count) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.GET_HISTORY);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+        intentService.putExtra(Constants.IntentParams.HISTORY_COUNT, count);
+
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
 
 }

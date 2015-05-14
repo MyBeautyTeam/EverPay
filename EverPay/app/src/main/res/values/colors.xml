@@ -26,6 +26,7 @@
     <color name="active_white">#FFFFFF</color>
 
     <color name="red_text">#f44336</color>
+    <color name="background_material_light">#FFFFFF</color>
 
     <!-- =========================== -->
 </resources>

@@ -82,8 +82,6 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
 
-
-
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -269,6 +267,7 @@ public class MainActivity extends ActionBarActivity
 
         }
     }
+
 
 }
 

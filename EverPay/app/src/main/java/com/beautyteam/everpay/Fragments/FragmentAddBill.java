@@ -66,6 +66,7 @@ public class FragmentAddBill extends Fragment implements
     private Animation alphaDisappear;
 
     private Button footerBtn;
+    private LinearLayout footerLayout;
 
     private ArrayList<BillListItem> billArrayList;
 
@@ -126,9 +127,11 @@ public class FragmentAddBill extends Fragment implements
 
         addBillList = (ListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-        footerBtn = (Button)inflater.inflate(R.layout.footer_btn, null);
+
+        footerLayout = (LinearLayout)inflater.inflate(R.layout.footer_btn, null);
+        footerBtn = (Button)footerLayout.findViewById(R.id.add_group_button);
         footerBtn.setVisibility(View.GONE);
-        addBillList.addFooterView(footerBtn);
+        addBillList.addFooterView(footerLayout);
 
         leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa_layout);
 

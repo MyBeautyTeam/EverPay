@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent">
+    <Button
+        android:id="@+id/load_history_btn"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Загрузить еще"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:textColor="@color/dark_primary"
+        android:background="@drawable/on_btn_pressed_selector"
+        android:drawablePadding="8dp"
+        android:layout_weight="0"
+        android:layout_marginBottom="5dp"
+        />
+</LinearLayout>
