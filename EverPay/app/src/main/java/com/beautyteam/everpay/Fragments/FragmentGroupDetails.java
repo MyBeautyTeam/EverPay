@@ -3,6 +3,7 @@ package com.beautyteam.everpay.Fragments;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -28,6 +29,7 @@ import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.beautyteam.everpay.Views.SwipeRefreshLayoutBottom;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
@@ -36,14 +38,13 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
  * Created by Admin on 05.04.2015.
  */
 public class FragmentGroupDetails extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback,
+        SwipeRefreshLayoutBottom.OnRefreshListener {
     private static final String GROUP_ID = "GROUP_ID";
     private static final String GROUP_TITLE = "GROUP_TITLE";
 
     private Button addBillBtn;
     private Button calcBtn;
-    private Button showBillBtn;
-    private TextView discriptGroup;
     private MainActivity mainActivity;
     private int groupId;
     private String groupTitle;
@@ -61,6 +62,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     private boolean isAllHistoryLoaded = true;
     private int countOfLoadedItem = 20;
+
+    private SwipeRefreshLayoutBottom refreshLayout;
 
 
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
@@ -89,6 +92,10 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         ПОДХОДИТ ЛИ!? ПОДУМАТЬ!
          */
 
+        serviceHelper.onResume();
+        serviceHelper.getHistory(groupId, 0);
+        serviceHelper.getGroupMembers(groupId);
+
         return inflater.inflate(R.layout.fragment_group_detail, null);
     }
 
@@ -109,6 +116,10 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);
+
+        refreshLayout = (SwipeRefreshLayoutBottom) view.findViewById(R.id.group_detail_refresh);
+        refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
+        refreshLayout.setOnRefreshListener(this);
 
     }
 
@@ -142,9 +153,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         serviceHelper.onResume();
         loadingLayout.setVisibility(View.VISIBLE);
         calcBtn.setVisibility(View.GONE);
-        serviceHelper.getHistory(groupId, 0);
-        serviceHelper.getGroupMembers(groupId);
         ((MainActivity) getActivity()).setTitle(groupTitle);
+
     }
 
     @Override
@@ -233,8 +243,14 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
             } else {
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
+            refreshLayout.setRefreshing(false);
         }
     }
 
 
+    @Override
+    public void onRefresh() {
+        serviceHelper.getHistory(groupId, 0);
+        serviceHelper.getGroupMembers(groupId);
+    }
 }

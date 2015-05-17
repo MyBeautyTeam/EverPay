@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 
+import static android.support.v4.widget.SwipeRefreshLayout.*;
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
@@ -35,7 +37,7 @@ import static com.beautyteam.everpay.Constants.LOG;
  * Created by asus on 15.03.2015.
  */
 public class FragmentGroups extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, OnRefreshListener {
 
     private ListView groupList;
     private Button addBtn;
@@ -46,6 +48,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     private GroupsListAdapter mAdapter;
     ServiceHelper serviceHelper;
     private LinearLayout loadingLayout;
+    private SwipeRefreshLayout refreshLayout;
 
     private boolean isFirstLaunch = true;
 
@@ -72,6 +75,9 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         addBtn.setOnClickListener(this);
 
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.groups_refresh_layout);
+        refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
+        refreshLayout.setOnRefreshListener(this);
     }
 
     private static final String[] PROJECTION = new String[] {
@@ -142,12 +148,6 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onResume() {
         super.onResume();
         serviceHelper.onResume();
-
-        loadingLayout.setVisibility(View.VISIBLE);
-        serviceHelper.getGroups();
-
-        //}
-
         ((MainActivity)getActivity()).setTitle(Constants.Titles.GROUPS);
     }
 
@@ -165,6 +165,12 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
             } else {
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
+            refreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        serviceHelper.getGroups();
     }
 }
