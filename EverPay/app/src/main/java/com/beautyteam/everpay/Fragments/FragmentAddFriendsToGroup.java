@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 
 public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, TitleUpdater {
     private ListView friendsList;
     private static final int LOADER_ID = 0;
     private AddFriendsToGroupAdapter mAdapter;
@@ -77,7 +77,7 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.FRIENDS);
+        updateTitle();
     }
 
 
@@ -116,5 +116,10 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
                 ((MainActivity)getActivity()).removeFragment();
                 break;
         }
+    }
+
+    @Override
+    public void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.FRIENDS);
     }
 }

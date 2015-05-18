@@ -37,7 +37,7 @@ import static com.beautyteam.everpay.Constants.LOG;
  * Created by asus on 15.03.2015.
  */
 public class FragmentGroups extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, OnRefreshListener {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, OnRefreshListener, TitleUpdater {
 
     private ListView groupList;
     private Button addBtn;
@@ -154,7 +154,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     public void onResume() {
         super.onResume();
         serviceHelper.onResume();
-        ((MainActivity)getActivity()).setTitle(Constants.Titles.GROUPS);
+        updateTitle();
     }
 
     @Override
@@ -178,5 +178,10 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     @Override
     public void onRefresh() {
         serviceHelper.getGroups();
+    }
+
+    @Override
+    public void updateTitle() {
+        ((MainActivity)getActivity()).setTitle(Constants.Titles.GROUPS);
     }
 }

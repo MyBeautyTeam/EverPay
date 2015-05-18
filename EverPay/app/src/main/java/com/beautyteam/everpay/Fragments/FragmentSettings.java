@@ -18,7 +18,7 @@ import com.vk.sdk.VKSdk;
  * Created by asus on 04.05.2015.
  */
 public class FragmentSettings  extends Fragment
-        implements View.OnClickListener {
+        implements View.OnClickListener, TitleUpdater {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class FragmentSettings  extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity)getActivity()).setTitle(Constants.Titles.SETTINGS);
+        updateTitle();
     }
 
     @Override
@@ -57,4 +57,8 @@ public class FragmentSettings  extends Fragment
     }
 
 
+    @Override
+    public void updateTitle() {
+        ((MainActivity)getActivity()).setTitle(Constants.Titles.SETTINGS);
+    }
 }

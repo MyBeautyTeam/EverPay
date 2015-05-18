@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * Created by Admin on 15.03.2015.
  */
 public class FragmentAddBill extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor>, TitleUpdater {
 
     private static final String GROUP_ID = "GROUP_ID";
     private static final String BILL_ID = "BILL_ID";
@@ -537,8 +537,10 @@ public class FragmentAddBill extends Fragment implements
         super.onResume();
     }
 
-    private void updateTitle() {
-        ((MainActivity) getActivity()).setTitle(title);
+    public void updateTitle() {
+        try {
+            ((MainActivity) getActivity()).setTitle(title);
+        } catch (Exception e) {};
     }
 
 }

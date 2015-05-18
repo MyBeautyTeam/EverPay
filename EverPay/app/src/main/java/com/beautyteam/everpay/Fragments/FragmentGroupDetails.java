@@ -33,6 +33,7 @@ import com.beautyteam.everpay.Views.SwipeRefreshLayoutBottom;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
@@ -42,7 +43,7 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
  */
 public class FragmentGroupDetails extends Fragment implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor>, RequestCallback,
-        SwipeRefreshLayoutBottom.OnRefreshListener {
+        SwipeRefreshLayoutBottom.OnRefreshListener, TitleUpdater {
 
     private static final String GROUP_ID = "GROUP_ID";
     private static final String GROUP_TITLE = "GROUP_TITLE";
@@ -68,7 +69,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     private int countOfLoadedItem = 20;
 
     private SwipeRefreshLayoutBottom refreshLayout;
-
     public static HashSet<Integer> downloadedGroupSet;
 
 
@@ -168,7 +168,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
         serviceHelper.onResume();
-        ((MainActivity) getActivity()).setTitle(groupTitle);
+        updateTitle();
 
     }
 
@@ -268,5 +268,10 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onRefresh() {
         serviceHelper.getHistory(groupId, 0);
         serviceHelper.getGroupMembers(groupId);
+    }
+
+    @Override
+    public void updateTitle() {
+        ((MainActivity)getActivity()).setTitle(groupTitle);
     }
 }

@@ -32,7 +32,7 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
  * Created by Admin on 10.03.2015.
  */
 public class FragmentIDebt extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, TitleUpdater {
 
     private ListView debtorsList;
 
@@ -156,5 +156,10 @@ public class FragmentIDebt extends Fragment implements
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.MAIN);
     }
 }

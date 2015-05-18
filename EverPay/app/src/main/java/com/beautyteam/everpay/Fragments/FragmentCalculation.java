@@ -42,7 +42,8 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
  * Created by Admin on 14.03.2015.
  */
 public class FragmentCalculation extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, RequestCallback {
+        LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, RequestCallback,
+        TitleUpdater {
 
     private static final int LOADER_ID = 1;
     private ListView calcList;
@@ -134,7 +135,7 @@ public class FragmentCalculation extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
+        updateTitle();
         loadingLayout.setVisibility(View.VISIBLE);
         serviceHelper.onResume();
         serviceHelper.calculate(groupId);
@@ -186,4 +187,8 @@ public class FragmentCalculation extends Fragment implements
     }
 
 
+    @Override
+    public void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
+    }
 }

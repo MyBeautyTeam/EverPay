@@ -27,6 +27,7 @@ import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
 import com.beautyteam.everpay.Fragments.FragmentSettings;
+import com.beautyteam.everpay.Fragments.TitleUpdater;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.vk.sdk.VKSdk;
@@ -35,6 +36,9 @@ import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import static android.content.SharedPreferences.*;
 import static com.beautyteam.everpay.Constants.*;
@@ -51,13 +55,9 @@ import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
 public class MainActivity extends ActionBarActivity
     implements RequestCallback {
 
-
-
     String TITLES[] = {"Главная" ,"Группы", "Настройки"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
-    //Similarly we Create a String Resource for the name and email in the header view
-    //And we also create a int resource for profile picture in the header view
 
     final String USER_NAME = "USER_NAME";
     final String IMG_URL = "IMG_URL";
@@ -80,6 +80,7 @@ public class MainActivity extends ActionBarActivity
     private SharedPreferences sPref;
 
     private ServiceHelper serviceHelper;
+    private LinkedList<String> titlesQueue = new LinkedList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +212,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void addFragment(Fragment fragment) {
+
         FragmentTransaction fTran = fragmentManager.beginTransaction();
         fTran.setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left);
         fTran.add(R.id.main_container, fragment);
@@ -233,6 +235,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void removeFragment() {
+        correctTitle();
         FragmentTransaction fTran = fragmentManager.beginTransaction();
         //fTran.remove(fragment);
         fragmentManager.popBackStackImmediate();
@@ -271,6 +274,23 @@ public class MainActivity extends ActionBarActivity
             }
         } else if (action.equals(CALCULATE)){
 
+        }
+    }
+
+    public void onBackPressed() {
+        try {
+            correctTitle();
+        } catch (Exception e){};
+        super.onBackPressed();
+    }
+
+    private void correctTitle() throws ClassCastException{
+        List<Fragment> list = fragmentManager.getFragments();
+        int count = fragmentManager.getBackStackEntryCount();
+        Fragment prevFragment = null;
+        if (count - 1 >= 0) {
+            prevFragment = list.get(count - 1);
+            ((TitleUpdater) prevFragment).updateTitle();
         }
     }
 

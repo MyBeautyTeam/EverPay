@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * Created by asus on 16.03.2015.
  */
 public class FragmentAddGroup extends Fragment
-        implements View.OnClickListener {
+        implements View.OnClickListener, TitleUpdater {
     private Toolbar toolbar;
     private Button addBtn;
     private Button saveBtn;
@@ -167,6 +167,11 @@ public class FragmentAddGroup extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        updateTitle();
+    }
+
+    @Override
+    public void updateTitle() {
         ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_GROUP);
     }
 }

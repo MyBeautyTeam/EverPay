@@ -35,7 +35,7 @@ public class FragmentLoading extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadingText.startAnimation(loopAppear);
+        //loadingText.startAnimation(loopAppear);
     }
 
 

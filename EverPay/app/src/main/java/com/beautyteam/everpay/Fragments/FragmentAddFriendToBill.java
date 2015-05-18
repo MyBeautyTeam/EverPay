@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by Admin on 06.04.2015.
  */
-public class FragmentAddFriendToBill extends Fragment {
+public class FragmentAddFriendToBill extends Fragment implements TitleUpdater{
 
     private ArrayList<BillListItem> billArrayList;
     private ListView friendsList;
@@ -41,7 +41,7 @@ public class FragmentAddFriendToBill extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_BILL);
+        updateTitle();
     }
 
     @Override
@@ -72,5 +72,10 @@ public class FragmentAddFriendToBill extends Fragment {
                 ((MainActivity)getActivity()).removeFragment();
             }
         });
+    }
+
+    @Override
+    public void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_BILL);
     }
 }

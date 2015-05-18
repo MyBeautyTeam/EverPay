@@ -43,7 +43,7 @@ import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
  * Created by asus on 28.04.2015.
  */
 public class FragmentEditGroup extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, TitleUpdater {
 
     private Toolbar toolbar;
     private Button addBtn;
@@ -140,7 +140,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.EDIT_GROUP);
+        updateTitle();
         serviceHelper.onResume();
     }
 
@@ -197,6 +197,11 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
                 Toast.makeText(getActivity(), "Ошибка удаения пользователя", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.EDIT_GROUP);
     }
 }
 

@@ -34,7 +34,7 @@ import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
  * Created by asus on 29.04.2015.
  */
 public class FragmentEditFriendsInGroup extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, TitleUpdater {
     private ListView friendsList;
     private static final int LOADER_ID = 0;
     private EditFriendsToGroupAdapter mAdapter;
@@ -85,7 +85,7 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     public void onResume() {
         super.onResume();
         serviceHelper.onResume();
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.FRIENDS);
+        updateTitle();
     }
 
     @Override
@@ -143,5 +143,10 @@ public class FragmentEditFriendsInGroup extends Fragment implements
                 Toast.makeText(getActivity(), "Ошибка добавления пользователя", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.FRIENDS);
     }
 }

@@ -39,7 +39,7 @@ import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
  */
 
 public class FragmentShowBill extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback {
+        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, TitleUpdater {
 
     private static final int LOADER_ID = 2;
     private static final String BILL_ID = "BILL_ID";
@@ -131,6 +131,11 @@ public class FragmentShowBill extends Fragment implements
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void updateTitle() {
+
     }
 
     private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {

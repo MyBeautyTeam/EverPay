@@ -29,7 +29,7 @@ import com.beautyteam.everpay.Views.SlidingTabLayout;
  * Created by Admin on 15.03.2015.
  */
 public class FragmentViewPager extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, TitleUpdater {
 
     private MainActivity mainActivity;
     private SlidingTabLayout slidingTabLayout;
@@ -75,7 +75,7 @@ public class FragmentViewPager extends Fragment implements
 
     @Override
     public void onResume() {
-        ((MainActivity) getActivity()).setTitle(Constants.Titles.MAIN);
+        updateTitle();
         super.onResume();
     }
 
@@ -139,4 +139,8 @@ public class FragmentViewPager extends Fragment implements
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
+    @Override
+    public void updateTitle() {
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.MAIN);
+    }
 }
