@@ -120,7 +120,7 @@ public class FragmentAddGroup extends Fragment
         String title = groupName.getText().toString();
         if(!title.equals("")) {
             Log.d("groupname", title.toString());
-            if (arrayList.size()>0) {
+            if (arrayList.size()> 1) {
                 Log.d("groupsize", String.valueOf(arrayList.size()));
                 return true;
             }  else {

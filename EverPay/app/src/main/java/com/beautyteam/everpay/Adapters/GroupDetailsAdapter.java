@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.History;
+import com.beautyteam.everpay.DialogAction;
 import com.beautyteam.everpay.Fragments.FragmentShowBill;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
@@ -29,6 +32,8 @@ public class GroupDetailsAdapter extends CursorAdapter {
     private static final  int REMOVE_BILLS = 6;
     private static final  int ADD_DEBTS = 7;
     private static final  int EDIT_DEBTS = 8;
+    private DialogAction dialogAction;
+
 
     public GroupDetailsAdapter(Context context, Cursor c, int flags, MainActivity mainActivity) {
         super(context, c, flags);
@@ -39,11 +44,10 @@ public class GroupDetailsAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         View itemLayout = inflater.inflate(R.layout.item_group_details, viewGroup, false);
-
         ViewHolder holder = new ViewHolder();
         holder.discript = (TextView) itemLayout.findViewById(R.id.item_group_details_text);
+        holder.send = (ImageView) itemLayout.findViewById(R.id.not_sended);
         itemLayout.setTag(holder);
-
         return itemLayout;
     }
 
@@ -54,8 +58,9 @@ public class GroupDetailsAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         final int groupId = cursor.getInt(cursor.getColumnIndex(History.GROUP_ID));
         final int billId = cursor.getInt(cursor.getColumnIndex(History.BILL_ID));
-        view.setBackgroundResource(0);
-        view.setOnClickListener(null);
+        holder.discript.setBackgroundResource(0);
+        holder.discript.setOnClickListener(null);
+        holder.send.setVisibility(View.GONE);
         switch (cursor.getInt(cursor.getColumnIndex(History.ACTION))) {
             case REMOVE_BILLS:
             case ADD_GROUPS:
@@ -65,15 +70,61 @@ public class GroupDetailsAdapter extends CursorAdapter {
             case ADD_DEBTS:
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" + " " +
                         cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) + " " +
-                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
+                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>" + " "));
                 break;
             case ADD_BILLS:
+                holder.send.setVisibility(View.VISIBLE);
+                holder.send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogAction = new DialogAction(mainActivity);
+                        dialogAction.show();
+                        dialogAction.setOnSendClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialogAction.dismiss();
+                                //notifyDataSetChanged();
+                            }
+                        });
+                        dialogAction.setOnDeleteClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialogAction.dismiss();
+                                //notifyDataSetChanged();
+                            }
+                        });
+                    }
+                });
+//                if (cursor.getInt(cursor.getColumnIndex(History.RESULT)) == Constants.Result.ERROR) {
+//                    holder.send.setVisibility(View.VISIBLE);
+//                    holder.send.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            dialogAction = new DialogAction(mainActivity);
+//                            dialogAction.show();
+//                            dialogAction.setOnSendClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    dialogAction.dismiss();
+//                                    //notifyDataSetChanged();
+//                                }
+//                            });
+//                            dialogAction.setOnDeleteClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    dialogAction.dismiss();
+//                                    //notifyDataSetChanged();
+//                                }
+//                            });
+//                        }
+//                    });
+//                }
             case EDIT_BILLS:
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" + " " +
                         cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) + " " +
-                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
-                view.setBackgroundResource(R.drawable.history_style);
-                view.setOnClickListener(new View.OnClickListener() {
+                        "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>" + " "));
+                holder.discript.setBackgroundResource(R.drawable.history_style);
+                holder.discript.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mainActivity.addFragment(FragmentShowBill.getInstance(groupId, billId));
@@ -84,8 +135,8 @@ public class GroupDetailsAdapter extends CursorAdapter {
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO_SAY)) + "</b>" +
                         " " + cursor.getString(cursor.getColumnIndex(History.TEXT_SAY)) +
                         " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" +
-                        " " + cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) +
-                        " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>"));
+                        "&nbsp;&nbsp;" + cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) +
+                        " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>" + "&nbsp"));
                 break;
         }
     }
@@ -97,5 +148,6 @@ public class GroupDetailsAdapter extends CursorAdapter {
 
     private static class ViewHolder {
         TextView discript;
+        ImageView send;
     }
 }

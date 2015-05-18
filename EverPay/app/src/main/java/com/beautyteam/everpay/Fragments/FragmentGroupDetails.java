@@ -215,6 +215,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
             History.TEXT_WHO_SAY,
             History.TEXT_WHAT_WHOM,
             History.TEXT_DESCRIPTION,
+            History.STATE,
+            History.RESULT
 
     };
 

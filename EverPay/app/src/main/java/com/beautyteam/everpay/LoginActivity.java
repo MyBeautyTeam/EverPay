@@ -26,20 +26,13 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         VKUIHelper.onCreate(this);
-         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
+        String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
-        VKSdk.initialize(sdkListener, VK_APP_ID);
+        VKSdk.initialize(sdkListener, VK_APP_ID,VKAccessToken.tokenFromSharedPreferences(this,sTokenKey));
 
         setContentView(R.layout.activity_login);
 
         Button loginButton = (Button) findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                VKSdk.authorize(sMyScope, true, false);
-                Log.d("vk", " click");
-            }
-        });
 
         if (VKSdk.wakeUpSession()) {
             Log.d("vk", " wake up ");
@@ -50,6 +43,14 @@ public class LoginActivity extends Activity {
             Log.d("vk", " no wake up");
             loginButton.setVisibility(View.VISIBLE);
         }
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VKSdk.authorize(sMyScope, true, false);
+                Log.d("vk", " click");
+            }
+        });
     }
 
     @Override
@@ -96,6 +97,10 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
+            String accessToken = newToken.accessToken;
+            newToken.saveTokenToSharedPreferences(LoginActivity.this,sTokenKey);
+            Log.d("TOken receive", accessToken);
+            Log.d("TOken receivw", String.valueOf(newToken.expiresIn));
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
             LoginActivity.this.finish();
@@ -104,6 +109,9 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
+            String accessToken = token.accessToken;
+            Log.d("TOken accept", accessToken);
+            Log.d("TOken accept", String.valueOf(token.expiresIn));
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
             LoginActivity.this.finish();

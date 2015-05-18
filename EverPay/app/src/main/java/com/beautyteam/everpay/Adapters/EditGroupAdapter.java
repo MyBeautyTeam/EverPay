@@ -111,7 +111,7 @@ public class EditGroupAdapter extends CursorAdapter {
         String name = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_NAME));
         holder.firstName.setText(name);
         final int id = cursor.getInt(cursor.getColumnIndex(GroupMembers.USER_ID));
-        int id_vk = cursor.getInt(cursor.getColumnIndex(GroupMembers.USER_ID_VK));
+        String id_vk = cursor.getString(cursor.getColumnIndex(GroupMembers.USER_ID_VK));
         String img = mapIdToAvatar.get(id_vk);
         Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
         if (creator.getId() == cursor.getInt(cursor.getColumnIndex(GroupMembers.USER_ID)))

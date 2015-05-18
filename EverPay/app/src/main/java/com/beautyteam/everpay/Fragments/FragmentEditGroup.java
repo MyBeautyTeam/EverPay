@@ -155,7 +155,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
             GroupMembers.ITEM_ID,
             GroupMembers.USER_ID,
             GroupMembers.USER_ID_VK,
-            GroupMembers.USER_NAME
+            GroupMembers.USER_NAME,
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -167,7 +167,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
             case LOADER_ID:
                 SharedPreferences sPref = getActivity().getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
                 User user  = new User(sPref.getInt(Constants.Preference.USER_ID, 0),
-                        sPref.getInt(Constants.Preference.USER_ID_VK,0),
+                        sPref.getInt(Constants.Preference.USER_ID_VK, 0),
                         sPref.getString(Constants.Preference.USER_NAME,"0"), "",
                         sPref.getString(Constants.Preference.IMG_URL,"0") );
                 mAdapter = new EditGroupAdapter(getActivity(), cursor, 0, mainActivity, user, getArguments().getInt(GROUP_ID), this);
