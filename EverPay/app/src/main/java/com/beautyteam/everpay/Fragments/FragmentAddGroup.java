@@ -96,7 +96,12 @@ public class FragmentAddGroup extends Fragment
         switch (v.getId()) {
             case R.id.add_btn_friend_foot:
                 FragmentAddFriendsToGroup frag= FragmentAddFriendsToGroup.getInstance(arrayList);
-                mainActivity.addFragment(frag);
+                mainActivity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_container, frag)
+                        .addToBackStack(null)
+                        .setCustomAnimations(R.anim.alpha_disappear, R.anim.alpha_appear)
+                        .commit();
                 break;
             case R.id.save_btn_group:
                 Log.d("button", "push button save group");

@@ -39,6 +39,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import static com.beautyteam.everpay.Constants.Action.EDIT_BILL;
@@ -193,7 +195,7 @@ public class PutProcessor extends Processor{
 
                 String response = urlConnectionPut(Constants.URL.EDIT_CALCULATION, requestJSON.toString());
                 if (response != null && response.contains("200")) {
-                    result = Constants.Result.OK;
+
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
@@ -206,6 +208,14 @@ public class PutProcessor extends Processor{
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     }
 
+                    // Обновим дату в группе
+                    Date cDate = new Date();
+                    String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+                    ContentValues cv = new ContentValues();
+                    cv.put(Groups.UPDATE_TIME, fDate);
+                    service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+
+                    result = Constants.Result.OK;
                 } else {
                     /*
                     TODO ДОПИСАТЬ ИСТОРИЮ
