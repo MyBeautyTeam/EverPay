@@ -6,6 +6,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -79,6 +80,8 @@ public class GroupDetailsAdapter extends CursorAdapter {
                     public void onClick(View view) {
                         dialogAction = new DialogAction(mainActivity);
                         dialogAction.show();
+                        Window window = dialogAction.getWindow();
+                        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         dialogAction.setOnSendClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
