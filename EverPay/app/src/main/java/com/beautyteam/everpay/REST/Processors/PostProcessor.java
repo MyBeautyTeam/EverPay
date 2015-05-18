@@ -33,6 +33,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,6 +110,13 @@ public class PostProcessor extends Processor {
                         cv = readHistory(historyItem);
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     }
+
+                    // Обновим дату в группе
+                    Date cDate = new Date();
+                    String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+                    cv = new ContentValues();
+                    cv.put(Groups.UPDATE_TIME, fDate);
+                    service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
 
                     result = Constants.Result.OK;
                 } catch (JSONException asdw) {

@@ -31,6 +31,9 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Views.SwipeRefreshLayoutBottom;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
 
@@ -40,6 +43,7 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
 public class FragmentGroupDetails extends Fragment implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor>, RequestCallback,
         SwipeRefreshLayoutBottom.OnRefreshListener {
+
     private static final String GROUP_ID = "GROUP_ID";
     private static final String GROUP_TITLE = "GROUP_TITLE";
 
@@ -65,6 +69,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     private SwipeRefreshLayoutBottom refreshLayout;
 
+    public static HashSet<Integer> downloadedGroupSet;
+
 
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
         FragmentGroupDetails fragmentGroupDetails = new FragmentGroupDetails();
@@ -80,10 +86,12 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
         Bundle arg = getArguments();
         serviceHelper = new ServiceHelper(getActivity(), this);
         groupId = arg.getInt(GROUP_ID);
         groupTitle = arg.getString(GROUP_TITLE);
+
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
         loadHistoryLayout = (LinearLayout) inflater.inflate(R.layout.header_load_history, null);
@@ -92,9 +100,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         ПОДХОДИТ ЛИ!? ПОДУМАТЬ!
          */
 
-        serviceHelper.onResume();
-        serviceHelper.getHistory(groupId, 0);
-        serviceHelper.getGroupMembers(groupId);
 
         return inflater.inflate(R.layout.fragment_group_detail, null);
     }
@@ -102,6 +107,22 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
+        calcBtn.setOnClickListener(this);
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
+
+        if (!downloadedGroupSet.contains(groupId)) { // Если еще ни разу не загужалось - загружаем
+            calcBtn.setVisibility(View.GONE);
+            loadingLayout.setVisibility(View.VISIBLE);
+            serviceHelper.onResume();
+            serviceHelper.getHistory(groupId, 0);
+            serviceHelper.getGroupMembers(groupId);
+        } else {
+            loadingLayout.setVisibility(View.GONE);
+            calcBtn.setVisibility(View.VISIBLE);
+        }
+
         historyList = (ListView) view.findViewById(R.id.group_detail_history);
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_bill, null);
@@ -111,11 +132,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
 
-        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         loadHistoryBtn.setOnClickListener(this);
-
-        calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
-        calcBtn.setOnClickListener(this);
 
         refreshLayout = (SwipeRefreshLayoutBottom) view.findViewById(R.id.group_detail_refresh);
         refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
@@ -151,8 +168,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
         serviceHelper.onResume();
-        loadingLayout.setVisibility(View.VISIBLE);
-        calcBtn.setVisibility(View.GONE);
         ((MainActivity) getActivity()).setTitle(groupTitle);
 
     }
@@ -240,6 +255,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
             loadingLayout.setVisibility(View.GONE);
             calcBtn.setVisibility(View.VISIBLE);
             if (result == Constants.Result.OK) {
+                downloadedGroupSet.add(groupId);
             } else {
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }

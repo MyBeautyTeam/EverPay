@@ -23,6 +23,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
+import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
 import com.beautyteam.everpay.Fragments.FragmentSettings;
@@ -32,6 +33,8 @@ import com.vk.sdk.VKSdk;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
+
+import java.util.HashSet;
 
 import static android.content.SharedPreferences.*;
 import static com.beautyteam.everpay.Constants.*;
@@ -83,6 +86,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
+        FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
