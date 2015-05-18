@@ -109,4 +109,6 @@ public class Constants {
     public final static String[] SCREEN_NAMES = {"Я должен", "Мне должны"};
 
     public final static String ACTION = "ACTION";
+
+    public final static String SENDER_ID = "663098152756";
 }

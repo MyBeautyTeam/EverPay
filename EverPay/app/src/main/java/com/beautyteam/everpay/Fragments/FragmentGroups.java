@@ -36,8 +36,12 @@ import static com.beautyteam.everpay.Constants.LOG;
 /**
  * Created by asus on 15.03.2015.
  */
-public class FragmentGroups extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, OnRefreshListener, TitleUpdater {
+public class FragmentGroups extends Fragment implements
+        View.OnClickListener,
+        LoaderManager.LoaderCallbacks<Cursor>,
+        RequestCallback,
+        OnRefreshListener,
+        TitleUpdater {
 
     private ListView groupList;
     private Button addBtn;
@@ -63,6 +67,10 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
         serviceHelper = new ServiceHelper(getActivity(), this);
         mAdapter = null;
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
+        serviceHelper.onResume();
+        serviceHelper.getGroups();
+
         return inflater.inflate(R.layout.fragment_groups, null);
     }
 

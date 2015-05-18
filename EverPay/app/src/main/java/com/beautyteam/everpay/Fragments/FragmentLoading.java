@@ -16,7 +16,7 @@ import com.beautyteam.everpay.R;
 /**
  * Created by Admin on 23.04.2015.
  */
-public class FragmentLoading extends Fragment {
+public class FragmentLoading extends Fragment implements TitleUpdater {
 
     private TextView loadingText;
     Animation loopAppear;
@@ -39,4 +39,8 @@ public class FragmentLoading extends Fragment {
     }
 
 
+    @Override
+    public void updateTitle() {
+
+    }
 }

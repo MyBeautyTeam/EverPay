@@ -3,6 +3,7 @@ package com.beautyteam.everpay;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -30,11 +31,14 @@ import com.beautyteam.everpay.Fragments.FragmentSettings;
 import com.beautyteam.everpay.Fragments.TitleUpdater;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.vk.sdk.VKSdk;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -82,6 +86,9 @@ public class MainActivity extends ActionBarActivity
     private ServiceHelper serviceHelper;
     private LinkedList<String> titlesQueue = new LinkedList<String>();
 
+    private GoogleCloudMessaging gcm;
+    private String regid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +105,10 @@ public class MainActivity extends ActionBarActivity
         boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
         if (isFirstLaunch) {
 
-            replaceFragment(new FragmentLoading());
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_container, new FragmentLoading())
+                    .commit();
             serviceHelper.initVKUsers();
 
         } else {
@@ -264,6 +274,8 @@ public class MainActivity extends ActionBarActivity
                 editor.commit();
                 setupDrawer();
                 replaceFragment(FragmentViewPager.getInstance());
+
+                registerGCM();
             } else {
                 Toast.makeText(this, "Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
                 VKSdk.logout();
@@ -277,6 +289,50 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+/*    private void registerGCM() {
+
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
+
+        // Достаем идентификатор регистрации
+        final String regId = GCMRegistrar.getRegistrationId(this);
+        //GCMRegistrar.unregister(getBaseContext());
+        if (regId.isEmpty()) { // Если отсутствует, то регистрируемся
+            GCMRegistrar.register(this, SENDER_ID);
+        } else {
+            Log.d("GCM", "Already registered: " + regId);
+        }
+    }
+    */
+
+    public void registerGCM(){
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+                    regid = gcm.register(Constants.SENDER_ID);
+                    msg = "Device registered, registration ID=" + regid;
+                    Log.i("GCM",  msg);
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+
+            }
+        }.execute(null, null, null);
+    }
+
+    @Override
     public void onBackPressed() {
         try {
             correctTitle();
