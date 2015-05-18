@@ -54,7 +54,7 @@ public class FragmentGroups extends Fragment implements
     private LinearLayout loadingLayout;
     private SwipeRefreshLayout refreshLayout;
 
-    private boolean isFirstLaunch = true;
+    public static boolean isFirstLaunch = true;
 
     public static FragmentGroups getInstance() {
         FragmentGroups fragmentGroups = new FragmentGroups();
@@ -67,9 +67,6 @@ public class FragmentGroups extends Fragment implements
         serviceHelper = new ServiceHelper(getActivity(), this);
         mAdapter = null;
         getLoaderManager().initLoader(LOADER_ID, null, this);
-
-        serviceHelper.onResume();
-        serviceHelper.getGroups();
 
         return inflater.inflate(R.layout.fragment_groups, null);
     }
@@ -86,6 +83,13 @@ public class FragmentGroups extends Fragment implements
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.groups_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
         refreshLayout.setOnRefreshListener(this);
+
+        if (isFirstLaunch) {
+            serviceHelper.onResume();
+            serviceHelper.getGroups();
+            loadingLayout.setVisibility(VISIBLE);
+            isFirstLaunch = false;
+        }
     }
 
     private static final String[] PROJECTION = new String[] {
