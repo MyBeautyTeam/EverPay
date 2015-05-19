@@ -154,6 +154,7 @@ public class MainActivity extends ActionBarActivity
     protected void onDestroy() {
         super.onDestroy();
         VKUIHelper.onDestroy(this);
+        FragmentGroups.isFirstLaunch = true;
     }
 
 
