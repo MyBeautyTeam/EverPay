@@ -105,7 +105,7 @@ public class MainActivity extends ActionBarActivity
 
         Intent intent = getIntent();
         boolean isFromNotification = intent.getBooleanExtra(Constants.IS_FROM_NOTYFICATION, false);
-        Log.e("handleNotificationIntent", "isNotif = " + isFromNotification);
+        Log.e("handleNotification", "isNotif = " + isFromNotification);
         if (isFromNotification) {
             handleNotificationIntent();
         }
@@ -395,7 +395,7 @@ public class MainActivity extends ActionBarActivity
 
 
     private void handleNotificationIntent() {
-        Log.e("handleNotificationIntent", "was called");
+        Log.e("handleNotification", "was called");
         //TODO для Татьяны
     }
 
