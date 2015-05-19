@@ -251,7 +251,7 @@ public class GetProcessors extends Processor {
             String response = get(Constants.URL.GET_HISTORY, params);
             if ((response != null) && (response.contains("200"))) {
                 if (count < 21)
-                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId + " AND " + History.RESULT + "!=" + Constants.Result.ERROR, null);
 
                 intent.putExtra(Constants.IntentParams.IS_ENDS, false);
                 try {
@@ -264,7 +264,6 @@ public class GetProcessors extends Processor {
                     while (iterator.hasNext()) {
                         historyItem = history.getJSONObject(iterator.next());
                         ContentValues cv = readHistory(historyItem);
-                        String histo =  historyItem.toString();
                         if (historyItem.toString().contains("создал"))
                             intent.putExtra(Constants.IntentParams.IS_ENDS, true);
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);

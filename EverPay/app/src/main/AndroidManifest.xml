@@ -6,6 +6,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <!-- GCM -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission android:name="com.beautyteam.everpay.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.beautyteam.everpay.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -38,6 +44,17 @@
             android:exported="false">
         </service>
         <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
+
+        <receiver
+            android:name=".GCM.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.beautyteam.smartkettle" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GCM.GcmMessageHandler" />
     </application>
 
 </manifest>

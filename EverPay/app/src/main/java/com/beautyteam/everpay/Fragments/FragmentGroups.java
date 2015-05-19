@@ -36,8 +36,12 @@ import static com.beautyteam.everpay.Constants.LOG;
 /**
  * Created by asus on 15.03.2015.
  */
-public class FragmentGroups extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, OnRefreshListener, TitleUpdater {
+public class FragmentGroups extends Fragment implements
+        View.OnClickListener,
+        LoaderManager.LoaderCallbacks<Cursor>,
+        RequestCallback,
+        OnRefreshListener,
+        TitleUpdater {
 
     private ListView groupList;
     private Button addBtn;
@@ -50,7 +54,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
     private LinearLayout loadingLayout;
     private SwipeRefreshLayout refreshLayout;
 
-    private boolean isFirstLaunch = true;
+    public static boolean isFirstLaunch = true;
 
     public static FragmentGroups getInstance() {
         FragmentGroups fragmentGroups = new FragmentGroups();
@@ -63,6 +67,7 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
         serviceHelper = new ServiceHelper(getActivity(), this);
         mAdapter = null;
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
         return inflater.inflate(R.layout.fragment_groups, null);
     }
 
@@ -78,6 +83,13 @@ public class FragmentGroups extends Fragment implements View.OnClickListener,
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.groups_refresh_layout);
         refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
         refreshLayout.setOnRefreshListener(this);
+
+        if (isFirstLaunch) {
+            serviceHelper.onResume();
+            serviceHelper.getGroups();
+            loadingLayout.setVisibility(VISIBLE);
+            isFirstLaunch = false;
+        }
     }
 
     private static final String[] PROJECTION = new String[] {

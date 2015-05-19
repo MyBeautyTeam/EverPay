@@ -3,6 +3,7 @@ package com.beautyteam.everpay;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -30,11 +31,16 @@ import com.beautyteam.everpay.Fragments.FragmentSettings;
 import com.beautyteam.everpay.Fragments.TitleUpdater;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKSdk;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
+import com.vk.sdk.VKUIHelper;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -44,6 +50,7 @@ import static android.content.SharedPreferences.*;
 import static com.beautyteam.everpay.Constants.*;
 import static com.beautyteam.everpay.Constants.Action.*;
 import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
+import static com.beautyteam.everpay.Constants.Preference.MALE;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 import static com.beautyteam.everpay.Constants.Preference.USER_ID;
 import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
@@ -82,23 +89,42 @@ public class MainActivity extends ActionBarActivity
     private ServiceHelper serviceHelper;
     private LinkedList<String> titlesQueue = new LinkedList<String>();
 
+    private GoogleCloudMessaging gcm;
+    private String regid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
+        serviceHelper.onResume();
+
+        // Удалить
+        registerGCM();
+        //
+
+        Intent intent = getIntent();
+        boolean isFromNotification = intent.getBooleanExtra(Constants.IS_FROM_NOTYFICATION, false);
+        Log.e("handleNotificationIntent", "isNotif = " + isFromNotification);
+        if (isFromNotification) {
+            handleNotificationIntent();
+        }
         FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        serviceHelper.onResume();
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
-        if (isFirstLaunch) {
 
-            replaceFragment(new FragmentLoading());
+        if (VKSdk.instance() == null) {
+            String ABCD = "";
+        }
+        if (isFirstLaunch) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_container, new FragmentLoading())
+                    .commit();
             serviceHelper.initVKUsers();
 
         } else {
@@ -112,10 +138,26 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
         serviceHelper.onResume();
+        VKUIHelper.onResume(this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
+
+
 
     @Override
     protected void onPause() {
@@ -250,6 +292,12 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        Toast.makeText(this, intent.toString(), Toast.LENGTH_SHORT).show();
+        String intentString = intent.toString();
+    }
+
+    @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
         if (action.equals(INIT_VK_USERS)) {
@@ -260,10 +308,13 @@ public class MainActivity extends ActionBarActivity
                 editor.putString(Constants.Preference.ACCESS_TOKEN, data.getString(ACCESS_TOKEN, "5"));
                 editor.putString(USER_NAME, data.getString(USER_NAME, "Самый Красивый"));
                 editor.putString(IMG_URL, data.getString(IMG_URL, "IMG"));
+                editor.putInt(MALE, data.getInt(Constants.IntentParams.MALE, 0));
                 editor.putBoolean(IS_FIRST_LAUNCH, false);
                 editor.commit();
                 setupDrawer();
                 replaceFragment(FragmentViewPager.getInstance());
+
+                registerGCM();
             } else {
                 Toast.makeText(this, "Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
                 VKSdk.logout();
@@ -272,11 +323,59 @@ public class MainActivity extends ActionBarActivity
                 // TODO МОЖЕТ НУЖНО ПОЧИСИТЬ БАЗУ?!
                 this.finish();
             }
-        } else if (action.equals(CALCULATE)){
-
+        } else if (action.equals(ADD_BILL)){
+            if (result == Constants.Result.OK) {
+                Toast.makeText(this, "Счет добавлен", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Ошибка соединения с интернетом. Попробуйте позже", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
+/*    private void registerGCM() {
+
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
+
+        // Достаем идентификатор регистрации
+        final String regId = GCMRegistrar.getRegistrationId(this);
+        //GCMRegistrar.unregister(getBaseContext());
+        if (regId.isEmpty()) { // Если отсутствует, то регистрируемся
+            GCMRegistrar.register(this, SENDER_ID);
+        } else {
+            Log.d("GCM", "Already registered: " + regId);
+        }
+    }
+    */
+
+    public void registerGCM(){
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+                    regid = gcm.register(Constants.SENDER_ID);
+                    msg = "Device registered, registration ID=" + regid;
+                    Log.i("GCM",  msg);
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+
+            }
+        }.execute(null, null, null);
+    }
+
+    @Override
     public void onBackPressed() {
         try {
             correctTitle();
@@ -294,6 +393,11 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+
+    private void handleNotificationIntent() {
+        Log.e("handleNotificationIntent", "was called");
+        //TODO для Татьяны
+    }
 
 }
 

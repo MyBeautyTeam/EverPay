@@ -81,6 +81,7 @@ public class Constants {
         public final static String USER_ID_VK = "USER_ID_VK";
         public final static String USER_NAME = "USER_NAME";
         public final static String IMG_URL = "IMG_URL";
+        public final static String MALE = "MALE";
         public final static String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
     }
 
@@ -98,6 +99,7 @@ public class Constants {
         public final static String USER_ID = "USER_ID";
         public final static String HISTORY_COUNT = "HISTORY_COUNT";
         public final static String IS_ENDS = "IS_ENDS";
+        public final static String MALE = "MALE";
     }
 
     public final static String RECEIVER = "RECEIVER";
@@ -107,6 +109,8 @@ public class Constants {
     public final static String FILE_DIRECTORY = "/.EverPay";
 
     public final static String[] SCREEN_NAMES = {"Я должен", "Мне должны"};
-
     public final static String ACTION = "ACTION";
+    public final static String IS_FROM_NOTYFICATION = "NOTIFY";
+
+    public final static String SENDER_ID = "663098152756";
 }
