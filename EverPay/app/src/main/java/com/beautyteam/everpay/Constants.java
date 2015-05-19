@@ -109,8 +109,8 @@ public class Constants {
     public final static String FILE_DIRECTORY = "/.EverPay";
 
     public final static String[] SCREEN_NAMES = {"Я должен", "Мне должны"};
-
     public final static String ACTION = "ACTION";
+    public final static String IS_FROM_NOTYFICATION = "NOTIFY";
 
     public final static String SENDER_ID = "663098152756";
 }

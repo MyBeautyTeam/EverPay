@@ -33,10 +33,12 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKSdk;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
+import com.vk.sdk.VKUIHelper;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -95,18 +97,31 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
+        serviceHelper.onResume();
+
+        // Удалить
+        registerGCM();
+        //
+
+        Intent intent = getIntent();
+        boolean isFromNotification = intent.getBooleanExtra(Constants.IS_FROM_NOTYFICATION, false);
+        Log.e("handleNotificationIntent", "isNotif = " + isFromNotification);
+        if (isFromNotification) {
+            handleNotificationIntent();
+        }
         FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        serviceHelper.onResume();
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
+
+        if (VKSdk.instance() == null) {
+            String ABCD = "";
+        }
         if (isFirstLaunch) {
-
-
             fragmentManager.beginTransaction()
                     .replace(R.id.main_container, new FragmentLoading())
                     .commit();
@@ -123,10 +138,26 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
         serviceHelper.onResume();
+        VKUIHelper.onResume(this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
+
+
 
     @Override
     protected void onPause() {
@@ -261,6 +292,12 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        Toast.makeText(this, intent.toString(), Toast.LENGTH_SHORT).show();
+        String intentString = intent.toString();
+    }
+
+    @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
         if (action.equals(INIT_VK_USERS)) {
@@ -356,6 +393,11 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+
+    private void handleNotificationIntent() {
+        Log.e("handleNotificationIntent", "was called");
+        //TODO для Татьяны
+    }
 
 }
 

@@ -3,23 +3,19 @@ package com.beautyteam.everpay.GCM;
 /**
  * Created by Admin on 18.05.2015.
  */
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
-import android.widget.Toast;
 
 public class GcmMessageHandler extends IntentService {
 
@@ -36,9 +32,25 @@ public class GcmMessageHandler extends IntentService {
         super.onCreate();
         handler = new Handler();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        // УДАЛИТЬ!
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendNotif("EverPay", "Красавица Татьяна!");
+            }
+        }, 7000);
     }
     @Override
     protected void onHandleIntent(Intent intent) {
+
+        // УДАЛИТЬ!
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendNotif("EverPay", "Красавица Татьяна!");
+            }
+        }, 7000);
 
         String action = intent.getAction();
         if (action.equals("com.google.android.c2dm.intent.REGISTRATION")) {
@@ -46,9 +58,6 @@ public class GcmMessageHandler extends IntentService {
         } else if (action.equals("com.google.android.c2dm.intent.RECEIVE")) {
             String msg = intent.getStringExtra("message");
 
-            Bundle extras = intent.getExtras();
-
-            GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
             switchOnScreen();
             sendNotif("EverPay", msg);
         }
@@ -69,7 +78,7 @@ public class GcmMessageHandler extends IntentService {
 
         // 3-я часть
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("INFA", "somefile");
+        intent.putExtra(Constants.IS_FROM_NOTYFICATION, true);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // 2-я часть
@@ -82,6 +91,7 @@ public class GcmMessageHandler extends IntentService {
 
         // отправляем
         nm.notify(1, notification);
+
     }
 
     private void switchOnScreen() {
@@ -91,9 +101,7 @@ public class GcmMessageHandler extends IntentService {
 
         Log.e("screen on.................................", ""+isScreenOn);
 
-        if(isScreenOn==false)
-        {
-
+        if(isScreenOn==false) {
             PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |PowerManager.ACQUIRE_CAUSES_WAKEUP |PowerManager.ON_AFTER_RELEASE,"MyLock");
 
             wl.acquire(10000);
