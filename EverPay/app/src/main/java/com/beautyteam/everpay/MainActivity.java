@@ -95,13 +95,10 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        VKUIHelper.onCreate(this);
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
         serviceHelper.onResume();
-
-        // Удалить
-        registerGCM();
-        //
 
         Intent intent = getIntent();
         boolean isFromNotification = intent.getBooleanExtra(Constants.IS_FROM_NOTYFICATION, false);
@@ -118,20 +115,19 @@ public class MainActivity extends ActionBarActivity
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
 
-        if (VKSdk.instance() == null) {
-            String ABCD = "";
-        }
         if (isFirstLaunch) {
             fragmentManager.beginTransaction()
                     .replace(R.id.main_container, new FragmentLoading())
                     .commit();
+            //replaceAllFragment(new FragmentLoading());
             serviceHelper.initVKUsers();
 
         } else {
             setupDrawer();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.main_container,FragmentViewPager.getInstance());
             fragmentTransaction.commit();
+            //replaceAllFragment(FragmentViewPager.getInstance());
             //replaceFragment(FragmentViewPager.getInstance());
         }
 
@@ -268,7 +264,7 @@ public class MainActivity extends ActionBarActivity
 
     public void replaceAllFragment(Fragment fragment) {
 
-        for(int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
+        for(int i = 0; i <= fragmentManager.getBackStackEntryCount(); ++i) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         FragmentTransaction fTran = fragmentManager.beginTransaction();
@@ -279,7 +275,6 @@ public class MainActivity extends ActionBarActivity
     public void removeFragment() {
         correctTitle();
         FragmentTransaction fTran = fragmentManager.beginTransaction();
-        //fTran.remove(fragment);
         fragmentManager.popBackStackImmediate();
         fTran.commit();
     }
@@ -289,12 +284,6 @@ public class MainActivity extends ActionBarActivity
         fTran.replace(R.id.main_container, fragment);
         fTran.addToBackStack(null);
         fTran.commit();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        Toast.makeText(this, intent.toString(), Toast.LENGTH_SHORT).show();
-        String intentString = intent.toString();
     }
 
     @Override
@@ -312,7 +301,11 @@ public class MainActivity extends ActionBarActivity
                 editor.putBoolean(IS_FIRST_LAUNCH, false);
                 editor.commit();
                 setupDrawer();
-                replaceFragment(FragmentViewPager.getInstance());
+                //replaceFragment(FragmentViewPager.getInstance());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_container, FragmentViewPager.getInstance())
+                        .setCustomAnimations(R.anim.alpha_appear, R.anim.alpha_disappear)
+                        .commit();
 
                 registerGCM();
             } else {

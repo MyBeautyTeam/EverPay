@@ -4,6 +4,7 @@ package com.beautyteam.everpay.GCM;
  * Created by Admin on 18.05.2015.
  */
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.LoginActivity;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
@@ -59,7 +60,7 @@ public class GcmMessageHandler extends IntentService {
                 System.currentTimeMillis());
 
         // 3-я часть
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(Constants.IS_FROM_NOTYFICATION, true);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 

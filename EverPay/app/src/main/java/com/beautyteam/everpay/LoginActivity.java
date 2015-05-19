@@ -112,9 +112,9 @@ public class LoginActivity extends Activity {
             String accessToken = token.accessToken;
             Log.d("TOken accept", accessToken);
             Log.d("TOken accept", String.valueOf(token.expiresIn));
-            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(i);
-            LoginActivity.this.finish();
+            //Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            //startActivity(i);
+            //LoginActivity.this.finish();
             Log.d("vk", " onaccept");
         }
     };
