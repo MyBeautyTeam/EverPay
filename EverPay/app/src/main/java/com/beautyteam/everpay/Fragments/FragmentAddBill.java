@@ -362,7 +362,6 @@ public class FragmentAddBill extends Fragment implements
                     int billID = insertToDB();
                     if (billEditedId < 0) {
                         ((MainActivity)getActivity()).getServiceHelper().addBill(billID, groupId);
-                        Toast.makeText(getActivity(), "Счет был добавлен", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         ((MainActivity)getActivity()).getServiceHelper().editBill(billID);

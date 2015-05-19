@@ -14,6 +14,7 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.History;
+import com.beautyteam.everpay.Database.HistoryGenerator;
 import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.Utils.DateFormetter;
 
@@ -60,6 +61,10 @@ public class PostProcessor extends Processor {
         if (ADD_BILL.equals(action)) {
             int billId = intent.getIntExtra(Constants.IntentParams.BILL_ID, 0);
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+
+            HistoryGenerator historyGenerator = new HistoryGenerator(service);
+            String historyId = historyGenerator.addBill(billId);
+
             Cursor c = service.getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_BILL, Bills.BILL_ID + "=" + billId, null, null);
             c.moveToFirst();
 
@@ -101,6 +106,7 @@ public class PostProcessor extends Processor {
                     cv.put(Bills.RESULT, Constants.Result.OK);
                     service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + oldBillId, null);
 
+                    /*
                     JSONObject history = responseJSON.getJSONObject("history");
 
                     service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
@@ -110,13 +116,20 @@ public class PostProcessor extends Processor {
                         cv = readHistory(historyItem);
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     }
+                    */
 
                     // Обновим дату в группе
                     Date cDate = new Date();
-                    String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+                    String fDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cDate);
                     cv = new ContentValues();
                     cv.put(Groups.UPDATE_TIME, fDate);
                     service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+
+                    // Обновляем статус новости
+                    cv = new ContentValues();
+                    cv.put(History.STATE, Constants.State.ENDS);
+                    cv.put(History.RESULT, Constants.Result.OK);
+                    service.getContentResolver().update(EverContentProvider.HISTORY_CONTENT_URI, cv, Bills.ITEM_ID + "=" + historyId, null);
 
                     result = Constants.Result.OK;
                 } catch (JSONException asdw) {
@@ -128,6 +141,7 @@ public class PostProcessor extends Processor {
                 cv.put(Bills.STATE, Constants.State.ENDS);
                 cv.put(Bills.RESULT, Constants.Result.ERROR);
                 service.getContentResolver().update(EverContentProvider.BILLS_CONTENT_URI, cv, Bills.BILL_ID + "=" + billId, null);
+                service.getContentResolver().update(EverContentProvider.HISTORY_CONTENT_URI, cv, Bills.ITEM_ID + "=" + historyId, null);
                 // ДОБАВИТЬ ИСТОРИЮ С ОШИБКОЙ!
             }
 
@@ -215,7 +229,6 @@ public class PostProcessor extends Processor {
                         cv.put(Groups.RESULT, Constants.Result.OK);
                         cv.put(Groups.STATE, Constants.State.ENDS);
                         service.getContentResolver().update(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv, GroupMembers.GROUP_ID + "=" + oldGroupId, null);
-
 
                         JSONObject history = responseJSON.getJSONObject("history");
                         cv = readHistory(history);

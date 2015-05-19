@@ -48,6 +48,7 @@ import static android.content.SharedPreferences.*;
 import static com.beautyteam.everpay.Constants.*;
 import static com.beautyteam.everpay.Constants.Action.*;
 import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
+import static com.beautyteam.everpay.Constants.Preference.MALE;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 import static com.beautyteam.everpay.Constants.Preference.USER_ID;
 import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
@@ -270,6 +271,7 @@ public class MainActivity extends ActionBarActivity
                 editor.putString(Constants.Preference.ACCESS_TOKEN, data.getString(ACCESS_TOKEN, "5"));
                 editor.putString(USER_NAME, data.getString(USER_NAME, "Самый Красивый"));
                 editor.putString(IMG_URL, data.getString(IMG_URL, "IMG"));
+                editor.putInt(MALE, data.getInt(Constants.IntentParams.MALE, 0));
                 editor.putBoolean(IS_FIRST_LAUNCH, false);
                 editor.commit();
                 setupDrawer();
@@ -284,8 +286,12 @@ public class MainActivity extends ActionBarActivity
                 // TODO МОЖЕТ НУЖНО ПОЧИСИТЬ БАЗУ?!
                 this.finish();
             }
-        } else if (action.equals(CALCULATE)){
-
+        } else if (action.equals(ADD_BILL)){
+            if (result == Constants.Result.OK) {
+                Toast.makeText(this, "Счет добавлен", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Ошибка соединения с интернетом. Попробуйте позже", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

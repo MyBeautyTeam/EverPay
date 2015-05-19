@@ -39,6 +39,7 @@ import java.util.Random;
 import static com.beautyteam.everpay.Constants.Action.INIT_VK_USERS;
 import static com.beautyteam.everpay.Constants.Preference.ACCESS_TOKEN;
 import static com.beautyteam.everpay.Constants.Preference.IMG_URL;
+import static com.beautyteam.everpay.Constants.Preference.MALE;
 import static com.beautyteam.everpay.Constants.Preference.USER_ID;
 import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
 import static com.beautyteam.everpay.Constants.Preference.USER_NAME;
@@ -80,6 +81,7 @@ public class VKProcessor extends Processor {
                 intent.putExtra(USER_ID_VK, userFull.id );
                 intent.putExtra(USER_NAME, userFull.last_name + " " + userFull.first_name);
                 intent.putExtra(IMG_URL, userFull.photo_100);
+                intent.putExtra(Constants.IntentParams.MALE, Math.abs(userFull.sex - 2));
 
                 JSONObject jsonObject = new JSONObject();
                 JSONObject user = new JSONObject();
