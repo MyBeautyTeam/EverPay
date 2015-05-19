@@ -104,7 +104,7 @@ public class FragmentGroups extends Fragment implements
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        loadingLayout.setVisibility(View.GONE);
+
         switch (loader.getId()) {
             case LOADER_ID:
                 /*
@@ -183,6 +183,7 @@ public class FragmentGroups extends Fragment implements
             } else {
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
+            loadingLayout.setVisibility(View.GONE);
             refreshLayout.setRefreshing(false);
         }
     }

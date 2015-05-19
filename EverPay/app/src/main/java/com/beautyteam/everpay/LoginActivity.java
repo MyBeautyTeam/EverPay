@@ -1,12 +1,15 @@
 package com.beautyteam.everpay;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.beautyteam.everpay.Database.EverContentProvider;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
@@ -16,11 +19,14 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.dialogs.VKCaptchaDialog;
 import com.vk.sdk.util.VKUtil;
 
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
+
 
 public class LoginActivity extends Activity {
     private static String VK_APP_ID = "4799302";
     private static String sTokenKey = "VK_ACCESS_TOKEN";
     private static String[] sMyScope = new String[]{VKScope.FRIENDS, VKScope.PHOTOS};
+    private SharedPreferences sPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,12 @@ public class LoginActivity extends Activity {
         VKUIHelper.onCreate(this);
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
+        sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
         VKSdk.initialize(sdkListener, VK_APP_ID,VKAccessToken.tokenFromSharedPreferences(this,sTokenKey));
+
+        if (!isPreviousCorrectEnds()) { // Проверка, что предыдущая оперция входа выполнилась
+            return;
+        }
 
         setContentView(R.layout.activity_login);
 
@@ -36,9 +47,18 @@ public class LoginActivity extends Activity {
 
         if (VKSdk.wakeUpSession()) {
             Log.d("vk", " wake up ");
-            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(i);
-            this.finish();
+            /*SharedPreferences sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
+            boolean isFirstLaunch = sPref.getBoolean(Constants.Preference.IS_FIRST_LAUNCH, false);
+            if (!isFirstLaunch) {
+                VKSdk.logout();
+                Intent i = new Intent(LoginActivity.this, LoginActivity.class);
+                startActivity(i);
+                this.finish();
+            } else {*/
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(i);
+                this.finish();
+            //}
         } else {
             Log.d("vk", " no wake up");
             loginButton.setVisibility(View.VISIBLE);
@@ -118,4 +138,39 @@ public class LoginActivity extends Activity {
             Log.d("vk", " onaccept");
         }
     };
+
+    /*
+    Проверка, завершился ли предыдущий запрос.
+    Если некоректно, то выполняем действия, для инвалидации некоректной информации.
+
+     */
+    private boolean isPreviousCorrectEnds(){
+        int registrationStatus = sPref.getInt(Constants.Preference.REGISTATION_STATUS, Constants.State.ENDS);
+        if (registrationStatus == Constants.State.IN_PROCESS) {
+            VKSdk.logout();
+            clearData();
+            sPref.edit()
+                    .putInt(Constants.Preference.REGISTATION_STATUS, Constants.State.ENDS)
+                    .commit();
+            Intent i = new Intent(LoginActivity.this, LoginActivity.class);
+            startActivity(i);
+            this.finish();
+            return false;
+        }
+        return true;
+    }
+
+    public void clearData() {
+        sPref.edit().clear().commit();
+
+        getContentResolver().delete(EverContentProvider.USERS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.GROUPS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.DEBTS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.CALCULATION_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, null, null);
+
+    }
+
 }

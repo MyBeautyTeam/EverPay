@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
@@ -83,7 +84,6 @@ public class MainActivity extends ActionBarActivity
     ActionBarDrawerToggle mDrawerToggle;
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
-    private final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
     private SharedPreferences sPref;
 
     private ServiceHelper serviceHelper;
@@ -113,19 +113,22 @@ public class MainActivity extends ActionBarActivity
         mRecyclerView.setLayoutManager(layoutManager);
 
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
-        boolean isFirstLaunch = sPref.getBoolean(IS_FIRST_LAUNCH, true);
+        boolean isFirstLaunch = sPref.getBoolean(Constants.Preference.IS_FIRST_LAUNCH, true);
 
         if (isFirstLaunch) {
             fragmentManager.beginTransaction()
                     .replace(R.id.main_container, new FragmentLoading())
                     .commit();
             //replaceAllFragment(new FragmentLoading());
+            sPref.edit()
+                    .putInt(Constants.Preference.REGISTATION_STATUS, Constants.State.IN_PROCESS)
+                    .commit();
             serviceHelper.initVKUsers();
 
         } else {
             setupDrawer();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.main_container,FragmentViewPager.getInstance());
+            fragmentTransaction.replace(R.id.main_container, FragmentViewPager.getInstance());
             fragmentTransaction.commit();
             //replaceAllFragment(FragmentViewPager.getInstance());
             //replaceFragment(FragmentViewPager.getInstance());
@@ -298,7 +301,8 @@ public class MainActivity extends ActionBarActivity
                 editor.putString(USER_NAME, data.getString(USER_NAME, "Самый Красивый"));
                 editor.putString(IMG_URL, data.getString(IMG_URL, "IMG"));
                 editor.putInt(MALE, data.getInt(Constants.IntentParams.MALE, 0));
-                editor.putBoolean(IS_FIRST_LAUNCH, false);
+                editor.putInt(Constants.Preference.REGISTATION_STATUS, Constants.State.ENDS);
+                editor.putBoolean(Constants.Preference.IS_FIRST_LAUNCH, false);
                 editor.commit();
                 setupDrawer();
                 //replaceFragment(FragmentViewPager.getInstance());
@@ -313,7 +317,8 @@ public class MainActivity extends ActionBarActivity
                 VKSdk.logout();
                 Intent i = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(i);
-                // TODO МОЖЕТ НУЖНО ПОЧИСИТЬ БАЗУ?!
+                clearData();
+                sPref.edit().putInt(Constants.Preference.REGISTATION_STATUS, Constants.State.ENDS);
                 this.finish();
             }
         } else if (action.equals(ADD_BILL)){
@@ -390,6 +395,23 @@ public class MainActivity extends ActionBarActivity
     private void handleNotificationIntent() {
         Log.e("handleNotificationIntent", "was called");
         //TODO для Татьяны
+    }
+
+    public void clearData() {
+        sPref.edit()
+            .clear()
+            .commit();
+
+        getContentResolver().delete(EverContentProvider.USERS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.GROUPS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.DEBTS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.CALCULATION_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, null, null);
+        getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, null, null);
+
+        FragmentGroupDetails.downloadedGroupSet.clear();
+
     }
 
 }

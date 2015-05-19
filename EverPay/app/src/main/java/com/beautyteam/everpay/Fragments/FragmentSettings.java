@@ -1,5 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,15 +12,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.Bills;
+import com.beautyteam.everpay.Database.Calculation;
+import com.beautyteam.everpay.Database.DBHelper;
+import com.beautyteam.everpay.Database.Debts;
+import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.GroupMembers;
+import com.beautyteam.everpay.Database.Groups;
+import com.beautyteam.everpay.Database.History;
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.vk.sdk.VKSdk;
+
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
  * Created by asus on 04.05.2015.
  */
 public class FragmentSettings  extends Fragment
         implements View.OnClickListener, TitleUpdater {
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +65,10 @@ public class FragmentSettings  extends Fragment
         switch (v.getId()) {
             case R.id.quit_button:
                 VKSdk.logout();
+
+                ((MainActivity)getActivity()).clearData();
                 getActivity().finish();
+
                 break;
         }
     }

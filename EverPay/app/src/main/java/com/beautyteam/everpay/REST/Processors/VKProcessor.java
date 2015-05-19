@@ -97,6 +97,15 @@ public class VKProcessor extends Processor {
                     Log.d("vksdk", responses[1].parsedModel.toString());
                     VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
 
+                    // TODO УДАЛИТЬ!!!
+                    ContentValues cav = new ContentValues();
+                        cav.put(Users.USER_ID, 1500);
+                        cav.put(Users.USER_ID_VK, 2500);
+                        cav.put(Users.NAME, "ЖИРНЫЙ НЕПРИЯТЕЛЬ");
+                        cav.put(Users.IMG, "http://cs14113.vk.me/c540104/v540104654/293e4/oqmgTryKZgM.jpg");
+                        service.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cav);
+                    //=========
+
                     ContentValues cv = new ContentValues();
                     for (VKApiUserFull vkFriend : usersArray) {
                         cv.put(Users.USER_ID_VK, vkFriend.id);

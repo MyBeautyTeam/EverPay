@@ -83,6 +83,7 @@ public class Constants {
         public final static String IMG_URL = "IMG_URL";
         public final static String MALE = "MALE";
         public final static String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
+        public final static String REGISTATION_STATUS = "REG_STATUS";
     }
 
     public class State {
