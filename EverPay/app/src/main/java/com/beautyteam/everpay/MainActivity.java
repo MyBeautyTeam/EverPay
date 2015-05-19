@@ -29,6 +29,7 @@ import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
 import com.beautyteam.everpay.Fragments.FragmentSettings;
+import com.beautyteam.everpay.Fragments.FragmentShowBill;
 import com.beautyteam.everpay.Fragments.TitleUpdater;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
@@ -100,12 +101,6 @@ public class MainActivity extends ActionBarActivity
         serviceHelper = new ServiceHelper(this, this);
         serviceHelper.onResume();
 
-        Intent intent = getIntent();
-        boolean isFromNotification = intent.getBooleanExtra(Constants.IS_FROM_NOTYFICATION, false);
-        Log.e("handleNotificationIntent", "isNotif = " + isFromNotification);
-        if (isFromNotification) {
-            handleNotificationIntent();
-        }
         FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
@@ -127,11 +122,13 @@ public class MainActivity extends ActionBarActivity
 
         } else {
             setupDrawer();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.main_container, FragmentViewPager.getInstance());
-            fragmentTransaction.commit();
-            //replaceAllFragment(FragmentViewPager.getInstance());
-            //replaceFragment(FragmentViewPager.getInstance());
+            if (Constants.Action.NOTIFICATION.equals(getIntent().getAction())) { //Если интент пришел из нотификации
+                handleNotificationIntent();
+            } else { // Если запустили сами
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container, FragmentViewPager.getInstance());
+                fragmentTransaction.commit();
+            }
         }
 
     }
@@ -393,9 +390,15 @@ public class MainActivity extends ActionBarActivity
     }
 
 
+    /*
+    Обраобтка сообщения, полученного из Нотификации
+     */
     private void handleNotificationIntent() {
         Log.e("handleNotificationIntent", "was called");
-        //TODO для Татьяны
+        int billId = getIntent().getExtras().getInt(Constants.IntentParams.BILL_ID, 0);
+        int groupId = getIntent().getExtras().getInt(Constants.IntentParams.GROUP_ID, 0);
+
+        replaceAllFragment(FragmentShowBill.getInstance(groupId, billId));
     }
 
     public void clearData() {
@@ -414,6 +417,7 @@ public class MainActivity extends ActionBarActivity
         FragmentGroupDetails.downloadedGroupSet.clear();
 
     }
+
 
 }
 

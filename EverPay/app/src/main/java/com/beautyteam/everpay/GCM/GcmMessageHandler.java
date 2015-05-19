@@ -43,7 +43,6 @@ public class GcmMessageHandler extends IntentService {
 
         } else if (action.equals("com.google.android.c2dm.intent.RECEIVE")) {
             String msg = intent.getStringExtra("message");
-
             switchOnScreen();
             sendNotif("EverPay", msg);
         }
@@ -61,7 +60,9 @@ public class GcmMessageHandler extends IntentService {
 
         // 3-я часть
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra(Constants.IS_FROM_NOTYFICATION, true);
+        intent.setAction(Constants.Action.NOTIFICATION);
+        intent.putExtra(Constants.IntentParams.BILL_ID, 173);
+        intent.putExtra(Constants.IntentParams.GROUP_ID, 7);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // 2-я часть

@@ -60,6 +60,8 @@ public class Constants {
 
         public final static String REMOVE_BILL = "REMOVE_BILL";
         public final static String REMOVE_MEMBER_FROM_GROUP = "REMOVE_GROUP_MEMBER";
+
+        public final static String NOTIFICATION = "NOTIFICATION";
     }
 
     public class Titles {

@@ -47,18 +47,22 @@ public class LoginActivity extends Activity {
 
         if (VKSdk.wakeUpSession()) {
             Log.d("vk", " wake up ");
-            /*SharedPreferences sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
-            boolean isFirstLaunch = sPref.getBoolean(Constants.Preference.IS_FIRST_LAUNCH, false);
-            if (!isFirstLaunch) {
-                VKSdk.logout();
-                Intent i = new Intent(LoginActivity.this, LoginActivity.class);
-                startActivity(i);
-                this.finish();
-            } else {*/
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(i);
-                this.finish();
-            //}
+
+            Intent intentStartMain = new Intent(LoginActivity.this, MainActivity.class);
+            if (Constants.Action.NOTIFICATION.equals(getIntent().getAction())) { //Если интент пришел из нотификации
+
+                Bundle arg = getIntent().getExtras();
+
+                int billId = arg.getInt(Constants.IntentParams.BILL_ID, 0);
+                int groupId = arg.getInt(Constants.IntentParams.GROUP_ID, 0);
+
+                intentStartMain.setAction(Constants.Action.NOTIFICATION);
+                intentStartMain.putExtra(Constants.IntentParams.BILL_ID, billId);
+                intentStartMain.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+            }
+            startActivity(intentStartMain);
+            this.finish();
+
         } else {
             Log.d("vk", " no wake up");
             loginButton.setVisibility(View.VISIBLE);
