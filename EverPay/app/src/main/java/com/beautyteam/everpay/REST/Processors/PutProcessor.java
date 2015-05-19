@@ -95,9 +95,7 @@ public class PutProcessor extends Processor{
 
                 String response = urlConnectionPut(Constants.URL.EDIT_BILL, requestJSON.toString());
                 if (response != null && response.contains("200")) {
-                    /*
-                    НЕОТТЕСТИРОВАНО!
-                     */
+
                     ContentValues cv = new ContentValues();
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
@@ -112,6 +110,9 @@ public class PutProcessor extends Processor{
                     JSONObject history = responseJSON.getJSONObject("history");
                     cv = readHistory(history);
                     service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+
+                    // Обновим дату в группе
+                    updateDateInGroup(groupId, service);
                 } else {
                     result = Constants.Result.ERROR;
                     ContentValues cv = new ContentValues();
@@ -156,6 +157,9 @@ public class PutProcessor extends Processor{
                         ContentValues cv = readHistory(historyItem);
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     }
+
+                    // Обновим дату в группе
+                    updateDateInGroup(groupId, service);
                 } else {
                     /*
                     TODO ДОПИСАТЬ ИСТОРИЮ
@@ -209,11 +213,7 @@ public class PutProcessor extends Processor{
                     }
 
                     // Обновим дату в группе
-                    Date cDate = new Date();
-                    String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
-                    ContentValues cv = new ContentValues();
-                    cv.put(Groups.UPDATE_TIME, fDate);
-                    service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+                    updateDateInGroup(groupId, service);
 
                     result = Constants.Result.OK;
                 } else {

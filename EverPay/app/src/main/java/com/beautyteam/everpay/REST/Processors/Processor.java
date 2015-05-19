@@ -1,9 +1,12 @@
 package com.beautyteam.everpay.REST.Processors;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.Utils.DateFormetter;
@@ -11,11 +14,23 @@ import com.beautyteam.everpay.Utils.DateFormetter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Admin on 29.04.2015.
  */
 public abstract class Processor {
     public abstract void request(Intent intent, Service service);
+
+    public void updateDateInGroup(int groupId, Context context) {
+        // Обновим дату в группе
+        Date cDate = new Date();
+        String fDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cDate);
+        ContentValues cv = new ContentValues();
+        cv.put(Groups.UPDATE_TIME, fDate);
+        context.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+    }
 
 
     public ContentValues readHistory(JSONObject history) {

@@ -119,14 +119,11 @@ public class PostProcessor extends Processor {
                     */
 
                     // Обновим дату в группе
-                    Date cDate = new Date();
-                    String fDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cDate);
-                    cv = new ContentValues();
-                    cv.put(Groups.UPDATE_TIME, fDate);
-                    service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+                    updateDateInGroup(groupId, service);
 
                     // Обновляем статус новости
                     cv = new ContentValues();
+                    cv.put(History.BILL_ID, newBillId);
                     cv.put(History.STATE, Constants.State.ENDS);
                     cv.put(History.RESULT, Constants.Result.OK);
                     service.getContentResolver().update(EverContentProvider.HISTORY_CONTENT_URI, cv, Bills.ITEM_ID + "=" + historyId, null);
@@ -175,6 +172,9 @@ public class PostProcessor extends Processor {
 
                         service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
                     }
+
+                    // Обновим дату в группе
+                    updateDateInGroup(groupId, service);
                 } else {
                     result = Constants.Result.ERROR;
                 }
@@ -223,6 +223,9 @@ public class PostProcessor extends Processor {
                         cv.put(Groups.RESULT, Constants.Result.OK);
                         cv.put(Groups.STATE, Constants.State.ENDS);
                         service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + oldGroupId, null);
+
+                        // Обновим дату в группе
+                        updateDateInGroup(Integer.parseInt(newGroupId), service);
 
                         cv = new ContentValues();
                         cv.put(GroupMembers.GROUP_ID, newGroupId);
@@ -307,6 +310,8 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().insert(EverContentProvider.CALCULATION_CONTENT_URI, cv);
                     }
 
+                    // Обновим дату в группе
+                    updateDateInGroup(groupId, service);
 
 
                 } else
@@ -316,28 +321,6 @@ public class PostProcessor extends Processor {
             }
         }
         service.onRequestEnd(result, intent);
-    }
-
-    private String post(String url, List<NameValuePair> nameValuePairs) {
-        // Возможно нужен всего один client - член класса
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(url);
-        try {
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            HttpResponse response = client.execute(post);
-            BufferedReader rd = new BufferedReader
-                    (new InputStreamReader(response.getEntity().getContent()));
-
-            String line = "";
-            String result = "";
-            while ((line = rd.readLine()) != null) {
-                result += line;
-            }
-            return result;
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     public String urlConnectionPost(String strUrl, String urlParameters) {

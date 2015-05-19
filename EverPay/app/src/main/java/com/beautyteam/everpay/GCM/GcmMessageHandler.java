@@ -33,24 +33,9 @@ public class GcmMessageHandler extends IntentService {
         handler = new Handler();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        // УДАЛИТЬ!
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendNotif("EverPay", "Красавица Татьяна!");
-            }
-        }, 7000);
     }
     @Override
     protected void onHandleIntent(Intent intent) {
-
-        // УДАЛИТЬ!
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendNotif("EverPay", "Красавица Татьяна!");
-            }
-        }, 7000);
 
         String action = intent.getAction();
         if (action.equals("com.google.android.c2dm.intent.REGISTRATION")) {
@@ -67,9 +52,6 @@ public class GcmMessageHandler extends IntentService {
 
     }
 
-    private void handleMessage(Intent intent) {
-        String message = intent.getExtras().toString();
-    }
 
     void sendNotif(String title, String message) {
         // 1-я часть

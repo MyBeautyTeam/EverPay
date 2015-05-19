@@ -75,6 +75,9 @@ public class DeleteProcessor extends Processor {
 
                     //ContentValues cv = readHistory(history);
                     //service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+
+                    // Обновим дату в группе
+                    updateDateInGroup(groupId, service);
                     result = Constants.Result.OK;
                 } else {
                     result = Constants.Result.ERROR;
@@ -104,6 +107,9 @@ public class DeleteProcessor extends Processor {
 
                     ContentValues cv = readHistory(history);
                     service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+
+                    // Обновим дату в группе
+                    updateDateInGroup(groupId, service);
                 } else {
                     result = Constants.Result.ERROR;
                 }
