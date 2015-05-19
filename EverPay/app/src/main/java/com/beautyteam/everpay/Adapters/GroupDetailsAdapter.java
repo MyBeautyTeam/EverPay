@@ -85,12 +85,12 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
                     holder.send.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String names[] = {"Отправить", "Удалить"};
+                            String names[] = {"Переотправить", "Удалить"};
                             Dialog dialog = new Dialog(mainActivity);
                             dialog.setContentView(R.layout.dialog_not_send);
                             ListView lv = (ListView) dialog.findViewById(R.id.dialog_action_list);
                             dialog.setCancelable(true);
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_list_item_1,names);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,R.layout.item_dialog_not_send, R.id.item_dialog, names);
                             lv.setAdapter(adapter);
                             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
@@ -105,6 +105,9 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
                         }
                     });
                 }
+                if (cursor.getInt(cursor.getColumnIndex(History.STATE)) == Constants.State.IN_PROCESS) {
+                    holder.inprocess.setVisibility(View.VISIBLE);
+                }
             case EDIT_BILLS:
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" + " " +
                         cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) + " " +
@@ -116,9 +119,6 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
                         mainActivity.addFragment(FragmentShowBill.getInstance(groupId, billId));
                     }
                 });
-                if (cursor.getInt(cursor.getColumnIndex(History.STATE)) == Constants.State.IN_PROCESS) {
-                    holder.inprocess.setVisibility(View.VISIBLE);
-                }
                 break;
             case EDIT_DEBTS:
                 holder.discript.setText(Html.fromHtml("<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO_SAY)) + "</b>" +
@@ -126,9 +126,6 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
                         " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHO)) + "</b>" +
                         "&nbsp;&nbsp;" + cursor.getString(cursor.getColumnIndex(History.TEXT_DESCRIPTION)) +
                         " " + "<b>" + cursor.getString(cursor.getColumnIndex(History.TEXT_WHAT_WHOM)) + "</b>" + "&nbsp"));
-                if (cursor.getInt(cursor.getColumnIndex(History.STATE)) == Constants.State.IN_PROCESS) {
-                    holder.inprocess.setVisibility(View.VISIBLE);
-                }
                 break;
         }
     }
