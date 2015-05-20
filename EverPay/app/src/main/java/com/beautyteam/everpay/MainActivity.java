@@ -101,6 +101,7 @@ public class MainActivity extends ActionBarActivity
         serviceHelper = new ServiceHelper(this, this);
         serviceHelper.onResume();
 
+
         FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
@@ -399,6 +400,7 @@ public class MainActivity extends ActionBarActivity
         int groupId = getIntent().getExtras().getInt(Constants.IntentParams.GROUP_ID, 0);
 
         replaceAllFragment(FragmentShowBill.getInstance(groupId, billId));
+
     }
 
     public void clearData() {
