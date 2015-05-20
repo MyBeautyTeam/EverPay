@@ -7,7 +7,6 @@ package com.beautyteam.everpay.Adapters;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
-        import android.view.Window;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.CursorAdapter;
@@ -15,19 +14,16 @@ package com.beautyteam.everpay.Adapters;
         import android.widget.ListView;
         import android.widget.ProgressBar;
         import android.widget.TextView;
-        import android.widget.Toast;
-
         import com.beautyteam.everpay.Constants;
         import com.beautyteam.everpay.Database.History;
         import com.beautyteam.everpay.Fragments.FragmentShowBill;
         import com.beautyteam.everpay.MainActivity;
-        import com.beautyteam.everpay.OnDialogClickListener;
         import com.beautyteam.everpay.R;
 
 /**
  * Created by asus on 25.04.2015.
  */
-public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickListener {
+public class GroupDetailsAdapter extends CursorAdapter {
     private final LayoutInflater inflater;
     private MainActivity mainActivity;
     private static final  int ADD_GROUPS = 0;
@@ -39,11 +35,13 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
     private static final  int REMOVE_BILLS = 6;
     private static final  int ADD_DEBTS = 7;
     private static final  int EDIT_DEBTS = 8;
+    OnDialogClickListener dialogListener;
 
-    public GroupDetailsAdapter(Context context, Cursor c, int flags, MainActivity mainActivity) {
+    public GroupDetailsAdapter(Context context, Cursor c, int flags, MainActivity mainActivity, OnDialogClickListener dialogListener) {
         super(context, c, flags);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mainActivity = mainActivity;
+        this.dialogListener = dialogListener;
     }
 
     @Override
@@ -64,6 +62,7 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
         ViewHolder holder = (ViewHolder) view.getTag();
         final int groupId = cursor.getInt(cursor.getColumnIndex(History.GROUP_ID));
         final int billId = cursor.getInt(cursor.getColumnIndex(History.BILL_ID));
+        final int newsId = cursor.getInt(cursor.getColumnIndex(History.ITEM_ID));
         holder.discript.setBackgroundResource(0);
         holder.discript.setOnClickListener(null);
         holder.send.setVisibility(View.GONE);
@@ -86,7 +85,7 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
                         @Override
                         public void onClick(View view) {
                             String names[] = {"Переотправить", "Удалить"};
-                            Dialog dialog = new Dialog(mainActivity);
+                            final Dialog dialog = new Dialog(mainActivity);
                             dialog.setContentView(R.layout.dialog_not_send);
                             ListView lv = (ListView) dialog.findViewById(R.id.dialog_action_list);
                             dialog.setCancelable(true);
@@ -95,9 +94,11 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
                             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent,View view1,int position, long id) {
+                                    dialog.dismiss();
                                     if (position == 0)
-                                        onResendBill(billId);
-                                    else onDeleteBill(billId);
+                                        dialogListener.onResendBill(newsId, groupId, billId);
+                                    else
+                                        dialogListener.onDeleteBill(newsId, groupId, billId);
                                 }
                             });
                             dialog.setTitle("Сообщение");
@@ -130,16 +131,6 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
         }
     }
 
-    @Override
-    public void onResendBill(int id) {
-        Toast.makeText(mainActivity, "переотправить",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onDeleteBill(int id) {
-        Toast.makeText(mainActivity, "удалить",Toast.LENGTH_LONG).show();
-
-    }
 
     @Override
     public int getCount() {
@@ -150,5 +141,10 @@ public class GroupDetailsAdapter extends CursorAdapter implements OnDialogClickL
         TextView discript;
         ImageView send;
         ProgressBar inprocess;
+    }
+
+    public interface OnDialogClickListener  {
+        void onResendBill(int historyItemid, int groupId, int billId);
+        void onDeleteBill(int historyItemid, int groupId, int billId);
     }
 }

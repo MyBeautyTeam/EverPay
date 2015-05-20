@@ -250,8 +250,8 @@ public class GetProcessors extends Processor {
             if ((response != null) && (response.contains("200"))) {
                 if (count < 21)
                     service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId +
-                            " AND (" + History.RESULT + "!=" + Constants.Result.ERROR +
-                            " OR " + History.STATE + "!=" + Constants.State.IN_PROCESS + ")", null);
+                            " AND " + History.RESULT + "!=" + Constants.Result.ERROR +
+                            " AND " + History.STATE + "!=" + Constants.State.IN_PROCESS + "", null);
 
                 intent.putExtra(Constants.IntentParams.IS_ENDS, false);
                 try {

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
+import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.History;
@@ -42,8 +43,11 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
  * Created by Admin on 05.04.2015.
  */
 public class FragmentGroupDetails extends Fragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback,
-        SwipeRefreshLayoutBottom.OnRefreshListener, TitleUpdater {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        RequestCallback,
+        SwipeRefreshLayoutBottom.OnRefreshListener,
+        TitleUpdater,
+        GroupDetailsAdapter.OnDialogClickListener {
 
     private static final String GROUP_ID = "GROUP_ID";
     private static final String GROUP_TITLE = "GROUP_TITLE";
@@ -230,7 +234,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                 /*
                 Проверить, не падает ли из-за возможно неинициализированной mainActivity;
                  */
-                mAdapter = new GroupDetailsAdapter(getActivity(), cursor, 0, mainActivity);
+                mAdapter = new GroupDetailsAdapter(getActivity(), cursor, 0, mainActivity, this);
                 historyList.setAdapter(mAdapter);
                 break;
         }
@@ -275,5 +279,18 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public void updateTitle() {
         ((MainActivity)getActivity()).setTitle(groupTitle);
+    }
+
+    @Override
+    public void onResendBill(int historyItemid, int groupId, int billId) {
+        getActivity().getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.ITEM_ID + "=" + historyItemid, null);
+        mainActivity.getServiceHelper().addBill(billId, groupId);
+    }
+
+    @Override
+    public void onDeleteBill(int historyItemid, int groupId, int billId) {
+        getActivity().getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.ITEM_ID + "=" + historyItemid, null);
+        getActivity().getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, Bills.BILL_ID + "=" + billId, null);
+        Toast.makeText(getActivity(), "Счет удален", Toast.LENGTH_SHORT).show();
     }
 }
