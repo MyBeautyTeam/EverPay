@@ -3,6 +3,7 @@ package com.beautyteam.everpay.REST.Processors;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -22,6 +23,11 @@ import java.util.Date;
  */
 public abstract class Processor {
     public abstract void request(Intent intent, Service service);
+    protected SharedPreferences sPref;
+
+    public Processor(Context context) {
+        sPref = context.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
+    }
 
     public void updateDateInGroup(int groupId, Context context) {
         // Обновим дату в группе
@@ -32,8 +38,16 @@ public abstract class Processor {
         context.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
     }
 
+    protected int getUserId() {
+        return sPref.getInt(Constants.Preference.USER_ID, 0);
+    }
 
-    public ContentValues readHistory(JSONObject history) {
+    protected String getAccessToken() {
+        return sPref.getString(Constants.Preference.ACCESS_TOKEN, "0");
+    }
+
+
+    protected ContentValues readHistory(JSONObject history) {
         try {
             // ===================
             ContentValues cv = new ContentValues();

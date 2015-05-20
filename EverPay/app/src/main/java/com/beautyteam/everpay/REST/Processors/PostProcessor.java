@@ -47,15 +47,17 @@ import static com.beautyteam.everpay.Constants.Action.*;
  */
 public class PostProcessor extends Processor {
 
+    public PostProcessor(Context context) {
+        super(context);
+    }
+
     @Override
     public void request(Intent intent, Service service) {
 
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
-        SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-        //int userId = sPref.getInt(Constants.Preference.USER_ID, 0);
-        //String accessToken = sPref.getString(Constants.Preference.ACCESS_TOKEN, "0");
-        int userId = 8;//sPref.getInt(Constants.Preference.USER_ID, 0);
-        String accessToken = "wjekwewue";//sPref.getString(ACCESS_TOKEN, "0");
+
+        int userId = getUserId();
+        String accessToken = getAccessToken();
         String action = intent.getAction();
 
         if (ADD_BILL.equals(action)) {
@@ -207,15 +209,14 @@ public class PostProcessor extends Processor {
                     }
                     paramsJSON.put("users_id_members", groupMembers);
 
-                    String jsonParams = paramsJSON.toString();
                     String response = urlConnectionPost(Constants.URL.ADD_GROUP, paramsJSON.toString());
                     if (response != null && response.contains("200")) {
                         result = Constants.Result.OK;
 
                         JSONObject responseJSON = new JSONObject(response);
                         responseJSON = responseJSON.getJSONObject("response");
-                        String newGroupId = responseJSON.getString("groups_id");
-                        String oldGroupId = responseJSON.getString("id");
+                        int newGroupId = responseJSON.getInt("groups_id");
+                        int oldGroupId = responseJSON.getInt("id");
 
                         ContentValues cv = new ContentValues();
 
@@ -225,7 +226,7 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + oldGroupId, null);
 
                         // Обновим дату в группе
-                        updateDateInGroup(Integer.parseInt(newGroupId), service);
+                        //updateDateInGroup(Integer.parseInt(newGroupId), service);
 
                         cv = new ContentValues();
                         cv.put(GroupMembers.GROUP_ID, newGroupId);
@@ -234,9 +235,14 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().update(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv, GroupMembers.GROUP_ID + "=" + oldGroupId, null);
 
                         JSONObject history = responseJSON.getJSONObject("history");
+
+                        intent.putExtra(Constants.IntentParams.GROUP_ID, newGroupId);
+                        intent.putExtra(Constants.IntentParams.GROUP_TITLE, groupTitle);
                         cv = readHistory(history);
-                        if (cv != null)
+                        if (cv != null) {
                             service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                            intent.putExtra(Constants.IntentParams.IS_ENDS, true);
+                        }
                         else
                             result = Constants.Result.ERROR;
                         // ====================

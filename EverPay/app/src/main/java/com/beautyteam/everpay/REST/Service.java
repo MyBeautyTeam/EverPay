@@ -22,7 +22,7 @@ public class Service extends IntentService implements ServiceCallback {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(Constants.LOG, "Service, onHandleIntent()");
-        Processor processor = ProcessorFactory.getProcessor(intent);
+        Processor processor = ProcessorFactory.getProcessor(this, intent);
         if (processor != null)
             processor.request(intent, this);
     }

@@ -33,13 +33,17 @@ import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
  */
 public class DeleteProcessor extends Processor {
 
+    public DeleteProcessor(Context context) {
+        super(context);
+    }
+
     @Override
     public void request(Intent intent, Service service) {
 
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
-        SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-        int userId = 8;//sPref.getInt(Constants.Preference.USER_ID, 0);
-        String accessToken = "wjekwewue";//sPref.getString(ACCESS_TOKEN, "0");
+
+        int userId = getUserId();//sPref.getInt(Constants.Preference.USER_ID, 0);
+        String accessToken = getAccessToken();//sPref.getString(ACCESS_TOKEN, "0");
         String action = intent.getAction();
 
         if (Constants.Action.REMOVE_MEMBER_FROM_GROUP.equals(action)) {

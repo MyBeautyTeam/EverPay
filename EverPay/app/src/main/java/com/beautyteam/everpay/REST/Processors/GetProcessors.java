@@ -47,6 +47,10 @@ import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
  */
 public class GetProcessors extends Processor {
 
+    public GetProcessors(Context context) {
+        super(context);
+    }
+
     @Override
     public void request(Intent intent, Service service) {
         LinkedList<NameValuePair> params = new LinkedList<NameValuePair>();
@@ -54,13 +58,7 @@ public class GetProcessors extends Processor {
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
         String action = intent.getAction();
 
-        SharedPreferences sPref = service.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
-        params.add(new BasicNameValuePair("users_id", 8 + ""));
-        //params.add(new BasicNameValuePair("access_token", "wjekwewue"));
-        /*
-        params.add(new BasicNameValuePair("users_id", sPref.getInt(Constants.Preference.USER_ID, 0) + ""));
-        params.add(new BasicNameValuePair("access_token", sPref.getString(Constants.Preference.ACCESS_TOKEN, "")));
-        */
+        params.add(new BasicNameValuePair("users_id", getUserId() + ""));
 
         if (GET_GROUPS.equals(action)) {
             String response = get(Constants.URL.GET_GROUPS, params);
@@ -251,7 +249,9 @@ public class GetProcessors extends Processor {
             String response = get(Constants.URL.GET_HISTORY, params);
             if ((response != null) && (response.contains("200"))) {
                 if (count < 21)
-                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId + " AND " + History.RESULT + "!=" + Constants.Result.ERROR, null);
+                    service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId +
+                            " AND (" + History.RESULT + "!=" + Constants.Result.ERROR +
+                            " OR " + History.STATE + "!=" + Constants.State.IN_PROCESS + ")", null);
 
                 intent.putExtra(Constants.IntentParams.IS_ENDS, false);
                 try {

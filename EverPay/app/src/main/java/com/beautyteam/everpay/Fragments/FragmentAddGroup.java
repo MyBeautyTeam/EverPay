@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,6 +28,8 @@ import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.User;
 
 import java.util.ArrayList;
@@ -35,7 +38,10 @@ import java.util.ArrayList;
  * Created by asus on 16.03.2015.
  */
 public class FragmentAddGroup extends Fragment
-        implements View.OnClickListener, TitleUpdater {
+        implements
+        View.OnClickListener,
+            TitleUpdater,
+        RequestCallback {
     private Toolbar toolbar;
     private Button addBtn;
     private Button saveBtn;
@@ -46,6 +52,9 @@ public class FragmentAddGroup extends Fragment
     private AddGroupAdapter mAdapter;
     private EditText groupName;
 
+    private ProgressDialog progressDialog;
+    private ServiceHelper serviceHelper;
+
     public static FragmentAddGroup getInstance() {
         FragmentAddGroup fragmentAddGroup = new FragmentAddGroup();
         return fragmentAddGroup;
@@ -53,7 +62,8 @@ public class FragmentAddGroup extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-         setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
+        serviceHelper = new ServiceHelper(getActivity(), this);
         return inflater.inflate(R.layout.fragment_add_group, null);
     }
 
@@ -107,10 +117,10 @@ public class FragmentAddGroup extends Fragment
                 Log.d("button", "push button save group");
                 if (isCorrectData()) {
                     int groupId = insertToDB();
-                    String title = groupName.getText().toString();
-                    mainActivity.getServiceHelper().addGroup(groupId);
-                    FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(groupId, title);
-                    mainActivity.replaceFragment(fragmentGroupDetails);
+                    serviceHelper.addGroup(groupId);
+                    progressDialog = new ProgressDialog(getActivity());
+                    progressDialog.setMessage("Создаем группу");
+                    progressDialog.show();
                 }
                 break;
         }
@@ -167,11 +177,31 @@ public class FragmentAddGroup extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        serviceHelper.onResume();
         updateTitle();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
     }
 
     @Override
     public void updateTitle() {
         ((MainActivity) getActivity()).setTitle(Constants.Titles.ADD_GROUP);
+    }
+
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        progressDialog.dismiss();
+        if (result == Constants.Result.OK) {
+            String title = data.getString(Constants.IntentParams.GROUP_TITLE);
+            int groupId = data.getInt(Constants.IntentParams.GROUP_ID);
+            FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(groupId, title);
+            mainActivity.replaceFragment(fragmentGroupDetails);
+        } else {
+            Toast.makeText(getActivity(), "Ошибка соединения с интернетом", Toast.LENGTH_SHORT).show();
+        }
     }
 }

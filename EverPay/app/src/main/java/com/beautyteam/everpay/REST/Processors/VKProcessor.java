@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.REST.Processors;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -52,6 +53,10 @@ public class VKProcessor extends Processor {
     private Intent mIntent;
     private Service mService;
 
+    public VKProcessor(Context context) {
+        super(context);
+    }
+
     @Override
     public void request(Intent intent, Service service) {
         mIntent = intent;
@@ -87,7 +92,7 @@ public class VKProcessor extends Processor {
                 JSONObject user = new JSONObject();
                 JSONObject friends = new JSONObject();
                 try {
-                    user.put("vk_id", new Random().nextInt(1000000) + 100000 );
+                    user.put("vk_id", userFull.id );
                     user.put("last_name", userFull.last_name);
                     user.put("name", userFull.first_name);
                     user.put("sex", Math.abs(userFull.sex-2));
@@ -206,6 +211,7 @@ public class VKProcessor extends Processor {
                     JSONObject jsonObject = new JSONObject(response);
                     jsonObject = jsonObject.getJSONObject("response");
                     int userId = jsonObject.getInt("users_id");
+                    String accessToken = jsonObject.getString("access_token");
                     JSONObject friendsId = jsonObject.getJSONObject("friends_ids");
                     Iterator<String> iterator = friendsId.keys();
                     while (iterator.hasNext()) {
@@ -219,7 +225,7 @@ public class VKProcessor extends Processor {
 
                     // /* ОТЛАДОЧНО!!!
                     mIntent.putExtra(USER_ID, userId);
-                    mIntent.putExtra(ACCESS_TOKEN, "wjekwewue");
+                    mIntent.putExtra(ACCESS_TOKEN, accessToken);
                      //*/
                     mService.onRequestEnd(Constants.Result.OK, mIntent);
                 } catch (JSONException e) {}

@@ -32,7 +32,7 @@ public class Constants {
         public final static String REMOVE_GROUP_MEMBER = BASE_URL + "groups/members/remove/";
         public final static String REMOVE_BILL = BASE_URL + "bills/remove/";
 
-        public final static String SIGNUP = BASE_URL + "signup/";
+        public final static String SIGNUP = BASE_URL + "login/";
     }
 
     public class Action {
@@ -103,6 +103,7 @@ public class Constants {
         public final static String HISTORY_COUNT = "HISTORY_COUNT";
         public final static String IS_ENDS = "IS_ENDS";
         public final static String MALE = "MALE";
+        public final static String GROUP_TITLE = "GROUP_TITLE";
     }
 
     public final static String RECEIVER = "RECEIVER";
