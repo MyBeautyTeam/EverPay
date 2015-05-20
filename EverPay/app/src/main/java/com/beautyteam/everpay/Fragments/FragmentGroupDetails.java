@@ -127,7 +127,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_bill, null);
         historyList.addFooterView(footerView);
-        historyList.addHeaderView(loadHistoryLayout);
 
         addBillBtn = (Button) view.findViewById(R.id.group_add_bill_btn);
         addBillBtn.setOnClickListener(this);
@@ -248,10 +247,11 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         if (action.equals(GET_HISTORY)) {
 
             if (data.getBoolean(Constants.IntentParams.IS_ENDS)) {
-                historyList.removeHeaderView(loadHistoryLayout);
-                isAllHistoryLoaded = true;
+                if (historyList.getHeaderViewsCount() > 0)
+                    historyList.removeHeaderView(loadHistoryLayout);
             } else {
-                isAllHistoryLoaded = false;
+                if (historyList.getHeaderViewsCount() < 1)
+                    historyList.addHeaderView(loadHistoryLayout);
             }
 
             loadingLayout.setVisibility(View.GONE);

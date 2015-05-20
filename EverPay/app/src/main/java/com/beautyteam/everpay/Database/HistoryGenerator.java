@@ -53,9 +53,22 @@ public class HistoryGenerator {
         return uri.getLastPathSegment();
     }
 
+    /*
+    Выбираем максимальную дату, увеличиваем секунду на 1 и вставляем.
+     */
     private String getDate() {
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
-        return sdf.format(new Date());
+        Cursor maxCursor = context.getContentResolver().query(EverContentProvider.HISTORY_CONTENT_URI, new String [] {"MAX("+History.ACTION_DATETIME+")"}, null, null, null);
+        maxCursor.moveToFirst();
+        String max = maxCursor.getString(0);
+
+        int length = max.length();
+        String lastChar = max.substring(length-2);
+        int lastDigit = Integer.parseInt(lastChar);
+        lastDigit++;
+
+        max = max.substring(0, length-2) + lastDigit;
+        return max;
     }
 
     private static final String[] PROJECTION_BILL = new String[] {
