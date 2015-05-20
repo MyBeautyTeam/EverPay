@@ -13,9 +13,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Constants;
@@ -90,6 +92,16 @@ public class FragmentGroups extends Fragment implements
             loadingLayout.setVisibility(VISIBLE);
             isFirstLaunch = false;
         }
+
+        setupEmptyList(view);
+
+    }
+
+    private void setupEmptyList(View view) {
+        ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
+        TextView emptyText = (TextView)stub.inflate();
+        emptyText.setText("Список групп пуст \n Создайте свою первую группу");
+        groupList.setEmptyView(emptyText);
     }
 
     private static final String[] PROJECTION = new String[] {

@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
@@ -73,6 +75,14 @@ public class FragmentIDebt extends Fragment implements
         if (loader == LOADER_ID_I_DEBT)
             ((MainActivity)getActivity()).getServiceHelper().getDebts();
 
+        setupEmptyList(view);
+    }
+
+    private void setupEmptyList(View view) {
+        ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
+        TextView emptyText = (TextView)stub.inflate();
+        emptyText.setText("Поздравляю! \nУ тебя здесь ничего нет =)");
+        debtorsList.setEmptyView(emptyText);
     }
 
     @Override

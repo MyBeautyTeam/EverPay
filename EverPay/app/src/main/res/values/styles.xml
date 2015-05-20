@@ -23,6 +23,12 @@
         <!-- You can also set colorControlNormal, colorControlActivated
         colorControlHighlight & colorSwitchThumbNormal. -->
     </style>
+    <style name="AppTheme.EmptyListView">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:layout_margin">15dp</item>
+    </style>
     <style name="AppTheme.Login" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="android:windowBackground">@color/active_white</item>

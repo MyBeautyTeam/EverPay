@@ -26,17 +26,28 @@
         android:divider="@null"
         android:paddingTop="8dp"
         />
+
+    <ViewStub
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/AppTheme.EmptyListView"
+        android:layout="@layout/empty_list_view"
+        android:layout_weight="1" />
+
     <Button
         android:id="@+id/calc_ok_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
-        android:layout_gravity="center"
+        android:layout_gravity="bottom|center"
         android:textColor="@color/dark_primary"
         android:background="@drawable/on_btn_pressed_selector"
         android:drawableLeft="@drawable/ic_check_black_18dp"
         android:drawablePadding="8dp"
         android:text="@string/ready"
         android:layout_weight="0"/>
+
+
 </LinearLayout>

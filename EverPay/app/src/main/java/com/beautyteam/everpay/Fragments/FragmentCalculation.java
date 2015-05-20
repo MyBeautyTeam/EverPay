@@ -15,9 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.CalcListAdapter;
@@ -85,6 +87,16 @@ public class FragmentCalculation extends Fragment implements
         calcList = (ListView) view.findViewById(R.id.calc_list);
         calcBtn = (Button) view.findViewById(R.id.calc_ok_btn);
         calcBtn.setOnClickListener(this);
+
+        setupEmptyList(view);
+
+    }
+
+    private void setupEmptyList(View view) {
+        ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
+        TextView emptyText = (TextView)stub.inflate();
+        emptyText.setText("Расчет пуст \nЧтобы здесь что-то появилось, нужно добавить счет");
+        calcList.setEmptyView(emptyText);
     }
 
     private static final String[] PROJECTION = new String[] {
@@ -169,7 +181,6 @@ public class FragmentCalculation extends Fragment implements
                 }
                 break;
         }
-        Toast.makeText(getActivity(), "Изменения внесены", Toast.LENGTH_SHORT).show();
         ((MainActivity) getActivity()).getServiceHelper().editCalculation(groupId);
         ((MainActivity) getActivity()).removeFragment();
     }
@@ -191,4 +202,5 @@ public class FragmentCalculation extends Fragment implements
     public void updateTitle() {
         ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
     }
+
 }
