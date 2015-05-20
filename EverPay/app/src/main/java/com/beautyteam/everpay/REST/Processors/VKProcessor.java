@@ -84,7 +84,7 @@ public class VKProcessor extends Processor {
                 //user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
                 intent.putExtra(ACCESS_TOKEN, "wjekwewue12345");
                 intent.putExtra(USER_ID_VK, userFull.id );
-                intent.putExtra(USER_NAME, userFull.last_name + " " + userFull.first_name);
+                intent.putExtra(USER_NAME, userFull.first_name + " " + userFull.last_name);
                 intent.putExtra(IMG_URL, userFull.photo_100);
                 intent.putExtra(Constants.IntentParams.MALE, Math.abs(userFull.sex - 2));
 

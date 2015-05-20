@@ -57,6 +57,7 @@ public class HistoryGenerator {
     Выбираем максимальную дату, увеличиваем секунду на 1 и вставляем.
      */
     private String getDate() {
+        /*
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
         Cursor maxCursor = context.getContentResolver().query(EverContentProvider.HISTORY_CONTENT_URI, new String [] {"MAX("+History.ACTION_DATETIME+")"}, null, null, null);
         maxCursor.moveToFirst();
@@ -69,6 +70,20 @@ public class HistoryGenerator {
 
         max = max.substring(0, length-2) + lastDigit;
         return max;
+        */
+
+        Cursor maxCursor = context.getContentResolver().query(EverContentProvider.HISTORY_CONTENT_URI, new String [] {"MAX("+History.ACTION_DATETIME+")"}, null, null, null);
+        maxCursor.moveToFirst();
+        String max = maxCursor.getString(0);
+
+        int lastInt = max.lastIndexOf(":");
+        String lastChar = max.substring(lastInt+1);
+        int lastDigit = Integer.parseInt(lastChar);
+        lastDigit++;
+
+        max = max.substring(0, lastInt+1) + lastDigit;
+        return max;
+
     }
 
     private static final String[] PROJECTION_BILL = new String[] {

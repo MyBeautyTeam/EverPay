@@ -47,12 +47,12 @@ public abstract class Processor {
             maxCursor.moveToFirst();
             String max = maxCursor.getString(0);
 
-            int length = max.length();
-            String lastChar = max.substring(length-2);
+            int lastInt = max.lastIndexOf(":");
+            String lastChar = max.substring(lastInt+1);
             int lastDigit = Integer.parseInt(lastChar);
             lastDigit++;
 
-            max = max.substring(0, length-2) + lastDigit;
+            max = max.substring(0, lastInt+1) + lastDigit;
             return max;
     }
 
