@@ -164,6 +164,7 @@ public class PostProcessor extends Processor {
                     jsonObject = jsonObject.getJSONObject("response");
                     JSONObject group = jsonObject.getJSONObject("group");
                     JSONObject members = jsonObject.getJSONObject("members");
+                    JSONObject history = jsonObject.getJSONObject("history");
                     JSONObject member;
                     for (int i = 0; i<members.length(); i++) {
                         member = members.getJSONObject(i + "");
@@ -176,6 +177,9 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
                     }
 
+                    ContentValues cv = readHistory(history);
+                    if (cv != null)
+                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     // Обновим дату в группе
                     updateDateInGroup(groupId, service);
                 } else {
@@ -276,6 +280,7 @@ public class PostProcessor extends Processor {
                     int groupIdFromResponse = groupJSON.getInt("groups_id");
 
                     JSONObject debtsJSOB = responseJSON.getJSONObject("debts");
+                    JSONObject history = responseJSON.getJSONObject("history");
                     ContentValues cv;
                     Iterator<String> iterator = debtsJSOB.keys();
                     while (iterator.hasNext()) {
@@ -316,6 +321,10 @@ public class PostProcessor extends Processor {
 
                         service.getContentResolver().insert(EverContentProvider.CALCULATION_CONTENT_URI, cv);
                     }
+
+                    cv = readHistory(history);
+                    if (cv != null)
+                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
 
                     // Обновим дату в группе
                     updateDateInGroup(groupId, service);

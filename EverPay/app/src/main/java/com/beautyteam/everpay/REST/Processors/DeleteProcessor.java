@@ -64,6 +64,7 @@ public class DeleteProcessor extends Processor {
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject members = responseJSON.getJSONObject("members");
+                    JSONObject history = responseJSON.getJSONObject("history");
 
                     Iterator<String> iterator = members.keys();
                     while (iterator.hasNext()) {
@@ -76,6 +77,10 @@ public class DeleteProcessor extends Processor {
 
                         service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
                     }
+
+                    ContentValues cv = readHistory(history);
+                    if (cv != null)
+                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
 
                     //ContentValues cv = readHistory(history);
                     //service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
