@@ -64,8 +64,12 @@ public class PostProcessor extends Processor {
             int billId = intent.getIntExtra(Constants.IntentParams.BILL_ID, 0);
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
 
+            // Добавим новость
             HistoryGenerator historyGenerator = new HistoryGenerator(service);
             String historyId = historyGenerator.addBill(billId);
+
+            // Обновим дату в группе
+            updateDateInGroup(groupId, service);
 
             Cursor c = service.getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_BILL, Bills.BILL_ID + "=" + billId, null, null);
             c.moveToFirst();
@@ -119,9 +123,6 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     }
                     */
-
-                    // Обновим дату в группе
-                    updateDateInGroup(groupId, service);
 
                     // Обновляем статус новости
                     cv = new ContentValues();
@@ -226,7 +227,7 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + oldGroupId, null);
 
                         // Обновим дату в группе
-                        //updateDateInGroup(Integer.parseInt(newGroupId), service);
+                        updateDateInGroup(newGroupId, service);
 
                         cv = new ContentValues();
                         cv.put(GroupMembers.GROUP_ID, newGroupId);

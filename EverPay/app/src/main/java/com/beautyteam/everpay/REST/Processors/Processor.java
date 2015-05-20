@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Admin on 29.04.2015.
@@ -31,11 +33,27 @@ public abstract class Processor {
 
     public void updateDateInGroup(int groupId, Context context) {
         // Обновим дату в группе
-        Date cDate = new Date();
-        String fDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cDate);
         ContentValues cv = new ContentValues();
-        cv.put(Groups.UPDATE_TIME, fDate);
+        cv.put(Groups.UPDATE_TIME, getAndIncrementMaxDate(context));
         context.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+    }
+
+    /*
+    Выбираем максимальное время, увеличиваем на 1 секунду и возвращаем в виде текста
+     */
+    protected String getAndIncrementMaxDate(Context context) {
+
+            Cursor maxCursor = context.getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, new String [] {"MAX("+Groups.UPDATE_TIME+")"}, null, null, null);
+            maxCursor.moveToFirst();
+            String max = maxCursor.getString(0);
+
+            int length = max.length();
+            String lastChar = max.substring(length-2);
+            int lastDigit = Integer.parseInt(lastChar);
+            lastDigit++;
+
+            max = max.substring(0, length-2) + lastDigit;
+            return max;
     }
 
     protected int getUserId() {
