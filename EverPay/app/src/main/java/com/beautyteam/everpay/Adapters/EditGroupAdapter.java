@@ -120,10 +120,12 @@ public class EditGroupAdapter extends CursorAdapter {
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 dialogWindow = new DialogWindow(mainActivity,R.layout.dialog_delete_friend);
+                dialogWindow.show();
                 Window window = dialogWindow.getWindow();
                 window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                dialogWindow.show();
+
                 dialogWindow.setOnYesClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

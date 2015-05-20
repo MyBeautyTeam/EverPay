@@ -20,7 +20,7 @@
         android:id="@+id/dialog_txt_dia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Вы уверены, что хотите исключить участника из группы?"
+        android:text="Вы уверены, что хотите удалить участника из группы?"
         android:textSize="16dp"
         android:textColor="#b7000000"
         android:layout_marginBottom="16dp"
