@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -120,6 +121,8 @@ public class EditGroupAdapter extends CursorAdapter {
             @Override
             public void onClick(View view) {
                 dialogWindow = new DialogWindow(mainActivity,R.layout.dialog_delete_friend);
+                Window window = dialogWindow.getWindow();
+                window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dialogWindow.show();
                 dialogWindow.setOnYesClickListener(new View.OnClickListener() {
                     @Override

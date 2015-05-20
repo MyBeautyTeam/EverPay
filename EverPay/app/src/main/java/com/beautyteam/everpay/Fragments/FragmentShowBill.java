@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -242,6 +243,8 @@ public class FragmentShowBill extends Fragment implements
     private void showDialog() {
         dialogWindow = new DialogWindow(getActivity(),R.layout.dialog_delete_bill);
         dialogWindow.show();
+        Window window = dialogWindow.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setOnYesClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
