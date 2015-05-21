@@ -53,5 +53,6 @@
         android:drawableLeft="@drawable/ic_check_black_18dp"
         android:drawablePadding="8dp"
         android:text="@string/ready"
+        android:textSize="18dp"
         android:layout_weight="0"/>
 </LinearLayout>
