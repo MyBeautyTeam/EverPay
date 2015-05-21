@@ -190,10 +190,33 @@ public class FragmentAddBill extends Fragment implements
 
     public void setLeftSumma(int summa) {
         leftSumma.setText(summa + "");
+        updateTextColor();
     }
 
     public void setNeedSumma(int summa) {
         needSummaText.setText(summa + "");
+        updateTextColor();
+    }
+
+    private void updateTextColor() {
+        int needSummaValue = Integer.parseInt(needSummaText.getText().toString());
+        int leftSummaValue = 0;
+        String leftSummaString = leftSumma.getText().toString();
+
+        if (leftSummaString.contains("/"))
+            leftSummaValue = Integer.parseInt(leftSummaString.substring(0, leftSummaString.indexOf("/")));
+        else
+            leftSummaValue = Integer.parseInt(leftSumma.getText().toString());
+
+        if (needSummaValue == leftSummaValue)
+            leftSumma.setTextColor(getResources().getColor(R.color.secondary_text));
+        else {
+            leftSumma.setTextColor(getResources().getColor(R.color.red_text));
+            if (leftSummaValue - needSummaValue > 0)
+                leftSumma.setText(leftSummaValue + "/+" + (leftSummaValue-needSummaValue));
+            else
+                leftSumma.setText(leftSummaValue + "/" + (leftSummaValue-needSummaValue));
+        }
     }
 
 

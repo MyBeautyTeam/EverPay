@@ -332,12 +332,13 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().insert(EverContentProvider.CALCULATION_CONTENT_URI, cv);
                     }
 
-                    /*
-                    JSONObject history = responseJSON.getJSONObject("history");
-                    cv = readHistory(history);
-                    if (cv != null)
-                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
-                    */
+                    if (responseJSON.has("history")) {
+                        JSONObject history = responseJSON.getJSONObject("history");
+                        cv = readHistory(history);
+                        if (cv != null)
+                            service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    }
+
 
                     // Обновим дату в группе
                     updateDateInGroup(groupId, service);
