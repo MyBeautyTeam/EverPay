@@ -148,26 +148,29 @@ public class FragmentGroups extends Fragment implements
         int id = item.getItemId();
         switch (id) {
             case R.id.add_group_tlb:
-                FragmentAddGroup frag= FragmentAddGroup.getInstance();
-                //mainActivity.addFragment(frag);
-                mainActivity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_container, frag)
-                        .addToBackStack(null)
-                        .setCustomAnimations(R.anim.alpha_disappear, R.anim.alpha_appear)
-                        .commit();
+                openAddGroupFragment();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void openAddGroupFragment() {
+        FragmentAddGroup frag= FragmentAddGroup.getInstance();
+        //mainActivity.addFragment(frag);
+        mainActivity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, frag)
+                .addToBackStack(null)
+                .setCustomAnimations(R.anim.alpha_disappear, R.anim.alpha_appear)
+                .commit();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_group_button:
-                FragmentAddGroup frag = FragmentAddGroup.getInstance();
-                mainActivity.addFragment(frag);
+                openAddGroupFragment();
                 break;
         }
     }
