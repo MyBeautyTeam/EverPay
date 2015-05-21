@@ -14,12 +14,8 @@
         <!-- colorAccent is used as the default value for colorControlActivated
         which is used to tint widgets -->
         <item name="android:windowTranslucentStatus">true</item>
-
         <item name="colorAccent">@color/dark_primary</item>
-
         <item name="android:textColorSecondary">@color/secondary_text</item> <!-- Цвет инпутов-->
-
-
 
         <item name="android:colorBackground">@color/active_white</item>
         <item name="android:windowBackground">@color/active_white</item>
@@ -35,4 +31,5 @@
         <item name="colorSwitchThumbNormal">@color/dark_primary</item>
 
     </style>
+
 </resources> 

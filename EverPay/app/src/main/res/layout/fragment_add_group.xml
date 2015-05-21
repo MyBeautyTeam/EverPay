@@ -38,8 +38,10 @@
         android:layout_height="wrap_content"
         android:divider="@null"
         android:layout_gravity="center"
+        android:overScrollMode="never"
         android:listSelector="@android:color/transparent"
         />
+
     </LinearLayout>
     <Button
         android:id="@+id/save_btn_group"
