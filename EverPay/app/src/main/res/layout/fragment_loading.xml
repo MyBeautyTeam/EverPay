@@ -22,7 +22,6 @@
             android:layout_gravity="bottom"
             android:text="Загрузка..."
             android:textSize="24dp"
-            android:layout_margin="10dp"
             />
     </LinearLayout>
 
@@ -31,14 +30,14 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
         <TextView
-            android:visibility="gone"
+
             android:id="@+id/loading_attention"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:gravity="center"
             android:text="Загрузка идет медленно, но верно! \nНе сдавайтесь!"
-            android:textSize="24dp"
+            android:textSize="20dp"
             />
     </LinearLayout>
 
