@@ -2,7 +2,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:gravity="center"
     android:clickable="true"
     android:layout_height="match_parent">
     <!--<ImageView
@@ -10,14 +9,38 @@
         android:layout_height="wrap_content"
         android:src="@drawable/calculator"
         />-->
-    <TextView
-        android:id="@+id/loading_text"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Загрузка..."
-        android:textSize="24dp"
-        />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="bottom"
+            android:text="Загрузка..."
+            android:textSize="24dp"
+            android:layout_margin="10dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/loading_attention"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="Загрузка идет медленно, но верно! \nНе сдавайтесь!"
+            android:textSize="24dp"
+            />
+    </LinearLayout>
 
 
 
