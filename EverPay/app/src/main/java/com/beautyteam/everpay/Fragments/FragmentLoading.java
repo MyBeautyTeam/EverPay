@@ -44,14 +44,14 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
             public void run() {
                 attentionText.setVisibility(View.VISIBLE);
             }
-        }, 6000);
+        }, 8000);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 attentionText.setText("Медленно =(\nНо мы очень любим тебя и не хотим, чтобы ты уходил");
             }
-        }, 15000);
+        }, 16000);
     }
 
 
