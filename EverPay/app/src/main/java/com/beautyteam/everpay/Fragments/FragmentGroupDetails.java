@@ -140,7 +140,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         refreshLayout = (SwipeRefreshLayoutBottom) view.findViewById(R.id.group_detail_refresh);
         refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
         refreshLayout.setOnRefreshListener(this);
-
     }
 
     @Override

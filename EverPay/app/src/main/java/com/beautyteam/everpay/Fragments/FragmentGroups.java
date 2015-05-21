@@ -58,6 +58,8 @@ public class FragmentGroups extends Fragment implements
 
     public static boolean isFirstLaunch = true;
 
+    private TextView emptyText;
+
     public static FragmentGroups getInstance() {
         FragmentGroups fragmentGroups = new FragmentGroups();
         return fragmentGroups;
@@ -99,7 +101,7 @@ public class FragmentGroups extends Fragment implements
 
     private void setupEmptyList(View view) {
         ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
-        TextView emptyText = (TextView)stub.inflate();
+        emptyText = (TextView)stub.inflate();
         emptyText.setText("Список групп пуст \n Создайте свою первую группу");
         groupList.setEmptyView(emptyText);
     }
@@ -192,7 +194,19 @@ public class FragmentGroups extends Fragment implements
         String action = data.getString(ACTION);
         if (action.equals(GET_GROUPS)) {
             if (result == Constants.Result.OK) {
+                // Для корректного отображения сообщения об ошибке
+                // Работает только для случая, когда список пуст
+                emptyText.setText("Список групп пуст \n Создайте свою первую группу");
+                emptyText.setOnClickListener(null);
             } else {
+                emptyText.setText("Произошла ошибка \n Нажмите, чтобы обновить");
+                emptyText.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onRefresh();
+                        loadingLayout.setVisibility(View.VISIBLE);
+                    }
+                });
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
             loadingLayout.setVisibility(View.GONE);
