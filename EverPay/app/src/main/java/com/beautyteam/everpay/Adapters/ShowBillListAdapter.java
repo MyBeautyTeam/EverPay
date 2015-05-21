@@ -109,7 +109,13 @@ public class ShowBillListAdapter extends CursorAdapter {
 
         String userId = cursor.getString(cursor.getColumnIndex(Bills.USER_ID_VK));
         String img = mapIdToAvatar.get(userId);
-        Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
+        Picasso.with(context)
+                .load(img)
+                .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                .error(context.getResources().getDrawable(R.drawable.default_image))
+                .resize(100,100)
+                .centerInside()
+                .into(holder.avatar);
 
 
     }

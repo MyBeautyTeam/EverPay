@@ -227,7 +227,13 @@ public class CalcListAdapter extends CursorAdapter {
                     viewHolder.firstLayout.setVisibility(View.VISIBLE);
 
                     String firstAvatarUrl = mapIdToAvatar.get(whoUserId);
-                    Picasso.with(context).load(firstAvatarUrl).resize(100, 100).centerInside().into(viewHolder.firstAvatar);
+                    Picasso.with(context)
+                            .load(firstAvatarUrl)
+                            .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                            .error(context.getResources().getDrawable(R.drawable.default_image))
+                            .resize(100, 100)
+                            .centerInside()
+                            .into(viewHolder.firstAvatar);
 
                     break;
                 // Кликаем на первый layout
@@ -244,7 +250,13 @@ public class CalcListAdapter extends CursorAdapter {
                     view.setVisibility(View.GONE);
                     viewHolder.secondLayout.setVisibility(View.VISIBLE);
                     String secondAvatarUrl = mapIdToAvatar.get(whomUserId);
-                    Picasso.with(context).load(secondAvatarUrl).resize(100, 100).centerInside().into(viewHolder.secondAvatar);
+                    Picasso.with(context)
+                            .load(secondAvatarUrl)
+                            .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                            .error(context.getResources().getDrawable(R.drawable.default_image))
+                            .resize(100, 100)
+                            .centerInside()
+                            .into(viewHolder.secondAvatar);
                     break;
                 // Кликаем на второй layout
                 case R.id.item_calc_second_layout:

@@ -117,7 +117,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             holder.imageView.setImageResource(mIcons[position -1]);// Settimg the image with array of our icons
         }
         else{
-            Picasso.with(context).load(avatar).resize(100, 100).centerInside().into(holder.profile);
+            Picasso.with(context)
+                    .load(avatar)
+                    .error(context.getResources().getDrawable(R.drawable.default_image))
+                    .resize(100, 100)
+                    .centerInside()
+                    .into(holder.profile);
             //holder.profile.setImageResource(avatar);           // Similarly we set the resources for header view
             holder.Name.setText(name);
             holder.email.setText(email);

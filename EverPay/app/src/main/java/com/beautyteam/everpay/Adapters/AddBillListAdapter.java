@@ -246,7 +246,13 @@ public class AddBillListAdapter extends BaseAdapter {
                 ".png"; // !!!!!!!!!
         File file = new File(filePath);*/
         String avatarUrl = mapIdToAvatar.get(billAvailableArrayList.get(position).vkid);
-        Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(viewHolder.avatar);
+        Picasso.with(context)
+                .load(avatarUrl)
+                .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                .error(context.getResources().getDrawable(R.drawable.default_image))
+                .resize(100, 100)
+                .centerInside()
+                .into(viewHolder.avatar);
 
         return convertView;
     }

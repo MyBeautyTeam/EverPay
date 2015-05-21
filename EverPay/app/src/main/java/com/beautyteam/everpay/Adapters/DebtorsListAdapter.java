@@ -106,14 +106,26 @@ public class DebtorsListAdapter extends CursorAdapter {
 
         if (userName == null) {
             holder.discript.setText(group);
-            Picasso.with(context).load(R.drawable.group_icon).resize(200, 200).centerInside().into(holder.avatar);
+            Picasso.with(context)
+                    .load(R.drawable.group_icon)
+                    .placeholder(context.getResources().getDrawable(R.drawable.group_icon))
+                    .error(context.getResources().getDrawable(R.drawable.group_icon))
+                    .resize(200, 200)
+                    .centerInside()
+                    .into(holder.avatar);
         }
         else {
             holder.discript.setText(userName + ", " + group);
             String id = cursor.getString(cursor.getColumnIndex(Debts.USER_VK_ID));
             String img = mapIdToAvatar.get(id);
 
-            Picasso.with(context).load(img).resize(100,100).centerInside().into(holder.avatar);
+            Picasso.with(context)
+                    .load(img)
+                    .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                    .error(context.getResources().getDrawable(R.drawable.default_image))
+                    .resize(100,100)
+                    .centerInside()
+                    .into(holder.avatar);
 
         }
     }

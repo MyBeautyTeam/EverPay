@@ -83,7 +83,13 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
         });
 
         String avatarUrl = cursor.getString(cursor.getColumnIndex(Users.IMG));
-        Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(holder.avatar);
+        Picasso.with(context)
+                .load(avatarUrl)
+                .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                .error(context.getResources().getDrawable(R.drawable.default_image))
+                .resize(100, 100)
+                .centerInside()
+                .into(holder.avatar);
         name = "";
     }
 

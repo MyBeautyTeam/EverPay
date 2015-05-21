@@ -71,7 +71,13 @@ public class AddGroupAdapter extends BaseAdapter {
         if(creator.getId() == user.getId())
             viewHolder.remove.setVisibility(View.GONE);
         String avatarUrl = user.getPhoto();
-        Picasso.with(context).load(avatarUrl).resize(100, 100).centerInside().into(viewHolder.avatar);
+        Picasso.with(context)
+                .load(avatarUrl)
+                .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                .error(context.getResources().getDrawable(R.drawable.default_image))
+                .resize(100, 100)
+                .centerInside()
+                .into(viewHolder.avatar);
 
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
