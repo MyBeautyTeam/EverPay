@@ -69,6 +69,7 @@ public abstract class Processor {
         try {
             // ===================
             ContentValues cv = new ContentValues();
+            cv.put(History.NEWS_ID, history.getString("news_id"));
             try {
                 cv.put(History.USERS_ID_WHO_SAY, history.getString("users_id_who_say"));
             } catch (JSONException e) {

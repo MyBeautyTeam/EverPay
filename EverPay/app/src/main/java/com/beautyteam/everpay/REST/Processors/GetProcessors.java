@@ -3,7 +3,7 @@ package com.beautyteam.everpay.REST.Processors;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
@@ -29,8 +29,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -39,8 +37,6 @@ import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
 import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
-
-import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
  * Created by Admin on 29.04.2015.
@@ -240,15 +236,23 @@ public class GetProcessors extends Processor {
         } else
         if (GET_HISTORY.equals(action)) {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
-            int count = intent.getIntExtra(Constants.IntentParams.HISTORY_COUNT, 0);
+            boolean isLoadAlso = intent.getBooleanExtra(Constants.IntentParams.IsMoreLoad, false);
 
             params.add(new BasicNameValuePair("groups_id", groupId + ""));
-            if (count != 0)
-                params.add(new BasicNameValuePair("number", count + ""));
-
+            if (isLoadAlso) {
+                // Забираем минимальное значение id истории
+                Cursor minCursor = service.getContentResolver().query(EverContentProvider.HISTORY_CONTENT_URI, new String [] {"MIN("+History.NEWS_ID+")"},
+                        History.GROUP_ID + "=" + groupId + " AND " +
+                        History.STATE + "!=" + Constants.State.IN_PROCESS + " AND " +
+                        History.RESULT + "!=" + Constants.Result.ERROR,
+                                null, null);
+                minCursor.moveToFirst();
+                int minNewsId = minCursor.getInt(0);
+                params.add(new BasicNameValuePair("news_id", minNewsId+""));
+            }
             String response = get(Constants.URL.GET_HISTORY, params);
             if ((response != null) && (response.contains("200"))) {
-                if (count < 21)
+                if (!isLoadAlso) // Если запрос на обновление - удаляем все предыдущие записи
                     service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId +
                             " AND " + History.RESULT + "!=" + Constants.Result.ERROR +
                             " AND " + History.STATE + "!=" + Constants.State.IN_PROCESS + "", null);

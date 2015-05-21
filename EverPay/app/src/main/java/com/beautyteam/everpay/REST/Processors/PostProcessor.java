@@ -123,9 +123,20 @@ public class PostProcessor extends Processor {
                         service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
                     }
                     */
+                    /*
+                    Сейчас будет проблема в опредеенном случае будет приходить две копии счетов в истории.
+                    Очень редко, но такое может быть, потому что сейчас newsId у счетов пустой.
+                    Чтобы этого избежать, нужно получать в ответ ID новости, а сами новости генерить на клиенте.
+                    Сейчас я введу костыль, чтобы это не ломалось, но это НУЖНО поменять.
+                     */
+                    cv = new ContentValues();
+                    // НАЧАЛО КОСТЫЛЯ ====
+                    JSONObject history = responseJSON.getJSONObject("history");
+                    history.getInt("news_id");
+                    cv.put(History.NEWS_ID, history.getInt("news_id"));
+                    // КОНЕЦ КОСТЫЛЯ =====
 
                     // Обновляем статус новости
-                    cv = new ContentValues();
                     cv.put(History.BILL_ID, newBillId);
                     cv.put(History.STATE, Constants.State.ENDS);
                     cv.put(History.RESULT, Constants.Result.OK);

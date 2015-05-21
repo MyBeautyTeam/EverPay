@@ -7,6 +7,7 @@ public class History {
     static final String HISTORY_TABLE = "history";
 
     static public final String ITEM_ID = "_id";
+    static public final String NEWS_ID = "id_news";
     static public final String USERS_ID_WHO_SAY = "id_who_say";
     static public final String USERS_ID_WHO = "id_who";
     static public final String USERS_ID_WHOM = "id_whom";
@@ -26,6 +27,7 @@ public class History {
 
     static public final String CREATE_TABLE = "create table " + HISTORY_TABLE + "("
             + ITEM_ID + " integer primary key autoincrement, "
+            + NEWS_ID + " integer, "
             + USERS_ID_WHO_SAY + " integer, "
             + USERS_ID_WHO + " integer, "
             + USERS_ID_WHOM + " integer, "

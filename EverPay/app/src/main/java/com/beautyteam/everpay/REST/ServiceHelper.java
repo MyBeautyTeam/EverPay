@@ -239,12 +239,14 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     /*
     Запросить историю группы
+    isMoreLoad - true, значит случилось нажатие кнопки "загрузит еще"
+    isMoreLoad - false, значит зпрос первых 20 записей
      */
-    public void getHistory(int groupId, int count) {
+    public void getHistory(int groupId, boolean isMoreLoad) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_HISTORY);
         intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
-        intentService.putExtra(Constants.IntentParams.HISTORY_COUNT, count);
+        intentService.putExtra(Constants.IntentParams.IsMoreLoad, isMoreLoad);
 
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);

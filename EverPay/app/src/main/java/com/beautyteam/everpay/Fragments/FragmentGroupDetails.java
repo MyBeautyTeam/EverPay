@@ -120,7 +120,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
             calcBtn.setVisibility(View.GONE);
             loadingLayout.setVisibility(View.VISIBLE);
             serviceHelper.onResume();
-            serviceHelper.getHistory(groupId, 0);
+            serviceHelper.getHistory(groupId, false);
             serviceHelper.getGroupMembers(groupId);
         } else {
             loadingLayout.setVisibility(View.GONE);
@@ -154,8 +154,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.load_history_btn:
-                countOfLoadedItem += 20;
-                serviceHelper.getHistory(groupId, countOfLoadedItem);
+                serviceHelper.getHistory(groupId, true);
 
         }
     }
@@ -271,7 +270,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     @Override
     public void onRefresh() {
-        serviceHelper.getHistory(groupId, 0);
+        serviceHelper.getHistory(groupId, false);
         serviceHelper.getGroupMembers(groupId);
     }
 
