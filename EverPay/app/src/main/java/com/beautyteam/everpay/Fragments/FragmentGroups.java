@@ -88,6 +88,7 @@ public class FragmentGroups extends Fragment implements
         refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
         refreshLayout.setOnRefreshListener(this);
 
+
         if (isFirstLaunch) {
             serviceHelper.onResume();
             serviceHelper.getGroups();
@@ -167,6 +168,7 @@ public class FragmentGroups extends Fragment implements
             case R.id.add_group_button:
                 FragmentAddGroup frag = FragmentAddGroup.getInstance();
                 mainActivity.addFragment(frag);
+                break;
         }
     }
 
@@ -194,11 +196,15 @@ public class FragmentGroups extends Fragment implements
         String action = data.getString(ACTION);
         if (action.equals(GET_GROUPS)) {
             if (result == Constants.Result.OK) {
-                // Для корректного отображения сообщения об ошибке
-                // Работает только для случая, когда список пуст
+
+
+                /* Для корректного отображения сообщения об ошибке
+                 Работает только для случая, когда список пуст*/
                 emptyText.setText("Список групп пуст \n Создайте свою первую группу");
                 emptyText.setOnClickListener(null);
             } else {
+                Toast.makeText(getActivity(), "Ошибка загрузки данных. Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
+
                 emptyText.setText("Произошла ошибка \n Нажмите, чтобы обновить");
                 emptyText.setOnClickListener(new OnClickListener() {
                     @Override
@@ -207,7 +213,6 @@ public class FragmentGroups extends Fragment implements
                         loadingLayout.setVisibility(View.VISIBLE);
                     }
                 });
-                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
             loadingLayout.setVisibility(View.GONE);
             refreshLayout.setRefreshing(false);

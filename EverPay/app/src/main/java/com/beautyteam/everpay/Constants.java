@@ -100,7 +100,7 @@ public class Constants {
         public final static String GROUP_ID = "GROUP_ID";
         public final static String BILL_ID = "BILL_ID";
         public final static String USER_ID = "USER_ID";
-        public final static String IsMoreLoad = "IsMoreLoad";
+        public final static String IS_MORE_LOAD = "IS_MORE_LOAD";
         public final static String IS_ENDS = "IS_ENDS";
         public final static String MALE = "MALE";
         public final static String GROUP_TITLE = "GROUP_TITLE";

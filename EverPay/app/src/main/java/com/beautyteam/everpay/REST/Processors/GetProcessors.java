@@ -236,7 +236,7 @@ public class GetProcessors extends Processor {
         } else
         if (GET_HISTORY.equals(action)) {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
-            boolean isLoadAlso = intent.getBooleanExtra(Constants.IntentParams.IsMoreLoad, false);
+            boolean isLoadAlso = intent.getBooleanExtra(Constants.IntentParams.IS_MORE_LOAD, false);
 
             params.add(new BasicNameValuePair("groups_id", groupId + ""));
             if (isLoadAlso) {

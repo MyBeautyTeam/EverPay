@@ -3,7 +3,6 @@ package com.beautyteam.everpay.Fragments;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
@@ -32,9 +30,7 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Views.SwipeRefreshLayoutBottom;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
@@ -74,6 +70,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     private SwipeRefreshLayoutBottom refreshLayout;
     public static HashSet<Integer> downloadedGroupSet;
+    private int previousCount = 0;
 
 
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
@@ -154,10 +151,13 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.load_history_btn:
+                previousCount = historyList.getCount();
                 serviceHelper.getHistory(groupId, true);
+                break;
 
         }
     }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -234,6 +234,9 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                  */
                 mAdapter = new GroupDetailsAdapter(getActivity(), cursor, 0, mainActivity, this);
                 historyList.setAdapter(mAdapter);
+
+                int error = historyList.getHeaderViewsCount() + 2; // "Погрещность" на header и footer
+                historyList.setSelection(cursor.getCount() - previousCount + error); // скролим до предыдущей записи, с учетом "еще"
                 break;
         }
     }
@@ -248,22 +251,37 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
         if (action.equals(GET_HISTORY)) {
 
-            if (data.getBoolean(Constants.IntentParams.IS_ENDS)) {
-                if (historyList.getHeaderViewsCount() > 0)
-                    historyList.removeHeaderView(loadHistoryLayout);
-            } else {
-                if (historyList.getHeaderViewsCount() < 1)
-                    historyList.addHeaderView(loadHistoryLayout);
-            }
-
             loadingLayout.setVisibility(View.GONE);
             calcBtn.setVisibility(View.VISIBLE);
             if (result == Constants.Result.OK) {
-                downloadedGroupSet.add(groupId);
+                downloadedGroupSet.add(groupId); // Ставим "флаг", что группа загружена
+                setHeaderVisible(!data.getBoolean(Constants.IntentParams.IS_ENDS)); // Если догузили до конца - убираем header
+
+                if (data.getBoolean(Constants.IntentParams.IS_MORE_LOAD)) {
+                    //historyList.setSelection(previousCount);
+                    //historyList.smoothScrollToPositionFromTop(20, previousCount/2, 0);
+                }
+
+
+
+
             } else {
+                setHeaderVisible(false);
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+
             }
             refreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void setHeaderVisible(boolean isVisible) {
+        if (isVisible) {
+            if (historyList.getHeaderViewsCount() < 1)
+                historyList.addHeaderView(loadHistoryLayout);
+        }
+        else {
+            if (historyList.getHeaderViewsCount() > 0)
+                historyList.removeHeaderView(loadHistoryLayout);
         }
     }
 
@@ -277,6 +295,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public void updateTitle() {
         ((MainActivity)getActivity()).setTitle(groupTitle);
+        previousCount = 0;
     }
 
     @Override

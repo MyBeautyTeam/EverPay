@@ -246,7 +246,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.GET_HISTORY);
         intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
-        intentService.putExtra(Constants.IntentParams.IsMoreLoad, isMoreLoad);
+        intentService.putExtra(Constants.IntentParams.IS_MORE_LOAD, isMoreLoad);
 
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
