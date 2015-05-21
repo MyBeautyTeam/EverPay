@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
+import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -34,7 +35,9 @@ import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
  * Created by Admin on 10.03.2015.
  */
 public class FragmentIDebt extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, RequestCallback, TitleUpdater {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        PageAdapter.OnDebtsLoadedListener,
+        TitleUpdater {
 
     private ListView debtorsList;
 
@@ -43,7 +46,6 @@ public class FragmentIDebt extends Fragment implements
     private DebtorsListAdapter mAdapter;
     private int loader;
     private LinearLayout loadingLayout;
-    private ServiceHelper serviceHelper;
 
     public static final String LOADER = "LOADER";
 
@@ -60,7 +62,6 @@ public class FragmentIDebt extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        serviceHelper = new ServiceHelper(getActivity(), this);
         loader = getArguments().getInt(LOADER);
         return inflater.inflate(R.layout.fragment_i_debts, null);
     }
@@ -72,8 +73,8 @@ public class FragmentIDebt extends Fragment implements
 
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
 
-        if (loader == LOADER_ID_I_DEBT)
-            ((MainActivity)getActivity()).getServiceHelper().getDebts();
+        /*if (loader == LOADER_ID_I_DEBT)
+            ((MainActivity)getActivity()).getServiceHelper().getDebts();*/
 
         setupEmptyList(view);
     }
@@ -86,27 +87,11 @@ public class FragmentIDebt extends Fragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        serviceHelper.onResume();
-        serviceHelper.getDebts();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        serviceHelper.onPause();
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.empty, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-
 
         private static final String[] PROJECTION = new String[] {
         Debts.ITEM_ID,
@@ -119,10 +104,13 @@ public class FragmentIDebt extends Fragment implements
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == LOADER_ID_I_DEBT) {
-            return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=1", null, Debts.SUMMA + " desc");
-        } else {
-            return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=0", null, Debts.SUMMA +" desc");
+        switch (id) {
+            case LOADER_ID_I_DEBT:
+                return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=1", null, Debts.SUMMA + " desc");
+            case LOADER_ID_DEBT_FOR_ME:
+                return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=0", null, Debts.SUMMA +" desc");
+            default:
+                return null;
         }
     }
 
@@ -161,21 +149,13 @@ public class FragmentIDebt extends Fragment implements
         mAdapter.swapCursor(null);
     }
 
-
-    @Override
-    public void onRequestEnd(int result, Bundle data) {
-        String action = data.getString(ACTION);
-        if (action.equals(GET_DEBTS)) {
-            getLoaderManager().initLoader(loader, null, this);
-            if (result == Constants.Result.OK) {
-            } else {
-                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     @Override
     public void updateTitle() {
         ((MainActivity) getActivity()).setTitle(Constants.Titles.MAIN);
+    }
+
+    @Override
+    public void onDebtsLoaded() {
+        getLoaderManager().initLoader(loader, null, this);
     }
 }

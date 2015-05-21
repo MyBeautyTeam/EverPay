@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Constants;
@@ -23,20 +24,24 @@ import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Views.SlidingTabLayout;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 
 /**
  * Created by Admin on 15.03.2015.
  */
 public class FragmentViewPager extends Fragment implements
+        RequestCallback,
         TitleUpdater {
 
     private MainActivity mainActivity;
     public static SlidingTabLayout slidingTabLayout;
-
-    private static final int LOADER_ID_I_DEBT = 1;
-    private static final int LOADER_ID_DEBT_FOR_ME = 0;
-
+    private ServiceHelper serviceHelper;
+    private PageAdapter pageAdapter;
 
     public static FragmentViewPager getInstance() {
         FragmentViewPager fragmentViewPager = new FragmentViewPager();
@@ -46,7 +51,7 @@ public class FragmentViewPager extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
+        serviceHelper = new ServiceHelper(getActivity(), this);
         return inflater.inflate(R.layout.fragment_view_pager, null);
     }
 
@@ -55,7 +60,7 @@ public class FragmentViewPager extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-        PageAdapter pageAdapter = new PageAdapter(getChildFragmentManager());
+        pageAdapter = new PageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);
 
         slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
@@ -74,11 +79,23 @@ public class FragmentViewPager extends Fragment implements
 
     @Override
     public void onResume() {
-        updateTitle();
         super.onResume();
+        updateTitle();
+        serviceHelper.onResume();
+        serviceHelper.getDebts();
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        updateTitle();
+        serviceHelper.onPause();
+
+    }
+
+
+
+        @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(Constants.LOG, "DESTROY");
@@ -105,5 +122,17 @@ public class FragmentViewPager extends Fragment implements
     @Override
     public void updateTitle() {
         ((MainActivity) getActivity()).setTitle(Constants.Titles.MAIN);
+    }
+
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        pageAdapter.notifyLoaded();
+        if (action.equals(GET_DEBTS)) {
+            if (result == Constants.Result.OK) {
+            } else {
+                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
