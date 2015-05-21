@@ -41,7 +41,7 @@ public class FragmentIDebt extends Fragment implements
     public static final int LOADER_ID_I_DEBT = 1;
     public static final int LOADER_ID_DEBT_FOR_ME = 0;
     private DebtorsListAdapter mAdapter;
-    int loader;
+    private int loader;
     private LinearLayout loadingLayout;
     private ServiceHelper serviceHelper;
 
@@ -90,6 +90,7 @@ public class FragmentIDebt extends Fragment implements
         super.onResume();
         serviceHelper.onResume();
         serviceHelper.getDebts();
+
     }
 
     @Override
@@ -140,6 +141,11 @@ public class FragmentIDebt extends Fragment implements
         mAdapter = new DebtorsListAdapter(getActivity(), c, 0);
         debtorsList.setAdapter(mAdapter);
 
+        if (loader.getId() == LOADER_ID_I_DEBT) {
+            FragmentViewPager.slidingTabLayout.setIDebt(summa);
+        } else {
+            FragmentViewPager.slidingTabLayout.setDebtForMe(summa);
+        }
         /*
         Uri uri = Uri.withAppendedPath(EverContentProvider.DEBTS_CONTENT_URI, "summa");
         uri = Uri.withAppendedPath(uri, loader.getId() + "");

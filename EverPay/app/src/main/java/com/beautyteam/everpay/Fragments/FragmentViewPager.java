@@ -29,13 +29,14 @@ import com.beautyteam.everpay.Views.SlidingTabLayout;
  * Created by Admin on 15.03.2015.
  */
 public class FragmentViewPager extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, TitleUpdater {
+        TitleUpdater {
 
     private MainActivity mainActivity;
-    private SlidingTabLayout slidingTabLayout;
+    public static SlidingTabLayout slidingTabLayout;
 
     private static final int LOADER_ID_I_DEBT = 1;
     private static final int LOADER_ID_DEBT_FOR_ME = 0;
+
 
     public static FragmentViewPager getInstance() {
         FragmentViewPager fragmentViewPager = new FragmentViewPager();
@@ -46,8 +47,6 @@ public class FragmentViewPager extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        getLoaderManager().initLoader(LOADER_ID_I_DEBT, null, this);
-        getLoaderManager().initLoader(LOADER_ID_DEBT_FOR_ME, null, this);
         return inflater.inflate(R.layout.fragment_view_pager, null);
     }
 
@@ -101,42 +100,6 @@ public class FragmentViewPager extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
-    }
-
-    private static final String[] PROJECTION = new String[] {
-            Debts.ITEM_ID,
-            Debts.SUMMA,
-            Debts.USER_VK_ID,
-            Debts.USER_NAME,
-            Debts.GROUP_TITLE,
-            Debts.IS_I_DEBT
-    };
-
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == LOADER_ID_I_DEBT) {
-            return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=1", null, Debts.SUMMA + " desc");
-        } else {
-            return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=0", null, Debts.SUMMA +" desc");
-        }
-    }
-
-    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-        int summa = 0;
-        if (c.moveToFirst() && c.getCount() != 0) {
-            while (!c.isAfterLast()) {
-                summa += c.getInt(c.getColumnIndex(Debts.SUMMA));
-                c.moveToNext();
-            }
-        }
-
-        if (loader.getId() == LOADER_ID_I_DEBT) {
-            slidingTabLayout.setIDebt(summa);
-        } else {
-            slidingTabLayout.setDebtForMe(summa);
-        }
-    }
-
-    public void onLoaderReset(Loader<Cursor> loader) {
     }
 
     @Override

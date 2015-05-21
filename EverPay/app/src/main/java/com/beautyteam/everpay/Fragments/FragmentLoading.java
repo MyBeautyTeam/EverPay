@@ -3,15 +3,17 @@ package com.beautyteam.everpay.Fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
 /**
@@ -20,8 +22,13 @@ import com.beautyteam.everpay.R;
 public class FragmentLoading extends Fragment implements TitleUpdater {
 
     private TextView loadingText;
-    private TextView attentionText;
+    private TextSwitcher attentionTextSwitcher;
     private Animation loopAppear;
+    private String firstAttemp = "Загрузка идет медленно, но верно! \nНе сдавайтесь!";
+    private String secondAttemp = "Медленно =(\nНо мы очень любим тебя и не хотим, чтобы ты уходил";
+
+    private Animation in;
+    private Animation out;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,8 +38,25 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         loadingText = (TextView) view.findViewById(R.id.loading_text);
-        attentionText = (TextView) view.findViewById(R.id.loading_attention);
+        attentionTextSwitcher = (TextSwitcher) view.findViewById(R.id.loading_attention);
+        attentionTextSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+
+            public View makeView() {
+                TextView myText = new TextView(getActivity());
+                myText.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+                myText.setTextSize(20);
+                myText.setTextColor(getResources().getColor(R.color.secondary_text));
+                return myText;
+            }
+
+         });
+
+        attentionTextSwitcher.setInAnimation(in);
+        attentionTextSwitcher.setOutAnimation(out);
+
         loopAppear = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_animation);
+        in = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_appear);
+        out = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_disappear);
     }
 
     @Override
@@ -42,16 +66,16 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                attentionText.setVisibility(View.VISIBLE);
+                attentionTextSwitcher.setText(firstAttemp);
             }
-        }, 8000);
+        }, 15000);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                attentionText.setText("Медленно =(\nНо мы очень любим тебя и не хотим, чтобы ты уходил");
+                attentionTextSwitcher.setText(secondAttemp);
             }
-        }, 16000);
+        }, 30000);
     }
 
 
