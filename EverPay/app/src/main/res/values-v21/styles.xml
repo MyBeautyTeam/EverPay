@@ -19,7 +19,7 @@
 
         <item name="android:colorBackground">@color/active_white</item>
         <item name="android:windowBackground">@color/active_white</item>
-
+        <item name="android:progressBarStyle">@style/ProgressBar</item>
     </style>
 
     <style name="SwitchCompat" parent="Theme.AppCompat.Light.NoActionBar">
@@ -29,7 +29,10 @@
         <item name="colorControlHighlight">@color/primary</item>
 
         <item name="colorSwitchThumbNormal">@color/dark_primary</item>
+    </style>
 
+    <style name="ProgressBar" parent="android:Widget.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progress_bar</item>
     </style>
 
 </resources> 
