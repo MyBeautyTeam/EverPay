@@ -14,8 +14,20 @@ import java.util.Random;
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "EverPayDatabase";
     public static final int DB_VERSION = 1;
+    private static DBHelper sInstance;
 
-    public DBHelper(Context context) {
+    public static DBHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (sInstance == null) {
+            sInstance = new DBHelper(context);
+        }
+        return sInstance;
+    }
+
+    private DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
