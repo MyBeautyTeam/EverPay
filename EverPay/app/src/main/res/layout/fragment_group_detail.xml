@@ -54,6 +54,7 @@
             android:background="@drawable/on_btn_pressed_selector"
             android:drawableLeft="@drawable/calculator"
             android:drawablePadding="8dp"
+            android:textSize="18dp"
             android:layout_weight="0"
             />
 

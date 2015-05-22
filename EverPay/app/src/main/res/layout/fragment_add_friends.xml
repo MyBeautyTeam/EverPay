@@ -26,6 +26,7 @@
         android:background="@drawable/on_btn_pressed_selector"
         android:drawableLeft="@drawable/ic_check_black_18dp"
         android:drawablePadding="8dp"
+        android:textSize="18dp"
         android:text="@string/ready"
         android:layout_weight="0"/>
 </LinearLayout>
