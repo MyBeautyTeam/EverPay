@@ -252,12 +252,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void addFragment(Fragment fragment) {
-
-        FragmentTransaction fTran = fragmentManager.beginTransaction();
-        fTran.setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left);
-        fTran.add(R.id.main_container, fragment);
-        fTran.addToBackStack(null);
-        fTran.commit();
+        getSupportFragmentManager().beginTransaction()
+            .setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left)
+            .replace(R.id.main_container, fragment)
+            .addToBackStack(null)
+            .commit();
     }
 
     public void setTitle(String title) {
@@ -265,20 +264,20 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void replaceAllFragment(Fragment fragment) {
-
         for(int i = 0; i <= fragmentManager.getBackStackEntryCount(); ++i) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         FragmentTransaction fTran = fragmentManager.beginTransaction();
         fTran.replace(R.id.main_container, fragment);
         fTran.commit();
+        //correctTitle();
     }
 
     public void removeFragment() {
-        correctTitle();
         FragmentTransaction fTran = fragmentManager.beginTransaction();
         fragmentManager.popBackStackImmediate();
         fTran.commit();
+        correctTitle();
     }
 
     public void addCoveredFragment(Fragment fragment) {
@@ -383,10 +382,11 @@ public class MainActivity extends ActionBarActivity
     private void correctTitle() throws ClassCastException{
         List<Fragment> list = fragmentManager.getFragments();
         int count = fragmentManager.getBackStackEntryCount();
-        Fragment prevFragment = null;
+        Fragment prevFragment;
         if (count - 1 >= 0) {
             prevFragment = list.get(count - 1);
-            ((TitleUpdater) prevFragment).updateTitle();
+            if (prevFragment != null)
+                ((TitleUpdater) prevFragment).updateTitle();
         }
     }
 

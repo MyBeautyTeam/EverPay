@@ -65,11 +65,16 @@ public class FragmentAddFriendToBill extends Fragment implements TitleUpdater{
         mAdapter = new AddFriendsToBillAdapter(getActivity(), billArrayList);
         friendsList.setAdapter(mAdapter);
 
+        final Fragment self = this;
         friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mAdapter.billDeletedArrayList.get(i).isRemoved = false;
                 ((MainActivity)getActivity()).removeFragment();
+                /*getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .hide(self)
+                        .commit();*/
             }
         });
     }

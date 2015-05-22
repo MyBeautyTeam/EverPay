@@ -182,7 +182,12 @@ public class FragmentAddBill extends Fragment implements
         footerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).addCoveredFragment(FragmentAddFriendToBill.getInstance(billArrayList));
+                //((MainActivity)getActivity()).addCoveredFragment(FragmentAddFriendToBill.getInstance(billArrayList));
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_container, FragmentAddFriendToBill.getInstance(billArrayList))
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -382,9 +387,13 @@ public class FragmentAddBill extends Fragment implements
                     }
                     else {
                         ((MainActivity)getActivity()).getServiceHelper().editBill(billID);
-                        Toast.makeText(getActivity(), "Счет был изменен", Toast.LENGTH_SHORT).show();
                     }
-                    ((MainActivity)getActivity()).removeFragment();
+                    /*getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .remove(this)
+                            .commit();*/
+                    ((MainActivity)getActivity()).onBackPressed();
+                    //((MainActivity)getActivity()).removeFragment();
 
                 }
                 break;
@@ -556,6 +565,7 @@ public class FragmentAddBill extends Fragment implements
     public void updateTitle() {
         try {
             ((MainActivity) getActivity()).setTitle(title);
+            mAdapter.notifyDataSetChanged();
         } catch (Exception e) {};
     }
 
