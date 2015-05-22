@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/on_btn_pressed_selector"
                 android:textColor="@color/primary"
+                android:padding="3dp"
                 android:text="Удалить"
                 />
             <Button
@@ -48,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/on_btn_pressed_selector"
                 android:textColor="@color/primary"
+                android:padding="3dp"
                 android:text="Отмена"
                 />
         </LinearLayout>
