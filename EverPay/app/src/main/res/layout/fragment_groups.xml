@@ -50,7 +50,7 @@
         android:background="@drawable/on_btn_pressed_selector"
         android:drawableLeft="@drawable/ic_group_add_black_18dp"
         android:drawablePadding="8dp"
-        android:textSize="18dp"
+        android:textSize="14dp"
         android:layout_weight="0"/>
 
 

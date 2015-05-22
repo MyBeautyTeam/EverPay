@@ -14,7 +14,7 @@
         android:textColor="@color/dark_primary"
         android:background="@drawable/on_btn_pressed_selector"
         android:drawablePadding="8dp"
-        android:textSize="18dp"
+        android:textSize="14dp"
         android:layout_weight="0"
         android:layout_marginBottom="5dp"
         />

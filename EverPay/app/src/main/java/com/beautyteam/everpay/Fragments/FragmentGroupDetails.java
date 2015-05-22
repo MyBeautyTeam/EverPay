@@ -235,7 +235,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                 mAdapter = new GroupDetailsAdapter(getActivity(), cursor, 0, mainActivity, this);
                 historyList.setAdapter(mAdapter);
 
-                int error = historyList.getHeaderViewsCount() + 2; // "Погрещность" на header и footer
+                int error = historyList.getHeaderViewsCount() + 1; // "Погрещность" на header и footer
                 historyList.setSelection(cursor.getCount() - previousCount + error); // скролим до предыдущей записи, с учетом "еще"
                 break;
         }
