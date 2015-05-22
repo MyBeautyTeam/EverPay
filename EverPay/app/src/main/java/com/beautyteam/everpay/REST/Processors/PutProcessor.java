@@ -153,14 +153,8 @@ public class PutProcessor extends Processor{
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
 
-
-                    //service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
-                    Iterator<String> historyKeys = history.keys();
-                    while (historyKeys.hasNext()) {
-                        JSONObject historyItem = history.getJSONObject(historyKeys.next());
-                        ContentValues cv = readHistory(historyItem);
-                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
-                    }
+                    ContentValues cv = readHistory(history);
+                    service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
 
                     // Обновим дату в группе
                     updateDateInGroup(groupId, service);
