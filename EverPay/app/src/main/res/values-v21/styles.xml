@@ -35,4 +35,8 @@
         <item name="android:indeterminateDrawable">@drawable/progress_bar</item>
     </style>
 
+    <style name="ListViewOverscroll">
+        <item name="android:overScrollMode">ifContentScrolls</item>
+    </style>
+
 </resources> 

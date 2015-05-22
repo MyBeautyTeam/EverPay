@@ -195,7 +195,7 @@
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="7dp"
-        android:overScrollMode="never"
+        style="@style/ListViewOverscroll"
         >
     </ListView>
 

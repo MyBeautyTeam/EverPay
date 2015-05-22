@@ -103,7 +103,7 @@ public class FragmentGroups extends Fragment implements
     private void setupEmptyList(View view) {
         ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
         emptyText = (TextView)stub.inflate();
-        emptyText.setText("Список групп пуст \n Создайте свою первую группу");
+        emptyText.setText("");
         groupList.setEmptyView(emptyText);
     }
 

@@ -46,7 +46,7 @@ public class FragmentIDebt extends Fragment implements
     private DebtorsListAdapter mAdapter;
     private int loader;
     private LinearLayout loadingLayout;
-
+    private TextView emptyText;
     public static final String LOADER = "LOADER";
 
     public static FragmentIDebt getInstance(int loader) {
@@ -81,8 +81,8 @@ public class FragmentIDebt extends Fragment implements
 
     private void setupEmptyList(View view) {
         ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
-        TextView emptyText = (TextView)stub.inflate();
-        emptyText.setText("Поздравляю! \nУ тебя здесь ничего нет =)");
+        emptyText = (TextView)stub.inflate();
+        emptyText.setText("");
         debtorsList.setEmptyView(emptyText);
     }
 
@@ -116,6 +116,7 @@ public class FragmentIDebt extends Fragment implements
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         loadingLayout.setVisibility(View.GONE);
+        emptyText.setText("Поздравляю! \nУ тебя здесь ничего нет =)");
         int summa = 0;
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {

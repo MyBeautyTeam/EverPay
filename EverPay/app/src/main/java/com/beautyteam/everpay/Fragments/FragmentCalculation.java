@@ -58,6 +58,7 @@ public class FragmentCalculation extends Fragment implements
     private LinearLayout loadingLayout;
     private ServiceHelper serviceHelper;
 
+    private TextView emptyText;
 
 
     public static FragmentCalculation getInstance(int groupId) {
@@ -94,8 +95,8 @@ public class FragmentCalculation extends Fragment implements
 
     private void setupEmptyList(View view) {
         ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
-        TextView emptyText = (TextView)stub.inflate();
-        emptyText.setText("Расчет пуст \nЧтобы здесь что-то появилось, нужно добавить счет");
+        emptyText = (TextView)stub.inflate();
+        emptyText.setText("");
         calcList.setEmptyView(emptyText);
     }
 
@@ -189,9 +190,11 @@ public class FragmentCalculation extends Fragment implements
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
         if (action.equals(CALCULATE)) {
+            emptyText.setText("Расчет пуст \nЧтобы здесь что-то появилось, нужно добавить счет");
             loadingLayout.setVisibility(View.GONE);
             if (result == Constants.Result.OK) {
             } else {
+                emptyText.setText("Произошла ошибка =(\n Проверьте соединение с интернетом");
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
         }

@@ -13,6 +13,6 @@
         android:dividerHeight="16dp"
         android:divider="@null"
         android:paddingTop="8dp"
-        android:overScrollMode="never"
+        style="@style/ListViewOverscroll"
     />
 </LinearLayout>
