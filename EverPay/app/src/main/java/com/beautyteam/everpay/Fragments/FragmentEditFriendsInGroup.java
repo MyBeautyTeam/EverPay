@@ -2,7 +2,9 @@ package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -102,7 +104,8 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, Users.NAME);
+        Uri uri = ContentUris.withAppendedId(EverContentProvider.USERS_CONTENT_URI, getArguments().getInt(GROUP_ID));
+        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, Users.NAME);
     }
 
     public void addMemberToGroup(int userId, int groupId) {

@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.beautyteam.everpay.User;
+
 import java.net.URI;
 
 /**
@@ -18,6 +20,10 @@ import java.net.URI;
 public class EverContentProvider extends ContentProvider {
     final String LOG_TAG = "myLogs";
     static final String AUTHORITY = "com.beautyteam.everpay.EverpayDB";
+
+    public static class PathParams {
+        public static String LEFT_GROUP = "/left";
+    }
 
 
 
@@ -47,12 +53,14 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_DEBTS = 5;
     static final int URI_CALCULATION = 6;
     static final int URI_HISTORY = 7;
+    static final int URI_USERS_LEFT_IN_GROUP = 8;
 
 
     private static final UriMatcher uriMatcher;
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE, URI_USERS);
+        uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE + "/#", URI_USERS_LEFT_IN_GROUP);
         uriMatcher.addURI(AUTHORITY, Groups.GROUPS_TABLE, URI_GROUPS);
         uriMatcher.addURI(AUTHORITY, GroupMembers.GROUP_MEMBERS_TABLE, URI_GROUP_MEMBERS);
         uriMatcher.addURI(AUTHORITY, Bills.BILLS_TABLE, URI_BILLS);
@@ -76,6 +84,7 @@ public class EverContentProvider extends ContentProvider {
     public String getType(Uri uri) {
         Log.d(LOG_TAG, "getType, " + uri.toString());
         switch (uriMatcher.match(uri)) {
+            case URI_USERS_LEFT_IN_GROUP:
             case URI_USERS:
                 return USERS_CONTENT_TYPE;
 
@@ -96,6 +105,8 @@ public class EverContentProvider extends ContentProvider {
 
             case URI_HISTORY:
                 return HISTORY_CONTENT_TYPE;
+
+
 
         }
         return null;
@@ -145,11 +156,32 @@ public class EverContentProvider extends ContentProvider {
                 notifyUri = HISTORY_CONTENT_URI;
                 break;
 
+            case URI_USERS_LEFT_IN_GROUP:
+                id = uri.getLastPathSegment();
+                notifyUri = USERS_CONTENT_URI;
+                String request = "select "+
+                        Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
+                        Users.USERS_TABLE + "." + Users.NAME + " as " + Users.NAME + ", " +
+                        Users.USERS_TABLE + "." + Users.IMG + " as " + Users.IMG + ", " +
+                        Users.USERS_TABLE + "." + Users.STATE + " as " + Users.STATE + ", " +
+                        Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
+                        " from "
+                        + Users.USERS_TABLE + " left join " + GroupMembers.GROUP_MEMBERS_TABLE +
+                        " on " + Users.USERS_TABLE+"."+Users.USER_ID + " = " + GroupMembers.GROUP_MEMBERS_TABLE+"."+GroupMembers.USER_ID +
+                        " and " + GroupMembers.GROUP_MEMBERS_TABLE+"."+GroupMembers.GROUP_ID +" = " + id +
+                        " where " + GroupMembers.GROUP_MEMBERS_TABLE+"."+GroupMembers.USER_ID + " is null" +
+                        " Order By " + Users.NAME;
+                Cursor c = db.rawQuery(request, null);
+                int count = c.getCount();
+                c.setNotificationUri(getContext().getContentResolver(), notifyUri);
+                return c;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
 
         }
 
+        //getContext().getContentResolver().notifyChange(notifyUri, null);
         Cursor cursor = db.query(table, projection, selection,
                 selectionArgs, null, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), notifyUri);
