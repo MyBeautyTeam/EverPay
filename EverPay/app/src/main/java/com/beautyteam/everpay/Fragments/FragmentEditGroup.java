@@ -59,6 +59,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
 
     private ServiceHelper serviceHelper;
     private ProgressDialog progressDialog;
+    private String screenName = "Редактирование группы";
 
 
     public static FragmentEditGroup getInstance(int groupId, String groupTitle) {
@@ -81,6 +82,9 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
+
         friendsList = (ListView) view.findViewById(R.id.edit_group_friends_list);
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
@@ -172,6 +176,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
                         sPref.getString(Constants.Preference.IMG_URL,"0") );
                 mAdapter = new EditGroupAdapter(getActivity(), cursor, 0, mainActivity, user, getArguments().getInt(GROUP_ID), this);
                 friendsList.setAdapter(mAdapter);
+
                 break;
         }
 

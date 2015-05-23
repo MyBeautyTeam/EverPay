@@ -59,6 +59,7 @@ public class FragmentShowBill extends Fragment implements
 
     private LinearLayout loadingLayout;
     private ServiceHelper serviceHelper;
+    private String screenName="Просмотр счета";
 
     public static FragmentShowBill getInstance(int groupId, int billId) {
         FragmentShowBill fragmentShowBill = new FragmentShowBill();
@@ -73,6 +74,7 @@ public class FragmentShowBill extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
         billId = getArguments().getInt(BILL_ID);
         groupId = getArguments().getInt(GROUP_ID);
@@ -85,6 +87,7 @@ public class FragmentShowBill extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //((MainActivity)getActivity()).getServiceHelper().getBill(billId, groupId);
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
 
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
 

@@ -33,9 +33,10 @@ import com.beautyteam.everpay.Fragments.FragmentShowBill;
 import com.beautyteam.everpay.Fragments.TitleUpdater;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
-import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKSdk;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
@@ -100,7 +101,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
         serviceHelper.onResume();
-
+        setupTracker();
 
         FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
@@ -110,6 +111,7 @@ public class MainActivity extends ActionBarActivity
 
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(Constants.Preference.IS_FIRST_LAUNCH, true);
+
 
         if (isFirstLaunch) {
             fragmentManager.beginTransaction()
@@ -134,6 +136,12 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    private void setupTracker() {
+        Tracker t = ((AnalyticsApp)this.getApplication()).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
+        t.setScreenName("Home");
+        t.send(new HitBuilders.AppViewBuilder().build());
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -153,6 +161,18 @@ public class MainActivity extends ActionBarActivity
         super.onDestroy();
         VKUIHelper.onDestroy(this);
         FragmentGroups.isFirstLaunch = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(MainActivity.this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(MainActivity.this).reportActivityStop(this);
     }
 
 
@@ -311,6 +331,7 @@ public class MainActivity extends ActionBarActivity
                 editor.putInt(Constants.Preference.REGISTATION_STATUS, Constants.State.ENDS);
                 editor.putBoolean(Constants.Preference.IS_FIRST_LAUNCH, false);
                 editor.commit();
+                registerGCM();
                 setupDrawer();
                 //replaceFragment(FragmentViewPager.getInstance());
                 fragmentManager.beginTransaction()
@@ -318,7 +339,6 @@ public class MainActivity extends ActionBarActivity
                         .setCustomAnimations(R.anim.alpha_appear, R.anim.alpha_disappear)
                         .commit();
 
-                registerGCM();
             } else {
                 Toast.makeText(this, "Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
                 VKSdk.logout();
@@ -429,6 +449,11 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    public void sendGoogleAnalytics(String screenName) {
+        Tracker tracker = ((AnalyticsApp)(getApplication())).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
+        tracker.setScreenName(screenName);
+        tracker.send(new HitBuilders.AppViewBuilder().build());
+    }
 
 }
 

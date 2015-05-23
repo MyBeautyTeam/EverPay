@@ -171,7 +171,6 @@ public class DeleteProcessor extends Processor {
             URL url = new URL(strUrl);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("DELETE");
-            connection.setDoOutput(true);
             connection.connect();
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(urlParameters);

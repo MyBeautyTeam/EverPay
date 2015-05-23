@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
+import com.beautyteam.everpay.AnalyticsApp;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -36,6 +37,8 @@ import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 
@@ -72,6 +75,7 @@ public class FragmentAddBill extends Fragment implements
 
     private static final int LOADER_ADD = 2;
     private static final int LOADER_EDIT = 3;
+    private String screenName = "Добавление счета";
 
     String title = "";
 
@@ -120,7 +124,7 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
 
         titleEditText = (EditText) view.findViewById(R.id.add_bill_title);
