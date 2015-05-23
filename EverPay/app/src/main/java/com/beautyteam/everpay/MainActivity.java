@@ -253,7 +253,7 @@ public class MainActivity extends ActionBarActivity
 
     public void addFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-            .setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left)
+            .setCustomAnimations(R.anim.left_to_right, R.anim.scale_dicrease, R.anim.scale_increase, R.anim.right_to_left)
             .replace(R.id.main_container, fragment)
             .addToBackStack(null)
             .commit();
