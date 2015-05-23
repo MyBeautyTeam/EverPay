@@ -4,10 +4,10 @@
 
     <scale xmlns:android="http://schemas.android.com/apk/res/android"
         android:fromXScale="1"
-        android:toXScale="0.9"
+        android:toXScale="0.85"
         android:fromYScale="1"
-        android:toYScale="0.9"
-        android:duration="150"
+        android:toYScale="0.85"
+        android:duration="200"
         android:pivotX="50%"
         android:pivotY="50%" >
     </scale>
@@ -16,7 +16,7 @@
         android:fromAlpha="1"
         android:toAlpha="0.5"
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:duration="150"
+        android:duration="200"
     />
 
 

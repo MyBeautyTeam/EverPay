@@ -259,6 +259,15 @@ public class MainActivity extends ActionBarActivity
             .commit();
     }
 
+    public void replaceWithoutAnim(Fragment fragment) {
+        removeFragment();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left, R.anim.left_to_right, R.anim.right_to_left)
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     public void setTitle(String title) {
         this.toolbar.setTitle(title);
     }

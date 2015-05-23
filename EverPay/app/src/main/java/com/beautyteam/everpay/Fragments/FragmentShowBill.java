@@ -230,7 +230,7 @@ public class FragmentShowBill extends Fragment implements
         switch (item.getItemId()) {
             case R.id.edit_bill:
 
-                ((MainActivity)getActivity()).replaceFragment(FragmentAddBill.getInstance(groupId, billId));
+                ((MainActivity)getActivity()).replaceWithoutAnim(FragmentAddBill.getInstance(groupId, billId));
                 break;
 
             case R.id.remove_bill:
