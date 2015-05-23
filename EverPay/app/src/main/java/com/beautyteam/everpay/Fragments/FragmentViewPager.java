@@ -38,6 +38,7 @@ public class FragmentViewPager extends Fragment implements
         RequestCallback,
         TitleUpdater {
 
+    private String screenName = "Главная";
     private MainActivity mainActivity;
     public static SlidingTabLayout slidingTabLayout;
     private ServiceHelper serviceHelper;
@@ -50,6 +51,7 @@ public class FragmentViewPager extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
         setHasOptionsMenu(true);
         serviceHelper = new ServiceHelper(getActivity(), this);
         return inflater.inflate(R.layout.fragment_view_pager, null);
@@ -58,7 +60,7 @@ public class FragmentViewPager extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         pageAdapter = new PageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);

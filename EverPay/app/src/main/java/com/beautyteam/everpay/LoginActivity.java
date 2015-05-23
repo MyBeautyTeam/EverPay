@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
@@ -27,10 +29,14 @@ public class LoginActivity extends Activity {
     private static String sTokenKey = "VK_ACCESS_TOKEN";
     private static String[] sMyScope = new String[]{VKScope.FRIENDS, VKScope.PHOTOS};
     private SharedPreferences sPref;
+    private String screenName = "Авторизация";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sendGoogleAnalytics(screenName);
+
         VKUIHelper.onCreate(this);
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
@@ -175,6 +181,12 @@ public class LoginActivity extends Activity {
         getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, null, null);
         getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, null, null);
 
+    }
+
+    public void sendGoogleAnalytics(String screenName) {
+        Tracker tracker = ((AnalyticsApp)(getApplication())).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
+        tracker.setScreenName(screenName);
+        tracker.send(new HitBuilders.AppViewBuilder().build());
     }
 
 }

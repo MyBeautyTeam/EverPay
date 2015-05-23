@@ -59,6 +59,7 @@ public class FragmentCalculation extends Fragment implements
     private ServiceHelper serviceHelper;
 
     private TextView emptyText;
+    private String screenName = "Расчет";
 
 
     public static FragmentCalculation getInstance(int groupId) {
@@ -84,6 +85,9 @@ public class FragmentCalculation extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
+
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         calcList = (ListView) view.findViewById(R.id.calc_list);
         calcBtn = (Button) view.findViewById(R.id.calc_ok_btn);

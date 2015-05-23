@@ -30,6 +30,8 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
     private Animation in;
     private Animation out;
 
+    private String screenName = "Загрузка";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_loading, null);
@@ -37,6 +39,10 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
+
         loadingText = (TextView) view.findViewById(R.id.loading_text);
         attentionTextSwitcher = (TextSwitcher) view.findViewById(R.id.loading_attention);
         attentionTextSwitcher.setFactory(new ViewSwitcher.ViewFactory() {

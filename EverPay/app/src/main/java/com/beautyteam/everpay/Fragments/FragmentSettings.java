@@ -33,6 +33,7 @@ import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 public class FragmentSettings  extends Fragment
         implements View.OnClickListener, TitleUpdater {
 
+    private String screenName="Настройки";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,8 +43,10 @@ public class FragmentSettings  extends Fragment
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Button quitButton = (Button) view.findViewById(R.id.quit_button);
         quitButton.setOnClickListener(this);
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
 
     }
 

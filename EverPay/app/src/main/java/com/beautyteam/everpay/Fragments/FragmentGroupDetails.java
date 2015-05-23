@@ -71,6 +71,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     private SwipeRefreshLayoutBottom refreshLayout;
     public static HashSet<Integer> downloadedGroupSet;
     private int previousCount = 0;
+    private String screenName = "Просмотр группы";
 
 
     public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
@@ -108,6 +109,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
 
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);
@@ -261,9 +264,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                     //historyList.setSelection(previousCount);
                     //historyList.smoothScrollToPositionFromTop(20, previousCount/2, 0);
                 }
-
-
-
 
             } else {
                 setHeaderVisible(false);

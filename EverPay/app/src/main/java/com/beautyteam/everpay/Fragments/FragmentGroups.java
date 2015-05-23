@@ -60,6 +60,8 @@ public class FragmentGroups extends Fragment implements
 
     private TextView emptyText;
 
+    private String screenName = "Группы";
+
     public static FragmentGroups getInstance() {
         FragmentGroups fragmentGroups = new FragmentGroups();
         return fragmentGroups;
@@ -78,6 +80,9 @@ public class FragmentGroups extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
+
         self=this;
         groupList = (ListView) view.findViewById(R.id.groups_list);
         addBtn = (Button) view.findViewById(R.id.add_group_button);
