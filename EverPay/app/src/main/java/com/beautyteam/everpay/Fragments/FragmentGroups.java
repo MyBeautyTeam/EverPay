@@ -162,13 +162,7 @@ public class FragmentGroups extends Fragment implements
 
     private void openAddGroupFragment() {
         FragmentAddGroup frag= FragmentAddGroup.getInstance();
-        //mainActivity.addFragment(frag);
-        mainActivity.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_container, frag)
-                .addToBackStack(null)
-                .setCustomAnimations(R.anim.alpha_disappear, R.anim.alpha_appear)
-                .commit();
+        mainActivity.addFragment(frag);
     }
 
     @Override

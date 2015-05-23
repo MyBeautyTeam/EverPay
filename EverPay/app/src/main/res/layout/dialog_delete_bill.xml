@@ -50,6 +50,7 @@
                 android:background="@drawable/on_btn_pressed_selector"
                 android:textColor="@color/primary"
                 android:padding="3dp"
+                android:layout_marginLeft="4dp"
                 android:text="Отмена"
                 />
         </LinearLayout>

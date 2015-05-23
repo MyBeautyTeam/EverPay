@@ -273,10 +273,19 @@ public class MainActivity extends ActionBarActivity
 
     public void addFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-            .setCustomAnimations(R.anim.left_to_right, 0, 0, R.anim.right_to_left)
+            .setCustomAnimations(R.anim.left_to_right, R.anim.scale_dicrease, R.anim.scale_increase, R.anim.right_to_left)
             .replace(R.id.main_container, fragment)
             .addToBackStack(null)
             .commit();
+    }
+
+    public void replaceWithOtherAnim(Fragment fragment) {
+        removeFragment();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left, R.anim.left_to_right, R.anim.right_to_left)
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void setTitle(String title) {
@@ -391,13 +400,13 @@ public class MainActivity extends ActionBarActivity
         }.execute(null, null, null);
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         try {
             correctTitle();
         } catch (Exception e){};
         super.onBackPressed();
-    }
+    }*/
 
     private void correctTitle() throws ClassCastException{
         List<Fragment> list = fragmentManager.getFragments();

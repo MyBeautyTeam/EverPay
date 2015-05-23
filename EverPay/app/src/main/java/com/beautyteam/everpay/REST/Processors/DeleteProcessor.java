@@ -13,6 +13,14 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.REST.Service;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.annotation.NotThreadSafe;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,10 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 
+import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
 import static com.beautyteam.everpay.Constants.Action.REMOVE_BILL;
 import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
 
@@ -58,25 +69,15 @@ public class DeleteProcessor extends Processor {
                 String response = urlConnectionDelete(Constants.URL.REMOVE_GROUP_MEMBER, paramsJSON.toString());
 
                 if ((response != null) && response.contains("200")) {
+                    /*service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI,
+                            GroupMembers.GROUP_ID + "=" + groupId , null);*/
                     service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI,
-                            GroupMembers.GROUP_ID + "=" + groupId , null);
+                            GroupMembers.GROUP_ID + "=" + groupId + " AND " +
+                                    GroupMembers.USER_ID + "=" + userIdWhom, null);
 
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
-                    JSONObject members = responseJSON.getJSONObject("members");
                     JSONObject history = responseJSON.getJSONObject("history");
-
-                    Iterator<String> iterator = members.keys();
-                    while (iterator.hasNext()) {
-                        JSONObject member = members.getJSONObject(iterator.next());
-                        ContentValues cv = new ContentValues();
-                        cv.put(GroupMembers.GROUP_ID, groupId);
-                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
-                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
-                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
-
-                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
-                    }
 
                     ContentValues cv = readHistory(history);
                     if (cv != null)
@@ -130,6 +131,40 @@ public class DeleteProcessor extends Processor {
     }
 
     public String urlConnectionDelete(String strUrl, String urlParameters) {
+        String responseText = null;
+        try {
+            HttpEntity entity = new StringEntity(urlParameters);
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpDeleteWithBody httpDeleteWithBody = new HttpDeleteWithBody(strUrl);
+            httpDeleteWithBody.setEntity(entity);
+
+            HttpResponse response = httpClient.execute(httpDeleteWithBody);
+            if (response.getStatusLine().getStatusCode() != 200)
+                return null;
+            else {
+                BufferedReader rd = new BufferedReader
+                        (new InputStreamReader(response.getEntity().getContent()));
+
+                String line = "";
+                responseText = "";
+                while ((line = rd.readLine()) != null) {
+                    responseText += line;
+                }
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return responseText;
+    }
+    /*public String urlConnectionDelete(String strUrl, String urlParameters) {
         HttpURLConnection connection = null;
         String str = "";
         try {
@@ -154,7 +189,24 @@ public class DeleteProcessor extends Processor {
             }
         }
         return str;
+    }*/
+
+    @NotThreadSafe
+    private class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
+        public static final String METHOD_NAME = "DELETE";
+        public String getMethod() { return METHOD_NAME; }
+
+        public HttpDeleteWithBody(final String uri) {
+            super();
+            setURI(URI.create(uri));
+        }
+        public HttpDeleteWithBody(final URI uri) {
+            super();
+            setURI(uri);
+        }
+        public HttpDeleteWithBody() { super(); }
     }
+
 
     private String handleInputStream(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
