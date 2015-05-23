@@ -259,7 +259,7 @@ public class MainActivity extends ActionBarActivity
             .commit();
     }
 
-    public void replaceWithoutAnim(Fragment fragment) {
+    public void replaceWithOtherAnim(Fragment fragment) {
         removeFragment();
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left, R.anim.left_to_right, R.anim.right_to_left)
@@ -380,13 +380,13 @@ public class MainActivity extends ActionBarActivity
         }.execute(null, null, null);
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         try {
             correctTitle();
         } catch (Exception e){};
         super.onBackPressed();
-    }
+    }*/
 
     private void correctTitle() throws ClassCastException{
         List<Fragment> list = fragmentManager.getFragments();

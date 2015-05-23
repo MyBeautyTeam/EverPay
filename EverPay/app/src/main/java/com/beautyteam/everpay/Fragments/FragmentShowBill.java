@@ -33,7 +33,6 @@ import com.beautyteam.everpay.Utils.AnimUtils;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_BILL;
-import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
 
 /**
  * Created by Admin on 22.04.2015.
@@ -230,7 +229,7 @@ public class FragmentShowBill extends Fragment implements
         switch (item.getItemId()) {
             case R.id.edit_bill:
 
-                ((MainActivity)getActivity()).replaceWithoutAnim(FragmentAddBill.getInstance(groupId, billId));
+                ((MainActivity)getActivity()).replaceWithOtherAnim(FragmentAddBill.getInstance(groupId, billId));
                 break;
 
             case R.id.remove_bill:
