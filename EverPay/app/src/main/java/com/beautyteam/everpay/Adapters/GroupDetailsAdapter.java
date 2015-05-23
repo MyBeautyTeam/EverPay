@@ -7,6 +7,7 @@ package com.beautyteam.everpay.Adapters;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
+        import android.view.Window;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.CursorAdapter;
@@ -16,6 +17,7 @@ package com.beautyteam.everpay.Adapters;
         import android.widget.TextView;
         import com.beautyteam.everpay.Constants;
         import com.beautyteam.everpay.Database.History;
+        import com.beautyteam.everpay.DialogWindow;
         import com.beautyteam.everpay.Fragments.FragmentShowBill;
         import com.beautyteam.everpay.MainActivity;
         import com.beautyteam.everpay.R;
@@ -84,25 +86,7 @@ public class GroupDetailsAdapter extends CursorAdapter {
                     holder.send.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String names[] = {"Переотправить", "Удалить"};
-                            final Dialog dialog = new Dialog(mainActivity);
-                            dialog.setContentView(R.layout.dialog_not_send);
-                            ListView lv = (ListView) dialog.findViewById(R.id.dialog_action_list);
-                            dialog.setCancelable(true);
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,R.layout.item_dialog_not_send, R.id.item_dialog, names);
-                            lv.setAdapter(adapter);
-                            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent,View view1,int position, long id) {
-                                    dialog.dismiss();
-                                    if (position == 0)
-                                        dialogListener.onResendBill(newsId, groupId, billId);
-                                    else
-                                        dialogListener.onDeleteBill(newsId, groupId, billId);
-                                }
-                            });
-                            dialog.setTitle("Сообщение");
-                            dialog.show();
+                            showDialog(newsId, groupId, billId);
                         }
                     });
                 }
@@ -146,5 +130,30 @@ public class GroupDetailsAdapter extends CursorAdapter {
     public interface OnDialogClickListener  {
         void onResendBill(int historyItemid, int groupId, int billId);
         void onDeleteBill(int historyItemid, int groupId, int billId);
+    }
+
+    private void showDialog(final int newsId, final int groupId, final int billId){
+        String names[] = {"Повторить попытку", "Удалить"};
+        final Dialog dialog = new Dialog(mainActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_not_send);
+        ListView lv = (ListView) dialog.findViewById(R.id.dialog_action_list);
+        dialog.setCancelable(true);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,R.layout.item_dialog_not_send, R.id.item_dialog, names);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent,View view1,int position, long id) {
+                dialog.dismiss();
+                if (position == 0)
+                    dialogListener.onResendBill(newsId, groupId, billId);
+                else
+                    dialogListener.onDeleteBill(newsId, groupId, billId);
+            }
+        });
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 }

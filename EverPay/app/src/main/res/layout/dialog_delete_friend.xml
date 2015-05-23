@@ -6,7 +6,6 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="4dp"
-    android:gravity="center"
     android:orientation="vertical" >
 
     <TextView
@@ -51,6 +50,7 @@
             android:background="@drawable/on_btn_pressed_selector"
             android:textColor="@color/primary"
             android:padding="3dp"
+            android:layout_marginLeft="4dp"
             android:text="Отмена"
             />
     </LinearLayout>

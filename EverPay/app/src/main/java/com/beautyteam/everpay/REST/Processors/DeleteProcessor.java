@@ -71,29 +71,13 @@ public class DeleteProcessor extends Processor {
                 if ((response != null) && response.contains("200")) {
                     /*service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI,
                             GroupMembers.GROUP_ID + "=" + groupId , null);*/
+                    service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI,
+                            GroupMembers.GROUP_ID + "=" + groupId + " AND " +
+                                    GroupMembers.USER_ID + "=" + userIdWhom, null);
 
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
-
-                    String request = GroupMembers.GROUP_ID + "=" + groupId + " AND " +
-                            GroupMembers.USER_ID + "=" + userIdWhom;
-                    service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, request, null);
-
-                    //Добавление участников!!!!! Решил убрать!!!
-                    /*
-                    JSONObject members = responseJSON.getJSONObject("members");
-                    Iterator<String> iterator = members.keys();
-                    while (iterator.hasNext()) {
-                        JSONObject member = members.getJSONObject(iterator.next());
-                        ContentValues cv = new ContentValues();
-                        cv.put(GroupMembers.GROUP_ID, groupId);
-                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
-                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
-                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
-
-                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
-                    }*/
 
                     ContentValues cv = readHistory(history);
                     if (cv != null)
