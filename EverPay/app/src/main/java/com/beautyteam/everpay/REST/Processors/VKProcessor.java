@@ -5,16 +5,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v4.content.CursorLoader;
 
 import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.REST.Service;
-import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKBatchRequest;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
@@ -25,6 +23,7 @@ import com.vk.sdk.api.photo.VKUploadImage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -39,22 +38,23 @@ public class VKProcessor extends Processor {
     }
 
     @Override
-    public void request(Intent intent, final Service service) {
+    public void request(final Intent intent, final Service service) {
         byte[] byteArray = intent.getByteArrayExtra(Constants.IntentParams.IMAGE);
         Bitmap photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         final int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
         VKRequest requestLoadPhoto = VKApi.uploadWallPhotoRequest(new VKUploadImage(photo, VKImageParameters.jpgImage(0.9f)), 0, 60479154);
 
-
         requestLoadPhoto.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onError(VKError error) {
                 super.onError(error);
+                service.onRequestEnd(Constants.Result.ERROR, intent);
             }
 
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
+                ArrayList<VKRequest> vkRequestArrayList = null;
                 try {
                     JSONObject jsonResponse = response.json.getJSONArray("response").getJSONObject(0);
                     int photoId = jsonResponse.getInt("id");
@@ -63,16 +63,40 @@ public class VKProcessor extends Processor {
 
                     HashSet<Integer> setUserToSend = new HashSet<Integer>();
                     cursor.moveToFirst();
+
+                    vkRequestArrayList = new ArrayList<VKRequest>();
                     for (int i=0; i<cursor.getCount(); i++) {
                         int userIdWhoVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHO_ID_VK));
-                        if (setUserToSend.add(userIdWhoVk) && userIdWhoVk!=getUserVkId())
-                            sendToUser(userIdWhoVk, photoId, message);
+                        if (setUserToSend.add(userIdWhoVk) && userIdWhoVk!=getUserVkId()) {
+                            vkRequestArrayList.add(generateRequest(userIdWhoVk, photoId, message));
+                        }
 
                         int userIdWhomVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
                         if (setUserToSend.add(userIdWhomVk) && userIdWhomVk!=getUserVkId())
-                            sendToUser(userIdWhomVk, photoId, message);
+                            vkRequestArrayList.add(generateRequest(userIdWhomVk, photoId, message));
 
                         cursor.moveToNext();
+
+                        if (vkRequestArrayList != null) {
+                            VKRequest[] requestsArr = new VKRequest[vkRequestArrayList.size()];
+                            requestsArr = vkRequestArrayList.toArray(requestsArr);
+
+                            VKBatchRequest vkBatchRequest = new VKBatchRequest(requestsArr);
+                            vkBatchRequest.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse[] responses) {
+                                    super.onComplete(responses);
+                                    service.onRequestEnd(Constants.Result.OK, intent);
+                                }
+
+                                @Override
+                                public void onError(VKError error) {
+                                    service.onRequestEnd(Constants.Result.ERROR, intent);
+                                    super.onError(error);
+                                }
+                            });
+                        }
+
                     }
                 } catch (JSONException e) {
 
@@ -82,7 +106,9 @@ public class VKProcessor extends Processor {
         });
     }
 
-    private void sendToUser(int userId, int photoId, String message) {
+
+
+    private VKRequest generateRequest(int userId, int photoId, String message) {
         String attachment = "photo" + getUserVkId() + "_" + photoId;
 
         VKParameters parameters = VKParameters.from(
@@ -95,8 +121,9 @@ public class VKProcessor extends Processor {
                 parameters,
                 VKRequest.HttpMethod.POST
         );
+        return requestSendMessage;
 
-        requestSendMessage.executeWithListener(new VKRequest.VKRequestListener() {
+        /*requestSendMessage.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onError(VKError error) {
                 super.onError(error);
@@ -106,7 +133,7 @@ public class VKProcessor extends Processor {
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
             }
-        });
+        }); */
     }
 
     private static final String[] PROJECTION = new String[] {

@@ -354,6 +354,12 @@ public class MainActivity extends ActionBarActivity
             } else {
                 Toast.makeText(this, "Ошибка соединения с интернетом. Попробуйте позже", Toast.LENGTH_SHORT).show();
             }
+        } else if(action.equals(SEND_MESSAGE_WITH_IMAGE)) {
+            if (result == Constants.Result.OK) {
+                Toast.makeText(this, "Сообщения доставлены", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Ошибка отправки сообщений", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
