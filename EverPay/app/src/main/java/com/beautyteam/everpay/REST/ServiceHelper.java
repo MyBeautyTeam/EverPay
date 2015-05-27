@@ -255,7 +255,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
-    public void sendPrintScreen(Bitmap screen) {
+    public void sendPrintScreen(Bitmap screen, int groupId) {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         screen.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -265,6 +265,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         intentService.setAction(Constants.Action.SEND_MESSAGE_WITH_IMAGE);
 
         intentService.putExtra(Constants.IntentParams.IMAGE, byteArray);
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }

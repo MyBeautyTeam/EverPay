@@ -148,7 +148,7 @@ public class FragmentCalculation extends Fragment implements
         switch (item.getItemId()) {
             case R.id.notify_vk:
                 Bitmap screen = new PrintScreener().printscreen2(calcList);
-                serviceHelper.sendPrintScreen(screen);
+                ((MainActivity)getActivity()).getServiceHelper().sendPrintScreen(screen, groupId);
                 break;
         }
         return super.onOptionsItemSelected(item);
