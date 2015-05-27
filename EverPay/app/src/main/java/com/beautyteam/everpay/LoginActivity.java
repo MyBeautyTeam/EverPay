@@ -27,7 +27,7 @@ import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 public class LoginActivity extends Activity {
     private static String VK_APP_ID = "4799302";
     private static String sTokenKey = "VK_ACCESS_TOKEN";
-    private static String[] sMyScope = new String[]{VKScope.FRIENDS, VKScope.PHOTOS};
+    private static String[] sMyScope = new String[]{VKScope.FRIENDS, VKScope.PHOTOS, VKScope.MESSAGES};
     private SharedPreferences sPref;
     private String screenName = "Авторизация";
 

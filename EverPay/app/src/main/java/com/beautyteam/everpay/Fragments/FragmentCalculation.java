@@ -3,6 +3,7 @@ package com.beautyteam.everpay.Fragments;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.beautyteam.everpay.Utils.PrintScreener;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -137,14 +139,17 @@ public class FragmentCalculation extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.empty, menu);
+        inflater.inflate(R.menu.notify, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.notify_vk:
+                Bitmap screen = new PrintScreener().printscreen2(calcList);
+                serviceHelper.sendPrintScreen(screen);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

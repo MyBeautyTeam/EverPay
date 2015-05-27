@@ -2,11 +2,14 @@ package com.beautyteam.everpay.REST;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Admin on 27.02.2015.
@@ -251,5 +254,21 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }
+
+    public void sendPrintScreen(Bitmap screen) {
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        screen.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.SEND_MESSAGE_WITH_IMAGE);
+
+        intentService.putExtra(Constants.IntentParams.IMAGE, byteArray);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
+
 
 }

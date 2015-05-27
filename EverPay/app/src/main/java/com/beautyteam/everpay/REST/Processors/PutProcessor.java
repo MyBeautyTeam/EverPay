@@ -60,7 +60,6 @@ public class PutProcessor extends Processor{
     @Override
     public void request(Intent intent, Service service) {
         int result = Constants.Result.OK; // Должно быть изменено. Написал, чтобы не ругалась IDE
-        SharedPreferences sPref = service.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
         int userId = getUserId();
         String accessToken = getAccessToken();
         String action = intent.getAction();

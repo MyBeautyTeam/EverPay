@@ -62,6 +62,8 @@ public class Constants {
         public final static String REMOVE_MEMBER_FROM_GROUP = "REMOVE_GROUP_MEMBER";
 
         public final static String NOTIFICATION = "NOTIFICATION";
+
+        public final static String SEND_MESSAGE_WITH_IMAGE = "IMG_MESSAGE";
     }
 
     public class Titles {
@@ -104,6 +106,7 @@ public class Constants {
         public final static String IS_ENDS = "IS_ENDS";
         public final static String MALE = "MALE";
         public final static String GROUP_TITLE = "GROUP_TITLE";
+        public final static String IMAGE = "IMAGE";
     }
 
     public final static String RECEIVER = "RECEIVER";
