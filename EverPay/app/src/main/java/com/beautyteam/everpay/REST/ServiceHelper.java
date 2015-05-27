@@ -270,6 +270,12 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    public void sendNotification() {
+
+    }
+
+
+
 
 
 }

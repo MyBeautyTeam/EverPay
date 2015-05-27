@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -17,6 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -147,8 +151,7 @@ public class FragmentCalculation extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.notify_vk:
-                Bitmap screen = new PrintScreener().printscreen2(calcList);
-                ((MainActivity)getActivity()).getServiceHelper().sendPrintScreen(screen, groupId);
+                showDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -213,6 +216,38 @@ public class FragmentCalculation extends Fragment implements
     @Override
     public void updateTitle() {
         ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
+    }
+
+    private void showDialog(){
+        String names[] = {"Личное сообщение vk.com", "Оповещение в приложении"};
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_list);
+        TextView title = (TextView)dialog.findViewById(R.id.dialog_list_title);
+        title.setText("Оповещение");
+        ListView lv = (ListView) dialog.findViewById(R.id.dialog_action_list);
+        dialog.setCancelable(true);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.item_dialog_not_send, R.id.item_dialog, names);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent,View view1,int position, long id) {
+                dialog.dismiss();
+                if (position == 0) {
+                    Bitmap screen = new PrintScreener().printscreen2(calcList);
+                    ((MainActivity) getActivity()).getServiceHelper().sendPrintScreen(screen, groupId);
+                    dialog.dismiss();
+                }
+                else {
+                    ((MainActivity) getActivity()).getServiceHelper().sendNotification();
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
 }
