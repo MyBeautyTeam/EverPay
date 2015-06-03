@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.vk.sdk.VKAccessToken;
@@ -34,7 +35,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         VKUIHelper.onCreate(this);
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
@@ -68,6 +68,7 @@ public class LoginActivity extends Activity {
             this.finish();
 
         } else {
+            FlurryAgent.logEvent("Фрагмент авторизации");
             Log.d("vk", " no wake up");
             loginButton.setVisibility(View.VISIBLE);
         }
@@ -76,6 +77,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View view) {
                 VKSdk.authorize(sMyScope, true, false);
+                FlurryAgent.logEvent("Нажатие на кнопку авторизации");
                 Log.d("vk", " click");
             }
         });
@@ -125,6 +127,7 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
+            FlurryAgent.logEvent("Получен новый AccessToken");
             String accessToken = newToken.accessToken;
             newToken.saveTokenToSharedPreferences(LoginActivity.this,sTokenKey);
             Log.d("TOken receive", accessToken);
