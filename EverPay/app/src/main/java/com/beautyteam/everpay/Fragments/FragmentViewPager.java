@@ -27,6 +27,7 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Views.SlidingTabLayout;
+import com.flurry.android.FlurryAgent;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
@@ -60,6 +61,7 @@ public class FragmentViewPager extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FlurryAgent.logEvent("Фрагмент главная");
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         pageAdapter = new PageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);

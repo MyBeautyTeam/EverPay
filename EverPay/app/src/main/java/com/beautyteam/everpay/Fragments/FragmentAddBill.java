@@ -36,6 +36,7 @@ import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -87,7 +88,7 @@ public class FragmentAddBill extends Fragment implements
         Bundle bundle = new Bundle();
         bundle.putInt(GROUP_ID, groupId);
         fragmentAddBill.setArguments(bundle);
-
+        FlurryAgent.logEvent("Фрагмент добавления счета");
         return fragmentAddBill;
     }
 
@@ -101,7 +102,7 @@ public class FragmentAddBill extends Fragment implements
         bundle.putInt(GROUP_ID, groupId);
         bundle.putInt(BILL_ID, billId);
         fragmentAddBill.setArguments(bundle);
-
+        FlurryAgent.logEvent("Фрагмент редактирования счета");
         return fragmentAddBill;
     }
 
@@ -123,6 +124,7 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
 
         titleEditText = (EditText) view.findViewById(R.id.add_bill_title);

@@ -27,4 +27,5 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:1.2.1'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.google.android.gms:play-services:7.3.0'
+    compile files('src/libs/FlurryAnalytics-5.5.0.jar')
 }

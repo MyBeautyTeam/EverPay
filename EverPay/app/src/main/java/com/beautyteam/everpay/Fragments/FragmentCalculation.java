@@ -37,6 +37,7 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Utils.PrintScreener;
+import com.flurry.android.FlurryAgent;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -91,7 +92,7 @@ public class FragmentCalculation extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        FlurryAgent.logEvent("Фрагмент расчет");
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         calcList = (ListView) view.findViewById(R.id.calc_list);
         calcBtn = (Button) view.findViewById(R.id.calc_ok_btn);

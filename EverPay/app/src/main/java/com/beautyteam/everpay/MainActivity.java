@@ -33,6 +33,7 @@ import com.beautyteam.everpay.Fragments.FragmentShowBill;
 import com.beautyteam.everpay.Fragments.TitleUpdater;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -446,6 +447,19 @@ public class MainActivity extends ActionBarActivity
         getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, null, null);
 
         FragmentGroupDetails.downloadedGroupSet.clear();
+
+    }
+
+
+    private void setupStatistic() {
+        int male = sPref.getInt(MALE, 2);
+        if (male == 0) // мужчина
+            FlurryAgent.setGender(com.flurry.android.Constants.MALE);
+        else if (male == 1) // женщина
+            FlurryAgent.setGender(com.flurry.android.Constants.FEMALE);
+        else
+            FlurryAgent.setGender(com.flurry.android.Constants.UNKNOWN);
+
 
     }
 

@@ -23,6 +23,7 @@ import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.flurry.android.FlurryAgent;
 import com.vk.sdk.VKSdk;
 
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
@@ -44,6 +45,7 @@ public class FragmentSettings  extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FlurryAgent.logEvent("Фрагмент настройки");
         Button quitButton = (Button) view.findViewById(R.id.quit_button);
         quitButton.setOnClickListener(this);
 

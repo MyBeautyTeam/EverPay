@@ -28,6 +28,7 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.flurry.android.FlurryAgent;
 
 import static android.support.v4.widget.SwipeRefreshLayout.*;
 import static com.beautyteam.everpay.Constants.ACTION;
@@ -80,7 +81,7 @@ public class FragmentGroups extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        FlurryAgent.logEvent("Фрагмент список групп");
         self=this;
         groupList = (ListView) view.findViewById(R.id.groups_list);
         addBtn = (Button) view.findViewById(R.id.add_group_button);

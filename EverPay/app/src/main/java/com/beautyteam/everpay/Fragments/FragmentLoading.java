@@ -15,6 +15,7 @@ import android.widget.ViewSwitcher;
 
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.flurry.android.FlurryAgent;
 
 /**
  * Created by Admin on 23.04.2015.
@@ -40,7 +41,7 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        FlurryAgent.logEvent("Фрагмент загрузки");
         loadingText = (TextView) view.findViewById(R.id.loading_text);
         attentionTextSwitcher = (TextSwitcher) view.findViewById(R.id.loading_attention);
         attentionTextSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
