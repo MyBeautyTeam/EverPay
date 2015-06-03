@@ -87,7 +87,6 @@ public class FragmentShowBill extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //((MainActivity)getActivity()).getServiceHelper().getBill(billId, groupId);
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
 
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
 

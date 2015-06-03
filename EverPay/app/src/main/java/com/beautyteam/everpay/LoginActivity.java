@@ -35,8 +35,6 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sendGoogleAnalytics(screenName);
-
         VKUIHelper.onCreate(this);
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
@@ -183,10 +181,5 @@ public class LoginActivity extends Activity {
 
     }
 
-    public void sendGoogleAnalytics(String screenName) {
-        Tracker tracker = ((AnalyticsApp)(getApplication())).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
-        tracker.setScreenName(screenName);
-        tracker.send(new HitBuilders.AppViewBuilder().build());
-    }
 
 }

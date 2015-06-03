@@ -92,8 +92,6 @@ public class FragmentCalculation extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
-
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         calcList = (ListView) view.findViewById(R.id.calc_list);
         calcBtn = (Button) view.findViewById(R.id.calc_ok_btn);

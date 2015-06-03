@@ -110,8 +110,6 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
-
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);

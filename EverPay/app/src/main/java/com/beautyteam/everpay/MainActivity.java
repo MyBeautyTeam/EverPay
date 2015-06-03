@@ -101,7 +101,6 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
         serviceHelper.onResume();
-        setupTracker();
 
         FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
@@ -136,11 +135,6 @@ public class MainActivity extends ActionBarActivity
 
     }
 
-    private void setupTracker() {
-        Tracker t = ((AnalyticsApp)this.getApplication()).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
-        t.setScreenName("Home");
-        t.send(new HitBuilders.AppViewBuilder().build());
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -453,12 +447,6 @@ public class MainActivity extends ActionBarActivity
 
         FragmentGroupDetails.downloadedGroupSet.clear();
 
-    }
-
-    public void sendGoogleAnalytics(String screenName) {
-        Tracker tracker = ((AnalyticsApp)(getApplication())).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
-        tracker.setScreenName(screenName);
-        tracker.send(new HitBuilders.AppViewBuilder().build());
     }
 
 }

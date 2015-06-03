@@ -46,7 +46,6 @@ public class FragmentSettings  extends Fragment
         super.onViewCreated(view, savedInstanceState);
         Button quitButton = (Button) view.findViewById(R.id.quit_button);
         quitButton.setOnClickListener(this);
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
 
     }
 

@@ -41,8 +41,6 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
-
         loadingText = (TextView) view.findViewById(R.id.loading_text);
         attentionTextSwitcher = (TextSwitcher) view.findViewById(R.id.loading_attention);
         attentionTextSwitcher.setFactory(new ViewSwitcher.ViewFactory() {

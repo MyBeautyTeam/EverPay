@@ -60,7 +60,6 @@ public class FragmentViewPager extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         pageAdapter = new PageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);

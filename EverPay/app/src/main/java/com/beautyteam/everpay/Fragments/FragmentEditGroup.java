@@ -83,8 +83,6 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
-
         friendsList = (ListView) view.findViewById(R.id.edit_group_friends_list);
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
