@@ -24,7 +24,7 @@ import com.beautyteam.everpay.Adapters.ShowBillListAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
-import com.beautyteam.everpay.DialogWindow;
+import com.beautyteam.everpay.Dialogs.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;

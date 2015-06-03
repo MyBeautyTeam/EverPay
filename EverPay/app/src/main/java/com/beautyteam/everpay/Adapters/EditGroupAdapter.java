@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.GroupMembers;
-import com.beautyteam.everpay.DialogWindow;
+import com.beautyteam.everpay.Dialogs.DialogWindow;
 import com.beautyteam.everpay.Fragments.FragmentEditGroup;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;

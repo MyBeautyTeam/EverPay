@@ -62,16 +62,6 @@
         </receiver>
         <service android:name=".GCM.GcmMessageHandler" />
 
-
-        <!--&lt;!&ndash; Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable
-             installation campaign reporting &ndash;&gt;
-        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />-->
     </application>
 
 </manifest>

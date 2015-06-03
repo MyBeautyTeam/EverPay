@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,10 +24,13 @@ import com.beautyteam.everpay.Adapters.PageAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Dialogs.DialogDebtDetail;
+import com.beautyteam.everpay.Dialogs.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.flurry.android.FlurryAgent;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
@@ -48,6 +53,7 @@ public class FragmentIDebt extends Fragment implements
     private LinearLayout loadingLayout;
     private TextView emptyText;
     public static final String LOADER = "LOADER";
+    private DialogDebtDetail dialogDebtDetail;
 
     public static FragmentIDebt getInstance(int loader) {
         FragmentIDebt fragmentIDebt = new FragmentIDebt();
@@ -75,7 +81,12 @@ public class FragmentIDebt extends Fragment implements
 
         /*if (loader == LOADER_ID_I_DEBT)
             ((MainActivity)getActivity()).getServiceHelper().getDebts();*/
-
+        debtorsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                showDialog();
+            }
+        });
         setupEmptyList(view);
     }
 
@@ -135,14 +146,6 @@ public class FragmentIDebt extends Fragment implements
         } else {
             FragmentViewPager.slidingTabLayout.setDebtForMe(summa);
         }
-        /*
-        Uri uri = Uri.withAppendedPath(EverContentProvider.DEBTS_CONTENT_URI, "summa");
-        uri = Uri.withAppendedPath(uri, loader.getId() + "");
-        Cursor c = getActivity().getContentResolver().query(uri, PROJECTION_SUM, null, null, null);
-
-        String text = c.getString(0);
-        Log.e("TEXT", text);
-        */
 
     }
 
@@ -158,5 +161,13 @@ public class FragmentIDebt extends Fragment implements
     @Override
     public void onDebtsLoaded() {
         getLoaderManager().initLoader(loader, null, this);
+    }
+
+    private void showDialog() {
+        dialogDebtDetail = new DialogDebtDetail(getActivity());
+        dialogDebtDetail.show();
+        Window window = dialogDebtDetail.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
     }
 }

@@ -1,4 +1,4 @@
-package com.beautyteam.everpay;
+package com.beautyteam.everpay.Dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+
+import com.beautyteam.everpay.R;
 
 /**
  * Created by Admin on 04.04.2015.

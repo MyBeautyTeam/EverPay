@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="200dp"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/dialog_debt_avatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/avatar"
+        />
+        <TextView
+            android:id="@+id/dialog_debt_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:text="Павел Кочетков"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:text="Долг: 500"
+            />
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/dialog_btn_show_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/on_btn_pressed_selector"
+            android:textColor="@color/primary"
+            android:padding="3dp"
+            android:text="Просмотреть профиль"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/dialog_debt_list"
+            android:layout_width="match_parent"
+            android:dividerHeight="5dp"
+            android:divider="@null"
+            style="@style/ListViewOverscroll"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</LinearLayout>
