@@ -8,24 +8,46 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.DialogDebtorsAdapter;
 import com.beautyteam.everpay.Database.Bills;
+import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.R;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Admin on 03.06.2015.
  */
 public class DialogDebtDetail extends Dialog implements View.OnClickListener {
 
+    private int isIDebt;
+    private int sum;
+    private int userId;
+    private String img;
+    private String userName;
+
+    private TextView dialogDebtName;
     private Button showProfileBtn;
     private ListView listView;
+    private TextView summaTextView;
 
 
-    public DialogDebtDetail(Context context) {
+    public DialogDebtDetail(Context context, String userName, int userId, int isIDebt, String img, int sum) {
         super(context);
+        this.isIDebt = isIDebt;
+        this.userId = userId;
+        this.img = img;
+        this.userName = userName;
+        this.sum = sum;
     }
+
+
+
+
 
 
     @Override
@@ -36,10 +58,25 @@ public class DialogDebtDetail extends Dialog implements View.OnClickListener {
         showProfileBtn = (Button) findViewById(R.id.dialog_btn_show_profile);
         showProfileBtn.setOnClickListener(this);
 
+        dialogDebtName = (TextView) findViewById(R.id.dialog_debt_name);
+        dialogDebtName.setText(userName);
+
+        summaTextView = (TextView) findViewById(R.id.dialog_debts_sum);
+        summaTextView.setText("Долг: "+sum+"");
+
         listView = (ListView) findViewById(R.id.dialog_debt_list);
 
-        Cursor c = getContext().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, PROJECTION_BILL, null, null, null);
+        Cursor c = getContext().getContentResolver().query(EverContentProvider.DEBTS_CONTENT_URI_DIALOG, PROJECTION_BILL, Debts.USER_ID +"=" + userId + " AND " + Debts.IS_I_DEBT + "=" + isIDebt, null, null);
         listView.setAdapter(new DialogDebtorsAdapter(getContext(), c) );
+
+        CircleImageView avatar = (CircleImageView)findViewById(R.id.dialog_debt_avatar);
+
+        Picasso.with(getContext())
+                .load(img)
+                .error(getContext().getResources().getDrawable(R.drawable.default_image))
+                .resize(100, 100)
+                .centerInside()
+                .into(avatar);
     }
 
     @Override
@@ -48,14 +85,10 @@ public class DialogDebtDetail extends Dialog implements View.OnClickListener {
     }
 
     private static final String[] PROJECTION_BILL = new String[] {
-            Bills.ITEM_ID,
-            Bills.BILL_ID,
-            Bills.TITLE,
-            Bills.USER_ID_VK,
-            Bills.USER_ID,
-            Bills.USER_NAME,
-            Bills.GROUP_ID,
-            Bills.NEED_SUM,
-            Bills.INVEST_SUM
+            Debts.ITEM_ID,
+            Debts.SUMMA,
+            Debts.IS_I_DEBT,
+            Debts.GROUP_TITLE,
+            Debts.GROUP_ID
     };
 }

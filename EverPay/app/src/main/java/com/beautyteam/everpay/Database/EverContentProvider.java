@@ -30,6 +30,7 @@ public class EverContentProvider extends ContentProvider {
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
+    public static final Uri DEBTS_CONTENT_URI_DIALOG = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE + "/" + "dialog");
     public static final Uri CALCULATION_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Calculation.CALCULATION_TABLE);
     public static final Uri GROUP_MEMBERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupMembers.GROUP_MEMBERS_TABLE);
     public static final Uri BILLS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Bills.BILLS_TABLE);
@@ -54,6 +55,7 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_CALCULATION = 6;
     static final int URI_HISTORY = 7;
     static final int URI_USERS_LEFT_IN_GROUP = 8;
+    static final int URI_DEBTS_DIALOG = 9;
 
 
     private static final UriMatcher uriMatcher;
@@ -68,6 +70,7 @@ public class EverContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE, URI_CALCULATION);
         uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE+ "/#", URI_CALCULATION);
         uriMatcher.addURI(AUTHORITY, History.HISTORY_TABLE, URI_HISTORY);
+        uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE + "/dialog", URI_DEBTS_DIALOG);
     }
 
 
@@ -142,6 +145,16 @@ public class EverContentProvider extends ContentProvider {
                 break;
 
             case URI_DEBTS:
+                table = Debts.DEBTS_TABLE;
+                notifyUri = DEBTS_CONTENT_URI;
+
+                Cursor cursor = db.query(table, projection, selection,
+                        selectionArgs, Debts.USER_ID, null, sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), notifyUri);
+                return cursor;
+                //break;
+
+            case URI_DEBTS_DIALOG:
                 table = Debts.DEBTS_TABLE;
                 notifyUri = DEBTS_CONTENT_URI;
                 break;

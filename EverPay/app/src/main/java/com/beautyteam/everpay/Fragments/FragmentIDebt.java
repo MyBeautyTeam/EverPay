@@ -81,12 +81,12 @@ public class FragmentIDebt extends Fragment implements
 
         /*if (loader == LOADER_ID_I_DEBT)
             ((MainActivity)getActivity()).getServiceHelper().getDebts();*/
-        debtorsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*debtorsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showDialog();
+                //showDialog();
             }
-        });
+        });*/
         setupEmptyList(view);
     }
 
@@ -106,7 +106,7 @@ public class FragmentIDebt extends Fragment implements
 
         private static final String[] PROJECTION = new String[] {
         Debts.ITEM_ID,
-        Debts.SUMMA,
+        Debts.SUM_SUMMA,
         Debts.USER_ID,
         Debts.USER_VK_ID,
         Debts.USER_NAME,
@@ -131,7 +131,7 @@ public class FragmentIDebt extends Fragment implements
         int summa = 0;
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
-                summa += c.getInt(c.getColumnIndex(Debts.SUMMA));
+                summa += c.getInt(c.getColumnIndex(Debts.SUM_SUMMA));
                 c.moveToNext();
             }
         }
@@ -163,11 +163,5 @@ public class FragmentIDebt extends Fragment implements
         getLoaderManager().initLoader(loader, null, this);
     }
 
-    private void showDialog() {
-        dialogDebtDetail = new DialogDebtDetail(getActivity());
-        dialogDebtDetail.show();
-        Window window = dialogDebtDetail.getWindow();
-        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-    }
 }

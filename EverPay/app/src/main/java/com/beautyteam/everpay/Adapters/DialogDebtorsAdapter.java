@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 
@@ -53,18 +54,12 @@ public class DialogDebtorsAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.bill.setText("Счет за что-то");
 
-        int summa = new Random().nextInt(10000) - 5000;
-        if (summa > 0) {
-            view.setBackgroundColor(greenColor);
-            holder.summa.setText("+" + summa);
-        }
-        else {
-            view.setBackgroundColor(redColor);
-            holder.summa.setText("" + summa);
-        }
+        String groupTitle = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
+        holder.bill.setText(groupTitle);
 
+        int sum =  cursor.getInt(cursor.getColumnIndex(Debts.SUMMA));
+        holder.summa.setText(sum + "");
 
 
     }
