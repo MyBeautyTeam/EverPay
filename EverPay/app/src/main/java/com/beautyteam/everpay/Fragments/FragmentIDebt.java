@@ -149,6 +149,13 @@ public class FragmentIDebt extends Fragment implements
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadingLayout.setVisibility(View.VISIBLE);
+        FragmentViewPager.slidingTabLayout.clearSlidingTab();
+    }
+
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }

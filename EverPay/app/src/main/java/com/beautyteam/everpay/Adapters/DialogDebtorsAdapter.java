@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -14,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.Debts;
+import com.beautyteam.everpay.Database.Groups;
+import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 
@@ -25,18 +29,11 @@ import java.util.Random;
 public class DialogDebtorsAdapter extends CursorAdapter {
 
     private final LayoutInflater inflater;
-    private Context context;
-    private int redColor;
-    private int greenColor;
+
 
     public DialogDebtorsAdapter(Context context, Cursor c) {
         super(context, c);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.context = context;
-
-        redColor = context.getResources().getColor(R.color.light_red);
-        greenColor = context.getResources().getColor(R.color.light_green);
-
     }
 
     @Override
@@ -52,21 +49,27 @@ public class DialogDebtorsAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        String groupTitle = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
+        final String groupTitle = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
         holder.bill.setText(groupTitle);
 
         int sum =  cursor.getInt(cursor.getColumnIndex(Debts.SUMMA));
         holder.summa.setText(sum + "");
 
+        final int groupId = cursor.getInt(cursor.getColumnIndex(Debts.GROUP_ID));
+        holder.groupId = groupId;
+        holder.groupTitle = groupTitle;
+
 
     }
 
-    private static class ViewHolder {
-        TextView summa;
-        TextView bill;
+    public static class ViewHolder {
+        public TextView summa;
+        public TextView bill;
+        public int groupId;
+        public String groupTitle;
     }
 
 }

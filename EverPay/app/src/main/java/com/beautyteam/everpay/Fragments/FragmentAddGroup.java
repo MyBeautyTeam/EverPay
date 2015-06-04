@@ -194,9 +194,9 @@ public class FragmentAddGroup extends Fragment
     public void onRequestEnd(int result, Bundle data) {
         progressDialog.dismiss();
         if (result == Constants.Result.OK) {
-            String title = data.getString(Constants.IntentParams.GROUP_TITLE);
             int groupId = data.getInt(Constants.IntentParams.GROUP_ID);
-            FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(groupId, title);
+            String groupTitle = data.getString(Constants.IntentParams.GROUP_TITLE);
+            FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(groupId, groupTitle);
             mainActivity.replaceFragment(fragmentGroupDetails);
         } else {
             Toast.makeText(getActivity(), "Ошибка соединения с интернетом", Toast.LENGTH_SHORT).show();

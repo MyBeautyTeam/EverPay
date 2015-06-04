@@ -43,8 +43,12 @@
             android:text="Просмотреть профиль"
             android:layout_gravity="bottom"
             android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
@@ -55,7 +59,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:listSelector="@drawable/on_group_pressed_selector_small"
+            android:divider="@null"
+
             style="@style/ListViewOverscroll"
-            android:footerDividersEnabled="false"/>
+            />
     </LinearLayout>
 </LinearLayout>

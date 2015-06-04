@@ -266,12 +266,20 @@ public class MainActivity extends ActionBarActivity
         addFragment(fragment);
     }
 
+
     public void addFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
             .setCustomAnimations(R.anim.left_to_right, R.anim.scale_dicrease, R.anim.scale_increase, R.anim.right_to_left)
             .replace(R.id.main_container, fragment)
             .addToBackStack(null)
             .commit();
+    }
+
+    public void addFragmentWithoutAnim(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void replaceWithOtherAnim(Fragment fragment) {

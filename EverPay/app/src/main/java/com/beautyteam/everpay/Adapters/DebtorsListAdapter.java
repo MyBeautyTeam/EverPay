@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Dialogs.DialogDebtDetail;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 public class DebtorsListAdapter extends CursorAdapter {
 
     private final LayoutInflater inflater;
+    private DialogDebtDetail dialogDebtDetail;
 
     HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
     Context context;
@@ -121,7 +123,7 @@ public class DebtorsListAdapter extends CursorAdapter {
         }
         else {
             holder.discript.setText(userName);
-            String id_vk = cursor.getString(cursor.getColumnIndex(Debts.USER_VK_ID));
+            final String id_vk = cursor.getString(cursor.getColumnIndex(Debts.USER_VK_ID));
             final int userId = cursor.getInt(cursor.getColumnIndex(Debts.USER_ID));
             final int isIDebt = cursor.getInt(cursor.getColumnIndex(Debts.IS_I_DEBT));
             final String img = mapIdToAvatar.get(id_vk);
@@ -137,7 +139,7 @@ public class DebtorsListAdapter extends CursorAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog(userName,userId, isIDebt, img, summ);
+                    showDialog(userName,userId, id_vk, isIDebt, img, summ);
                 }
             });
         }
@@ -157,11 +159,13 @@ public class DebtorsListAdapter extends CursorAdapter {
         RoundedImageView avatar;
     }
 
-    private void showDialog(String userName, int userId, int isIDebt, String img, int sum) {
-        DialogDebtDetail dialogDebtDetail = new DialogDebtDetail(context, userName, userId, isIDebt, img, sum);
+    private void showDialog(String userName, int userId, String userVkId, int isIDebt, String img, int sum) {
+        dialogDebtDetail = new DialogDebtDetail(context, userName, userId, userVkId, isIDebt, img, sum);
         dialogDebtDetail.show();
         Window window = dialogDebtDetail.getWindow();
         window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
+
+
 }
 
