@@ -57,7 +57,6 @@ public class FragmentViewPager extends Fragment implements
         super.onCreateView(inflater,container,savedInstanceState);
         setHasOptionsMenu(true);
         serviceHelper = new ServiceHelper(getActivity(), this);
-        serviceHelper.onResume();
 
         return inflater.inflate(R.layout.fragment_view_pager, null);
     }

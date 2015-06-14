@@ -58,7 +58,6 @@
             android:id="@+id/dialog_debt_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:listSelector="@drawable/on_group_pressed_selector_small"
             android:divider="@null"
 
             style="@style/ListViewOverscroll"

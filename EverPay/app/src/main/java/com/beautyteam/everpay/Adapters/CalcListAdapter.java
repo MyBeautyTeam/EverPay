@@ -27,6 +27,8 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.HashMap;
 
@@ -195,15 +197,23 @@ public class CalcListAdapter extends CursorAdapter {
 
         int position = cursor.getPosition();
         if (mapPositionToIsOpenFirstAvatar.get(position)) {
-            holder.firstName.performClick();
+            //holder.firstName.performClick();
+            openAvatar(holder.firstLayout, holder.firstAvatar, holder.firstName, userWhoVK);
+            mapPositionToIsOpenFirstAvatar.put(position, true);
         } else {
-            holder.firstLayout.performClick();
+            //holder.firstLayout.performClick();
+            closeAvatar(holder.firstLayout, holder.firstName);
+            mapPositionToIsOpenFirstAvatar.put(position, false);
+            //openAvatar(position, holder.firstAvatar, holder.firstLayout, userWhoVK);
         }
 
         if (mapPositionToIsOpenSecondAvatar.get(position)) {
-            holder.secondName.performClick();
+
+            openAvatar(holder.secondLayout, holder.secondAvatar, holder.secondName, userWhomVK);
+            mapPositionToIsOpenSecondAvatar.put(position, true);
         } else {
-            holder.secondLayout.performClick();
+            closeAvatar(holder.secondLayout, holder.secondName);
+            mapPositionToIsOpenSecondAvatar.put(position, false);
         }
 
     }
@@ -245,53 +255,52 @@ public class CalcListAdapter extends CursorAdapter {
             switch (view.getId()) {
                 // Кликаем на первый текст
                 case R.id.item_calc_first_name:
+                    openAvatar(viewHolder.firstLayout, viewHolder.firstAvatar, viewHolder.firstName, whoUserId);
                     mapPositionToIsOpenFirstAvatar.put(position, true);
 
-                    view.setVisibility(View.GONE);
-                    viewHolder.firstLayout.setVisibility(View.VISIBLE);
-
-                    String firstAvatarUrl = mapIdToAvatar.get(whoUserId);
-                    Picasso.with(context)
-                            .load(firstAvatarUrl)
-                            .placeholder(context.getResources().getDrawable(R.drawable.default_image))
-                            .error(context.getResources().getDrawable(R.drawable.default_image))
-                            .resize(100, 100)
-                            .centerInside()
-                            .into(viewHolder.firstAvatar);
-
                     break;
+
                 // Кликаем на первый layout
                 case R.id.item_calc_first_layout:
+                    closeAvatar(viewHolder.firstLayout, viewHolder.firstName);
                     mapPositionToIsOpenFirstAvatar.put(position, false);
-
-                    view.setVisibility(view.GONE); // Прячем картинку
-                    viewHolder.firstName.setVisibility(View.VISIBLE); // Показываем текст
                     break;
+
                 // Кликаем на второй текст
                 case R.id.item_calc_second_name:
+                    openAvatar(viewHolder.secondLayout, viewHolder.secondAvatar, viewHolder.secondName, whomUserId);
                     mapPositionToIsOpenSecondAvatar.put(position, true);
-
-                    view.setVisibility(View.GONE);
-                    viewHolder.secondLayout.setVisibility(View.VISIBLE);
-                    String secondAvatarUrl = mapIdToAvatar.get(whomUserId);
-                    Picasso.with(context)
-                            .load(secondAvatarUrl)
-                            .placeholder(context.getResources().getDrawable(R.drawable.default_image))
-                            .error(context.getResources().getDrawable(R.drawable.default_image))
-                            .resize(100, 100)
-                            .centerInside()
-                            .into(viewHolder.secondAvatar);
                     break;
+
                 // Кликаем на второй layout
                 case R.id.item_calc_second_layout:
+                    closeAvatar(viewHolder.secondLayout, viewHolder.secondName);
                     mapPositionToIsOpenSecondAvatar.put(position, false);
-
-                    view.setVisibility(view.GONE); // Прячем картинку
-                    viewHolder.secondName.setVisibility(View.VISIBLE); // Показываем текст
                     break;
             }
         }
+
     }
 
+    private void openAvatar(LinearLayout imageLayout, RoundedImageView image, TextView text, String userId) {
+
+        text.setVisibility(View.GONE);
+        imageLayout.setVisibility(View.VISIBLE);
+
+        String firstAvatarUrl = mapIdToAvatar.get(userId);
+        Picasso.with(context)
+                .load(firstAvatarUrl)
+                .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                .error(context.getResources().getDrawable(R.drawable.default_image))
+                .resize(100, 100)
+                .centerInside()
+                .into(image);
+    }
+
+    private void closeAvatar(LinearLayout imageLayout, TextView text) {
+
+        imageLayout.setVisibility(View.GONE); // Прячем картинку
+        text.setVisibility(View.VISIBLE); // Показываем текст
+    }
 
 }

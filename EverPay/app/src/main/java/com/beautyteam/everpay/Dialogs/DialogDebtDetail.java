@@ -18,6 +18,7 @@ import com.beautyteam.everpay.Adapters.DialogDebtorsAdapter;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentViewPager;
@@ -57,7 +58,6 @@ public class DialogDebtDetail extends Dialog implements View.OnClickListener {
         this.userName = userName;
         this.sum = sum;
         this.userIdVk = userIdVk;
-
         mainActivity = (MainActivity) context;
     }
 
@@ -87,7 +87,7 @@ public class DialogDebtDetail extends Dialog implements View.OnClickListener {
                 ViewHolder holder = (ViewHolder) view.getTag();
                 dismiss();
                 FragmentViewPager.isLoaded = true;
-                mainActivity.addFragmentWithoutAnim(FragmentGroupDetails.getInstance(holder.groupId, holder.groupTitle));
+                mainActivity.addFragmentWithoutAnim(FragmentCalculation.getInstance(holder.groupId));
             }
         });
 
