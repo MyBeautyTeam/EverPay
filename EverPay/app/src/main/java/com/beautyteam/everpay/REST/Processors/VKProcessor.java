@@ -32,9 +32,11 @@ import java.util.HashSet;
 public class VKProcessor extends Processor {
     private final String smileApply = "&#10004;";
     private final String smileCancel = "&#10060;";
+    private Context context;
 
     public VKProcessor(Context context) {
         super(context);
+        this.context = context;
     }
 
     @Override
@@ -59,45 +61,49 @@ public class VKProcessor extends Processor {
                     JSONObject jsonResponse = response.json.getJSONArray("response").getJSONObject(0);
                     int photoId = jsonResponse.getInt("id");
                     Cursor cursor = service.getContentResolver().query(EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, Calculation.GROUPS_ID +" = " + groupId, null, /*SORT_ORDER*/null);
-                    String message = generateMessage(cursor);
 
-                    HashSet<Integer> setUserToSend = new HashSet<Integer>();
+                    HashSet<Integer> setUserToSend = new HashSet<Integer>(); // Список пользователей, кому будет отправлено сообщение
                     cursor.moveToFirst();
 
                     vkRequestArrayList = new ArrayList<VKRequest>();
                     for (int i=0; i<cursor.getCount(); i++) {
                         int userIdWhoVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHO_ID_VK));
-                        if (setUserToSend.add(userIdWhoVk) && userIdWhoVk!=getUserVkId()) {
+
+                        if (setUserToSend.add(userIdWhoVk) && userIdWhoVk != getUserVkId()) {
+                            String message = generateMessage(userIdWhoVk);
                             vkRequestArrayList.add(generateRequest(userIdWhoVk, photoId, message));
                         }
 
                         int userIdWhomVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
-                        if (setUserToSend.add(userIdWhomVk) && userIdWhomVk!=getUserVkId())
+                        if (setUserToSend.add(userIdWhomVk) && userIdWhomVk != getUserVkId()) {
+                            String message = generateMessage(userIdWhomVk);
                             vkRequestArrayList.add(generateRequest(userIdWhomVk, photoId, message));
-
-                        cursor.moveToNext();
-
-                        if (vkRequestArrayList != null) {
-                            VKRequest[] requestsArr = new VKRequest[vkRequestArrayList.size()];
-                            requestsArr = vkRequestArrayList.toArray(requestsArr);
-
-                            VKBatchRequest vkBatchRequest = new VKBatchRequest(requestsArr);
-                            vkBatchRequest.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
-                                @Override
-                                public void onComplete(VKResponse[] responses) {
-                                    super.onComplete(responses);
-                                    service.onRequestEnd(Constants.Result.OK, intent);
-                                }
-
-                                @Override
-                                public void onError(VKError error) {
-                                    service.onRequestEnd(Constants.Result.ERROR, intent);
-                                    super.onError(error);
-                                }
-                            });
                         }
 
+                        cursor.moveToNext();
                     }
+
+                    if (vkRequestArrayList != null) {
+                        VKRequest[] requestsArr = new VKRequest[vkRequestArrayList.size()];
+                        requestsArr = vkRequestArrayList.toArray(requestsArr);
+
+                        VKBatchRequest vkBatchRequest = new VKBatchRequest(requestsArr);
+                        vkBatchRequest.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
+                            @Override
+                            public void onComplete(VKResponse[] responses) {
+                                super.onComplete(responses);
+                                service.onRequestEnd(Constants.Result.OK, intent);
+                            }
+
+                            @Override
+                            public void onError(VKError error) {
+                                service.onRequestEnd(Constants.Result.ERROR, intent);
+                                super.onError(error);
+                            }
+                        });
+                    }
+
+
                 } catch (JSONException e) {
 
                 }
@@ -150,24 +156,28 @@ public class VKProcessor extends Processor {
             Calculation.IS_DELETED
     };
 
-    private String generateMessage(Cursor cursor) {
-        cursor.moveToFirst();
+    private String generateMessage(int userId) {
+
         String message = "***Сообщение отправлено автоматически***\n";
         message += "Текущее положение дел:";
-        for (int i=0; i < cursor.getCount(); i++) {
+
+        Cursor cursor = context.getContentResolver().query(EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, Calculation.WHOM_ID_VK +" = " + userId + " OR " + Calculation.WHO_ID_VK + " = " + userId , null, /*SORT_ORDER*/null);
+        cursor.moveToFirst();
+        for (int i=0; i < cursor.getCount(); cursor.moveToNext(), i++) {
             message += "\n";
-            String nameWho = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHO));
-            String nameWhom = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHOM));
-            int sum = cursor.getInt(cursor.getColumnIndex(Calculation.SUMMA));
-            boolean isDeleted = cursor.getInt(cursor.getColumnIndex(Calculation.IS_DELETED)) > 0 ? true:false;
-            message += nameWho + " -> " + sum + "руб. -> " + nameWhom + " ";
+            boolean isDeleted = cursor.getInt(cursor.getColumnIndex(Calculation.IS_DELETED)) > 0 ? true : false;
             if (isDeleted)
                 message += smileApply;
             else
                 message += smileCancel;
-
-            cursor.moveToNext();
+            message += " ";
+            
+            String nameWho = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHO));
+            String nameWhom = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHOM));
+            int sum = cursor.getInt(cursor.getColumnIndex(Calculation.SUMMA));
+            message += nameWho + " -> " + sum + "руб. -> " + nameWhom + " ";
         }
+
         message += "\nС Уважением, и бесконечной любовью,\n";
         message += "Ваш Everpay.";
 
