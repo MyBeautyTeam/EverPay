@@ -33,6 +33,7 @@ import com.beautyteam.everpay.Fragments.FragmentShowBill;
 import com.beautyteam.everpay.Fragments.TitleUpdater;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -101,7 +102,6 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         serviceHelper = new ServiceHelper(this, this);
         serviceHelper.onResume();
-        setupTracker();
 
 
 
@@ -138,11 +138,6 @@ public class MainActivity extends ActionBarActivity
 
     }
 
-    private void setupTracker() {
-        Tracker t = ((AnalyticsApp)this.getApplication()).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
-        t.setScreenName("Home");
-        t.send(new HitBuilders.AppViewBuilder().build());
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -273,12 +268,20 @@ public class MainActivity extends ActionBarActivity
         addFragment(fragment);
     }
 
+
     public void addFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
             .setCustomAnimations(R.anim.left_to_right, R.anim.scale_dicrease, R.anim.scale_increase, R.anim.right_to_left)
             .replace(R.id.main_container, fragment)
             .addToBackStack(null)
             .commit();
+    }
+
+    public void addFragmentWithoutAnim(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void replaceWithOtherAnim(Fragment fragment) {
@@ -355,6 +358,12 @@ public class MainActivity extends ActionBarActivity
                 Toast.makeText(this, "Счет добавлен", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Ошибка соединения с интернетом. Попробуйте позже", Toast.LENGTH_SHORT).show();
+            }
+        } else if(action.equals(SEND_MESSAGE_WITH_IMAGE)) {
+            if (result == Constants.Result.OK) {
+                Toast.makeText(this, "Сообщения доставлены", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Ошибка отправки сообщений", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -451,10 +460,17 @@ public class MainActivity extends ActionBarActivity
 
     }
 
-    public void sendGoogleAnalytics(String screenName) {
-        Tracker tracker = ((AnalyticsApp)(getApplication())).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
-        tracker.setScreenName(screenName);
-        tracker.send(new HitBuilders.AppViewBuilder().build());
+
+    private void setupStatistic() {
+        int male = sPref.getInt(MALE, 2);
+        if (male == 0) // мужчина
+            FlurryAgent.setGender(com.flurry.android.Constants.MALE);
+        else if (male == 1) // женщина
+            FlurryAgent.setGender(com.flurry.android.Constants.FEMALE);
+        else
+            FlurryAgent.setGender(com.flurry.android.Constants.UNKNOWN);
+
+
     }
 
 }

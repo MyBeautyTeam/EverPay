@@ -19,6 +19,9 @@ public class Debts {
     public static final String STATE = "state";
     public static final String RESULT = "result";
 
+    // Агрегаторные функции
+    static public final String SUM_SUMMA = "SUM(summa)";
+
 
     // Скрипт создания таблицы
     static public final String CREATE_TABLE = "create table " + DEBTS_TABLE + "("
@@ -33,4 +36,5 @@ public class Debts {
             + STATE + " integer, "
             + RESULT + " integer"
             + ")";
+
 }

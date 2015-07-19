@@ -19,7 +19,7 @@
         android:id="@+id/debtors_fragment_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:listSelector="@android:color/transparent"
+        android:listSelector="@drawable/on_group_pressed_selector"
         style="@style/ListViewOverscroll"
         android:footerDividersEnabled="false">
     </ListView>

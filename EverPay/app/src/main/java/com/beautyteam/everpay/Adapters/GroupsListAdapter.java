@@ -47,14 +47,14 @@ public class GroupsListAdapter  extends CursorAdapter {
         final String groupTitle = cursor.getString(cursor.getColumnIndex(Groups.TITLE));
         holder.discript.setText(groupTitle);
 
-        final String id = cursor.getString(cursor.getColumnIndex(Groups.GROUP_ID));
+        final int id = cursor.getInt(cursor.getColumnIndex(Groups.GROUP_ID));
 
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(Constants.LOG, "GROUP_ID =" + id);
-                mainActivity.addFragment(FragmentGroupDetails.getInstance(Integer.parseInt(id), groupTitle));
+                mainActivity.addFragment(FragmentGroupDetails.getInstance(id, groupTitle));
             }
         });
     }

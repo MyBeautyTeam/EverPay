@@ -28,5 +28,8 @@
     <color name="red_text">#f44336</color>
     <color name="background_material_light">#FFFFFF</color>
 
+    <color name="light_green">#1155f900</color>
+    <color name="light_red">#14fff7ee</color>
+
     <!-- =========================== -->
 </resources>

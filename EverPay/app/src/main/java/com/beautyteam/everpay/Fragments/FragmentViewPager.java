@@ -27,6 +27,7 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Views.SlidingTabLayout;
+import com.flurry.android.FlurryAgent;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
@@ -44,6 +45,8 @@ public class FragmentViewPager extends Fragment implements
     private ServiceHelper serviceHelper;
     private PageAdapter pageAdapter;
 
+    public static boolean isLoaded = false;
+
     public static FragmentViewPager getInstance() {
         FragmentViewPager fragmentViewPager = new FragmentViewPager();
         return fragmentViewPager;
@@ -54,13 +57,14 @@ public class FragmentViewPager extends Fragment implements
         super.onCreateView(inflater,container,savedInstanceState);
         setHasOptionsMenu(true);
         serviceHelper = new ServiceHelper(getActivity(), this);
+
         return inflater.inflate(R.layout.fragment_view_pager, null);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
+        FlurryAgent.logEvent("Фрагмент главная");
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         pageAdapter = new PageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);
@@ -85,6 +89,7 @@ public class FragmentViewPager extends Fragment implements
         updateTitle();
         serviceHelper.onResume();
         serviceHelper.getDebts();
+
     }
 
     @Override

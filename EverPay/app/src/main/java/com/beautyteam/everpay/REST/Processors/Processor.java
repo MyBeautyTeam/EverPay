@@ -60,6 +60,10 @@ public abstract class Processor {
         return sPref.getInt(Constants.Preference.USER_ID, 0);
     }
 
+    protected int getUserVkId() {
+        return sPref.getInt(Constants.Preference.USER_ID_VK, 0);
+    }
+
     protected String getAccessToken() {
         return sPref.getString(Constants.Preference.ACCESS_TOKEN, "0");
     }

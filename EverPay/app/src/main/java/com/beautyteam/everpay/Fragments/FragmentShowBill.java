@@ -24,12 +24,13 @@ import com.beautyteam.everpay.Adapters.ShowBillListAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
-import com.beautyteam.everpay.DialogWindow;
+import com.beautyteam.everpay.Dialogs.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Utils.AnimUtils;
+import com.flurry.android.FlurryAgent;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_BILL;
@@ -87,7 +88,7 @@ public class FragmentShowBill extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //((MainActivity)getActivity()).getServiceHelper().getBill(billId, groupId);
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
+        FlurryAgent.logEvent("Просмотр счета");
 
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
 
@@ -253,6 +254,7 @@ public class FragmentShowBill extends Fragment implements
                 dialogWindow.dismiss();
                 removeBill(getArguments().getInt(BILL_ID));
                 ((MainActivity)getActivity()).removeFragment();
+                FlurryAgent.logEvent("Удаление счета");
             }
         });
     }

@@ -7,11 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.GroupMembers;
+import com.beautyteam.everpay.Dialogs.DialogDebtDetail;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -33,11 +36,14 @@ import java.util.HashMap;
 public class DebtorsListAdapter extends CursorAdapter {
 
     private final LayoutInflater inflater;
+    private DialogDebtDetail dialogDebtDetail;
 
     HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
+    Context context;
 
     public DebtorsListAdapter(Context context, final Cursor c, int flags) {
         super(context, c, flags);
+        this.context=context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         new Handler().post(new Runnable() {
             @Override
@@ -99,9 +105,10 @@ public class DebtorsListAdapter extends CursorAdapter {
         final ViewHolder holder = (ViewHolder) view.getTag();
 
         //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
-        holder.summa.setText(cursor.getString(cursor.getColumnIndex(Debts.SUMMA)));
+        final int summ = cursor.getInt(cursor.getColumnIndex(Debts.SUM_SUMMA));
+        holder.summa.setText(summ + "");
 
-        String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
+        final String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
         String group = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
 
         if (userName == null) {
@@ -115,9 +122,11 @@ public class DebtorsListAdapter extends CursorAdapter {
                     .into(holder.avatar);
         }
         else {
-            holder.discript.setText(userName + ", " + group);
-            String id = cursor.getString(cursor.getColumnIndex(Debts.USER_VK_ID));
-            String img = mapIdToAvatar.get(id);
+            holder.discript.setText(userName);
+            final String id_vk = cursor.getString(cursor.getColumnIndex(Debts.USER_VK_ID));
+            final int userId = cursor.getInt(cursor.getColumnIndex(Debts.USER_ID));
+            final int isIDebt = cursor.getInt(cursor.getColumnIndex(Debts.IS_I_DEBT));
+            final String img = mapIdToAvatar.get(id_vk);
 
             Picasso.with(context)
                     .load(img)
@@ -127,7 +136,14 @@ public class DebtorsListAdapter extends CursorAdapter {
                     .centerInside()
                     .into(holder.avatar);
 
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDialog(userName,userId, id_vk, isIDebt, img, summ);
+                }
+            });
         }
+
     }
 
 
@@ -142,5 +158,14 @@ public class DebtorsListAdapter extends CursorAdapter {
         TextView discript;
         RoundedImageView avatar;
     }
+
+    private void showDialog(String userName, int userId, String userVkId, int isIDebt, String img, int sum) {
+        dialogDebtDetail = new DialogDebtDetail(context, userName, userId, userVkId, isIDebt, img, sum);
+        dialogDebtDetail.show();
+        Window window = dialogDebtDetail.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+
 }
 

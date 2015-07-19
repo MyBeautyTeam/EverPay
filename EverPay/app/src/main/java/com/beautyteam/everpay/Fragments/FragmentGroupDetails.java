@@ -29,6 +29,7 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Views.SwipeRefreshLayoutBottom;
+import com.flurry.android.FlurryAgent;
 
 import java.util.HashSet;
 
@@ -109,8 +110,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
+        FlurryAgent.logEvent("Фрагмент просмотр деталей группы");
 
         calcBtn = (Button) view.findViewById(R.id.group_calc_btn);
         calcBtn.setOnClickListener(this);

@@ -2,13 +2,13 @@ package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,9 +27,10 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * Created by Admin on 15.03.2015.
@@ -43,10 +44,15 @@ public class CalcListAdapter extends CursorAdapter {
     private HashMap<Integer, Boolean> mapPositionToIsOpenSecondAvatar = new HashMap<Integer, Boolean>();
     private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
 
+
+    private int userIdOwner; // ID пользователя, чтобы узнать, какая должна быть стрелочка
+
     public CalcListAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        userIdOwner = context.getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE).getInt(Constants.Preference.USER_ID, 0);
 
         String usersId = "";
         if (c.moveToFirst() && c.getCount() != 0) {
@@ -121,6 +127,8 @@ public class CalcListAdapter extends CursorAdapter {
         holder.firstLayout = (LinearLayout) itemLayout.findViewById(R.id.item_calc_first_layout);
         holder.secondLayout = (LinearLayout) itemLayout.findViewById(R.id.item_calc_second_layout);
 
+        holder.arrow = (ImageView) itemLayout.findViewById(R.id.calc_arrow);
+
         itemLayout.setTag(holder);
         return itemLayout;
     }
@@ -163,6 +171,23 @@ public class CalcListAdapter extends CursorAdapter {
         String userWhoVK = cursor.getString(cursor.getColumnIndex(Calculation.WHO_ID_VK));
         String userWhomVK = cursor.getString(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
 
+        /*
+        Определяем цвет стрелочки
+         */
+        int userWhoId = cursor.getInt(cursor.getColumnIndex(Calculation.WHO_ID));
+        int userWhomId = cursor.getInt(cursor.getColumnIndex(Calculation.WHOM_ID));
+        if (userWhoId != userIdOwner && userWhomId != userIdOwner) {
+            /*Picasso.with(context)
+                    .load(R.drawable.ic_trending_neutral_black_36dp)
+                    .centerInside()
+                    .into(holder.arrow);*/
+            holder.arrow.setImageResource(R.drawable.ic_trending_neutral_blue_36dp);
+            holder.summa.setTextColor(context.getResources().getColor(R.color.primary));
+        } else {
+            holder.arrow.setImageResource(R.drawable.ic_trending_neutral_black_36dp);
+            holder.summa.setTextColor(context.getResources().getColor(R.color.primary_text));
+        }
+
         OnTextClickListener textListener = new OnTextClickListener();
         textListener.setParams(holder, userWhoVK, userWhomVK, cursor.getPosition());
         holder.firstName.setOnClickListener(textListener);
@@ -172,15 +197,23 @@ public class CalcListAdapter extends CursorAdapter {
 
         int position = cursor.getPosition();
         if (mapPositionToIsOpenFirstAvatar.get(position)) {
-            holder.firstName.performClick();
+            //holder.firstName.performClick();
+            openAvatar(holder.firstLayout, holder.firstAvatar, holder.firstName, userWhoVK);
+            mapPositionToIsOpenFirstAvatar.put(position, true);
         } else {
-            holder.firstLayout.performClick();
+            //holder.firstLayout.performClick();
+            closeAvatar(holder.firstLayout, holder.firstName);
+            mapPositionToIsOpenFirstAvatar.put(position, false);
+            //openAvatar(position, holder.firstAvatar, holder.firstLayout, userWhoVK);
         }
 
         if (mapPositionToIsOpenSecondAvatar.get(position)) {
-            holder.secondName.performClick();
+
+            openAvatar(holder.secondLayout, holder.secondAvatar, holder.secondName, userWhomVK);
+            mapPositionToIsOpenSecondAvatar.put(position, true);
         } else {
-            holder.secondLayout.performClick();
+            closeAvatar(holder.secondLayout, holder.secondName);
+            mapPositionToIsOpenSecondAvatar.put(position, false);
         }
 
     }
@@ -199,6 +232,7 @@ public class CalcListAdapter extends CursorAdapter {
         RoundedImageView secondAvatar;
         LinearLayout firstLayout;
         LinearLayout secondLayout;
+        ImageView arrow;
     }
 
     private class OnTextClickListener implements View.OnClickListener {
@@ -221,52 +255,52 @@ public class CalcListAdapter extends CursorAdapter {
             switch (view.getId()) {
                 // Кликаем на первый текст
                 case R.id.item_calc_first_name:
+                    openAvatar(viewHolder.firstLayout, viewHolder.firstAvatar, viewHolder.firstName, whoUserId);
                     mapPositionToIsOpenFirstAvatar.put(position, true);
 
-                    view.setVisibility(View.GONE);
-                    viewHolder.firstLayout.setVisibility(View.VISIBLE);
-
-                    String firstAvatarUrl = mapIdToAvatar.get(whoUserId);
-                    Picasso.with(context)
-                            .load(firstAvatarUrl)
-                            .placeholder(context.getResources().getDrawable(R.drawable.default_image))
-                            .error(context.getResources().getDrawable(R.drawable.default_image))
-                            .resize(100, 100)
-                            .centerInside()
-                            .into(viewHolder.firstAvatar);
-
                     break;
+
                 // Кликаем на первый layout
                 case R.id.item_calc_first_layout:
+                    closeAvatar(viewHolder.firstLayout, viewHolder.firstName);
                     mapPositionToIsOpenFirstAvatar.put(position, false);
-
-                    view.setVisibility(view.GONE); // Прячем картинку
-                    viewHolder.firstName.setVisibility(View.VISIBLE); // Показываем текст
                     break;
+
                 // Кликаем на второй текст
                 case R.id.item_calc_second_name:
+                    openAvatar(viewHolder.secondLayout, viewHolder.secondAvatar, viewHolder.secondName, whomUserId);
                     mapPositionToIsOpenSecondAvatar.put(position, true);
-
-                    view.setVisibility(View.GONE);
-                    viewHolder.secondLayout.setVisibility(View.VISIBLE);
-                    String secondAvatarUrl = mapIdToAvatar.get(whomUserId);
-                    Picasso.with(context)
-                            .load(secondAvatarUrl)
-                            .placeholder(context.getResources().getDrawable(R.drawable.default_image))
-                            .error(context.getResources().getDrawable(R.drawable.default_image))
-                            .resize(100, 100)
-                            .centerInside()
-                            .into(viewHolder.secondAvatar);
                     break;
+
                 // Кликаем на второй layout
                 case R.id.item_calc_second_layout:
+                    closeAvatar(viewHolder.secondLayout, viewHolder.secondName);
                     mapPositionToIsOpenSecondAvatar.put(position, false);
-
-                    view.setVisibility(view.GONE); // Прячем картинку
-                    viewHolder.secondName.setVisibility(View.VISIBLE); // Показываем текст
                     break;
             }
         }
+
+    }
+
+    private void openAvatar(LinearLayout imageLayout, RoundedImageView image, TextView text, String userId) {
+
+        text.setVisibility(View.GONE);
+        imageLayout.setVisibility(View.VISIBLE);
+
+        String firstAvatarUrl = mapIdToAvatar.get(userId);
+        Picasso.with(context)
+                .load(firstAvatarUrl)
+                .placeholder(context.getResources().getDrawable(R.drawable.default_image))
+                .error(context.getResources().getDrawable(R.drawable.default_image))
+                .resize(100, 100)
+                .centerInside()
+                .into(image);
+    }
+
+    private void closeAvatar(LinearLayout imageLayout, TextView text) {
+
+        imageLayout.setVisibility(View.GONE); // Прячем картинку
+        text.setVisibility(View.VISIBLE); // Показываем текст
     }
 
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.vk.sdk.VKAccessToken;
@@ -27,16 +28,13 @@ import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 public class LoginActivity extends Activity {
     private static String VK_APP_ID = "4799302";
     private static String sTokenKey = "VK_ACCESS_TOKEN";
-    private static String[] sMyScope = new String[]{VKScope.FRIENDS, VKScope.PHOTOS};
+    private static String[] sMyScope = new String[]{VKScope.FRIENDS, VKScope.PHOTOS, VKScope.MESSAGES};
     private SharedPreferences sPref;
     private String screenName = "Авторизация";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        sendGoogleAnalytics(screenName);
-
         VKUIHelper.onCreate(this);
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
@@ -70,6 +68,7 @@ public class LoginActivity extends Activity {
             this.finish();
 
         } else {
+            FlurryAgent.logEvent("Фрагмент авторизации");
             Log.d("vk", " no wake up");
             loginButton.setVisibility(View.VISIBLE);
         }
@@ -78,6 +77,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View view) {
                 VKSdk.authorize(sMyScope, true, false);
+                FlurryAgent.logEvent("Нажатие на кнопку авторизации");
                 Log.d("vk", " click");
             }
         });
@@ -127,6 +127,7 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
+            FlurryAgent.logEvent("Получен новый AccessToken");
             String accessToken = newToken.accessToken;
             newToken.saveTokenToSharedPreferences(LoginActivity.this,sTokenKey);
             Log.d("TOken receive", accessToken);
@@ -183,10 +184,5 @@ public class LoginActivity extends Activity {
 
     }
 
-    public void sendGoogleAnalytics(String screenName) {
-        Tracker tracker = ((AnalyticsApp)(getApplication())).getTracker(AnalyticsApp.TrackerName.APP_TRACKER);
-        tracker.setScreenName(screenName);
-        tracker.send(new HitBuilders.AppViewBuilder().build());
-    }
 
 }

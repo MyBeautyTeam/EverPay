@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/ListViewOverscroll"
+            android:listSelector="@drawable/on_group_pressed_selector"
             android:layout_weight="1">
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>

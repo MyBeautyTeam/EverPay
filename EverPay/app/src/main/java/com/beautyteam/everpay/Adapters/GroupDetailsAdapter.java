@@ -17,7 +17,6 @@ package com.beautyteam.everpay.Adapters;
         import android.widget.TextView;
         import com.beautyteam.everpay.Constants;
         import com.beautyteam.everpay.Database.History;
-        import com.beautyteam.everpay.DialogWindow;
         import com.beautyteam.everpay.Fragments.FragmentShowBill;
         import com.beautyteam.everpay.MainActivity;
         import com.beautyteam.everpay.R;
@@ -136,7 +135,7 @@ public class GroupDetailsAdapter extends CursorAdapter {
         String names[] = {"Повторить попытку", "Удалить"};
         final Dialog dialog = new Dialog(mainActivity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_not_send);
+        dialog.setContentView(R.layout.dialog_list);
         ListView lv = (ListView) dialog.findViewById(R.id.dialog_action_list);
         dialog.setCancelable(true);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mainActivity,R.layout.item_dialog_not_send, R.id.item_dialog, names);

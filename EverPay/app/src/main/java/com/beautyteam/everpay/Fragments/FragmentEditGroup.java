@@ -34,6 +34,7 @@ import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.User;
+import com.flurry.android.FlurryAgent;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.CALCULATE;
@@ -82,9 +83,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ((MainActivity)getActivity()).sendGoogleAnalytics(screenName);
-
+        FlurryAgent.logEvent("Фрагмент редактирование группы");
         friendsList = (ListView) view.findViewById(R.id.edit_group_friends_list);
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
