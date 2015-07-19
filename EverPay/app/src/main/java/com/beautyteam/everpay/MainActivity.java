@@ -103,6 +103,8 @@ public class MainActivity extends ActionBarActivity
         serviceHelper.onResume();
         setupTracker();
 
+
+
         FragmentGroupDetails.downloadedGroupSet = new HashSet<Integer>();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
