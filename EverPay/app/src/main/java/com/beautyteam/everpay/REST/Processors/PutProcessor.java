@@ -3,7 +3,6 @@ package com.beautyteam.everpay.REST.Processors;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -12,23 +11,8 @@ import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Groups;
-import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.REST.Service;
-import com.beautyteam.everpay.Utils.DateFormetter;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,14 +23,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 
 import static com.beautyteam.everpay.Constants.Action.EDIT_BILL;
 import static com.beautyteam.everpay.Constants.Action.EDIT_CALCULATION;
 import static com.beautyteam.everpay.Constants.Action.EDIT_GROUP;
-import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
  * Created by Admin on 02.05.2015.

@@ -10,7 +10,7 @@ import java.util.TimeZone;
 /**
  * Created by Admin on 01.05.2015.
  */
-public class DateFormetter {
+public class DateFormatter {
     public static String formatDateTime(String timeToFormat) {
 
         String day = timeToFormat.substring(0, timeToFormat.indexOf(" "));

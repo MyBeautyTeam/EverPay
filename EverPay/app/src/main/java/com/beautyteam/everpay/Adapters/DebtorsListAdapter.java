@@ -48,7 +48,8 @@ public class DebtorsListAdapter extends CursorAdapter {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                loadAvatarsFromVK(c);
+                if (!c.isClosed()) // Без этого падает переход на дроверу с экрана расчета
+                    loadAvatarsFromVK(c);
             }
         });
     }
