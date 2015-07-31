@@ -111,6 +111,7 @@ public class FragmentIDebt extends Fragment implements
         Debts.USER_ID,
         Debts.USER_VK_ID,
         Debts.USER_NAME,
+        Debts.GROUP_ID,
         Debts.GROUP_TITLE,
         Debts.IS_I_DEBT
     };

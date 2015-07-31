@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Dialogs.DialogDebtDetail;
+import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
@@ -37,6 +38,7 @@ public class DebtorsListAdapter extends CursorAdapter {
 
     private final LayoutInflater inflater;
     private DialogDebtDetail dialogDebtDetail;
+    private MainActivity activity;
 
     HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
     Context context;
@@ -102,7 +104,7 @@ public class DebtorsListAdapter extends CursorAdapter {
 
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
         final ViewHolder holder = (ViewHolder) view.getTag();
 
         //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
@@ -110,10 +112,10 @@ public class DebtorsListAdapter extends CursorAdapter {
         holder.summa.setText(summ + "");
 
         final String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
-        String group = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
+        final String groupTitle = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
 
         if (userName == null) {
-            holder.discript.setText(group);
+            holder.discript.setText(groupTitle);
             Picasso.with(context)
                     .load(R.drawable.group_icon)
                     .placeholder(context.getResources().getDrawable(R.drawable.group_icon))
@@ -121,6 +123,14 @@ public class DebtorsListAdapter extends CursorAdapter {
                     .resize(200, 200)
                     .centerInside()
                     .into(holder.avatar);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int groupId = cursor.getInt(cursor.getColumnIndex(Debts.GROUP_ID));
+                    ((MainActivity)context).addFragment(FragmentGroupDetails.getInstance(groupId, groupTitle));
+                }
+            });
         }
         else {
             holder.discript.setText(userName);
