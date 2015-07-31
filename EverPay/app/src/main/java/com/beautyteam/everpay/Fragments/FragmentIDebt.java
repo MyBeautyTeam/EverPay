@@ -44,6 +44,7 @@ public class FragmentIDebt extends Fragment implements
         PageAdapter.OnDebtsLoadedListener,
         TitleUpdater {
 
+
     private ListView debtorsList;
 
     public static final int LOADER_ID_I_DEBT = 1;

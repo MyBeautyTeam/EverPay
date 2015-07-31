@@ -25,8 +25,6 @@ public class EverContentProvider extends ContentProvider {
         public static String LEFT_GROUP = "/left";
     }
 
-
-
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
@@ -35,8 +33,6 @@ public class EverContentProvider extends ContentProvider {
     public static final Uri GROUP_MEMBERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupMembers.GROUP_MEMBERS_TABLE);
     public static final Uri BILLS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Bills.BILLS_TABLE);
     public static final Uri HISTORY_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + History.HISTORY_TABLE);
-
-
 
     static final String USERS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Users.USERS_TABLE;
     static final String GROUPS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
@@ -149,7 +145,7 @@ public class EverContentProvider extends ContentProvider {
                 notifyUri = DEBTS_CONTENT_URI;
 
                 Cursor cursor = db.query(table, projection, selection,
-                        selectionArgs, Debts.USER_ID, null, sortOrder);
+                        selectionArgs, "(case when " + Debts.USER_ID + " is null then "+Debts.ITEM_ID+" else "+ Debts.USER_ID + " end)", null, sortOrder);
                 cursor.setNotificationUri(getContext().getContentResolver(), notifyUri);
                 return cursor;
                 //break;
