@@ -2,6 +2,7 @@ package com.beautyteam.everpay.Fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -12,12 +13,9 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.DebtorsListAdapter;
 import com.beautyteam.everpay.Adapters.PageAdapter;
@@ -25,16 +23,8 @@ import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Dialogs.DialogDebtDetail;
-import com.beautyteam.everpay.Dialogs.DialogWindow;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
-import com.beautyteam.everpay.REST.RequestCallback;
-import com.beautyteam.everpay.REST.ServiceHelper;
-import com.flurry.android.FlurryAgent;
-
-import static com.beautyteam.everpay.Constants.ACTION;
-import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
-import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
 
 /**
  * Created by Admin on 10.03.2015.
@@ -44,7 +34,10 @@ public class FragmentIDebt extends Fragment implements
         PageAdapter.OnDebtsLoadedListener,
         TitleUpdater {
 
-
+/*
+Все, что связано с isError - полный пиздец!
+Если не перепишу - в церкви не будут отпевать.
+ */
     private ListView debtorsList;
 
     public static final int LOADER_ID_I_DEBT = 1;
@@ -55,6 +48,8 @@ public class FragmentIDebt extends Fragment implements
     private TextView emptyText;
     public static final String LOADER = "LOADER";
     private DialogDebtDetail dialogDebtDetail;
+
+    public static boolean isError = false; // ЖУТЧАЙШИЙ КОСТЫЛЬ, ГОСПОДИ, ПРОСТИ. Как низко я пал...
 
     public static FragmentIDebt getInstance(int loader) {
         FragmentIDebt fragmentIDebt = new FragmentIDebt();
@@ -79,6 +74,16 @@ public class FragmentIDebt extends Fragment implements
         debtorsList = (ListView) view.findViewById(R.id.debtors_fragment_list);
 
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
+        isError = false;
+        final LoaderManager.LoaderCallbacks<Cursor> self = this;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (((Fragment) self).isAdded()&&(isError)) {
+                    getLoaderManager().initLoader(loader, null, self);
+                }
+            }
+        }, 3000);
 
         /*if (loader == LOADER_ID_I_DEBT)
             ((MainActivity)getActivity()).getServiceHelper().getDebts();*/
@@ -117,6 +122,7 @@ public class FragmentIDebt extends Fragment implements
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
         switch (id) {
             case LOADER_ID_I_DEBT:
                 return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=1", null, Debts.SUMMA + " desc");
@@ -128,8 +134,8 @@ public class FragmentIDebt extends Fragment implements
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+
         loadingLayout.setVisibility(View.GONE);
-        emptyText.setText("Поздравляю! \nУ тебя здесь ничего нет =)");
         int summa = 0;
         if (c.moveToFirst() && c.getCount() != 0) {
             while (!c.isAfterLast()) {
@@ -148,6 +154,8 @@ public class FragmentIDebt extends Fragment implements
         } else {
             FragmentViewPager.slidingTabLayout.setDebtForMe(summa);
         }
+
+        emptyText.setText("Поздравляю! \nУ тебя здесь ничего нет =)");
 
     }
 
@@ -171,6 +179,5 @@ public class FragmentIDebt extends Fragment implements
     public void onDebtsLoaded() {
         getLoaderManager().initLoader(loader, null, this);
     }
-
 
 }
