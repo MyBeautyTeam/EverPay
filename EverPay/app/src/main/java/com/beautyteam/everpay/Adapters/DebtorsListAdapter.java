@@ -113,6 +113,7 @@ public class DebtorsListAdapter extends CursorAdapter {
 
         final String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
         final String groupTitle = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));
+        final int groupId = cursor.getInt(cursor.getColumnIndex(Debts.GROUP_ID));
 
         if (userName == null) {
             holder.discript.setText(groupTitle);
@@ -127,7 +128,6 @@ public class DebtorsListAdapter extends CursorAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int groupId = cursor.getInt(cursor.getColumnIndex(Debts.GROUP_ID));
                     ((MainActivity)context).addFragment(FragmentGroupDetails.getInstance(groupId, groupTitle));
                 }
             });

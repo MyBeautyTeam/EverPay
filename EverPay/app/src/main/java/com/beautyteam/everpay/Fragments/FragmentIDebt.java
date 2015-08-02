@@ -125,9 +125,9 @@ public class FragmentIDebt extends Fragment implements
 
         switch (id) {
             case LOADER_ID_I_DEBT:
-                return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=1", null, Debts.SUMMA + " desc");
+                return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=1", null, Debts.SUM_SUMMA + " desc");
             case LOADER_ID_DEBT_FOR_ME:
-                return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=0", null, Debts.SUMMA +" desc");
+                return new CursorLoader(getActivity(), EverContentProvider.DEBTS_CONTENT_URI, PROJECTION, Debts.IS_I_DEBT +"=0", null, Debts.SUM_SUMMA +" desc");
             default:
                 return null;
         }
