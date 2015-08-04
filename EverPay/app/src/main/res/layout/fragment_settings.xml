@@ -28,6 +28,7 @@
                 android:textSize="16dp"
                 />
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/setting_switch_push"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/SwitchCompat"
@@ -52,7 +53,7 @@
                 android:textSize="16dp"
                 />
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/add_bill_switch"
+                android:id="@+id/setting_switch_advice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/SwitchCompat"
@@ -70,7 +71,7 @@
         android:layout_marginBottom="16dp"
         >
         <Button
-            android:id="@+id/bug_report_btn"
+            android:id="@+id/evaluate_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Оценить"
@@ -83,7 +84,7 @@
             android:textColor="@color/primary"
             />
         <Button
-            android:id="@+id/evaluate_btn"
+            android:id="@+id/bug_report_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Связаться с разработчиками"

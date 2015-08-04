@@ -1,5 +1,6 @@
 package com.beautyteam.everpay;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.tjeannin.apprate.AppRate;
 import com.vk.sdk.VKSdk;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
@@ -112,6 +114,15 @@ public class MainActivity extends ActionBarActivity
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(Constants.Preference.IS_FIRST_LAUNCH, true);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setMessage("Поставьте нам оценку! Для Вас пустяк - а для нас это очень важно!")
+                .setPositiveButton("Поставлю", null)
+                .setNegativeButton("Не хочу", null)
+                .setNeutralButton("Потом", null);
+
+        new AppRate(this)
+                .setCustomDialog(builder)
+                .init();
 
         if (isFirstLaunch) {
             fragmentManager.beginTransaction()
