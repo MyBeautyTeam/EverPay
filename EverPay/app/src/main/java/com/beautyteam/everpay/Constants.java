@@ -76,6 +76,7 @@ public class Constants {
         public final static String GROUPS = "Группы";
         public final static String MAIN = "Главная";
         public final static String SETTINGS = "Настройки";
+        public final static String CREATE_USER = "Создание участника";
     }
 
     public class Preference {

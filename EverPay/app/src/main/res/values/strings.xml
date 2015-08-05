@@ -12,10 +12,15 @@
     <string name="add_group">ДОБАВИТЬ ГРУППУ</string>
     <string name="ready">ГОТОВО</string>
     <string name="add_friend">ДОБАВИТЬ УЧАСТНИКА</string>
+    <string name="create_user">НЕТ В ДРУЗЬЯХ? СОЗДАТЬ УЧАСТНИКА</string>
     <string name="quit">ВЫХОД</string>
+    <string name="search_title">Поиск</string>
+    <string name="search_hint">Поиск</string>
+    <string name="radio_male">Мужской</string>
+    <string name="radio_female">Женский</string>
+    <string name="radio_sex">Пол:</string>
 
-
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

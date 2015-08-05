@@ -4,11 +4,27 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:background="@color/background_material_light">
-        <ListView
-            android:id="@+id/edit_group_friends_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            style="@style/ListViewOverscroll"
-            />
+    <ListView
+        android:id="@+id/edit_group_friends_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/ListViewOverscroll"
+        android:layout_weight="1"
+        />
+    <Button
+        android:id="@+id/create_btn_user_edit_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/dark_primary"
+        android:background="@drawable/btn_add_friend_style"
+        android:drawableLeft="@drawable/account_plus"
+        android:text="@string/create_user"
+        android:drawablePadding="8dp"
+        android:textSize="14dp"
+        android:layout_centerHorizontal="true"
+        />
     </LinearLayout>
