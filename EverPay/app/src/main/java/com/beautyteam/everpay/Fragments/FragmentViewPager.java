@@ -44,6 +44,7 @@ public class FragmentViewPager extends Fragment implements
     public static SlidingTabLayout slidingTabLayout;
     private ServiceHelper serviceHelper;
     private PageAdapter pageAdapter;
+    private ViewPager viewPager;
 
     public static boolean isLoaded = false;
 
@@ -65,9 +66,11 @@ public class FragmentViewPager extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FlurryAgent.logEvent("Фрагмент главная");
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-        pageAdapter = new PageAdapter(getChildFragmentManager());
-        viewPager.setAdapter(pageAdapter);
+        //if (pageAdapter == null || pageAdapter.listeners.size() == 0) {
+            viewPager = (ViewPager) view.findViewById(R.id.pager);
+            pageAdapter = new PageAdapter(getChildFragmentManager());
+            viewPager.setAdapter(pageAdapter);
+        //}
 
         slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         // Center the tabs in the layout
@@ -138,6 +141,7 @@ public class FragmentViewPager extends Fragment implements
         if (action.equals(GET_DEBTS)) {
             if (result == Constants.Result.OK) {
             } else {
+                FragmentIDebt.isError = true;
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
         }

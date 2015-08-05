@@ -1,7 +1,10 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,6 +38,7 @@ public class FragmentSettings  extends Fragment
         implements View.OnClickListener, TitleUpdater {
 
     private String screenName="Настройки";
+    private MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +52,12 @@ public class FragmentSettings  extends Fragment
         FlurryAgent.logEvent("Фрагмент настройки");
         Button quitButton = (Button) view.findViewById(R.id.quit_button);
         quitButton.setOnClickListener(this);
+
+        Button bugReport = (Button) view.findViewById(R.id.bug_report_btn);
+        bugReport.setOnClickListener(this);
+
+        Button evaluateBtn = (Button) view.findViewById(R.id.evaluate_btn);
+        evaluateBtn.setOnClickListener(this);
 
     }
 
@@ -74,6 +84,17 @@ public class FragmentSettings  extends Fragment
                 getActivity().finish();
 
                 break;
+
+            case R.id.bug_report_btn:
+                mainActivity.addFragment(FragmentBugReport.getInstance());
+                break;
+
+            case R.id.evaluate_btn:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse
+                        ("https://play.google.com/store/apps/details?id=com.scimob.ninetyfour.percent"));
+                startActivity(intent);
+                break;
         }
     }
 
@@ -81,5 +102,11 @@ public class FragmentSettings  extends Fragment
     @Override
     public void updateTitle() {
         ((MainActivity)getActivity()).setTitle(Constants.Titles.SETTINGS);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mainActivity = (MainActivity)activity;
     }
 }

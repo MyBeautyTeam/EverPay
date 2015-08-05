@@ -14,7 +14,7 @@ import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.REST.Service;
-import com.beautyteam.everpay.Utils.DateFormetter;
+import com.beautyteam.everpay.Utils.DateFormatter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -73,7 +73,7 @@ public class GetProcessors extends Processor {
                             cv = new ContentValues();
                             cv.put(Groups.GROUP_ID, group.getString("groups_id"));
                             cv.put(Groups.TITLE, group.getString("title"));
-                            cv.put(Groups.UPDATE_TIME, DateFormetter.formatDateTime(group.getString("update_datetime")));
+                            cv.put(Groups.UPDATE_TIME, DateFormatter.formatDateTime(group.getString("update_datetime")));
                             if (group.getBoolean("is_calculated"))
                                 cv.put(Groups.IS_CALCULATED, 1);
                             else

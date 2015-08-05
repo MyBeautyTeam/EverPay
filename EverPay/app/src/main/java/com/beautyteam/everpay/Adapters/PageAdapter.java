@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class PageAdapter extends FragmentStatePagerAdapter {
 
-    ArrayList<OnDebtsLoadedListener> listeners;
+    public ArrayList<OnDebtsLoadedListener> listeners;
 
     public PageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);

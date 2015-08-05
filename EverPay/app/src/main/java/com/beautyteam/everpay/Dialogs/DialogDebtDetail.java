@@ -96,6 +96,7 @@ public class DialogDebtDetail extends Dialog implements View.OnClickListener {
         Picasso.with(getContext())
                 .load(img)
                 .error(getContext().getResources().getDrawable(R.drawable.default_image))
+                .placeholder(getContext().getResources().getDrawable(R.drawable.default_image))
                 .resize(100, 100)
                 .centerInside()
                 .into(avatar);

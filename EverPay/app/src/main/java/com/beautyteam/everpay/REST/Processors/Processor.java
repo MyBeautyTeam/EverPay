@@ -11,14 +11,13 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.REST.Service;
-import com.beautyteam.everpay.Utils.DateFormetter;
+import com.beautyteam.everpay.Utils.DateFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Admin on 29.04.2015.
@@ -43,17 +42,28 @@ public abstract class Processor {
      */
     protected String getAndIncrementMaxDate(Context context) {
 
-            Cursor maxCursor = context.getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, new String [] {"MAX("+Groups.UPDATE_TIME+")"}, null, null, null);
-            maxCursor.moveToFirst();
-            String max = maxCursor.getString(0);
+        Cursor maxCursor = context.getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, new String [] {"MAX("+Groups.UPDATE_TIME+")"}, null, null, null);
+        maxCursor.moveToFirst();
+        String max = maxCursor.getString(0);
 
-            int lastInt = max.lastIndexOf(":");
-            String lastChar = max.substring(lastInt+1);
-            int lastDigit = Integer.parseInt(lastChar);
-            lastDigit++;
+        if (max == null) {
+            Date cDate = new Date();
+            max = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(cDate);
+        }
 
-            max = max.substring(0, lastInt+1) + lastDigit;
-            return max;
+        int lastInt = max.lastIndexOf(":");
+        String lastChar = max.substring(lastInt+1);
+        int lastDigit = Integer.parseInt(lastChar);
+        lastDigit++;
+
+        String lastDigitInString = lastDigit + "";
+
+        if (lastDigit<10) {
+            lastDigitInString = "0" + lastDigitInString;
+        }
+
+        max = max.substring(0, lastInt+1) + lastDigitInString;
+        return max;
     }
 
     protected int getUserId() {
@@ -104,7 +114,7 @@ public abstract class Processor {
             cv.put(History.ACTION, history.getString("action"));
 
             String date = history.getString("action_datetime");
-            String formatedDate = DateFormetter.formatDateTime(date);
+            String formatedDate = DateFormatter.formatDateTime(date);
             cv.put(History.ACTION_DATETIME, formatedDate);
             try {
                 cv.put(History.TEXT_WHO_SAY, history.getString("text_who_say"));
