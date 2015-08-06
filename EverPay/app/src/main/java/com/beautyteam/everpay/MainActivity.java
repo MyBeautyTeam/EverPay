@@ -246,6 +246,11 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
             }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
         });
 
 
@@ -445,7 +450,7 @@ public class MainActivity extends ActionBarActivity
     Обраобтка сообщения, полученного из Нотификации
      */
     private void handleNotificationIntent() {
-        Log.e("handleNotificationIntent", "was called");
+        Log.e("handleNotificationIt", "was called");
         int billId = getIntent().getExtras().getInt(Constants.IntentParams.BILL_ID, 0);
         int groupId = getIntent().getExtras().getInt(Constants.IntentParams.GROUP_ID, 0);
 

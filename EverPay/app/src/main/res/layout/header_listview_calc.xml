@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/calc_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FF5252"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Вы должны:"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:textColor="#FFFFFF"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="2500"
+            android:textColor="#FFFFFF"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_weight="1.3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Счет"
+                android:gravity="center"
+                android:textSize="16dp"
+                android:textColor="#FFFFFF"
+                />
+            <TextView
+                android:layout_weight="1.8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Должен"
+                android:drawableBottom="@drawable/package_up"
+                android:gravity="center"
+                android:textSize="14dp"
+                android:textColor="#FFFFFF"
+                />
+            <TextView
+                android:layout_weight="1.8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Внес"
+                android:gravity="center"
+                android:drawableBottom="@drawable/package_down"
+                android:textColor="#FFFFFF"
+                android:textSize="14dp"
+                />
+            <TextView
+                android:layout_weight="1.8"
+                android:layout_marginRight="5dp"
+                android:text="Баланс"
+                android:textSize="16dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:textColor="#FFFFFF"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

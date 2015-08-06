@@ -16,13 +16,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.CalcDetailsAdapter;
-import com.beautyteam.everpay.Adapters.CalcListAdapter;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.CalculationDetails;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.flurry.android.FlurryAgent;
+
+import it.carlom.stikkyheader.core.StikkyHeaderBuilder;
 
 /**
  * Created by popka on 06.08.15.
@@ -34,7 +37,7 @@ public class FragmentCalcDetails extends Fragment implements
     private static final int LOADER_ID = 1;
     private CalcDetailsAdapter mAdapter;
 
-    private ListView calcDetailsList;
+    private ListView list;
     private ServiceHelper serviceHelper;
 
     private TextView debtTitle;
@@ -51,13 +54,14 @@ public class FragmentCalcDetails extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         groupId = getArguments().getInt(GROUP_ID);
         setHasOptionsMenu(true);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
         serviceHelper = new ServiceHelper(getActivity(), this);
-        return inflater.inflate(R.layout.fragment_calc_details, null);
+        return inflater.inflate(R.layout.fragment_calc_details, container, false);
     }
 
     @Override
@@ -65,9 +69,9 @@ public class FragmentCalcDetails extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
         FlurryAgent.logEvent("Детализация группы");
 
-        calcDetailsList = (ListView)view.findViewById(R.id.calc_details_list);
-        debtTitle = (TextView)view.findViewById(R.id.calc_details_debt_title);
-        summaText = (TextView)view.findViewById(R.id.calc_details_summa);
+        list = (ListView)view.findViewById(R.id.calc_details_list);
+        /*debtTitle = (TextView)view.findViewById(R.id.calc_details_debt_title);
+        summaText = (TextView)view.findViewById(R.id.calc_details_summa);*/
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -78,7 +82,7 @@ public class FragmentCalcDetails extends Fragment implements
         switch (loader.getId()) {
             case LOADER_ID:
                 mAdapter = new CalcDetailsAdapter(getActivity(), cursor, 0);
-                calcDetailsList.setAdapter(mAdapter);
+                list.setAdapter(mAdapter);
                 break;
         }
     }
@@ -113,6 +117,18 @@ public class FragmentCalcDetails extends Fragment implements
         //loadingLayout.setVisibility(View.VISIBLE);
         serviceHelper.onResume();
         //serviceHelper.calculate(groupId);
+        ((MainActivity) getActivity()).setTitle(Constants.Titles.CALCULATION);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        StikkyHeaderBuilder.stickTo(list)
+                .setHeader(R.id.calc_header, (ViewGroup) getView())
+                .minHeightHeader(150)
+                .build();
+
     }
 
     @Override
@@ -126,4 +142,5 @@ public class FragmentCalcDetails extends Fragment implements
     public void onRequestEnd(int result, Bundle data) {
 
     }
+
 }
