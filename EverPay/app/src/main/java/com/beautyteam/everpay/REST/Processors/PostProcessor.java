@@ -341,33 +341,6 @@ public class PostProcessor extends Processor {
         service.onRequestEnd(result, intent);
     }
 
-    public String urlConnectionPost(String strUrl, String urlParameters) {
-        HttpURLConnection connection = null;
-        String str = null;
-        try {
-            URL url = new URL(strUrl);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.connect();
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write(urlParameters);
-            writer.flush();
-            int code = connection.getResponseCode();
-            if (code == 200) {
-                InputStream in = connection.getInputStream();
-                str = handleInputStream(in);
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-        return str;
-    }
 
     private String handleInputStream(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));

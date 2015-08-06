@@ -16,6 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -29,7 +30,4 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.3.0'
     compile files('src/libs/FlurryAnalytics-5.5.0.jar')
     compile files('src/libs/AppRate_1.1.jar')
-    compile files('src/libs/javax.mail.jar')
-    compile files('src/libs/activation.jar')
-    compile files('src/libs/additionnal.jar')
 }

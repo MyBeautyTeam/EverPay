@@ -274,6 +274,16 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     }
 
+    public void sendBugReport(String theme, String msg) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.BUG_REPORT);
+
+        intentService.putExtra(Constants.IntentParams.THEME, theme);
+        intentService.putExtra(Constants.IntentParams.EMAIL_MSG, msg);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
 
 
 

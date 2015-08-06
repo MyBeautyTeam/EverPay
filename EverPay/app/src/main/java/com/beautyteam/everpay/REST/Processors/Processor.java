@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -16,6 +17,13 @@ import com.beautyteam.everpay.Utils.DateFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -135,5 +143,43 @@ public abstract class Processor {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    public String urlConnectionPost(String strUrl, String urlParameters) {
+        HttpURLConnection connection = null;
+        String str = null;
+        try {
+            URL url = new URL(strUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.connect();
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(urlParameters);
+            writer.flush();
+            int code = connection.getResponseCode();
+            if (code == 200) {
+                InputStream in = connection.getInputStream();
+                str = handleInputStream(in);
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return str;
+    }
+
+    private String handleInputStream(InputStream in) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String result = "", line = "";
+        while ((line = reader.readLine()) != null) {
+            result += line;
+        }
+        Log.e("", result);
+        return result;
     }
 }

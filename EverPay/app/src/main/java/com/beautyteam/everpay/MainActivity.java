@@ -116,7 +116,8 @@ public class MainActivity extends ActionBarActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setMessage("Поставьте нам оценку! Для Вас пустяк - а для нас это очень важно!")
-                .setPositiveButton("Поставлю", null)
+                .setIcon(getResources().getDrawable(R.drawable.icon))
+                .setPositiveButton("Хорошо", null)
                 .setNegativeButton("Не хочу", null)
                 .setNeutralButton("Потом", null);
 

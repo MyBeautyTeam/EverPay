@@ -49,6 +49,10 @@ public class ProcessorFactory {
         if (SEND_MESSAGE_WITH_IMAGE.equals(action)) {
             return new VKProcessor(context);
         }
+        else
+        if (BUG_REPORT.equals(action)) {
+            return new EmailerProcessor(context);
+        }
 
         return null;
     }

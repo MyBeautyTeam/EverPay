@@ -64,6 +64,8 @@ public class Constants {
         public final static String NOTIFICATION = "NOTIFICATION";
 
         public final static String SEND_MESSAGE_WITH_IMAGE = "IMG_MESSAGE";
+
+        public final static String BUG_REPORT = "BUG_REPORT";
     }
 
     public class Titles {
@@ -107,6 +109,10 @@ public class Constants {
         public final static String MALE = "MALE";
         public final static String GROUP_TITLE = "GROUP_TITLE";
         public final static String IMAGE = "IMAGE";
+
+        //==== bugreport
+        public final static String THEME = "THEME";
+        public final static String EMAIL_MSG = "EMAIL_MSG";
     }
 
     public final static String RECEIVER = "RECEIVER";
@@ -121,3 +127,4 @@ public class Constants {
 
     public final static String SENDER_ID = "663098152756";
 }
+
