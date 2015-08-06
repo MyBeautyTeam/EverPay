@@ -128,14 +128,14 @@ public class VKAuthProcessor extends Processor {
                     }
                     JSONObject friendsWithoutVK = jsonObject.getJSONObject("friends");
 
-                    Iterator<String> it =friendsWithoutVK.keys();
-                    while (it.hasNext()) {
+                    iterator =friendsWithoutVK.keys();
+                    while (iterator.hasNext()) {
                         String key = iterator.next();
                         JSONObject friendWithotVK = friendsWithoutVK.getJSONObject(key);
                         ContentValues cv = new ContentValues();
                         cv.put(Users.USER_ID, friendWithotVK.getInt("users_id"));
-                        cv.put(Users.USER_ID_VK, 0);
-                        cv.put(Users.NAME, friendWithotVK.getInt("last_name")+ " " + friendWithotVK.getInt("name"));
+                        cv.put(Users.USER_ID_VK, friendWithotVK.getInt("vk_id"));
+                        cv.put(Users.NAME, friendWithotVK.getString("last_name") + " " + friendWithotVK.getString("name"));
                         cv.put(Users.IMG, "http://vk.com/images/deactivated_100.png");
                         cv.put(Users.STATE, Constants.State.ENDS);
                         cv.put(Users.RESULT, Constants.Result.OK);

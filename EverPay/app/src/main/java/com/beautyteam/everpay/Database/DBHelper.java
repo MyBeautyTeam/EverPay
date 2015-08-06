@@ -47,9 +47,9 @@ public class DBHelper extends SQLiteOpenHelper {
             cv.put(CalculationDetails.ITEM_ID, i);
             cv.put(CalculationDetails.GROUP_ID, i);
             cv.put(CalculationDetails.BILL_TITLE, "Счет за дружбу с пацанами" + i);
-            cv.put(CalculationDetails.NEED_SUM, new Random().nextInt(5000));
+            cv.put(CalculationDetails.DEBT_SUM, new Random().nextInt(5000));
             cv.put(CalculationDetails.INVEST_SUM, new Random().nextInt(5000));
-            cv.put(CalculationDetails.BALANCE, cv.getAsInteger(CalculationDetails.INVEST_SUM) - cv.getAsInteger(CalculationDetails.NEED_SUM));
+            cv.put(CalculationDetails.BALANCE, cv.getAsInteger(CalculationDetails.INVEST_SUM) - cv.getAsInteger(CalculationDetails.DEBT_SUM));
             db.insert(CalculationDetails.CALCULATION_DETAILS_TABLE, null, cv);
         }
 
@@ -140,7 +140,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cv.put(Bills.USER_NAME, "Name LastName" + j);
                 int coef = new Random().nextInt(100);
                 cv.put(Bills.INVEST_SUM, j * coef);
-                cv.put(Bills.NEED_SUM, j * coef);
+                cv.put(Bills.DEBT_SUM, j * coef);
                 db.insert(Bills.BILLS_TABLE, null, cv);
             }
         }

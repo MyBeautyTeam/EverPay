@@ -9,7 +9,7 @@ public class CalculationDetails {
     static public final String ITEM_ID = "_id";
     static public final String GROUP_ID = "group_id";
     static public final String BILL_TITLE = "bill_title";
-    static public final String NEED_SUM = "need";
+    static public final String DEBT_SUM = "need";
     static public final String INVEST_SUM = "invest";
     static public final String BALANCE = "balance";
 
@@ -17,7 +17,7 @@ public class CalculationDetails {
             + ITEM_ID + " integer primary key autoincrement, "
             + GROUP_ID + " integer, "
             + BILL_TITLE + " CHAR(50), "
-            + NEED_SUM + " integer, "
+            + DEBT_SUM + " integer, "
             + INVEST_SUM + " integer, "
             + BALANCE + " integer"
             + ")";

@@ -68,22 +68,24 @@ public class VKProcessor extends Processor {
                     vkRequestArrayList = new ArrayList<VKRequest>();
                     for (int i=0; i<cursor.getCount(); i++) {
                         int userIdWhoVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHO_ID_VK));
-
-                        if (setUserToSend.add(userIdWhoVk) && userIdWhoVk != getUserVkId()) {
-                            String message = generateMessage(userIdWhoVk);
-                            vkRequestArrayList.add(generateRequest(userIdWhoVk, photoId, message));
-                        }
-
                         int userIdWhomVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
-                        if (setUserToSend.add(userIdWhomVk) && userIdWhomVk != getUserVkId()) {
-                            String message = generateMessage(userIdWhomVk);
-                            vkRequestArrayList.add(generateRequest(userIdWhomVk, photoId, message));
+                        if (userIdWhomVk != 0 && userIdWhoVk != 0) {
+
+                            if (setUserToSend.add(userIdWhoVk) && userIdWhoVk != getUserVkId()) {
+                                String message = generateMessage(userIdWhoVk);
+                                vkRequestArrayList.add(generateRequest(userIdWhoVk, photoId, message));
+                            }
+
+                            if (setUserToSend.add(userIdWhomVk) && userIdWhomVk != getUserVkId()) {
+                                String message = generateMessage(userIdWhomVk);
+                                vkRequestArrayList.add(generateRequest(userIdWhomVk, photoId, message));
+                            }
                         }
 
                         cursor.moveToNext();
                     }
 
-                    if (vkRequestArrayList != null) {
+                    if (vkRequestArrayList.size() != 0) {
                         VKRequest[] requestsArr = new VKRequest[vkRequestArrayList.size()];
                         requestsArr = vkRequestArrayList.toArray(requestsArr);
 
@@ -101,6 +103,8 @@ public class VKProcessor extends Processor {
                                 super.onError(error);
                             }
                         });
+                    } else {
+                        service.onRequestEnd(Constants.Result.OK, intent);
                     }
 
 

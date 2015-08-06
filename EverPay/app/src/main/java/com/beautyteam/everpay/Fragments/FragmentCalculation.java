@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -38,10 +39,12 @@ import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Utils.PrintScreener;
 import com.flurry.android.FlurryAgent;
+import com.tjeannin.apprate.AppRate;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.CALCULATE;
@@ -101,6 +104,19 @@ public class FragmentCalculation extends Fragment implements
 
         detailsBtn = (Button) view.findViewById(R.id.calc_details_btn);
         detailsBtn.setOnClickListener(this);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setMessage("Поставьте нам оценку! Для Вас пустяк, а для нас это очень важно!")
+                .setIcon(R.drawable.group_icon)
+                .setPositiveButton("Хорошо", null)
+                .setNegativeButton("Не хочу", null)
+                .setNeutralButton("Потом", null);
+
+        new AppRate(getActivity())
+                .setCustomDialog(builder)
+                .init();
+
 
         setupEmptyList(view);
 

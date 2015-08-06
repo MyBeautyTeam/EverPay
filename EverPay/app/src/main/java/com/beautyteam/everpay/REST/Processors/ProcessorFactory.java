@@ -18,7 +18,8 @@ public class ProcessorFactory {
                 GET_GROUP_MEMBERS.equals(action) ||
                 GET_DEBTS.equals(action) ||
                 GET_BILL.equals(action) ||
-                GET_HISTORY.equals(action)
+                GET_HISTORY.equals(action) ||
+                GET_CALC_DETAILS.equals(action)
                 ) {
             return new GetProcessors(context);
         } else
@@ -29,7 +30,8 @@ public class ProcessorFactory {
             ADD_BILL.equals(action) ||
             ADD_MEMBER_TO_GROUP.equals(action) ||
             ADD_GROUP.equals(action) ||
-            CALCULATE.equals(action)
+            CALCULATE.equals(action) ||
+            ADD_USER.equals(action)
             ) {
             return new PostProcessor(context);
         } else

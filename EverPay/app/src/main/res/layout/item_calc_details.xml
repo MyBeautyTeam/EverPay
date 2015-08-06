@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -36,12 +37,12 @@
             />
         <TextView
             android:id="@+id/item_calc_details_balance"
-            android:layout_weight="1.8"
+            android:layout_weight="1.6"
             android:layout_marginRight="5dp"
             android:text="-500"
             android:textSize="19dp"
             android:textColor="@color/red_text"
-            android:gravity="right|center"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />

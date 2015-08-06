@@ -116,17 +116,6 @@ public class MainActivity extends ActionBarActivity
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);//PreferenceManager.getDefaultSharedPreferences(this);//getSharedPreferences(Constants.Preference.SHARED_PREFERENCES, MODE_PRIVATE);
         boolean isFirstLaunch = sPref.getBoolean(Constants.Preference.IS_FIRST_LAUNCH, true);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setMessage("Поставьте нам оценку! Для Вас пустяк - а для нас это очень важно!")
-                .setIcon(getResources().getDrawable(R.drawable.group_icon))
-                .setPositiveButton("Хорошо", null)
-                .setNegativeButton("Не хочу", null)
-                .setNeutralButton("Потом", null);
-
-        new AppRate(this)
-                .setCustomDialog(builder)
-                .init();
-
         if (isFirstLaunch) {
             fragmentManager.beginTransaction()
                     .replace(R.id.main_container, new FragmentLoading())
@@ -377,6 +366,8 @@ public class MainActivity extends ActionBarActivity
             } else {
                 Toast.makeText(this, "Ошибка отправки сообщений", Toast.LENGTH_SHORT).show();
             }
+        } else if (action.equals(ADD_MEMBER_TO_GROUP)) {
+
         }
     }
 
@@ -423,14 +414,6 @@ public class MainActivity extends ActionBarActivity
         }.execute(null, null, null);
     }
 
-    /*@Override
-    public void onBackPressed() {
-        try {
-            correctTitle();
-        } catch (Exception e){};
-        super.onBackPressed();
-    }*/
-
     private void correctTitle() throws ClassCastException{
         List<Fragment> list = fragmentManager.getFragments();
         int count = fragmentManager.getBackStackEntryCount();
@@ -447,7 +430,7 @@ public class MainActivity extends ActionBarActivity
     Обраобтка сообщения, полученного из Нотификации
      */
     private void handleNotificationIntent() {
-        Log.e("handleNotificationIntent", "was called");
+        Log.e("handleNotificatintent", "was called");
         int billId = getIntent().getExtras().getInt(Constants.IntentParams.BILL_ID, 0);
         int groupId = getIntent().getExtras().getInt(Constants.IntentParams.GROUP_ID, 0);
 

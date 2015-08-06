@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
+import com.beautyteam.everpay.Database.CalculationDetails;
 import com.beautyteam.everpay.Database.Debts;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
@@ -33,6 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import static com.beautyteam.everpay.Constants.Action.GET_BILL;
+import static com.beautyteam.everpay.Constants.Action.GET_CALC_DETAILS;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUPS;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
@@ -276,6 +278,40 @@ public class GetProcessors extends Processor {
                     result = Constants.Result.OK;
 
                 } catch (JSONException e) {}
+
+            } else {
+                result = Constants.Result.ERROR;
+            }
+
+        } else if (GET_CALC_DETAILS.equals(action)) {
+            int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+            params.add(new BasicNameValuePair("groups_id", groupId + ""));
+            String response = get(Constants.URL.CALC_DETAILS, params);
+            if ((response != null) && (response.contains("200"))) {
+                result = Constants.Result.OK;
+                service.getContentResolver().delete(EverContentProvider.CALC_DETAILS_CONTENT_URI, CalculationDetails.GROUP_ID + "=" + groupId, null );
+                try {
+                    JSONObject responseJSON = new JSONObject(response);
+                    responseJSON = responseJSON.getJSONObject("response");
+                    responseJSON = responseJSON.getJSONObject("debts_details");
+                    Iterator<String> iterator = responseJSON.keys();
+                    while (iterator.hasNext()) {
+                        String key = iterator.next();
+                        JSONObject item = responseJSON.getJSONObject(key);
+                        ContentValues cv = new ContentValues();
+                        cv.put(CalculationDetails.GROUP_ID, groupId);
+                        cv.put(CalculationDetails.DEBT_SUM, item.getString("debt_sum"));
+                        cv.put(CalculationDetails.INVEST_SUM, item.getString("investment_sum"));
+                        cv.put(CalculationDetails.BALANCE, item.getString("sum"));
+
+                        JSONObject bill = item.getJSONObject("bill");
+                        cv.put(CalculationDetails.BILL_TITLE, bill.getString("title"));
+
+                        service.getContentResolver().insert(EverContentProvider.CALC_DETAILS_CONTENT_URI, cv);
+                    }
+                } catch (JSONException e) {
+                    result = Constants.Result.ERROR;
+                }
 
             } else {
                 result = Constants.Result.ERROR;

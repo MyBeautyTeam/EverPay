@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,22 +18,31 @@ import android.widget.Toast;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.ADD_USER;
 
 /**
  * Created by asus on 21.07.2015.
  */
 public class FragmentCreateUser extends Fragment
-    implements View.OnClickListener, TitleUpdater {
+    implements View.OnClickListener, TitleUpdater,
+        RequestCallback{
 
     private Button saveBtn;
     private EditText name;
     private EditText lastname;
     private int sex;
+    private ServiceHelper serviceHelper;
+    ProgressDialog progressDialog;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        serviceHelper = new ServiceHelper(getActivity(), this);
         return inflater.inflate(R.layout.fragment_create_user, null);
     }
 
@@ -55,8 +65,6 @@ public class FragmentCreateUser extends Fragment
                     sex = 1;
             }
         });
-//        RadioButton rdbtnFemale = (RadioButton) view.findViewById(R.id.radioFemale);
-//        RadioButton rdbtnMale = (RadioButton) view.findViewById(R.id.radioMale);
 
     }
 
@@ -71,6 +79,13 @@ public class FragmentCreateUser extends Fragment
     public void onResume() {
         super.onResume();
         updateTitle();
+        serviceHelper.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        serviceHelper.onPause();
     }
 
     @Override
@@ -79,8 +94,6 @@ public class FragmentCreateUser extends Fragment
             case R.id.save_btn_user:
                 if((!name.getText().toString().equals(""))&&(!lastname.getText().toString().equals(""))) {
                     addUser(sex, name.getText().toString(), lastname.getText().toString());// добавить созданного польщователя в группу
-                    ((MainActivity) getActivity()).removeFragment();
-                    ((MainActivity) getActivity()).removeFragment();
                 }
                 else
                     Toast.makeText(getActivity(), "Введите имя и фамилию", Toast.LENGTH_SHORT).show();
@@ -89,14 +102,34 @@ public class FragmentCreateUser extends Fragment
     }
 
     public void addUser(int sex, String nameUser, String lastNameUser){
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Создаем пользователя");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         Log.d("dannie", sex+"");
         Log.d("dannie", nameUser);
         Log.d("dannie", lastNameUser);
+        serviceHelper.createUser(nameUser, lastNameUser, sex);
 
     }
 
     @Override
     public void updateTitle() {
         ((MainActivity)getActivity()).setTitle(Constants.Titles.CREATE_USER);
+    }
+
+    @Override
+    public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
+        if (action.equals(ADD_USER)) {
+            progressDialog.dismiss();
+
+            if (result == Constants.Result.OK) {
+                Toast.makeText(getActivity(), "Пользователь добавлен", Toast.LENGTH_SHORT).show();
+                ((MainActivity) getActivity()).removeFragment();
+            } else {
+                Toast.makeText(getActivity(), "Ошибка. Проверьте подключение к интернету.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

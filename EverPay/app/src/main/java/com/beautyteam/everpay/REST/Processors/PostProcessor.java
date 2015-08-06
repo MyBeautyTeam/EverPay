@@ -361,11 +361,12 @@ public class PostProcessor extends Processor {
                 paramsJSON.put("id", 0);
 
 
-                String response = urlConnectionPost(Constants.URL.CALCULATE, paramsJSON.toString());
+                String response = urlConnectionPost(Constants.URL.ADD_USER, paramsJSON.toString());
                 if (response != null && response.contains("200")) {
                     result = Constants.Result.OK;
 
                     JSONObject responseJSON = new JSONObject(response);
+                    responseJSON = responseJSON.getJSONObject("response");
                     int newUserId = responseJSON.getInt("users_id");
 
                     ContentValues cv = new ContentValues();

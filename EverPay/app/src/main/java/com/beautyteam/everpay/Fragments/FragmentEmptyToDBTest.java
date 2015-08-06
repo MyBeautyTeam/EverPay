@@ -55,7 +55,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
             Bills.USER_ID_VK,
             Bills.USER_NAME,
             Bills.INVEST_SUM,
-            Bills.NEED_SUM
+            Bills.DEBT_SUM
     };
     */
 
@@ -86,7 +86,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
                         //String groupId = c.getString(c.getColumnIndex(GroupMembers.GROUP_ID));
                         //String userId = c.getString(c.getColumnIndex(GroupMembers.USER_ID_VK));
                         /*String userName = c.getString(c.getColumnIndex(Bills.USER_NAME));
-                        String need = c.getString(c.getColumnIndex(Bills.NEED_SUM));
+                        String need = c.getString(c.getColumnIndex(Bills.DEBT_SUM));
                         String invest = c.getString(c.getColumnIndex(Bills.INVEST_SUM));*/
 
                         String oldText = textView.getText().toString();
@@ -104,7 +104,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
         Users.USER_ID_VK,
         Users.NAME,
         Users.IMG,
-        BillDetails.NEED_SUM,
+        BillDetails.DEBT_SUM,
         BillDetails.INVEST_SUM
     };
 

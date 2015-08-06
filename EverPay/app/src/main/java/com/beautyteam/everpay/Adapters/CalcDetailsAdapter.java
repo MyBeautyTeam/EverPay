@@ -40,7 +40,7 @@ public class CalcDetailsAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         String billTitle = cursor.getString(cursor.getColumnIndex(CalculationDetails.BILL_TITLE));
-        int need = cursor.getInt(cursor.getColumnIndex(CalculationDetails.NEED_SUM));
+        int need = cursor.getInt(cursor.getColumnIndex(CalculationDetails.DEBT_SUM));
         int invest = cursor.getInt(cursor.getColumnIndex(CalculationDetails.INVEST_SUM));
         int balance = cursor.getInt(cursor.getColumnIndex(CalculationDetails.BALANCE));
 

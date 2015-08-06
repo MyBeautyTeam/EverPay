@@ -1,5 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,14 +16,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.CalcDetailsAdapter;
+import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.CalculationDetails;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.flurry.android.FlurryAgent;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.GET_CALC_DETAILS;
+import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
  * Created by popka on 06.08.15.
@@ -38,6 +50,9 @@ public class FragmentCalcDetails extends Fragment implements
 
     private TextView debtTitle;
     private TextView summaText;
+    private CircleImageView avatar;
+
+    SharedPreferences sPref;
 
     public static FragmentCalcDetails getInstance(int groupId) {
         FragmentCalcDetails fragmentCalcDetails = new FragmentCalcDetails();
@@ -63,14 +78,23 @@ public class FragmentCalcDetails extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FlurryAgent.logEvent("Детализация группы");
-
+        avatar = (CircleImageView) view.findViewById(R.id.calc_details_avatar);
         calcDetailsList = (ListView)view.findViewById(R.id.calc_details_list);
         debtTitle = (TextView)view.findViewById(R.id.calc_details_debt_title);
         summaText = (TextView)view.findViewById(R.id.calc_details_summa);
+
+        sPref = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
+        String imgUrl = sPref.getString(Constants.Preference.IMG_URL, "IMG");
+        Picasso.with(getActivity())
+                .load(imgUrl)
+                .error(getActivity().getResources().getDrawable(R.drawable.default_image))
+                .resize(100, 100)
+                .centerInside()
+                .into(avatar);
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), EverContentProvider.CALC_DETAILS_CONTENT_URI, PROJECTION, null/*Calculation.GROUPS_ID +" = " + groupId*/, null, /*SORT_ORDER*/null);
+        return new CursorLoader(getActivity(), EverContentProvider.CALC_DETAILS_CONTENT_URI, PROJECTION, CalculationDetails.GROUP_ID +" = " + groupId, null, "ABS("+CalculationDetails.BALANCE+")");
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
@@ -106,7 +130,7 @@ public class FragmentCalcDetails extends Fragment implements
         CalculationDetails.ITEM_ID,
         CalculationDetails.GROUP_ID,
         CalculationDetails.BILL_TITLE,
-        CalculationDetails.NEED_SUM,
+        CalculationDetails.DEBT_SUM,
         CalculationDetails.INVEST_SUM,
         CalculationDetails.BALANCE
     };
@@ -116,7 +140,7 @@ public class FragmentCalcDetails extends Fragment implements
         super.onResume();
         //loadingLayout.setVisibility(View.VISIBLE);
         serviceHelper.onResume();
-        //serviceHelper.calculate(groupId);
+        serviceHelper.getCalculationDetails(groupId);
     }
 
     @Override
@@ -128,11 +152,19 @@ public class FragmentCalcDetails extends Fragment implements
 
     @Override
     public void onRequestEnd(int result, Bundle data) {
+        String action = data.getString(ACTION);
 
+        if (action.equals(GET_CALC_DETAILS)) {
+            if (result == Constants.Result.OK) {
+
+            } else {
+                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void updateTitleSumm() {
-        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.CALC_DETAILS_CONTENT_URI, new String[]{"SUM(" + CalculationDetails.BALANCE + ")"}, null, null, null);
+        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.CALC_DETAILS_CONTENT_URI, new String[]{"SUM(" + CalculationDetails.BALANCE + ")"}, CalculationDetails.GROUP_ID +" = " + groupId, null, null);
         maxCursor.moveToFirst();
         int sum = maxCursor.getInt(0);
         if (sum > 0) {

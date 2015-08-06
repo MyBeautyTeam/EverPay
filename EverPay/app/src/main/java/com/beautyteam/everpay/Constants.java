@@ -33,6 +33,9 @@ public class Constants {
         public final static String REMOVE_BILL = BASE_URL + "bills/remove/";
 
         public final static String SIGNUP = BASE_URL + "login/";
+
+        public final static String ADD_USER = BASE_URL + "users/add/";
+        public final static String CALC_DETAILS = BASE_URL + "debts/details/";
     }
 
     public class Action {
@@ -48,6 +51,7 @@ public class Constants {
         public final static String GET_DEBTS = "GET_DEBTS";
         public final static String GET_BILL = "GET_BILL";
         public final static String GET_HISTORY = "GET_HISTORY";
+        public final static String GET_CALC_DETAILS = "GET_CALC_DETAILS";
 
         public final static String ADD_BILL = "ADD_BILL";
         public final static String ADD_MEMBER_TO_GROUP = "ADD_MEMBER_TO_GROUP";
@@ -124,6 +128,9 @@ public class Constants {
         public final static String NEW_USER_LASTNAME = "NEW_USER_LASTNAME";
         public final static String SEX = "SEX";
 
+        // ==
+        public final static String IS_EMPTY_LIST = "IS_EMPTY_LIST";
+
     }
 
     public final static String RECEIVER = "RECEIVER";
@@ -138,4 +145,5 @@ public class Constants {
 
     public final static String SENDER_ID = "663098152756";
 }
+
 
