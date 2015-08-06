@@ -173,6 +173,7 @@ public class EverContentProvider extends ContentProvider {
                 id = uri.getLastPathSegment();
                 notifyUri = USERS_CONTENT_URI;
                 String request = "select "+
+                        Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
                         Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
                         Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
                         Users.USERS_TABLE + "." + Users.NAME + " as " + Users.NAME + ", " +

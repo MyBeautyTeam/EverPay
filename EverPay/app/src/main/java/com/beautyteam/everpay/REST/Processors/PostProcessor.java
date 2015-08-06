@@ -384,6 +384,25 @@ public class PostProcessor extends Processor {
             } catch (JSONException e) {
                 result = Constants.Result.ERROR;
             }
+        } else {
+            if (REG_GCM.equals(action)) {
+                String regID = intent.getStringExtra(Constants.IntentParams.GCM_ID);
+                try {
+                    JSONObject paramsJSON = new JSONObject();
+                    paramsJSON.put("users_id", userId);
+                    paramsJSON.put("access_token", accessToken);
+                    paramsJSON.put("reg_id", regID);
+                    String response = urlConnectionPost(Constants.URL.ADD_USER, paramsJSON.toString());
+                    if (response != null && response.contains("200")) {
+                        result = Constants.Result.OK;
+
+                    }
+                } catch (JSONException e) {
+                    result = Constants.Result.ERROR;
+                }
+
+
+            }
         }
         service.onRequestEnd(result, intent);
     }

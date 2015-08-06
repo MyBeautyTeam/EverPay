@@ -105,17 +105,18 @@ public class FragmentCalculation extends Fragment implements
         detailsBtn = (Button) view.findViewById(R.id.calc_details_btn);
         detailsBtn.setOnClickListener(this);
 
+        if (new Random().nextInt() % 2 == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setMessage("Поставьте нам оценку! Для Вас пустяк, а для нас это очень важно!")
+                    .setIcon(R.drawable.group_icon)
+                    .setPositiveButton("Хорошо", null)
+                    .setNegativeButton("Не хочу", null)
+                    .setNeutralButton("Потом", null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setMessage("Поставьте нам оценку! Для Вас пустяк, а для нас это очень важно!")
-                .setIcon(R.drawable.group_icon)
-                .setPositiveButton("Хорошо", null)
-                .setNegativeButton("Не хочу", null)
-                .setNeutralButton("Потом", null);
-
-        new AppRate(getActivity())
-                .setCustomDialog(builder)
-                .init();
+            new AppRate(getActivity())
+                    .setCustomDialog(builder)
+                    .init();
+        }
 
 
         setupEmptyList(view);

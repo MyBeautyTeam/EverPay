@@ -31,7 +31,8 @@ public class ProcessorFactory {
             ADD_MEMBER_TO_GROUP.equals(action) ||
             ADD_GROUP.equals(action) ||
             CALCULATE.equals(action) ||
-            ADD_USER.equals(action)
+            ADD_USER.equals(action) ||
+            REG_GCM.equals(action)
             ) {
             return new PostProcessor(context);
         } else

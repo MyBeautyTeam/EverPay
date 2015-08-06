@@ -123,7 +123,8 @@ public class FragmentEditFriendsInGroup extends Fragment implements
         serviceHelper.onPause();
     }
 
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
+            Users.ITEM_ID,
             Users.USER_ID,
             Users.USER_ID_VK,
             Users.NAME,

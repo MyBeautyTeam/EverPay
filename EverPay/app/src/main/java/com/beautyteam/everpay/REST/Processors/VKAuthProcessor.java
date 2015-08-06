@@ -124,7 +124,7 @@ public class VKAuthProcessor extends Processor {
                         String value = friendsId.getString(key);
                         ContentValues cv = new ContentValues();
                         cv.put(Users.USER_ID, value);
-                        mService.getContentResolver().update(EverContentProvider.USERS_CONTENT_URI, cv, Users.USER_ID +"=" + key, null);
+                        mService.getContentResolver().update(EverContentProvider.USERS_CONTENT_URI, cv, Users.ITEM_ID +"=" + key, null);
                     }
                     JSONObject friendsWithoutVK = jsonObject.getJSONObject("friends");
 
@@ -192,7 +192,6 @@ public class VKAuthProcessor extends Processor {
                         @Override
                         protected Void doInBackground(Void... voids) {
                             VKApiUserFull userFull = ((VKList<VKApiUserFull>) responses[0].parsedModel).get(0);
-                            //user = new User(userFull.id, userFull.first_name, userFull.last_name, userFull.photo_100);
                             intent.putExtra(ACCESS_TOKEN, "wjekwewue12345");
                             intent.putExtra(USER_ID_VK, userFull.id );
                             intent.putExtra(USER_NAME, userFull.first_name + " " + userFull.last_name);
@@ -212,9 +211,6 @@ public class VKAuthProcessor extends Processor {
 
                                 Log.d("vksdk", responses[1].parsedModel.toString());
                                 VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
-
-
-
 
                                 ContentValues cv = new ContentValues();
                                 for (VKApiUserFull vkFriend : usersArray) {

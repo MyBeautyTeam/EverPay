@@ -399,6 +399,7 @@ public class MainActivity extends ActionBarActivity
                     regid = gcm.register(Constants.SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
                     Log.i("GCM",  msg);
+                    serviceHelper.registerGCM(regid);
 
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();

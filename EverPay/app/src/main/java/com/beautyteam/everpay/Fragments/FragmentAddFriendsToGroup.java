@@ -113,6 +113,7 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
 
 
     private static final String[] PROJECTION = new String[]{
+            Users.ITEM_ID,
             Users.USER_ID,
             Users.USER_ID_VK,
             Users.NAME,

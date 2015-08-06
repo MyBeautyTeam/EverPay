@@ -36,6 +36,8 @@ public class Constants {
 
         public final static String ADD_USER = BASE_URL + "users/add/";
         public final static String CALC_DETAILS = BASE_URL + "debts/details/";
+
+        public final static String REGISTER_GCM = BASE_URL + "gcm/register/";
     }
 
     public class Action {
@@ -58,6 +60,7 @@ public class Constants {
         public final static String ADD_GROUP = "ADD_GROUP";
         public final static String CALCULATE = "CALCULATE";
         public final static String ADD_USER = "ADD_USER";
+        public final static String REG_GCM = "REG_GCM";
 
         public final static String EDIT_BILL = "EDIT_BILL";
         public final static String EDIT_GROUP = "EDIT_GROUP";
@@ -129,7 +132,7 @@ public class Constants {
         public final static String SEX = "SEX";
 
         // ==
-        public final static String IS_EMPTY_LIST = "IS_EMPTY_LIST";
+        public final static String GCM_ID = "GCM_ID";
 
     }
 
