@@ -2,6 +2,8 @@ package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,8 +24,12 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.flurry.android.FlurryAgent;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.BUG_REPORT;
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 
 /**
@@ -40,6 +46,8 @@ public class FragmentBugReport extends Fragment implements
     private ProgressDialog progressDialog;
     private ServiceHelper serviceHelper;
 
+    private SharedPreferences sPref;
+
     public static FragmentBugReport getInstance() {
         return new FragmentBugReport();
     }
@@ -55,6 +63,8 @@ public class FragmentBugReport extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FlurryAgent.logEvent("Связаться с разработчиками");
+
+        sPref = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
 
         radioGroup = (RadioGroup) view.findViewById(R.id.bug_radio_group);
         editText = (EditText) view.findViewById(R.id.bug_message);
@@ -85,6 +95,7 @@ public class FragmentBugReport extends Fragment implements
 
     @Override
     public void onClick(View view) {
+
         String theme = "";
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
         if (radioButtonID > 0) {
@@ -111,6 +122,11 @@ public class FragmentBugReport extends Fragment implements
         if (message.isEmpty()) {
             Toast.makeText(getActivity(), "Сообщение пусто",Toast.LENGTH_SHORT).show();
             return;
+        } else {
+            if (message.length() < 20) {
+                Toast.makeText(getActivity(), "Слишком короткое сообщение",Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Отправление");
@@ -128,11 +144,24 @@ public class FragmentBugReport extends Fragment implements
 
             if (result == Constants.Result.OK) {
                 Toast.makeText(getActivity(), "Успешно отправлено. Спасибо!", Toast.LENGTH_SHORT).show();
+
+                int countOfReportToday = sPref.getInt(getDate(), 2);
+                countOfReportToday--;
+                sPref.edit()
+                    .putInt(getDate(), countOfReportToday)
+                    .commit();
+
                 mainActivity.removeFragment();
             } else {
                 Toast.makeText(getActivity(), "Ошибка отправки. Попробуйте позже", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public static String getDate() {
+        Date cDate = new Date();
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+        return date;
     }
 
 

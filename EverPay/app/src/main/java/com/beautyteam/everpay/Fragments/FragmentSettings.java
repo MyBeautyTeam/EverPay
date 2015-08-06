@@ -7,12 +7,15 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
@@ -29,16 +32,26 @@ import com.beautyteam.everpay.R;
 import com.flurry.android.FlurryAgent;
 import com.vk.sdk.VKSdk;
 
+import static com.beautyteam.everpay.Constants.Preference.SETTING_ADVICE;
+import static com.beautyteam.everpay.Constants.Preference.SETTING_PUSH;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
  * Created by asus on 04.05.2015.
  */
 public class FragmentSettings  extends Fragment
-        implements View.OnClickListener, TitleUpdater {
+        implements View.OnClickListener,
+        TitleUpdater,
+        CompoundButton.OnCheckedChangeListener
+{
 
     private String screenName="Настройки";
     private MainActivity mainActivity;
+
+    private SwitchCompat pushSwitch;
+    private SwitchCompat adviceSwitch;
+
+    private SharedPreferences sPref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +62,10 @@ public class FragmentSettings  extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sPref = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
+
         FlurryAgent.logEvent("Фрагмент настройки");
+
         Button quitButton = (Button) view.findViewById(R.id.quit_button);
         quitButton.setOnClickListener(this);
 
@@ -58,6 +74,14 @@ public class FragmentSettings  extends Fragment
 
         Button evaluateBtn = (Button) view.findViewById(R.id.evaluate_btn);
         evaluateBtn.setOnClickListener(this);
+
+        pushSwitch = (SwitchCompat) view.findViewById(R.id.setting_switch_push);
+        adviceSwitch = (SwitchCompat) view.findViewById(R.id.setting_switch_advice);
+        setupSwitch();
+
+        pushSwitch.setOnCheckedChangeListener(this);
+        adviceSwitch.setOnCheckedChangeListener(this);
+
 
     }
 
@@ -86,7 +110,11 @@ public class FragmentSettings  extends Fragment
                 break;
 
             case R.id.bug_report_btn:
-                mainActivity.addFragment(FragmentBugReport.getInstance());
+                if (sPref.getInt(FragmentBugReport.getDate(), 2) < 1 ) {
+                    Toast.makeText(getActivity(), "Не больше двух запросов в день", Toast.LENGTH_SHORT).show();
+                } else {
+                    mainActivity.addFragment(FragmentBugReport.getInstance());
+                }
                 break;
 
             case R.id.evaluate_btn:
@@ -108,5 +136,28 @@ public class FragmentSettings  extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mainActivity = (MainActivity)activity;
+    }
+
+    private void setupSwitch() {
+        pushSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_PUSH, true));
+        adviceSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_ADVICE, false));
+    }
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.setting_switch_push:
+                sPref.edit()
+                        .putBoolean(SETTING_PUSH, b)
+                    .commit();
+                break;
+            case R.id.setting_switch_advice:
+                sPref.edit()
+                    .putBoolean(SETTING_ADVICE, b)
+                    .commit();
+                break;
+        }
+
     }
 }

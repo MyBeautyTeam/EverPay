@@ -90,6 +90,9 @@ public class Constants {
         public final static String MALE = "MALE";
         public final static String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
         public final static String REGISTATION_STATUS = "REG_STATUS";
+
+        public final static String SETTING_PUSH = "SETTING_PUSH";
+        public final static String SETTING_ADVICE = "SETTING_ADVICE";
     }
 
     public class State {
