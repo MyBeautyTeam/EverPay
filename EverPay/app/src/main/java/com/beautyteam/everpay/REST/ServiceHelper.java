@@ -284,6 +284,17 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
+    public void addUser(String name, String lastName, int sex) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.BUG_REPORT);
+
+        intentService.putExtra(Constants.IntentParams.NEW_USER_NAME, name);
+        intentService.putExtra(Constants.IntentParams.NEW_USER_LASTNAME, lastName);
+        intentService.putExtra(Constants.IntentParams.SEX, sex);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+        activity.startService(intentService);
+    }
+
 
 
 

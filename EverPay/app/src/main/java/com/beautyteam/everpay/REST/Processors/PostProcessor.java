@@ -14,6 +14,7 @@ import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.Database.HistoryGenerator;
+import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.REST.Service;
 
 import org.json.JSONException;
@@ -337,6 +338,51 @@ public class PostProcessor extends Processor {
             } catch (JSONException e) {
                 result = Constants.Result.ERROR;
             }
+        } else
+        if (ADD_USER.equals(action)) {
+            String userName =intent.getStringExtra(Constants.IntentParams.NEW_USER_NAME);
+            String userLastName =intent.getStringExtra(Constants.IntentParams.NEW_USER_LASTNAME);
+            int sex =intent.getIntExtra(Constants.IntentParams.SEX, 0);
+
+
+            try {
+                JSONObject paramsJSON = new JSONObject();
+                paramsJSON.put("users_id", userId);
+                paramsJSON.put("access_token", accessToken);
+
+                JSONObject user = new JSONObject();
+                user.put("last_name", userLastName);
+                user.put("name", userName);
+                user.put("sex", sex);
+
+                paramsJSON.put("users_id", userId);
+                paramsJSON.put("access_token", accessToken);
+                paramsJSON.put("user", user);
+                paramsJSON.put("id", 0);
+
+
+                String response = urlConnectionPost(Constants.URL.CALCULATE, paramsJSON.toString());
+                if (response != null && response.contains("200")) {
+                    result = Constants.Result.OK;
+
+                    JSONObject responseJSON = new JSONObject(response);
+                    int newUserId = responseJSON.getInt("users_id");
+
+                    ContentValues cv = new ContentValues();
+                    cv.put(Users.USER_ID, newUserId);
+                    cv.put(Users.USER_ID_VK, 0);
+                    cv.put(Users.NAME, userLastName+ " " +userName);
+                    cv.put(Users.IMG, "http://vk.com/images/deactivated_100.png");
+                    cv.put(Users.STATE, Constants.State.ENDS);
+                    cv.put(Users.RESULT, Constants.Result.OK);
+                    service.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
+
+                } else {
+                    result = Constants.Result.ERROR;
+                }
+            } catch (JSONException e) {
+                result = Constants.Result.ERROR;
+            }
         }
         service.onRequestEnd(result, intent);
     }
@@ -378,6 +424,11 @@ public class PostProcessor extends Processor {
             GroupMembers.USER_ID_VK,
             GroupMembers.USER_ID,
             GroupMembers.USER_NAME,
+    };
+
+    private static final String[] PROJECTION_USERS = new String[] {
+            Users.USER_ID,
+            Users.NAME
     };
 
 

@@ -53,6 +53,7 @@ public class Constants {
         public final static String ADD_MEMBER_TO_GROUP = "ADD_MEMBER_TO_GROUP";
         public final static String ADD_GROUP = "ADD_GROUP";
         public final static String CALCULATE = "CALCULATE";
+        public final static String ADD_USER = "ADD_USER";
 
         public final static String EDIT_BILL = "EDIT_BILL";
         public final static String EDIT_GROUP = "EDIT_GROUP";
@@ -116,6 +117,12 @@ public class Constants {
         //==== bugreport
         public final static String THEME = "THEME";
         public final static String EMAIL_MSG = "EMAIL_MSG";
+
+        //==== User
+        public final static String NEW_USER_NAME = "NEW_USER_NAME";
+        public final static String NEW_USER_LASTNAME = "NEW_USER_LASTNAME";
+        public final static String SEX = "SEX";
+
     }
 
     public final static String RECEIVER = "RECEIVER";

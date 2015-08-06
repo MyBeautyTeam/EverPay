@@ -126,6 +126,22 @@ public class VKAuthProcessor extends Processor {
                         cv.put(Users.USER_ID, value);
                         mService.getContentResolver().update(EverContentProvider.USERS_CONTENT_URI, cv, Users.USER_ID +"=" + key, null);
                     }
+                    JSONObject friendsWithoutVK = jsonObject.getJSONObject("friends");
+
+                    Iterator<String> it =friendsWithoutVK.keys();
+                    while (it.hasNext()) {
+                        String key = iterator.next();
+                        JSONObject friendWithotVK = friendsWithoutVK.getJSONObject(key);
+                        ContentValues cv = new ContentValues();
+                        cv.put(Users.USER_ID, friendWithotVK.getInt("users_id"));
+                        cv.put(Users.USER_ID_VK, 0);
+                        cv.put(Users.NAME, friendWithotVK.getInt("last_name")+ " " + friendWithotVK.getInt("name"));
+                        cv.put(Users.IMG, "http://vk.com/images/deactivated_100.png");
+                        cv.put(Users.STATE, Constants.State.ENDS);
+                        cv.put(Users.RESULT, Constants.Result.OK);
+                        mService.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
+                    }
+
                     mIntent.putExtra(USER_ID, userId);
 
                     // /* ОТЛАДОЧНО!!!
@@ -197,14 +213,8 @@ public class VKAuthProcessor extends Processor {
                                 Log.d("vksdk", responses[1].parsedModel.toString());
                                 VKUsersArray usersArray = (VKUsersArray) responses[1].parsedModel;
 
-                                // TODO УДАЛИТЬ!!!
-                                ContentValues cav = new ContentValues();
-                                cav.put(Users.USER_ID, 1500);
-                                cav.put(Users.USER_ID_VK, 2500);
-                                cav.put(Users.NAME, "ЖИРНЫЙ НЕПРИЯТЕЛЬ");
-                                cav.put(Users.IMG, "http://cs14113.vk.me/c540104/v540104654/293e4/oqmgTryKZgM.jpg");
-                                service.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cav);
-                                //=========
+
+
 
                                 ContentValues cv = new ContentValues();
                                 for (VKApiUserFull vkFriend : usersArray) {

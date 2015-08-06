@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Adapters.CalcDetailsAdapter;
-import com.beautyteam.everpay.Adapters.CalcListAdapter;
 import com.beautyteam.everpay.Database.CalculationDetails;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.R;
@@ -75,12 +74,17 @@ public class FragmentCalcDetails extends Fragment implements
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
         switch (loader.getId()) {
             case LOADER_ID:
                 mAdapter = new CalcDetailsAdapter(getActivity(), cursor, 0);
                 calcDetailsList.setAdapter(mAdapter);
                 break;
         }
+        updateTitleSumm();
+
+
+
     }
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
@@ -125,5 +129,27 @@ public class FragmentCalcDetails extends Fragment implements
     @Override
     public void onRequestEnd(int result, Bundle data) {
 
+    }
+
+    private void updateTitleSumm() {
+        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.CALC_DETAILS_CONTENT_URI, new String[]{"SUM(" + CalculationDetails.BALANCE + ")"}, null, null, null);
+        maxCursor.moveToFirst();
+        int sum = maxCursor.getInt(0);
+        if (sum > 0) {
+            debtTitle.setText("Вам должны");
+            debtTitle.setTextColor(getResources().getColor(R.color.green_text));
+            summaText.setText(sum + "");
+            summaText.setTextColor(getResources().getColor(R.color.green_text));
+        } else {
+            if (sum < 0) {
+                debtTitle.setText("Ваш долг");
+                debtTitle.setTextColor(getResources().getColor(R.color.red_text));
+                summaText.setText(Math.abs(sum) + "");
+                summaText.setTextColor(getResources().getColor(R.color.red_text));
+            } else {
+                debtTitle.setText("Вы ничего не должны");
+                summaText.setText("в этой группе");
+            }
+        }
     }
 }
