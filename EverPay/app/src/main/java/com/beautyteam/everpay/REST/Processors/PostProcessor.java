@@ -392,7 +392,7 @@ public class PostProcessor extends Processor {
                     paramsJSON.put("users_id", userId);
                     paramsJSON.put("access_token", accessToken);
                     paramsJSON.put("reg_id", regID);
-                    String response = urlConnectionPost(Constants.URL.ADD_USER, paramsJSON.toString());
+                    String response = urlConnectionPost(Constants.URL.REGISTER_GCM, paramsJSON.toString());
                     if (response != null && response.contains("200")) {
                         result = Constants.Result.OK;
 
