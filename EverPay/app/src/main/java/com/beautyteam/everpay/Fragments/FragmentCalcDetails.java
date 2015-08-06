@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +53,9 @@ public class FragmentCalcDetails extends Fragment implements
     private TextView debtTitle;
     private TextView summaText;
     private CircleImageView avatar;
+    private LinearLayout loadingLayout;
 
+    private TextView emptyText;
     SharedPreferences sPref;
 
     public static FragmentCalcDetails getInstance(int groupId) {
@@ -78,6 +82,7 @@ public class FragmentCalcDetails extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FlurryAgent.logEvent("Детализация группы");
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         avatar = (CircleImageView) view.findViewById(R.id.calc_details_avatar);
         calcDetailsList = (ListView)view.findViewById(R.id.calc_details_list);
         debtTitle = (TextView)view.findViewById(R.id.calc_details_debt_title);
@@ -138,7 +143,7 @@ public class FragmentCalcDetails extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        //loadingLayout.setVisibility(View.VISIBLE);
+        loadingLayout.setVisibility(View.VISIBLE);
         serviceHelper.onResume();
         serviceHelper.getCalculationDetails(groupId);
     }
@@ -149,6 +154,13 @@ public class FragmentCalcDetails extends Fragment implements
         serviceHelper.onPause();
     }
 
+    private void setupEmptyList(View view) {
+        ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
+        emptyText = (TextView)stub.inflate();
+        emptyText.setText("");
+        calcDetailsList.setEmptyView(emptyText);
+    }
+
 
     @Override
     public void onRequestEnd(int result, Bundle data) {
@@ -156,8 +168,9 @@ public class FragmentCalcDetails extends Fragment implements
 
         if (action.equals(GET_CALC_DETAILS)) {
             if (result == Constants.Result.OK) {
-
+                loadingLayout.setVisibility(View.GONE);
             } else {
+                emptyText.setText("Произошла ошибка =(\n Проверьте соединение с интернетом");
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
         }
