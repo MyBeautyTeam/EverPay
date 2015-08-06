@@ -27,6 +27,7 @@ public class FragmentCreateUser extends Fragment
     private Button saveBtn;
     private EditText name;
     private EditText lastname;
+    private int sex;
 
 
     @Override
@@ -48,6 +49,10 @@ public class FragmentCreateUser extends Fragment
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton rdbtn = (RadioButton) radioGroup.findViewById(i);
                 Log.d("пол", rdbtn.getText().toString());
+                if (rdbtn.getText().toString() == "Мужской")
+                    sex = 0;
+                else
+                    sex = 1;
             }
         });
 //        RadioButton rdbtnFemale = (RadioButton) view.findViewById(R.id.radioFemale);
@@ -73,7 +78,7 @@ public class FragmentCreateUser extends Fragment
         switch (v.getId()) {
             case R.id.save_btn_user:
                 if((!name.getText().toString().equals(""))&&(!lastname.getText().toString().equals(""))) {
-                    // добавить созданного польщователя в группу
+                    addUser(sex, name.getText().toString(), lastname.getText().toString());// добавить созданного польщователя в группу
                     ((MainActivity) getActivity()).removeFragment();
                     ((MainActivity) getActivity()).removeFragment();
                 }
@@ -83,6 +88,12 @@ public class FragmentCreateUser extends Fragment
         }
     }
 
+    public void addUser(int sex, String nameUser, String lastNameUser){
+        Log.d("dannie", sex+"");
+        Log.d("dannie", nameUser);
+        Log.d("dannie", lastNameUser);
+
+    }
 
     @Override
     public void updateTitle() {
