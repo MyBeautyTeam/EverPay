@@ -41,6 +41,7 @@ public class EverContentProvider extends ContentProvider {
     static final String CALC_DETAILS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + CalculationDetails.CALCULATION_DETAILS_TABLE;
 
 
+
     static final int URI_USERS = 1;
     static final int URI_GROUPS = 2;
     static final int URI_GROUP_MEMBERS = 3;
