@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -40,15 +39,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(GroupMembers.CREATE_TABLE);
         db.execSQL(Bills.CREATE_TABLE);
         db.execSQL(History.CREATE_TABLE);
-
+        db.execSQL(CalculationDetails.CREATE_TABLE);
 
         ContentValues cv = new ContentValues();
-        cv.put(Users.USER_ID, 1500);
-        cv.put(Users.USER_ID_VK, 2500);
-        cv.put(Users.NAME, "ЖИРНЫЙ НЕПРИЯТЕЛЬ");
-        cv.put(Users.IMG, "http://cs14113.vk.me/c540104/v540104654/293e4/oqmgTryKZgM.jpg");
-        db.insert(Users.USERS_TABLE, null, cv);
-        cv = new ContentValues();
+
+        for (int i = 1; i <= 15; i++) {
+            cv.put(CalculationDetails.ITEM_ID, i);
+            cv.put(CalculationDetails.GROUP_ID, i);
+            cv.put(CalculationDetails.BILL_TITLE, "Счет за дружбу с пацанами" + i);
+            cv.put(CalculationDetails.NEED_SUM, new Random().nextInt(5000));
+            cv.put(CalculationDetails.INVEST_SUM, new Random().nextInt(5000));
+            cv.put(CalculationDetails.BALANCE, cv.getAsInteger(CalculationDetails.INVEST_SUM) - cv.getAsInteger(CalculationDetails.NEED_SUM));
+            db.insert(CalculationDetails.CALCULATION_DETAILS_TABLE, null, cv);
+        }
 
         /*
         //for (int i = 1; i <= 5; i++) {

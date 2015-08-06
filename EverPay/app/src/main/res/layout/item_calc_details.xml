@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/item_calc_details_bill"
+            android:layout_weight="1.3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Шпроты для пацанов"
+            android:padding="4dp"
+            android:gravity="center"
+            android:textSize="16dp"
+            />
+        <TextView
+            android:id="@+id/item_calc_details_need"
+            android:layout_weight="1.8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="2500"
+            android:gravity="center"
+            android:textSize="13dp"
+            />
+        <TextView
+            android:id="@+id/item_calc_details_invest"
+            android:layout_weight="1.8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="2000"
+            android:gravity="center"
+            android:textSize="13dp"
+            />
+        <TextView
+            android:id="@+id/item_calc_details_balance"
+            android:layout_weight="1.8"
+            android:layout_marginRight="5dp"
+            android:text="-500"
+            android:textSize="19dp"
+            android:textColor="@color/red_text"
+            android:gravity="right|center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+</LinearLayout>

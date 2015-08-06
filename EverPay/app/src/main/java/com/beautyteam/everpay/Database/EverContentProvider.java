@@ -21,10 +21,6 @@ public class EverContentProvider extends ContentProvider {
     final String LOG_TAG = "myLogs";
     static final String AUTHORITY = "com.beautyteam.everpay.EverpayDB";
 
-    public static class PathParams {
-        public static String LEFT_GROUP = "/left";
-    }
-
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
@@ -33,6 +29,7 @@ public class EverContentProvider extends ContentProvider {
     public static final Uri GROUP_MEMBERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + GroupMembers.GROUP_MEMBERS_TABLE);
     public static final Uri BILLS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Bills.BILLS_TABLE);
     public static final Uri HISTORY_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + History.HISTORY_TABLE);
+    public static final Uri CALC_DETAILS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + CalculationDetails.CALCULATION_DETAILS_TABLE);
 
     static final String USERS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Users.USERS_TABLE;
     static final String GROUPS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Groups.GROUPS_TABLE;
@@ -41,6 +38,7 @@ public class EverContentProvider extends ContentProvider {
     static final String DEBTS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Debts.DEBTS_TABLE;
     static final String CALCULATION_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + Calculation.CALCULATION_TABLE;
     static final String HISTORY_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + History.HISTORY_TABLE;
+    static final String CALC_DETAILS_CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AUTHORITY + "." + CalculationDetails.CALCULATION_DETAILS_TABLE;
 
 
     static final int URI_USERS = 1;
@@ -52,6 +50,7 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_HISTORY = 7;
     static final int URI_USERS_LEFT_IN_GROUP = 8;
     static final int URI_DEBTS_DIALOG = 9;
+    static final int URI_CALC_DETAILS = 10;
 
 
     private static final UriMatcher uriMatcher;
@@ -67,6 +66,7 @@ public class EverContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, Calculation.CALCULATION_TABLE+ "/#", URI_CALCULATION);
         uriMatcher.addURI(AUTHORITY, History.HISTORY_TABLE, URI_HISTORY);
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE + "/dialog", URI_DEBTS_DIALOG);
+        uriMatcher.addURI(AUTHORITY, CalculationDetails.CALCULATION_DETAILS_TABLE, URI_CALC_DETAILS);
     }
 
 
@@ -104,6 +104,9 @@ public class EverContentProvider extends ContentProvider {
 
             case URI_HISTORY:
                 return HISTORY_CONTENT_TYPE;
+
+            case URI_CALC_DETAILS:
+                return CALC_DETAILS_CONTENT_TYPE;
 
 
 
@@ -185,6 +188,11 @@ public class EverContentProvider extends ContentProvider {
                 int count = c.getCount();
                 c.setNotificationUri(getContext().getContentResolver(), notifyUri);
                 return c;
+            case URI_CALC_DETAILS:
+                table = CalculationDetails.CALCULATION_DETAILS_TABLE;
+                notifyUri = CALC_DETAILS_CONTENT_URI;
+                break;
+
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
 
@@ -193,6 +201,7 @@ public class EverContentProvider extends ContentProvider {
         //getContext().getContentResolver().notifyChange(notifyUri, null);
         Cursor cursor = db.query(table, projection, selection,
                 selectionArgs, null, null, sortOrder);
+        int length = cursor.getCount();
         cursor.setNotificationUri(getContext().getContentResolver(), notifyUri);
         return cursor;
     }
@@ -221,6 +230,9 @@ public class EverContentProvider extends ContentProvider {
                 break;
             case URI_HISTORY:
                 table = History.HISTORY_TABLE;
+                break;
+            case URI_CALC_DETAILS:
+                table = CalculationDetails.CALCULATION_DETAILS_TABLE;
                 break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
@@ -259,6 +271,9 @@ public class EverContentProvider extends ContentProvider {
             case URI_HISTORY:
                 table = History.HISTORY_TABLE;
                 break;
+            case URI_CALC_DETAILS:
+                table = CalculationDetails.CALCULATION_DETAILS_TABLE;
+                break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
         }
@@ -294,6 +309,9 @@ public class EverContentProvider extends ContentProvider {
                 break;
             case URI_HISTORY:
                 table = History.HISTORY_TABLE;
+                break;
+            case URI_CALC_DETAILS:
+                table = CalculationDetails.CALCULATION_DETAILS_TABLE;
                 break;
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);

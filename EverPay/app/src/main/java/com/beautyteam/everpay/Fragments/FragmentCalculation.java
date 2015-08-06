@@ -57,6 +57,7 @@ public class FragmentCalculation extends Fragment implements
     private static final int LOADER_ID = 1;
     private ListView calcList;
     private Button calcBtn;
+    private Button detailsBtn;
     private int groupId;
 
     private CalcListAdapter mAdapter;
@@ -97,6 +98,9 @@ public class FragmentCalculation extends Fragment implements
         calcList = (ListView) view.findViewById(R.id.calc_list);
         calcBtn = (Button) view.findViewById(R.id.calc_ok_btn);
         calcBtn.setOnClickListener(this);
+
+        detailsBtn = (Button) view.findViewById(R.id.calc_details_btn);
+        detailsBtn.setOnClickListener(this);
 
         setupEmptyList(view);
 
@@ -191,10 +195,14 @@ public class FragmentCalculation extends Fragment implements
                     int length = getActivity().getContentResolver().update(uri, cv, Calculation.CALC_ID + "=" + id, null);
 
                 }
+                ((MainActivity) getActivity()).getServiceHelper().editCalculation(groupId);
+                ((MainActivity) getActivity()).removeFragment();
                 break;
+            case R.id.calc_details_btn:
+                ((MainActivity) getActivity()).addFragment(FragmentCalcDetails.getInstance(groupId));
+                break;
+
         }
-        ((MainActivity) getActivity()).getServiceHelper().editCalculation(groupId);
-        ((MainActivity) getActivity()).removeFragment();
     }
 
     @Override
