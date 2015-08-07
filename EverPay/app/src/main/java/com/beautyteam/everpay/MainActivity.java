@@ -369,6 +369,13 @@ public class MainActivity extends ActionBarActivity
             }
         } else if (action.equals(ADD_MEMBER_TO_GROUP)) {
 
+        } else if (action.equals(EDIT_GROUP)) {
+            if (result == Constants.Result.OK) {
+                String title=data.getString(Constants.IntentParams.GROUP_TITLE);
+                setTitle(title);
+            } else {
+                setTitle("Группа");
+            }
         }
     }
 
