@@ -14,9 +14,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
+
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 public class GcmMessageHandler extends IntentService {
 
@@ -26,6 +29,7 @@ public class GcmMessageHandler extends IntentService {
     public GcmMessageHandler() {
         super("GcmMessageHandler");
     }
+    SharedPreferences sPref;
 
     @Override
     public void onCreate() {
@@ -33,6 +37,7 @@ public class GcmMessageHandler extends IntentService {
         super.onCreate();
         handler = new Handler();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
 
     }
     @Override
@@ -42,16 +47,18 @@ public class GcmMessageHandler extends IntentService {
         if (action.equals("com.google.android.c2dm.intent.REGISTRATION")) {
 
         } else if (action.equals("com.google.android.c2dm.intent.RECEIVE")) {
-            String msg = intent.getStringExtra("text");
-            int actionId = Integer.parseInt(intent.getStringExtra("action"));
-            int groupId = Integer.parseInt(intent.getStringExtra("groups_id"));
-            String billidStr = intent.getStringExtra("bills_id");
-            int billId = 0;
-            if (billidStr != null)
-                billId = Integer.parseInt(billidStr);
-            switchOnScreen();
+            if (sPref.getBoolean(Constants.Preference.SETTING_PUSH, true)) {
+                String msg = intent.getStringExtra("text");
+                int actionId = Integer.parseInt(intent.getStringExtra("action"));
+                int groupId = Integer.parseInt(intent.getStringExtra("groups_id"));
+                String billidStr = intent.getStringExtra("bills_id");
+                int billId = 0;
+                if (billidStr != null)
+                    billId = Integer.parseInt(billidStr);
+                switchOnScreen();
 
-            sendNotif("EverPay", msg, actionId, groupId, billId);
+                sendNotif("EverPay", msg, actionId, groupId, billId);
+            }
         }
 
 

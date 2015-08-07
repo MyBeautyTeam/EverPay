@@ -169,10 +169,6 @@ public class FragmentSettings  extends Fragment
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.setting_switch_push:
-                progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setMessage("Изменение");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
 
                 sPref.edit()
                         .putBoolean(SETTING_PUSH, b)
