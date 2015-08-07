@@ -42,9 +42,16 @@ public class GcmMessageHandler extends IntentService {
         if (action.equals("com.google.android.c2dm.intent.REGISTRATION")) {
 
         } else if (action.equals("com.google.android.c2dm.intent.RECEIVE")) {
-            String msg = intent.getStringExtra("message");
+            String msg = intent.getStringExtra("text");
+            int actionId = Integer.parseInt(intent.getStringExtra("action"));
+            int groupId = Integer.parseInt(intent.getStringExtra("groups_id"));
+            String billidStr = intent.getStringExtra("bills_id");
+            int billId = 0;
+            if (billidStr != null)
+                billId = Integer.parseInt(billidStr);
             switchOnScreen();
-            sendNotif("EverPay", msg);
+
+            sendNotif("EverPay", msg, actionId, groupId, billId);
         }
 
 
@@ -53,17 +60,20 @@ public class GcmMessageHandler extends IntentService {
     }
 
 
-    void sendNotif(String title, String message) {
+    void sendNotif(String title, String message, int action, int groupId, int billId) {
         // 1-я часть
-        Notification notification = new Notification(R.drawable.ic_launcher, "Text in status bar",
+        Notification notification = new Notification(R.drawable.ic_launcher, message,
                 System.currentTimeMillis());
 
         // 3-я часть
         Intent intent = new Intent(this, LoginActivity.class);
+        /*intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);*/
         intent.setAction(Constants.Action.NOTIFICATION);
-        intent.putExtra(Constants.IntentParams.BILL_ID, 173);
-        intent.putExtra(Constants.IntentParams.GROUP_ID, 7);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        intent.putExtra(Constants.IntentParams.ACTION_NOTIF, action);
+        intent.putExtra(Constants.IntentParams.BILL_ID, billId);
+        intent.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // 2-я часть
         notification.setLatestEventInfo(this, title, message, pIntent);
@@ -83,7 +93,7 @@ public class GcmMessageHandler extends IntentService {
 
         boolean isScreenOn = pm.isScreenOn();
 
-        Log.e("screen on.................................", ""+isScreenOn);
+        Log.e("screen on............", ""+isScreenOn);
 
         if(isScreenOn==false) {
             PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |PowerManager.ACQUIRE_CAUSES_WAKEUP |PowerManager.ON_AFTER_RELEASE,"MyLock");

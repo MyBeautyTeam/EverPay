@@ -24,6 +24,7 @@ import com.beautyteam.everpay.Adapters.CalcDetailsAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.CalculationDetails;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
@@ -146,6 +147,7 @@ public class FragmentCalcDetails extends Fragment implements
         loadingLayout.setVisibility(View.VISIBLE);
         serviceHelper.onResume();
         serviceHelper.getCalculationDetails(groupId);
+        updateTitle();
     }
 
     @Override
@@ -196,5 +198,9 @@ public class FragmentCalcDetails extends Fragment implements
                 summaText.setText("в этой группе");
             }
         }
+    }
+
+    public void updateTitle() {
+        ((MainActivity)getActivity()).setTitle(Constants.Titles.CALC_DETAILS);
     }
 }

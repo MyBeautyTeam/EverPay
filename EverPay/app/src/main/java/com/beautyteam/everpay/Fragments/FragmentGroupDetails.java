@@ -14,15 +14,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.GroupDetailsAdapter;
 import com.beautyteam.everpay.Database.Bills;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Database.Groups;
 import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
@@ -73,14 +76,14 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     public static HashSet<Integer> downloadedGroupSet;
     private int previousCount = 0;
     private String screenName = "Просмотр группы";
+    private TextView emptyText;
 
 
-    public static FragmentGroupDetails getInstance(int groupId, String groupTitle) {
+    public static FragmentGroupDetails getInstance(int groupId) {
         FragmentGroupDetails fragmentGroupDetails = new FragmentGroupDetails();
 
         Bundle bundle = new Bundle();
         bundle.putInt(GROUP_ID, groupId);
-        bundle.putString(GROUP_TITLE, groupTitle);
         fragmentGroupDetails.setArguments(bundle);
 
         return fragmentGroupDetails;
@@ -89,11 +92,11 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
         Bundle arg = getArguments();
-        serviceHelper = new ServiceHelper(getActivity(), this);
         groupId = arg.getInt(GROUP_ID);
-        groupTitle = arg.getString(GROUP_TITLE);
+
+
+        serviceHelper = new ServiceHelper(getActivity(), this);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
@@ -140,6 +143,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         refreshLayout = (SwipeRefreshLayoutBottom) view.findViewById(R.id.group_detail_refresh);
         refreshLayout.setColorSchemeResources(R.color.vk_light_color, R.color.vk_share_blue_color, R.color.vk_grey_color);
         refreshLayout.setOnRefreshListener(this);
+
+        setupEmptyList(view);
     }
 
     @Override
@@ -159,6 +164,13 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
                 break;
 
         }
+    }
+
+    private void setupEmptyList(View view) {
+        ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
+        emptyText = (TextView)stub.inflate();
+        emptyText.setText("");
+        historyList.setEmptyView(emptyText);
     }
 
 
@@ -195,7 +207,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         int id = item.getItemId();
         switch (id) {
             case R.id.edit_group_tlb:
-                FragmentEditGroup frag= FragmentEditGroup.getInstance(groupId, groupTitle);
+                FragmentEditGroup frag= FragmentEditGroup.getInstance(groupId);
                 mainActivity.addFragment(frag);
                 return true;
         }
@@ -267,6 +279,7 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
             } else {
                 setHeaderVisible(false);
+                emptyText.setText("Произошла ошибка =(\n Проверьте соединение с интернетом");
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
 
             }
@@ -294,7 +307,12 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
     @Override
     public void updateTitle() {
-        ((MainActivity)getActivity()).setTitle(groupTitle);
+        Cursor titleCursor = getActivity().getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, new String [] {Groups.TITLE}, Groups.GROUP_ID + "=" + groupId, null, null);
+        titleCursor.moveToFirst();
+        if (titleCursor.getCount() > 0) {
+            groupTitle = titleCursor.getString(0);
+            ((MainActivity) getActivity()).setTitle(groupTitle);
+        }
         previousCount = 0;
     }
 

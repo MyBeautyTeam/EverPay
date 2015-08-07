@@ -37,6 +37,13 @@
                 android:layout_margin="5dp"
                 android:dividerHeight="2dp"
                 />
+            <ViewStub
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/AppTheme.EmptyListView"
+                android:layout="@layout/empty_list_view"
+                android:layout_weight="1" />
         </com.beautyteam.everpay.Views.SwipeRefreshLayoutBottom>
 
 

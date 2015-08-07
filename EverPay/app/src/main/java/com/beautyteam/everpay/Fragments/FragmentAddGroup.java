@@ -118,6 +118,7 @@ public class FragmentAddGroup extends Fragment
                     serviceHelper.addGroup(groupId);
                     progressDialog = new ProgressDialog(getActivity());
                     progressDialog.setMessage("Создаем группу");
+                    progressDialog.setCancelable(false);
                     progressDialog.show();
                 }
                 break;
@@ -196,7 +197,7 @@ public class FragmentAddGroup extends Fragment
         if (result == Constants.Result.OK) {
             int groupId = data.getInt(Constants.IntentParams.GROUP_ID);
             String groupTitle = data.getString(Constants.IntentParams.GROUP_TITLE);
-            FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(groupId, groupTitle);
+            FragmentGroupDetails fragmentGroupDetails = FragmentGroupDetails.getInstance(groupId);
             mainActivity.replaceFragment(fragmentGroupDetails);
         } else {
             Toast.makeText(getActivity(), "Ошибка соединения с интернетом", Toast.LENGTH_SHORT).show();

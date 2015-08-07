@@ -24,9 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Iterator;
 
 import static com.beautyteam.everpay.Constants.Action.*;
@@ -385,7 +382,7 @@ public class PostProcessor extends Processor {
                 result = Constants.Result.ERROR;
             }
         } else {
-            if (REG_GCM.equals(action)) {
+            if (REGISTER_GCM.equals(action)) {
                 String regID = intent.getStringExtra(Constants.IntentParams.GCM_ID);
                 try {
                     JSONObject paramsJSON = new JSONObject();

@@ -307,7 +307,17 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     public void registerGCM(String regId) {
         Intent intentService = new Intent(activity, Service.class);
-        intentService.setAction(Constants.Action.REG_GCM);
+        intentService.setAction(Constants.Action.REGISTER_GCM);
+
+        intentService.putExtra(Constants.IntentParams.GCM_ID, regId);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+
+        activity.startService(intentService);
+    }
+
+    public void unregisterGCM(String regId) {
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.UNREGISTER_GCM);
 
         intentService.putExtra(Constants.IntentParams.GCM_ID, regId);
         intentService.putExtra(Constants.RECEIVER, mReceiver);

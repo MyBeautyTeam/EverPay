@@ -11,6 +11,16 @@ public class Constants {
         public final static int ERROR = -1;
     }
 
+    public class NOTIFICATION_ACTION {
+        public final static int ADD_GROUPS = 0;
+        public final static int ADD_MEMBERS = 2;
+        public final static int REMOVE_MEMBERS = 3;
+        public final static int ADD_BILLS = 4;
+        public final static int EDIT_BILLS = 5;
+        public final static int ADD_DEBTS = 7;
+        public final static int EDIT_DEBTS = 8;
+    }
+
     public class URL {
         public final static String BASE_URL = "http://188.166.89.182/";
         public final static String GET_GROUPS = BASE_URL + "groups/";
@@ -38,6 +48,7 @@ public class Constants {
         public final static String CALC_DETAILS = BASE_URL + "debts/details/";
 
         public final static String REGISTER_GCM = BASE_URL + "gcm/register/";
+        public final static String UNREGISTER_GCM = BASE_URL + "gcm/unregister/";
     }
 
     public class Action {
@@ -60,7 +71,7 @@ public class Constants {
         public final static String ADD_GROUP = "ADD_GROUP";
         public final static String CALCULATE = "CALCULATE";
         public final static String ADD_USER = "ADD_USER";
-        public final static String REG_GCM = "REG_GCM";
+        public final static String REGISTER_GCM = "REGISTER_GCM";
 
         public final static String EDIT_BILL = "EDIT_BILL";
         public final static String EDIT_GROUP = "EDIT_GROUP";
@@ -68,6 +79,7 @@ public class Constants {
 
         public final static String REMOVE_BILL = "REMOVE_BILL";
         public final static String REMOVE_MEMBER_FROM_GROUP = "REMOVE_GROUP_MEMBER";
+        public final static String UNREGISTER_GCM = "REGISTER_GCM";
 
         public final static String NOTIFICATION = "NOTIFICATION";
 
@@ -87,6 +99,7 @@ public class Constants {
         public final static String MAIN = "Главная";
         public final static String SETTINGS = "Настройки";
         public final static String CREATE_USER = "Создание участника";
+        public final static String CALC_DETAILS = "Детализация";
     }
 
     public class Preference {
@@ -102,6 +115,7 @@ public class Constants {
 
         public final static String SETTING_PUSH = "SETTING_PUSH";
         public final static String SETTING_ADVICE = "SETTING_ADVICE";
+        public final static String GCM_REGID = "GCM_REGID";
     }
 
     public class State {
@@ -133,6 +147,9 @@ public class Constants {
 
         // ==
         public final static String GCM_ID = "GCM_ID";
+
+        //== NOTIFITACION
+        public final static String ACTION_NOTIF = "ACTION_NOTIF";
 
     }
 

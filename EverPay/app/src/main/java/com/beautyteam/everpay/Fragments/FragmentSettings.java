@@ -1,13 +1,16 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,9 +32,17 @@ import com.beautyteam.everpay.Database.History;
 import com.beautyteam.everpay.Database.Users;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.beautyteam.everpay.REST.RequestCallback;
+import com.beautyteam.everpay.REST.ServiceHelper;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.vk.sdk.VKSdk;
 
+import java.io.IOException;
+
+import static com.beautyteam.everpay.Constants.ACTION;
+import static com.beautyteam.everpay.Constants.Action.ADD_USER;
+import static com.beautyteam.everpay.Constants.Action.REGISTER_GCM;
 import static com.beautyteam.everpay.Constants.Preference.SETTING_ADVICE;
 import static com.beautyteam.everpay.Constants.Preference.SETTING_PUSH;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
@@ -52,6 +63,8 @@ public class FragmentSettings  extends Fragment
     private SwitchCompat adviceSwitch;
 
     private SharedPreferences sPref;
+    private ProgressDialog progressDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,6 +112,11 @@ public class FragmentSettings  extends Fragment
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.quit_button:
@@ -139,7 +157,10 @@ public class FragmentSettings  extends Fragment
     }
 
     private void setupSwitch() {
-        pushSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_PUSH, true));
+        String regId = sPref.getString(Constants.Preference.GCM_REGID, null);
+        if (regId == null) {
+            pushSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_PUSH, true));
+        }
         adviceSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_ADVICE, false));
     }
 
@@ -148,6 +169,11 @@ public class FragmentSettings  extends Fragment
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.setting_switch_push:
+                progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Изменение");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
                 sPref.edit()
                         .putBoolean(SETTING_PUSH, b)
                     .commit();
@@ -160,4 +186,6 @@ public class FragmentSettings  extends Fragment
         }
 
     }
+
+
 }
