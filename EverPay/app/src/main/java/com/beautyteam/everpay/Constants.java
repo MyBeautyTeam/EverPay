@@ -70,7 +70,8 @@ public class Constants {
         public final static String ADD_MEMBER_TO_GROUP = "ADD_MEMBER_TO_GROUP";
         public final static String ADD_GROUP = "ADD_GROUP";
         public final static String CALCULATE = "CALCULATE";
-        public final static String ADD_USER = "ADD_USER";
+        public final static String CREATE_AND_ADD_USER = "CREATE_AND_ADD_USER";
+        public final static String CREATE_USER = "CREATE_USER";
         public final static String REGISTER_GCM = "REGISTER_GCM";
 
         public final static String EDIT_BILL = "EDIT_BILL";

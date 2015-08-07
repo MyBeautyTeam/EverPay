@@ -4,6 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@drawable/on_btn_pressed_selector"
     >
     <LinearLayout
         android:layout_weight="1.25"

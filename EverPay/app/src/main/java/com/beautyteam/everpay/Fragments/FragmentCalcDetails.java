@@ -97,6 +97,8 @@ public class FragmentCalcDetails extends Fragment implements
                 .resize(100, 100)
                 .centerInside()
                 .into(avatar);
+
+        setupEmptyList(view);
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -167,10 +169,9 @@ public class FragmentCalcDetails extends Fragment implements
     @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
-
+        loadingLayout.setVisibility(View.GONE);
         if (action.equals(GET_CALC_DETAILS)) {
             if (result == Constants.Result.OK) {
-                loadingLayout.setVisibility(View.GONE);
             } else {
                 emptyText.setText("Произошла ошибка =(\n Проверьте соединение с интернетом");
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();

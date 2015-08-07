@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -213,13 +214,8 @@ public class FragmentAddBill extends Fragment implements
 
         if (needSummaValue == leftSummaValue)
             leftSumma.setTextColor(getResources().getColor(R.color.secondary_text));
-        else// {
+        else
             leftSumma.setTextColor(getResources().getColor(R.color.red_text));
-            /*if (leftSummaValue - needSummaValue > 0)
-                leftSumma.setText(leftSummaValue + "/+" + (leftSummaValue-needSummaValue));
-            else
-                leftSumma.setText(leftSummaValue + "/" + (leftSummaValue-needSummaValue));
-        }*/
     }
 
 

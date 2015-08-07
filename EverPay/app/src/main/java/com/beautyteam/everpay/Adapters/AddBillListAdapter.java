@@ -172,7 +172,7 @@ public class AddBillListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.from(context).inflate(R.layout.item_add_bill, parent, false);
             viewHolder = new ViewHolder();
@@ -253,6 +253,15 @@ public class AddBillListAdapter extends BaseAdapter {
                 .resize(100, 100)
                 .centerInside()
                 .into(viewHolder.avatar);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int sum = getNeedSumma() - getInvestSumma();
+                if (sum > 0)
+                    viewHolder.put.setText(sum + "");
+            }
+        });
 
         return convertView;
     }

@@ -113,7 +113,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_apply:
-                String oldTitle = getArguments().getString(GROUP_TITLE);
+                String oldTitle = getGroupTitle();
                 String newTitle = title.getText().toString();
 
                 if ( ! oldTitle.equals(newTitle)) {
@@ -127,6 +127,16 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getGroupTitle() {
+        String groupTitle = "Группа";
+        Cursor titleCursor = getActivity().getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, new String [] {Groups.TITLE}, Groups.GROUP_ID + "=" + groupId, null, null);
+        titleCursor.moveToFirst();
+        if (titleCursor.getCount() > 0) {
+            groupTitle = titleCursor.getString(0);
+        }
+        return groupTitle;
     }
 
     @Override

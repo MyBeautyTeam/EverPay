@@ -46,6 +46,7 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
     private Button saveBtn;
     private Button createBtn;
     private String mCurFilter;
+    private static final String GROUP_ID = "GROUP_ID";
 
     public static FragmentAddFriendsToGroup getInstance(ArrayList<User> arrayList) {
         FragmentAddFriendsToGroup fragmentAddFriendsToGroup = new FragmentAddFriendsToGroup();
@@ -156,8 +157,8 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
                 ((MainActivity) getActivity()).removeFragment();
                 break;
             case R.id.create_btn_user_add_friends:
-                FragmentCreateUser fragmentCreateUser = new FragmentCreateUser();
-                ((MainActivity) getActivity()).addFragment(fragmentCreateUser);
+                //FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(groupId);
+                //((MainActivity) getActivity()).addFragment(fragmentCreateUser);
                 break;
         }
     }

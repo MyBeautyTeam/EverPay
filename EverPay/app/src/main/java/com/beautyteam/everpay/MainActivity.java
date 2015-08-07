@@ -25,6 +25,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
@@ -443,6 +444,8 @@ public class MainActivity extends ActionBarActivity
         int groupId = getIntent().getExtras().getInt(Constants.IntentParams.GROUP_ID, 0);
         switch (actionId) {
             case Constants.NOTIFICATION_ACTION.ADD_DEBTS:
+                replaceAllFragment(FragmentCalculation.getInstance(groupId));
+                break;
             case Constants.NOTIFICATION_ACTION.EDIT_DEBTS:
             case Constants.NOTIFICATION_ACTION.ADD_GROUPS:
             case Constants.NOTIFICATION_ACTION.ADD_MEMBERS:
@@ -452,6 +455,9 @@ public class MainActivity extends ActionBarActivity
             case Constants.NOTIFICATION_ACTION.ADD_BILLS:
             case Constants.NOTIFICATION_ACTION.EDIT_BILLS:
                 replaceAllFragment(FragmentShowBill.getInstance(groupId, billId));
+                break;
+            default:
+                replaceAllFragment(FragmentGroupDetails.getInstance(groupId));
                 break;
 
         }
