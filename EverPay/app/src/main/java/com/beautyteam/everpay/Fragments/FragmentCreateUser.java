@@ -65,7 +65,6 @@ public class FragmentCreateUser extends Fragment
                     sex = 1;
             }
         });
-
     }
 
     @Override

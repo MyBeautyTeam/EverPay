@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddFriendsToGroupAdapter;
 import com.beautyteam.everpay.Constants;
@@ -72,8 +73,6 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
         saveBtn.setOnClickListener(this);
         createBtn = (Button) view.findViewById(R.id.create_btn_user_add_friends);
         createBtn.setOnClickListener(this);
-
-
     }
 
     @Override

@@ -34,12 +34,16 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
         this.friendsInGroup = fragmentEditFriends;
         int i = 0;
         c.moveToFirst();
-        sections = "" + c.getString(c.getColumnIndex(Users.NAME)).charAt(0);
+        if(c.getInt(c.getColumnIndex(Users.USER_ID_VK)) == 0)
+            sections +="\u2606";
+        else
+            sections += "" + c.getString(c.getColumnIndex(Users.NAME)).charAt(0);
         while(c.moveToNext()) {
-            if (c.getString(c.getColumnIndex(Users.NAME)).charAt(0) != sections.charAt(i)) {
-                sections += "" + c.getString(c.getColumnIndex(Users.NAME)).charAt(0);
-                i++;
-            }
+            if(c.getInt(c.getColumnIndex(Users.USER_ID_VK)) != 0)
+                if (c.getString(c.getColumnIndex(Users.NAME)).charAt(0) != sections.charAt(i)) {
+                    sections += "" + c.getString(c.getColumnIndex(Users.NAME)).charAt(0);
+                    i++;
+                }
         }
     }
 
@@ -60,24 +64,26 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
         final ViewHolder holder = (ViewHolder)view.getTag();
         final int id = cursor.getInt(cursor.getColumnIndex(Users.USER_ID));
         String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
+        int userVkId = cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK));
         holder.firstName.setText(name);
-        holder.separator.setPadding(0,0,0,0);
         if(cursor.getPosition() != 0) {
             cursor.moveToPrevious();
-            if (cursor.getString(cursor.getColumnIndex(Users.NAME)).charAt(0) != name.charAt(0)) {
-                holder.separator.setText(name.subSequence(0, 1));
-            } else {
+            if (userVkId == 0)
                 holder.separator.setText("");
-                holder.separator.setPadding(32,0,0,0);
-            }
+            else if ((cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK)) == 0)||(cursor.getString(cursor.getColumnIndex(Users.NAME)).charAt(0) != name.charAt(0)))
+                holder.separator.setText(name.subSequence(0, 1));
+            else
+                holder.separator.setText("");
             cursor.moveToNext();
         } else {
-            holder.separator.setText(name.subSequence(0, 1));
+            if(cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK)) == 0)
+                holder.separator.setText("\u2605");
+            else
+                holder.separator.setText(name.subSequence(0, 1));
         }
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //addMemberToGroup(id,groupId);
                 friendsInGroup.addMemberToGroup(id, groupId);
             }
         });
@@ -110,10 +116,13 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
     public int getPositionForSection(int section) {
         Cursor cursor = getCursor();
         cursor.moveToPosition(-1);
-        while(cursor.moveToNext()) {
-            if (cursor.getString(cursor.getColumnIndex(Users.NAME)).charAt(0) == sections.charAt(section))
-                return cursor.getPosition();
-        }
+        if (section == 0 ) {
+            return 0;
+        } else
+            while(cursor.moveToNext()) {
+                if (cursor.getString(cursor.getColumnIndex(Users.NAME)).charAt(0) == sections.charAt(section))
+                    return cursor.getPosition();
+            }
         return 0;
     }
 
