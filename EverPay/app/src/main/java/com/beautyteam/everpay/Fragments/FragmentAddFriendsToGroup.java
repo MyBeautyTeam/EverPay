@@ -123,10 +123,10 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (mCurFilter != null) {
-            return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, Users.NAME +" like ('%"+mCurFilter+"%')", null, Users.NAME);
+            return new CursorLoader(getActivity(), EverContentProvider.USERS_FRIENDS_GROUP_BY_VK, PROJECTION, Users.NAME +" like ('%"+mCurFilter+"%')", null, Users.NAME);
 
         } else {
-            return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, null, null, Users.NAME);
+            return new CursorLoader(getActivity(), EverContentProvider.USERS_FRIENDS_GROUP_BY_VK, PROJECTION, null, null, Users.NAME);
         }
     }
 

@@ -22,6 +22,7 @@ public class EverContentProvider extends ContentProvider {
     static final String AUTHORITY = "com.beautyteam.everpay.EverpayDB";
 
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
+    public static final Uri USERS_FRIENDS_GROUP_BY_VK = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE + "/" + "order_vk");
     public static final Uri GROUPS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Groups.GROUPS_TABLE);
     public static final Uri DEBTS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE);
     public static final Uri DEBTS_CONTENT_URI_DIALOG = Uri.parse("content://" + AUTHORITY + "/" + Debts.DEBTS_TABLE + "/" + "dialog");
@@ -53,6 +54,8 @@ public class EverContentProvider extends ContentProvider {
     static final int URI_DEBTS_DIALOG = 9;
     static final int URI_CALC_DETAILS = 10;
 
+    static final int URI_FRIENDS_GROUP_BY_VK = 11; //
+
 
     private static final UriMatcher uriMatcher;
     static {
@@ -68,6 +71,7 @@ public class EverContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, History.HISTORY_TABLE, URI_HISTORY);
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE + "/dialog", URI_DEBTS_DIALOG);
         uriMatcher.addURI(AUTHORITY, CalculationDetails.CALCULATION_DETAILS_TABLE, URI_CALC_DETAILS);
+        uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE + "/order_vk", URI_FRIENDS_GROUP_BY_VK);
     }
 
 
@@ -86,6 +90,7 @@ public class EverContentProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case URI_USERS_LEFT_IN_GROUP:
             case URI_USERS:
+            case URI_FRIENDS_GROUP_BY_VK:
                 return USERS_CONTENT_TYPE;
 
             case URI_GROUPS:
@@ -169,10 +174,10 @@ public class EverContentProvider extends ContentProvider {
                 notifyUri = HISTORY_CONTENT_URI;
                 break;
 
-            case URI_USERS_LEFT_IN_GROUP:
+            case URI_USERS_LEFT_IN_GROUP: {
                 id = uri.getLastPathSegment();
                 notifyUri = USERS_CONTENT_URI;
-                String request = "select "+
+                String request = "select " +
                         Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
                         Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
                         Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
@@ -182,18 +187,50 @@ public class EverContentProvider extends ContentProvider {
                         Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
                         " from "
                         + Users.USERS_TABLE + " left join " + GroupMembers.GROUP_MEMBERS_TABLE +
-                        " on " + Users.USERS_TABLE+"."+Users.USER_ID + " = " + GroupMembers.GROUP_MEMBERS_TABLE+"."+GroupMembers.USER_ID +
-                        " and " + GroupMembers.GROUP_MEMBERS_TABLE+"."+GroupMembers.GROUP_ID +" = " + id +
-                        " where " + GroupMembers.GROUP_MEMBERS_TABLE+"."+GroupMembers.USER_ID + " is null" +
+                        " on " + Users.USERS_TABLE + "." + Users.USER_ID + " = " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID +
+                        " and " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.GROUP_ID + " = " + id +
+                        " where " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID + " is null" +
                         " Order By " + Users.NAME;
                 Cursor c = db.rawQuery(request, null);
                 int count = c.getCount();
                 c.setNotificationUri(getContext().getContentResolver(), notifyUri);
                 return c;
+            }
             case URI_CALC_DETAILS:
                 table = CalculationDetails.CALCULATION_DETAILS_TABLE;
                 notifyUri = CALC_DETAILS_CONTENT_URI;
                 break;
+
+            case URI_FRIENDS_GROUP_BY_VK: {
+                notifyUri = USERS_CONTENT_URI;
+                String request = "select * from " +
+                        " (select " +
+                        Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
+                        Users.USERS_TABLE + "." + Users.NAME + " as " + Users.NAME + ", " +
+                        Users.USERS_TABLE + "." + Users.IMG + " as " + Users.IMG + ", " +
+                        Users.USERS_TABLE + "." + Users.STATE + " as " + Users.STATE + ", " +
+                        Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
+                        " from " + Users.USERS_TABLE +
+                        " where " + Users.USER_ID_VK + "=0" +
+                        " Order By " + Users.NAME + ")"
+                        + " UNION ALL " +
+                        "select * from (" +
+                        "select " + Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
+                        Users.USERS_TABLE + "." + Users.NAME + " as " + Users.NAME + ", " +
+                        Users.USERS_TABLE + "." + Users.IMG + " as " + Users.IMG + ", " +
+                        Users.USERS_TABLE + "." + Users.STATE + " as " + Users.STATE + ", " +
+                        Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
+                        " from " + Users.USERS_TABLE +
+                        " where " + Users.USER_ID_VK + "!=0" +
+                        " Order By " + Users.NAME + ")";
+                Cursor c = db.rawQuery(request, null);
+                c.setNotificationUri(getContext().getContentResolver(), notifyUri);
+                return c;
+            }
 
             default:
                 throw new IllegalArgumentException("Wrong URI: " + uri);
