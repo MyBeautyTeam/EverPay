@@ -38,6 +38,7 @@ import java.util.Iterator;
 import static com.beautyteam.everpay.Constants.Action.GET_GROUP_MEMBERS;
 import static com.beautyteam.everpay.Constants.Action.REMOVE_BILL;
 import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
+import static com.beautyteam.everpay.Constants.Action.UNREGISTER_GCM;
 
 /**
  * Created by Admin on 02.05.2015.
@@ -125,6 +126,26 @@ public class DeleteProcessor extends Processor {
                 }
             } catch (JSONException e) {
                 result = Constants.Result.ERROR;
+            }
+        } else {
+            if (UNREGISTER_GCM.equals(action)) {
+                String regID = intent.getStringExtra(Constants.IntentParams.GCM_ID);
+                try {
+                    JSONObject paramsJSON = new JSONObject();
+                    paramsJSON.put("users_id", userId);
+                    paramsJSON.put("access_token", accessToken);
+                    paramsJSON.put("reg_id", regID);
+                    String response = urlConnectionDelete(Constants.URL.REMOVE_BILL, paramsJSON.toString());
+                    if ((response != null) && response.contains("200")) {
+                        result = Constants.Result.OK;
+                    } else {
+                        result = Constants.Result.ERROR;
+                    }
+
+                } catch (JSONException e) {
+                    result = Constants.Result.ERROR;
+                }
+
             }
         }
         service.onRequestEnd(result, intent);

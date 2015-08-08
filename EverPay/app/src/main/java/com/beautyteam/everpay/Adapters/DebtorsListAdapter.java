@@ -128,7 +128,7 @@ public class DebtorsListAdapter extends CursorAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)context).addFragment(FragmentGroupDetails.getInstance(groupId, groupTitle));
+                    ((MainActivity)context).addFragment(FragmentGroupDetails.getInstance(groupId));
                 }
             });
         }

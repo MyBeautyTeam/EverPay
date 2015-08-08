@@ -25,6 +25,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Fragments.FragmentCalculation;
 import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
@@ -368,6 +369,13 @@ public class MainActivity extends ActionBarActivity
             }
         } else if (action.equals(ADD_MEMBER_TO_GROUP)) {
 
+        } else if (action.equals(EDIT_GROUP)) {
+            if (result == Constants.Result.OK) {
+                String title=data.getString(Constants.IntentParams.GROUP_TITLE);
+                setTitle(title);
+            } else {
+                setTitle("Группа");
+            }
         }
     }
 
@@ -397,9 +405,15 @@ public class MainActivity extends ActionBarActivity
                         gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
                     }
                     regid = gcm.register(Constants.SENDER_ID);
-                    msg = "Device registered, registration ID=" + regid;
-                    Log.i("GCM",  msg);
-                    serviceHelper.registerGCM(regid);
+                    if (regid!=null) {
+                        msg = "Device registered, registration ID=" + regid;
+                        Log.i("GCM",  msg);
+                        serviceHelper.registerGCM(regid);
+                        sPref.edit()
+                                .putString(Constants.Preference.GCM_REGID, regid)
+                                .commit();
+                    }
+
 
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
@@ -432,10 +446,28 @@ public class MainActivity extends ActionBarActivity
      */
     private void handleNotificationIntent() {
         Log.e("handleNotificatintent", "was called");
+        int actionId = getIntent().getExtras().getInt(Constants.IntentParams.ACTION_NOTIF);
         int billId = getIntent().getExtras().getInt(Constants.IntentParams.BILL_ID, 0);
         int groupId = getIntent().getExtras().getInt(Constants.IntentParams.GROUP_ID, 0);
+        switch (actionId) {
+            case Constants.NOTIFICATION_ACTION.ADD_DEBTS:
+                replaceAllFragment(FragmentCalculation.getInstance(groupId));
+                break;
+            case Constants.NOTIFICATION_ACTION.EDIT_DEBTS:
+            case Constants.NOTIFICATION_ACTION.ADD_GROUPS:
+            case Constants.NOTIFICATION_ACTION.ADD_MEMBERS:
+                replaceAllFragment(FragmentGroupDetails.getInstance(groupId));
+                break;
 
-        replaceAllFragment(FragmentShowBill.getInstance(groupId, billId));
+            case Constants.NOTIFICATION_ACTION.ADD_BILLS:
+            case Constants.NOTIFICATION_ACTION.EDIT_BILLS:
+                replaceAllFragment(FragmentShowBill.getInstance(groupId, billId));
+                break;
+            default:
+                replaceAllFragment(FragmentGroupDetails.getInstance(groupId));
+                break;
+
+        }
 
     }
 

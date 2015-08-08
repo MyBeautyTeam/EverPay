@@ -53,16 +53,19 @@ public class LoginActivity extends Activity {
             Log.d("vk", " wake up ");
 
             Intent intentStartMain = new Intent(LoginActivity.this, MainActivity.class);
+
             if (Constants.Action.NOTIFICATION.equals(getIntent().getAction())) { //Если интент пришел из нотификации
 
                 Bundle arg = getIntent().getExtras();
 
-                int billId = arg.getInt(Constants.IntentParams.BILL_ID, 0);
-                int groupId = arg.getInt(Constants.IntentParams.GROUP_ID, 0);
+                int actionId = arg.getInt(Constants.IntentParams.ACTION_NOTIF);
+                int groupId = arg.getInt(Constants.IntentParams.GROUP_ID);
+                int billId = arg.getInt(Constants.IntentParams.BILL_ID);
 
                 intentStartMain.setAction(Constants.Action.NOTIFICATION);
-                intentStartMain.putExtra(Constants.IntentParams.BILL_ID, billId);
+                intentStartMain.putExtra(Constants.IntentParams.ACTION_NOTIF, actionId);
                 intentStartMain.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+                intentStartMain.putExtra(Constants.IntentParams.BILL_ID, billId);
             }
             startActivity(intentStartMain);
             this.finish();

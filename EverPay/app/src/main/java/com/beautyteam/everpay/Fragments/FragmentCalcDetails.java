@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.beautyteam.everpay.Adapters.CalcDetailsAdapter;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.CalculationDetails;
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
@@ -51,7 +54,9 @@ public class FragmentCalcDetails extends Fragment implements
     private TextView debtTitle;
     private TextView summaText;
     private CircleImageView avatar;
+    private LinearLayout loadingLayout;
 
+    private TextView emptyText;
     SharedPreferences sPref;
 
     public static FragmentCalcDetails getInstance(int groupId) {
@@ -78,6 +83,7 @@ public class FragmentCalcDetails extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FlurryAgent.logEvent("Детализация группы");
+        loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         avatar = (CircleImageView) view.findViewById(R.id.calc_details_avatar);
         calcDetailsList = (ListView)view.findViewById(R.id.calc_details_list);
         debtTitle = (TextView)view.findViewById(R.id.calc_details_debt_title);
@@ -91,6 +97,8 @@ public class FragmentCalcDetails extends Fragment implements
                 .resize(100, 100)
                 .centerInside()
                 .into(avatar);
+
+        setupEmptyList(view);
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -138,9 +146,10 @@ public class FragmentCalcDetails extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        //loadingLayout.setVisibility(View.VISIBLE);
+        loadingLayout.setVisibility(View.VISIBLE);
         serviceHelper.onResume();
         serviceHelper.getCalculationDetails(groupId);
+        updateTitle();
     }
 
     @Override
@@ -149,15 +158,22 @@ public class FragmentCalcDetails extends Fragment implements
         serviceHelper.onPause();
     }
 
+    private void setupEmptyList(View view) {
+        ViewStub stub = (ViewStub) view.findViewById(R.id.empty);
+        emptyText = (TextView)stub.inflate();
+        emptyText.setText("");
+        calcDetailsList.setEmptyView(emptyText);
+    }
+
 
     @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
-
+        loadingLayout.setVisibility(View.GONE);
         if (action.equals(GET_CALC_DETAILS)) {
             if (result == Constants.Result.OK) {
-
             } else {
+                emptyText.setText("Произошла ошибка =(\n Проверьте соединение с интернетом");
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
         }
@@ -183,5 +199,9 @@ public class FragmentCalcDetails extends Fragment implements
                 summaText.setText("в этой группе");
             }
         }
+    }
+
+    public void updateTitle() {
+        ((MainActivity)getActivity()).setTitle(Constants.Titles.CALC_DETAILS);
     }
 }

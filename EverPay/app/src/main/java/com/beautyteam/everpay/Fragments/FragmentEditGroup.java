@@ -57,17 +57,17 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     private static final int LOADER_ID = 0;
     private static final String GROUP_ID = "GROUP_ID";
     private static final String GROUP_TITLE = "GROUP_TITLE";
+    private int groupId;
 
     private ServiceHelper serviceHelper;
     private ProgressDialog progressDialog;
     private String screenName = "Редактирование группы";
 
 
-    public static FragmentEditGroup getInstance(int groupId, String groupTitle) {
+    public static FragmentEditGroup getInstance(int groupId) {
         FragmentEditGroup fragmentEditGroup = new FragmentEditGroup();
         Bundle bundle = new Bundle();
         bundle.putInt(GROUP_ID, groupId);
-        bundle.putString(GROUP_TITLE, groupTitle);
         fragmentEditGroup.setArguments(bundle);
         return fragmentEditGroup;
     }
@@ -88,7 +88,13 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
         View footerView = inflater.inflate(R.layout.footer_add_friend, null);
         title = (TextView) view.findViewById(R.id.group_name);
-        title.setText(getArguments().getString(GROUP_TITLE));
+        groupId = getArguments().getInt(GROUP_ID);
+
+        Cursor titleCursor = getActivity().getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, new String[]{Groups.TITLE}, Groups.GROUP_ID + "=" + groupId, null, null);
+        titleCursor.moveToFirst();
+        String groupTitle = titleCursor.getString(0);
+
+        title.setText(groupTitle);
         addBtn = (Button) footerView.findViewById(R.id.add_btn_friend_foot);
         groupName = (EditText) view.findViewById(R.id.group_name);
         friendsList.addFooterView(footerView);
@@ -107,7 +113,7 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_apply:
-                String oldTitle = getArguments().getString(GROUP_TITLE);
+                String oldTitle = getGroupTitle();
                 String newTitle = title.getText().toString();
 
                 if ( ! oldTitle.equals(newTitle)) {
@@ -121,6 +127,16 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getGroupTitle() {
+        String groupTitle = "Группа";
+        Cursor titleCursor = getActivity().getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, new String [] {Groups.TITLE}, Groups.GROUP_ID + "=" + groupId, null, null);
+        titleCursor.moveToFirst();
+        if (titleCursor.getCount() > 0) {
+            groupTitle = titleCursor.getString(0);
+        }
+        return groupTitle;
     }
 
     @Override

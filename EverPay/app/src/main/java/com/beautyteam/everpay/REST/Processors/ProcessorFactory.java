@@ -3,8 +3,6 @@ package com.beautyteam.everpay.REST.Processors;
 import android.content.Context;
 import android.content.Intent;
 
-import com.beautyteam.everpay.Constants;
-
 import static com.beautyteam.everpay.Constants.Action.*;
 
 /**
@@ -31,8 +29,9 @@ public class ProcessorFactory {
             ADD_MEMBER_TO_GROUP.equals(action) ||
             ADD_GROUP.equals(action) ||
             CALCULATE.equals(action) ||
-            ADD_USER.equals(action) ||
-            REG_GCM.equals(action)
+            CREATE_USER.equals(action) ||
+            CREATE_AND_ADD_USER.equals(action) ||
+            REGISTER_GCM.equals(action)
             ) {
             return new PostProcessor(context);
         } else
@@ -45,7 +44,8 @@ public class ProcessorFactory {
         } else
         if (
             REMOVE_MEMBER_FROM_GROUP.equals(action) ||
-            REMOVE_BILL.equals(action)
+            REMOVE_BILL.equals(action) ||
+            UNREGISTER_GCM.equals(action)
             )
             return new DeleteProcessor(context);
         else

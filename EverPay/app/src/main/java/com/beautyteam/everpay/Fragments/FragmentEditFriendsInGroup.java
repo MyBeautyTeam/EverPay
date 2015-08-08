@@ -49,11 +49,12 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     private EditFriendsToGroupAdapter mAdapter;
     private static final String FRIENDS = "FRIENDS";
     private MainActivity mainActivity;
-    private static final String GROUP_ID = "GROUP_ID";
     private String mCurFilter;
     private ServiceHelper serviceHelper;
     private ProgressDialog progressDialog;
     private Button createBtn;
+    private int groupId;
+    private static final String GROUP_ID = "GROUP_ID";
 
     public static FragmentEditFriendsInGroup getInstance(int groupId) {
         FragmentEditFriendsInGroup fragmentEditFriendsInGroup = new FragmentEditFriendsInGroup();
@@ -66,6 +67,7 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        groupId = getArguments().getInt(GROUP_ID, -1);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         serviceHelper = new ServiceHelper(getActivity(), this);
         return inflater.inflate(R.layout.fragment_edit_friends, null);
@@ -187,7 +189,7 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.create_btn_user_edit_friends:
-                FragmentCreateUser fragmentCreateUser = new FragmentCreateUser();
+                FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(groupId);
                 ((MainActivity) getActivity()).addFragment(fragmentCreateUser);
                 break;
         }

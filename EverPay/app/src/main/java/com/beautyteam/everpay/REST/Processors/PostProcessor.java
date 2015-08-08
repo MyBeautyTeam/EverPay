@@ -24,9 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Iterator;
 
 import static com.beautyteam.everpay.Constants.Action.*;
@@ -149,45 +146,7 @@ public class PostProcessor extends Processor {
         if (ADD_MEMBER_TO_GROUP.equals(action)) {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
             int userIdWhom = intent.getIntExtra(Constants.IntentParams.USER_ID, 0);
-            try {
-                JSONObject paramsJSON = new JSONObject();
-                paramsJSON.put("users_id", userId);
-                paramsJSON.put("access_token", accessToken);
-                paramsJSON.put("groups_id", groupId);
-                paramsJSON.put("users_id_whom", userIdWhom);
-                String response = urlConnectionPost(Constants.URL.ADD_GROUP_MEMBER, paramsJSON.toString());
-                if ((response != null) && response.contains("200")) {
-                    result = Constants.Result.OK;
-
-                    service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, GroupMembers.GROUP_ID + "=" +groupId, null );
-                    JSONObject jsonObject = new JSONObject(response);
-                    jsonObject = jsonObject.getJSONObject("response");
-                    JSONObject group = jsonObject.getJSONObject("group");
-                    JSONObject members = jsonObject.getJSONObject("members");
-                    JSONObject history = jsonObject.getJSONObject("history");
-                    JSONObject member;
-                    for (int i = 0; i<members.length(); i++) {
-                        member = members.getJSONObject(i + "");
-                        ContentValues cv = new ContentValues();
-                        cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
-                        cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
-                        cv.put(GroupMembers.USER_ID, member.getString("users_id"));
-                        cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
-
-                        service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
-                    }
-
-                    ContentValues cv = readHistory(history);
-                    if (cv != null)
-                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
-                    // Обновим дату в группе
-                    updateDateInGroup(groupId, service);
-                } else {
-                    result = Constants.Result.ERROR;
-                }
-            } catch (JSONException e) {
-                result = Constants.Result.ERROR;
-            }
+            result = addUserToGroup(service, userIdWhom, groupId);
         } else
         if (ADD_GROUP.equals(action)) {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
@@ -339,60 +298,44 @@ public class PostProcessor extends Processor {
                 result = Constants.Result.ERROR;
             }
         } else
-        if (ADD_USER.equals(action)) {
+        if (CREATE_AND_ADD_USER.equals(action)) {
+            String userName =intent.getStringExtra(Constants.IntentParams.NEW_USER_NAME);
+            String userLastName =intent.getStringExtra(Constants.IntentParams.NEW_USER_LASTNAME);
+            int sex =intent.getIntExtra(Constants.IntentParams.SEX, 0);
+            int groupId =intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+
+            int newUserId = createUser(service, userName, userLastName, sex);
+            if (newUserId == Constants.Result.ERROR) {
+                result = Constants.Result.ERROR;
+            } else {
+                result = addUserToGroup(service, newUserId, groupId);
+            }
+
+        } else
+        if (CREATE_USER.equals(action)) {
             String userName =intent.getStringExtra(Constants.IntentParams.NEW_USER_NAME);
             String userLastName =intent.getStringExtra(Constants.IntentParams.NEW_USER_LASTNAME);
             int sex =intent.getIntExtra(Constants.IntentParams.SEX, 0);
 
-
-            try {
-                JSONObject paramsJSON = new JSONObject();
-                paramsJSON.put("users_id", userId);
-                paramsJSON.put("access_token", accessToken);
-
-                JSONObject user = new JSONObject();
-                user.put("last_name", userLastName);
-                user.put("name", userName);
-                user.put("sex", sex);
-
-                paramsJSON.put("users_id", userId);
-                paramsJSON.put("access_token", accessToken);
-                paramsJSON.put("user", user);
-                paramsJSON.put("id", 0);
-
-
-                String response = urlConnectionPost(Constants.URL.ADD_USER, paramsJSON.toString());
-                if (response != null && response.contains("200")) {
-                    result = Constants.Result.OK;
-
-                    JSONObject responseJSON = new JSONObject(response);
-                    responseJSON = responseJSON.getJSONObject("response");
-                    int newUserId = responseJSON.getInt("users_id");
-
-                    ContentValues cv = new ContentValues();
-                    cv.put(Users.USER_ID, newUserId);
-                    cv.put(Users.USER_ID_VK, 0);
-                    cv.put(Users.NAME, userLastName+ " " +userName);
-                    cv.put(Users.IMG, "http://vk.com/images/deactivated_100.png");
-                    cv.put(Users.STATE, Constants.State.ENDS);
-                    cv.put(Users.RESULT, Constants.Result.OK);
-                    service.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
-
-                } else {
-                    result = Constants.Result.ERROR;
-                }
-            } catch (JSONException e) {
+            int newUserId = createUser(service, userName, userLastName, sex);
+            if (newUserId == Constants.Result.ERROR) {
                 result = Constants.Result.ERROR;
+            } else {
+                intent.putExtra(Constants.IntentParams.USER_ID, newUserId);
+                result = Constants.Result.OK;
             }
-        } else {
-            if (REG_GCM.equals(action)) {
+
+
+        }
+        else {
+            if (REGISTER_GCM.equals(action)) {
                 String regID = intent.getStringExtra(Constants.IntentParams.GCM_ID);
                 try {
                     JSONObject paramsJSON = new JSONObject();
                     paramsJSON.put("users_id", userId);
                     paramsJSON.put("access_token", accessToken);
                     paramsJSON.put("reg_id", regID);
-                    String response = urlConnectionPost(Constants.URL.ADD_USER, paramsJSON.toString());
+                    String response = urlConnectionPost(Constants.URL.REGISTER_GCM, paramsJSON.toString());
                     if (response != null && response.contains("200")) {
                         result = Constants.Result.OK;
 
@@ -450,6 +393,99 @@ public class PostProcessor extends Processor {
             Users.USER_ID,
             Users.NAME
     };
+
+    private int addUserToGroup(Service service, int userIdWhom, int groupId) {
+        int result = Constants.Result.OK;
+        try {
+            int userId = getUserId();
+            String accessToken = getAccessToken();
+            JSONObject paramsJSON = new JSONObject();
+            paramsJSON.put("users_id", userId);
+            paramsJSON.put("access_token", accessToken);
+            paramsJSON.put("groups_id", groupId);
+            paramsJSON.put("users_id_whom", userIdWhom);
+            String response = urlConnectionPost(Constants.URL.ADD_GROUP_MEMBER, paramsJSON.toString());
+            if ((response != null) && response.contains("200")) {
+                result = Constants.Result.OK;
+
+                service.getContentResolver().delete(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, GroupMembers.GROUP_ID + "=" +groupId, null );
+                JSONObject jsonObject = new JSONObject(response);
+                jsonObject = jsonObject.getJSONObject("response");
+                JSONObject group = jsonObject.getJSONObject("group");
+                JSONObject members = jsonObject.getJSONObject("members");
+                JSONObject history = jsonObject.getJSONObject("history");
+                JSONObject member;
+                for (int i = 0; i<members.length(); i++) {
+                    member = members.getJSONObject(i + "");
+                    ContentValues cv = new ContentValues();
+                    cv.put(GroupMembers.GROUP_ID, group.getString("groups_id"));
+                    cv.put(GroupMembers.USER_ID_VK, member.getString("vk_id"));
+                    cv.put(GroupMembers.USER_ID, member.getString("users_id"));
+                    cv.put(GroupMembers.USER_NAME, member.getString("last_name") + " " + member.getString("name"));
+
+                    service.getContentResolver().insert(EverContentProvider.GROUP_MEMBERS_CONTENT_URI, cv);
+                }
+
+                ContentValues cv = readHistory(history);
+                if (cv != null)
+                    service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                // Обновим дату в группе
+                updateDateInGroup(groupId, service);
+            } else {
+                result = Constants.Result.ERROR;
+            }
+        } catch (JSONException e) {
+            result = Constants.Result.ERROR;
+        }
+        return result;
+    }
+
+    private int createUser(Service service, String userName, String userLastName, int sex ) {
+        int result = Constants.Result.OK;
+        int newUserId = -1;
+        try {
+            JSONObject paramsJSON = new JSONObject();
+
+            JSONObject user = new JSONObject();
+            user.put("last_name", userLastName);
+            user.put("name", userName);
+            user.put("sex", sex);
+
+            paramsJSON.put("users_id", getUserId());
+            paramsJSON.put("access_token", getAccessToken());
+            paramsJSON.put("user", user);
+            paramsJSON.put("id", 0);
+
+
+            String response = urlConnectionPost(Constants.URL.ADD_USER, paramsJSON.toString());
+            if (response != null && response.contains("200")) {
+                result = Constants.Result.OK;
+
+                JSONObject responseJSON = new JSONObject(response);
+                responseJSON = responseJSON.getJSONObject("response");
+                newUserId = responseJSON.getInt("users_id");
+
+                ContentValues cv = new ContentValues();
+                cv.put(Users.USER_ID, newUserId);
+                cv.put(Users.USER_ID_VK, 0);
+                cv.put(Users.NAME, userLastName+ " " +userName);
+                cv.put(Users.IMG, "http://vk.com/images/deactivated_100.png");
+                cv.put(Users.STATE, Constants.State.ENDS);
+                cv.put(Users.RESULT, Constants.Result.OK);
+                service.getContentResolver().insert(EverContentProvider.USERS_CONTENT_URI, cv);
+
+            } else {
+                result = Constants.Result.ERROR;
+            }
+        } catch (JSONException e) {
+            result = Constants.Result.ERROR;
+        }
+        if (newUserId < 0) {
+            return Constants.Result.ERROR;
+        } else {
+            return newUserId;
+        }
+    }
 
 
 }

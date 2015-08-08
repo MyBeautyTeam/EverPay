@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:background="@color/background_material_light"
-    android:clickable="true"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
@@ -193,10 +193,11 @@
         android:id="@+id/add_bill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="false"
         android:divider="@null"
         android:dividerHeight="7dp"
         style="@style/ListViewOverscroll"
-        >
-    </ListView>
+    />
+
 
 </LinearLayout>

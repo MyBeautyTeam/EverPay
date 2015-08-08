@@ -54,7 +54,7 @@ public class GroupsListAdapter  extends CursorAdapter {
             @Override
             public void onClick(View view) {
                 Log.d(Constants.LOG, "GROUP_ID =" + id);
-                mainActivity.addFragment(FragmentGroupDetails.getInstance(id, groupTitle));
+                mainActivity.addFragment(FragmentGroupDetails.getInstance(id));
             }
         });
     }

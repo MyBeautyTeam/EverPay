@@ -138,6 +138,7 @@ public class PutProcessor extends Processor{
 
                     // Обновим дату в группе
                     updateDateInGroup(groupId, service);
+                    intent.putExtra(Constants.IntentParams.GROUP_TITLE, title);
                 } else {
                     /*
                     TODO ДОПИСАТЬ ИСТОРИЮ

@@ -3,8 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-
+    android:clickable="true"
+    android:background="@drawable/on_btn_pressed_selector"
     android:layout_height="match_parent">
+
     <com.beautyteam.everpay.Views.RoundedImageView
         android:id="@+id/debtors_list_item_avatar"
         android:layout_width="40dp"
