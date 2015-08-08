@@ -177,7 +177,42 @@ public class EverContentProvider extends ContentProvider {
             case URI_USERS_LEFT_IN_GROUP: {
                 id = uri.getLastPathSegment();
                 notifyUri = USERS_CONTENT_URI;
-                String request = "select " +
+                String request = "select * from " +
+                        " (select " +
+                        Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
+                        Users.USERS_TABLE + "." + Users.NAME + " as " + Users.NAME + ", " +
+                        Users.USERS_TABLE + "." + Users.IMG + " as " + Users.IMG + ", " +
+                        Users.USERS_TABLE + "." + Users.STATE + " as " + Users.STATE + ", " +
+                        Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
+                        " from "
+                        //=========
+                        + Users.USERS_TABLE + " left join " + GroupMembers.GROUP_MEMBERS_TABLE +
+                        " on " + Users.USERS_TABLE + "." + Users.USER_ID + " = " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID +
+                        " and " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.GROUP_ID + " = " + id +
+                        " where " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID + " is null" +
+                        " and " + Users.USER_ID_VK + "=0" +
+                        //=========
+                        " Order By " + Users.NAME + ")"
+                        + " UNION ALL " +
+                        "select * from (" +
+                        "select " + Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
+                        Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
+                        Users.USERS_TABLE + "." + Users.NAME + " as " + Users.NAME + ", " +
+                        Users.USERS_TABLE + "." + Users.IMG + " as " + Users.IMG + ", " +
+                        Users.USERS_TABLE + "." + Users.STATE + " as " + Users.STATE + ", " +
+                        Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
+                        " from "
+                        + Users.USERS_TABLE + " left join " + GroupMembers.GROUP_MEMBERS_TABLE +
+                        " on " + Users.USERS_TABLE + "." + Users.USER_ID + " = " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID +
+                        " and " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.GROUP_ID + " = " + id +
+                        " where " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID + " is null" +
+                        " and " + Users.USER_ID_VK + "!=0" +
+                        " Order By " + Users.NAME + ")";
+
+                String reque1st = "select " +
                         Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
                         Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
                         Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
