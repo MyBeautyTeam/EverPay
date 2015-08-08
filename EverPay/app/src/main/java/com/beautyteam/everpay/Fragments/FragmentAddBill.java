@@ -43,6 +43,8 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 
+import it.carlom.stikkyheader.core.StikkyHeaderBuilder;
+
 /**
  * Created by Admin on 15.03.2015.
  */
@@ -216,6 +218,18 @@ public class FragmentAddBill extends Fragment implements
             leftSumma.setTextColor(getResources().getColor(R.color.secondary_text));
         else
             leftSumma.setTextColor(getResources().getColor(R.color.red_text));
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        StikkyHeaderBuilder.stickTo(addBillList)
+                .setHeader(R.id.header, (ViewGroup) getView())
+                .minHeightHeader(250)
+                .build();
+
+
     }
 
 
