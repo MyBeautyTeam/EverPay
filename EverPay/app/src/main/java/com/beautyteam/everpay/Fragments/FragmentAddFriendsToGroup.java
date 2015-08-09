@@ -149,14 +149,14 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        ArrayList<User> finArrayList = getArguments().getParcelableArrayList(FRIENDS);
+        finArrayList = mAdapter.getArrayList();
         switch (v.getId()) {
             case R.id.save_btn_friends_in_group:
-                ArrayList<User> arrayList = getArguments().getParcelableArrayList(FRIENDS);
-                arrayList = mAdapter.getArrayList();
                 ((MainActivity) getActivity()).removeFragment();
                 break;
             case R.id.create_btn_user_add_friends:
-                FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(getArguments().getParcelableArrayList(FRIENDS));
+                FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(finArrayList);
                 ((MainActivity) getActivity()).addFragment(fragmentCreateUser);
                 break;
         }

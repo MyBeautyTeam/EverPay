@@ -60,7 +60,7 @@ public class FragmentCreateUser extends Fragment
         return fragmentCreateUser;
     }
 
-    public static FragmentCreateUser getInstance(ArrayList<Parcelable> arrayList) {
+    public static FragmentCreateUser getInstance(ArrayList<User> arrayList) {
         FragmentCreateUser fragmentCreateUser = new FragmentCreateUser();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(FRIENDS, arrayList);

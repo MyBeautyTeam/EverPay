@@ -298,7 +298,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     public void createUser(String name, String lastName, int sex) {
         Intent intentService = new Intent(activity, Service.class);
-        intentService.setAction(Constants.Action.CREATE_AND_ADD_USER);
+        intentService.setAction(Constants.Action.CREATE_USER);
 
         intentService.putExtra(Constants.IntentParams.NEW_USER_NAME, name);
         intentService.putExtra(Constants.IntentParams.NEW_USER_LASTNAME, lastName);
