@@ -30,6 +30,11 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.flurry.android.FlurryAgent;
 
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
+
 import static android.support.v4.widget.SwipeRefreshLayout.*;
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_DEBTS;
@@ -50,7 +55,7 @@ public class FragmentGroups extends Fragment implements
     private Button addBtn;
     private Fragment self;
     private MainActivity mainActivity;
-
+    private TourGuide mTourGuideHandler;
     private static final int LOADER_ID = 0;
     private GroupsListAdapter mAdapter;
     ServiceHelper serviceHelper;
@@ -101,7 +106,6 @@ public class FragmentGroups extends Fragment implements
         }
 
         setupEmptyList(view);
-
     }
 
     private void setupEmptyList(View view) {
@@ -134,6 +138,7 @@ public class FragmentGroups extends Fragment implements
                 break;
         }
     }
+
 
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
@@ -168,6 +173,7 @@ public class FragmentGroups extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_group_button:
+                mTourGuideHandler.cleanUp();
                 openAddGroupFragment();
                 break;
         }

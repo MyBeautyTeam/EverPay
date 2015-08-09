@@ -156,8 +156,8 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
                 ((MainActivity) getActivity()).removeFragment();
                 break;
             case R.id.create_btn_user_add_friends:
-                //FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(groupId);
-                //((MainActivity) getActivity()).addFragment(fragmentCreateUser);
+                FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(getArguments().getParcelableArrayList(FRIENDS));
+                ((MainActivity) getActivity()).addFragment(fragmentCreateUser);
                 break;
         }
     }
