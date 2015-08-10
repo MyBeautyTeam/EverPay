@@ -1,7 +1,9 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -32,16 +34,23 @@ import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
+import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
 import com.flurry.android.FlurryAgent;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by Admin on 15.03.2015.
@@ -77,6 +86,9 @@ public class FragmentAddBill extends Fragment implements
     private static final int LOADER_ADD = 2;
     private static final int LOADER_EDIT = 3;
     private String screenName = "Добавление счета";
+
+    private ShowcaseView show;
+    private int indexOfShowcase = 1;
 
     String title = "";
 
@@ -193,6 +205,63 @@ public class FragmentAddBill extends Fragment implements
                         .replace(R.id.main_container, FragmentAddFriendToBill.getInstance(billArrayList))
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+
+        indexOfShowcase = 1;
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+              //  demotour();
+            }
+        });
+    }
+
+    private void demotour() {
+        show = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
+                .setContentTitle("Если сумма разбита поровну между участниками - нажмите ПОРОВНУ")
+                .build();
+
+        show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
+            @Override
+            public void onShowcaseViewHide(ShowcaseView showcaseView) {
+            }
+
+            @Override
+            public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+                switch (indexOfShowcase) {
+                    case 1: {
+                            indexOfShowcase++;
+                            show.setTarget(new ViewTarget(R.id.add_bill_need_summa_text, getActivity()));
+                            show.setContentTitle("В поле ДОЛЖНЫ необходимо ввести общую сумму долга у участников");
+                            show.show();
+                    }
+                    case 2: {
+
+                        if( addBillList.getChildAt(0) == null)
+                            indexOfShowcase = 0;
+                        else {
+                            indexOfShowcase++;
+                            show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_put)));
+                            show.setContentTitle("В ячейки под надписью ВНЕС необходимо написать сумму, которую внес каждый участник из общей суммы");
+                            show.show();
+                        }
+                        break;
+                    }
+                    case 3: {
+                        indexOfShowcase++;
+                        show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)));
+                        show.setContentTitle("Если человек не участвует в счете, нажмите на крестик");
+                        show.show();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onShowcaseViewShow(ShowcaseView showcaseView) {
+
             }
         });
 

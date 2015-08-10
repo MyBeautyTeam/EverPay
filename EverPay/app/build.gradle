@@ -39,5 +39,7 @@ dependencies {
     compile ('com.github.worker8:tourguide:1.0.13-SNAPSHOT@aar'){
         transitive=true
     }
+    compile 'com.github.amlcurran.showcaseview:library:5.0.0'
+    compile 'com.nineoldandroids:library:2.4.0'
 
 }

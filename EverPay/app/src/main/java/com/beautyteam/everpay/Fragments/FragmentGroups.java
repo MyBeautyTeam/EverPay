@@ -2,11 +2,14 @@ package com.beautyteam.everpay.Fragments;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,6 +35,9 @@ import com.beautyteam.everpay.Adapters.GroupsListAdapter;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.flurry.android.FlurryAgent;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import tourguide.tourguide.Overlay;
 import tourguide.tourguide.Pointer;
@@ -61,6 +70,8 @@ public class FragmentGroups extends Fragment implements
     ServiceHelper serviceHelper;
     private LinearLayout loadingLayout;
     private SwipeRefreshLayout refreshLayout;
+    private ShowcaseView show;
+    private ShowcaseView show2;
 
     public static boolean isFirstLaunch = true;
 
@@ -106,6 +117,38 @@ public class FragmentGroups extends Fragment implements
         }
 
         setupEmptyList(view);
+
+//        view.post(new Runnable() {
+//            @Override
+//            public void run() {
+//               demotour();
+//            }
+//        });
+    }
+
+    private void demotour() {
+        show = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(R.id.add_group_button, getActivity()))
+                .setContentTitle("Кнопка для создания новой группы")
+                .build();
+
+        show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
+            @Override
+            public void onShowcaseViewHide(ShowcaseView showcaseView) {
+                show2 = new ShowcaseView.Builder(getActivity())
+                        .setTarget(new ViewTarget(R.id.add_group_tlb, getActivity()))
+                        .setContentTitle("Кнопка для создания новой группы")
+                        .build();
+            }
+
+            @Override
+            public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+            }
+
+            @Override
+            public void onShowcaseViewShow(ShowcaseView showcaseView) {
+            }
+        });
     }
 
     private void setupEmptyList(View view) {
@@ -157,6 +200,7 @@ public class FragmentGroups extends Fragment implements
         int id = item.getItemId();
         switch (id) {
             case R.id.add_group_tlb:
+               // show2.hide();
                 openAddGroupFragment();
                 return true;
         }
@@ -173,7 +217,7 @@ public class FragmentGroups extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_group_button:
-                mTourGuideHandler.cleanUp();
+               // show.hide();
                 openAddGroupFragment();
                 break;
         }

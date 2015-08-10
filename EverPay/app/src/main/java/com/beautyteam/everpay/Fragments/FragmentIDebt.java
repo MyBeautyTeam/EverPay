@@ -1,18 +1,23 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +30,14 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Dialogs.DialogDebtDetail;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
 
 /**
  * Created by Admin on 10.03.2015.
@@ -48,6 +61,7 @@ public class FragmentIDebt extends Fragment implements
     private TextView emptyText;
     public static final String LOADER = "LOADER";
     private DialogDebtDetail dialogDebtDetail;
+    private ShowcaseView show;
 
     public static boolean isError = false; // ЖУТЧАЙШИЙ КОСТЫЛЬ, ГОСПОДИ, ПРОСТИ. Как низко я пал...
 
@@ -94,6 +108,24 @@ public class FragmentIDebt extends Fragment implements
             }
         });*/
         setupEmptyList(view);
+
+//        view.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                demotour();
+//            }
+//        });
+    }
+
+    private void demotour() {
+        show = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(R.id.add_group_tlb, getActivity()))
+                .setContentTitle("Здравствуйте")
+                .setContentText("Этот экран отображает," +
+                        "кому вы должны денег, а кто должен вам." +
+                        " в левом вверхнем углу вы можете" +
+                        " нажать на меню")
+                .build();
     }
 
     private void setupEmptyList(View view) {

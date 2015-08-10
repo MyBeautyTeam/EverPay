@@ -16,6 +16,9 @@ import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -43,7 +46,6 @@ public class CalcListAdapter extends CursorAdapter {
     private HashMap<Integer, Boolean> mapPositionToIsOpenFirstAvatar = new HashMap<Integer, Boolean>();
     private HashMap<Integer, Boolean> mapPositionToIsOpenSecondAvatar = new HashMap<Integer, Boolean>();
     private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
-
 
     private int userIdOwner; // ID пользователя, чтобы узнать, какая должна быть стрелочка
 
@@ -215,7 +217,6 @@ public class CalcListAdapter extends CursorAdapter {
             closeAvatar(holder.secondLayout, holder.secondName);
             mapPositionToIsOpenSecondAvatar.put(position, false);
         }
-
     }
 
     @Override

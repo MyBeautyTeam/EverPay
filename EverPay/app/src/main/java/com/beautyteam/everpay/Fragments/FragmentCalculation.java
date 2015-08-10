@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +40,9 @@ import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Utils.PrintScreener;
 import com.flurry.android.FlurryAgent;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.tjeannin.apprate.AppRate;
 
 import java.util.HashMap;
@@ -62,6 +66,9 @@ public class FragmentCalculation extends Fragment implements
     private Button calcBtn;
     private Button detailsBtn;
     private int groupId;
+    private ShowcaseView show;
+    private int indexOfShowcase = 1;
+
 
     private CalcListAdapter mAdapter;
     private static final String GROUP_ID = "GROUP_ID";
@@ -85,6 +92,8 @@ public class FragmentCalculation extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        indexOfShowcase = 1;
+
         groupId = getArguments().getInt(GROUP_ID);
         setHasOptionsMenu(true);
 
@@ -120,6 +129,62 @@ public class FragmentCalculation extends Fragment implements
 
 
         setupEmptyList(view);
+
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                demotour();
+            }
+        });
+    }
+
+    private void demotour() {
+        show = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(R.id.notify_vk, getActivity()))
+                .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
+                .build();
+
+        show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
+            @Override
+            public void onShowcaseViewHide(ShowcaseView showcaseView) {
+            }
+
+            @Override
+            public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+                switch (indexOfShowcase) {
+                    case 1: {
+                        if( calcList.getChildAt(0) == null) {
+                            indexOfShowcase = 0;
+                        } else{
+                            indexOfShowcase++;
+                            show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_summa)));
+                            show.setContentTitle("Сумма долга");
+                            show.show();
+                        }
+                        break;
+                    }
+                    case 2: {
+                        indexOfShowcase++;
+                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_second_avatar)));
+                        show.setContentTitle("Чтобы посмотреть аватарку пользователя - нажмите на имя пользователя");
+                        show.show();
+                        break;
+                    }
+                    case 3: {
+                        indexOfShowcase++;
+                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_checkbox)));
+                        show.setContentTitle("Если долг возвращен - поставьте галочку");
+                        show.show();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onShowcaseViewShow(ShowcaseView showcaseView) {
+
+            }
+        });
 
     }
 
@@ -171,6 +236,8 @@ public class FragmentCalculation extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.notify_vk:
+                indexOfShowcase = 0;
+                show.hide();
                 showDialog();
                 break;
         }
@@ -196,6 +263,8 @@ public class FragmentCalculation extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.calc_ok_btn:
+                indexOfShowcase = 0;
+                show.hide();
                 HashMap<String, Integer> mapIdToIsDeleted = mAdapter.getMapIdToIsdeleted();
                 Iterator it = mapIdToIsDeleted.entrySet().iterator();
 
@@ -216,6 +285,8 @@ public class FragmentCalculation extends Fragment implements
                 ((MainActivity) getActivity()).removeFragment();
                 break;
             case R.id.calc_details_btn:
+                indexOfShowcase = 0;
+                show.hide();
                 ((MainActivity) getActivity()).addFragment(FragmentCalcDetails.getInstance(groupId));
                 break;
 
@@ -274,4 +345,11 @@ public class FragmentCalculation extends Fragment implements
         window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
+    @Override
+    public void onStop() {
+        indexOfShowcase = 0;
+        show.hide();
+        super.onStop();
+
+    }
 }
