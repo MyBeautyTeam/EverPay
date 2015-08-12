@@ -212,7 +212,7 @@ public class FragmentAddBill extends Fragment implements
         view.post(new Runnable() {
             @Override
             public void run() {
-              //  demotour();
+                demotour();
             }
         });
     }
@@ -220,9 +220,11 @@ public class FragmentAddBill extends Fragment implements
     private void demotour() {
         show = new ShowcaseView.Builder(getActivity())
                 .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
-                .setContentTitle("Если сумма разбита поровну между участниками - нажмите ПОРОВНУ")
+                .setContentTitle("Если сумма разбита поровну между участниками - нажмите ПОРОВНУ, иначе - НЕПОРОВНУ")
+                .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
 
+        show.setButtonText("ОК");
         show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
             @Override
             public void onShowcaseViewHide(ShowcaseView showcaseView) {
@@ -230,31 +232,75 @@ public class FragmentAddBill extends Fragment implements
 
             @Override
             public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-                switch (indexOfShowcase) {
-                    case 1: {
+                if (!switchCompat.isChecked()) {
+                    switch (indexOfShowcase) {
+                        case 1: {
                             indexOfShowcase++;
-                            show.setTarget(new ViewTarget(R.id.add_bill_need_summa_text, getActivity()));
-                            show.setContentTitle("В поле ДОЛЖНЫ необходимо ввести общую сумму долга у участников");
+                            show.setTarget(new ViewTarget(getView().findViewById(R.id.add_bill_need_summa_edit)));
+                            show.setContentTitle("В поле ДОЛЖНЫ введите общую сумму долга у участников");
                             show.show();
-                    }
-                    case 2: {
-
-                        if( addBillList.getChildAt(0) == null)
-                            indexOfShowcase = 0;
-                        else {
-                            indexOfShowcase++;
-                            show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_put)));
-                            show.setContentTitle("В ячейки под надписью ВНЕС необходимо написать сумму, которую внес каждый участник из общей суммы");
-                            show.show();
+                            break;
                         }
-                        break;
+                        case 2: {
+
+                            if (addBillList.getChildAt(0) == null)
+                                indexOfShowcase = 0;
+                            else {
+                                indexOfShowcase++;
+                                show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)));
+                                show.setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник.");
+                                show.show();
+                            }
+                            break;
+                        }
+                        case 3: {
+                            indexOfShowcase++;
+                            show = null;
+                            show = new ShowcaseView.Builder(getActivity())
+                                    .setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)))
+                                    .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
+                                    .setStyle(R.style.CustomShowcaseTheme2)
+                                    .build();
+                            show.setButtonText("ОК");
+                            break;
+                        }
                     }
-                    case 3: {
-                        indexOfShowcase++;
-                        show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)));
-                        show.setContentTitle("Если человек не участвует в счете, нажмите на крестик");
-                        show.show();
-                        break;
+                } else {
+                    switch (indexOfShowcase) {
+                        case 1: {
+                            if (addBillList.getChildAt(0) == null)
+                                indexOfShowcase = 0;
+                            else {
+                                indexOfShowcase++;
+                                show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_need_text)));
+                                show.setContentTitle("В ячейку под полем ДОЛЖЕН впишите сумму, которую должен каждый участник");
+                                show.show();
+                            }
+                            break;
+                        }
+                        case 2: {
+
+                            if (addBillList.getChildAt(0) == null)
+                                indexOfShowcase = 0;
+                            else {
+                                indexOfShowcase++;
+                                show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)));
+                                show.setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник.");
+                                show.show();
+                            }
+                            break;
+                        }
+                        case 3: {
+                            indexOfShowcase++;
+                            show = null;
+                            show = new ShowcaseView.Builder(getActivity())
+                                    .setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)))
+                                    .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
+                                    .setStyle(R.style.CustomShowcaseTheme2)
+                                    .build();
+                            show.setButtonText("ОК");
+                            break;
+                        }
                     }
                 }
             }
@@ -638,4 +684,11 @@ public class FragmentAddBill extends Fragment implements
         } catch (Exception e) {};
     }
 
+    @Override
+    public void onStop() {
+        indexOfShowcase = 0;
+        show.hide();
+        super.onStop();
+
+    }
 }

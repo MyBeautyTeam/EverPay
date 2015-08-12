@@ -12,7 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -139,11 +142,14 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private void demotour() {
+  //      RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         show = new ShowcaseView.Builder(getActivity())
                 .setTarget(new ViewTarget(R.id.notify_vk, getActivity()))
                 .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
+                .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
-
+        show.setButtonText("ОК");
+//        show.setButtonPosition(params);
         show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
             @Override
             public void onShowcaseViewHide(ShowcaseView showcaseView) {
@@ -153,12 +159,12 @@ public class FragmentCalculation extends Fragment implements
             public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
                 switch (indexOfShowcase) {
                     case 1: {
-                        if( calcList.getChildAt(0) == null) {
+                        if (calcList.getChildAt(0) == null) {
                             indexOfShowcase = 0;
-                        } else{
+                        } else {
                             indexOfShowcase++;
                             show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_summa)));
-                            show.setContentTitle("Сумма долга");
+                            show.setContentTitle("Число над стрелочкой обозначает сумму долга");
                             show.show();
                         }
                         break;
