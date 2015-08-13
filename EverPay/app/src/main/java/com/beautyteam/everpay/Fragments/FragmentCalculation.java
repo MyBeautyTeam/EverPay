@@ -142,14 +142,17 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private void demotour() {
-  //      RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.setMargins(0, 0, 70, 70);
         show = new ShowcaseView.Builder(getActivity())
                 .setTarget(new ViewTarget(R.id.notify_vk, getActivity()))
                 .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
-        show.setButtonText("ОК");
-//        show.setButtonPosition(params);
+        show.setButtonPosition(params);
         show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
             @Override
             public void onShowcaseViewHide(ShowcaseView showcaseView) {
@@ -171,7 +174,7 @@ public class FragmentCalculation extends Fragment implements
                     }
                     case 2: {
                         indexOfShowcase++;
-                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_second_avatar)));
+                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_first_name)));
                         show.setContentTitle("Чтобы посмотреть аватарку пользователя - нажмите на имя пользователя");
                         show.show();
                         break;

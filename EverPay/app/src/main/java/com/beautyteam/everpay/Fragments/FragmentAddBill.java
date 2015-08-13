@@ -27,6 +27,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +90,7 @@ public class FragmentAddBill extends Fragment implements
 
     private ShowcaseView show;
     private int indexOfShowcase = 1;
+    private RelativeLayout.LayoutParams params;
 
     String title = "";
 
@@ -218,13 +220,17 @@ public class FragmentAddBill extends Fragment implements
     }
 
     private void demotour() {
+        params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.setMargins(0, 0, 0, 60);
         show = new ShowcaseView.Builder(getActivity())
                 .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
                 .setContentTitle("Если сумма разбита поровну между участниками - нажмите ПОРОВНУ, иначе - НЕПОРОВНУ")
+
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
-
-        show.setButtonText("ОК");
+        show.setButtonPosition(params);
         show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
             @Override
             public void onShowcaseViewHide(ShowcaseView showcaseView) {
@@ -242,26 +248,30 @@ public class FragmentAddBill extends Fragment implements
                             break;
                         }
                         case 2: {
-
                             if (addBillList.getChildAt(0) == null)
                                 indexOfShowcase = 0;
                             else {
                                 indexOfShowcase++;
                                 show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)));
-                                show.setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник.");
+                                show.setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник");
                                 show.show();
                             }
                             break;
                         }
                         case 3: {
-                            indexOfShowcase++;
-                            show = null;
-                            show = new ShowcaseView.Builder(getActivity())
-                                    .setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)))
-                                    .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
-                                    .setStyle(R.style.CustomShowcaseTheme2)
-                                    .build();
-                            show.setButtonText("ОК");
+                            if (addBillList.getChildAt(0) == null)
+                                indexOfShowcase = 0;
+                            else {
+                                indexOfShowcase++;
+                                show = null;
+                                show = new ShowcaseView.Builder(getActivity())
+                                        .setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)))
+                                        .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
+                                        .setStyle(R.style.CustomShowcaseTheme2)
+                                        .build();
+                                show.setButtonPosition(params);
+
+                            }
                             break;
                         }
                     }
@@ -285,20 +295,24 @@ public class FragmentAddBill extends Fragment implements
                             else {
                                 indexOfShowcase++;
                                 show.setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)));
-                                show.setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник.");
+                                show.setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник");
                                 show.show();
                             }
                             break;
                         }
                         case 3: {
-                            indexOfShowcase++;
-                            show = null;
-                            show = new ShowcaseView.Builder(getActivity())
-                                    .setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)))
-                                    .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
-                                    .setStyle(R.style.CustomShowcaseTheme2)
-                                    .build();
-                            show.setButtonText("ОК");
+                            if (addBillList.getChildAt(0) == null)
+                                indexOfShowcase = 0;
+                            else {
+                                indexOfShowcase++;
+                                show = null;
+                                show = new ShowcaseView.Builder(getActivity())
+                                        .setTarget(new ViewTarget(addBillList.getChildAt(0).findViewById(R.id.add_bill_list_remove)))
+                                        .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
+                                        .setStyle(R.style.CustomShowcaseTheme2)
+                                        .build();
+                                show.setButtonPosition(params);
+                            }
                             break;
                         }
                     }

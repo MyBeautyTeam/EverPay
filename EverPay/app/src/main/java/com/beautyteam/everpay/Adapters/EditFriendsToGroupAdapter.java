@@ -66,6 +66,7 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
         String name = cursor.getString(cursor.getColumnIndex(Users.NAME));
         int userVkId = cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK));
         holder.firstName.setText(name);
+        holder.separator.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
         if(cursor.getPosition() != 0) {
             cursor.moveToPrevious();
             if (userVkId == 0)
@@ -77,7 +78,7 @@ public class EditFriendsToGroupAdapter extends CursorAdapter implements SectionI
             cursor.moveToNext();
         } else {
             if(cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK)) == 0)
-                holder.separator.setText("\u2605");
+                holder.separator.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_star_rate_blue_36dp, 0, 0, 0);
             else
                 holder.separator.setText(name.subSequence(0, 1));
         }

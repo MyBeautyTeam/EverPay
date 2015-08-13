@@ -56,9 +56,9 @@
     </style>
 
     <style name="CustomShowcaseTheme2" parent="ShowcaseView.Light">
-        <item name="sv_backgroundColor">#663d4353</item>
-        <item name="sv_showcaseColor">#25467A</item>
-        <item name="sv_buttonText">Close</item>
+        <item name="sv_backgroundColor">#8C3d4353</item>
+        <item name="sv_showcaseColor">#303F9F</item>
+        <item name="sv_buttonText">OK</item>
         <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
     </style>
 
@@ -74,7 +74,8 @@
     </style>
 
     <style name="CustomTitle2" parent="TextAppearance.ShowcaseView.Title">
-        <item name="android:textColor">@color/active_white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <style name="ListItemBigtext">

@@ -103,6 +103,7 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
         holder.firstName.setText(name);
         final int id = cursor.getInt(cursor.getColumnIndex(Users.USER_ID));
         int userVkId = cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK));
+        holder.separator.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
         boolean isChecked = false;
             if (set.contains(id)) {
                 isChecked = true;
@@ -119,7 +120,7 @@ public class AddFriendsToGroupAdapter extends CursorAdapter implements SectionIn
             cursor.moveToNext();
         } else {
             if(cursor.getInt(cursor.getColumnIndex(Users.USER_ID_VK)) == 0)
-                holder.separator.setText("\u2605");
+                holder.separator.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_star_rate_blue_36dp, 0, 0, 0);
             else
                 holder.separator.setText(name.subSequence(0, 1));
         }

@@ -17,5 +17,6 @@
         android:drawablePadding="8dp"
         android:textSize="14dp"
         android:layout_centerHorizontal="true"
+        style="?android:attr/borderlessButtonStyle"
         />
     </LinearLayout>
