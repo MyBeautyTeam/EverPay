@@ -150,17 +150,17 @@ class TextDrawer {
     	case 1:
     		mBestTextPosition[0] = 2*padding;
     		mBestTextPosition[1] = 2*padding + actionBarOffset;
-    		mBestTextPosition[2] = canvasW - 2 * padding;
+    		mBestTextPosition[2] = canvasW - 3 * padding;
     		break;
     	case 2:
     		mBestTextPosition[0] = showcase.right;
     		mBestTextPosition[1] = 2*padding;
-    		mBestTextPosition[2] = (canvasW) - 2 * padding;
+    		mBestTextPosition[2] = (canvasW - showcase.right) - 3 * padding;
     		break;
     	case 3:
     		mBestTextPosition[0] = 2*padding;
     		mBestTextPosition[1] = showcase.bottom;
-    		mBestTextPosition[2] = canvasW - 2 * padding;
+    		mBestTextPosition[2] = canvasW - 3 * padding;
     		break;
     	}
     	if(shouldCentreText) {

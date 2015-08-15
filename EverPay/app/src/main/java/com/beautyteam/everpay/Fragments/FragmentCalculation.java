@@ -95,8 +95,6 @@ public class FragmentCalculation extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        indexOfShowcase = 1;
-
         groupId = getArguments().getInt(GROUP_ID);
         setHasOptionsMenu(true);
 
@@ -142,6 +140,7 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private void demotour() {
+        indexOfShowcase = 1;
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);

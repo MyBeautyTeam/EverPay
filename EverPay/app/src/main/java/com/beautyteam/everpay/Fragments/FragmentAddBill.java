@@ -2,6 +2,8 @@ package com.beautyteam.everpay.Fragments;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,6 +55,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import it.carlom.stikkyheader.core.StikkyHeaderBuilder;
+
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
+
 /**
  * Created by Admin on 15.03.2015.
  */
@@ -89,8 +95,9 @@ public class FragmentAddBill extends Fragment implements
     private String screenName = "Добавление счета";
 
     private ShowcaseView show;
-    private int indexOfShowcase = 1;
+    private int indexOfShowcase;
     private RelativeLayout.LayoutParams params;
+    private SharedPreferences sPref;
 
     String title = "";
 
@@ -139,6 +146,8 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sPref = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
 
         LayoutInflater inflater = getLayoutInflater(savedInstanceState);
 
@@ -210,8 +219,8 @@ public class FragmentAddBill extends Fragment implements
             }
         });
 
-        indexOfShowcase = 1;
-        view.post(new Runnable() {
+        if ((sPref.getBoolean(Constants.Preference.IS_FIRST_LAUNCH, false) == true)||(sPref.getBoolean(Constants.Preference.SETTING_ADVICE, false) == true))
+            view.post(new Runnable() {
             @Override
             public void run() {
                 demotour();
@@ -220,6 +229,7 @@ public class FragmentAddBill extends Fragment implements
     }
 
     private void demotour() {
+        indexOfShowcase = 1;
         params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -252,6 +262,18 @@ public class FragmentAddBill extends Fragment implements
             leftSumma.setTextColor(getResources().getColor(R.color.secondary_text));
         else
             leftSumma.setTextColor(getResources().getColor(R.color.red_text));
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        StikkyHeaderBuilder.stickTo(addBillList)
+                .setHeader(R.id.header, (ViewGroup) getView())
+                .minHeightHeader(250)
+                .build();
+
+
     }
 
 
@@ -533,7 +555,7 @@ public class FragmentAddBill extends Fragment implements
                         indexOfShowcase++;
                         show.hide();
                         show =  new ShowcaseView.Builder(getActivity())
-                                .setTarget(new ViewTarget(R.id.add_bill_name_put, getActivity()))
+                                .setTarget(new ViewTarget((EditText)addBillList.getChildAt(1).findViewById(R.id.add_bill_list_put)))
                                 .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
                                 .setScaleMultiplier(0.5f)
@@ -587,7 +609,7 @@ public class FragmentAddBill extends Fragment implements
                         indexOfShowcase++;
                         show.hide();
                         show = new ShowcaseView.Builder(getActivity())
-                                .setTarget(new ViewTarget(R.id.add_bill_name_put, getActivity()))
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
                                 .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
                                 .setScaleMultiplier(0.5f)
@@ -709,8 +731,8 @@ private class SwitchChangeListener implements CompoundButton.OnCheckedChangeList
 
     @Override
     public void onStop() {
-        indexOfShowcase = 0;
-        show.hide();
+        if( indexOfShowcase > 0 && indexOfShowcase < 4)
+            show.hide();
         super.onStop();
 
     }
