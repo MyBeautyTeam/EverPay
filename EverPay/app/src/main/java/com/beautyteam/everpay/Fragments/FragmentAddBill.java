@@ -509,7 +509,7 @@ public class FragmentAddBill extends Fragment implements
      */
     private int insertToDB() {
 
-        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String [] {"MAX("+Bills.BILL_ID+")"}, null, null, null);
+        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String[]{"MAX(" + Bills.BILL_ID + ")"}, null, null, null);
         maxCursor.moveToFirst();
         int max = maxCursor.getInt(0);
         int billID = max+1;
@@ -554,8 +554,9 @@ public class FragmentAddBill extends Fragment implements
                     else {
                         indexOfShowcase++;
                         show.hide();
+                        View put = getViewByPosition(1).findViewById(R.id.add_bill_list_put_parrent);
                         show =  new ShowcaseView.Builder(getActivity())
-                                .setTarget(new ViewTarget((EditText)addBillList.getChildAt(1).findViewById(R.id.add_bill_list_put)))
+                                .setTarget(new ViewTarget(put))
                                 .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
                                 .setScaleMultiplier(0.5f)
@@ -608,8 +609,9 @@ public class FragmentAddBill extends Fragment implements
                     else {
                         indexOfShowcase++;
                         show.hide();
+                        View put = getViewByPosition(1).findViewById(R.id.add_bill_list_put_parrent);
                         show = new ShowcaseView.Builder(getActivity())
-                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
+                                .setTarget(new ViewTarget(put))
                                 .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
                                 .setScaleMultiplier(0.5f)
@@ -623,7 +625,6 @@ public class FragmentAddBill extends Fragment implements
                     if (addBillList.getChildAt(0) == null)
                         indexOfShowcase = 0;
                     else {
-                        indexOfShowcase++;
                         show.hide();
                         show = new ShowcaseView.Builder(getActivity())
                                 .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
@@ -731,9 +732,21 @@ private class SwitchChangeListener implements CompoundButton.OnCheckedChangeList
 
     @Override
     public void onStop() {
-        if( indexOfShowcase > 0 && indexOfShowcase < 4)
+        if( indexOfShowcase > 0 && indexOfShowcase < 5)
             show.hide();
         super.onStop();
 
+    }
+
+    private View getViewByPosition(int pos) {
+        final int firstListItemPosition = addBillList.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + addBillList.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return addBillList.getAdapter().getView(pos, null, addBillList);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return addBillList.getChildAt(childIndex);
+        }
     }
 }
