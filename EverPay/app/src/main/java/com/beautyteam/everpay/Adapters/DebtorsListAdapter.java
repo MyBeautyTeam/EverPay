@@ -118,9 +118,9 @@ public class DebtorsListAdapter extends CursorAdapter {
         if (userName == null) {
             holder.discript.setText(groupTitle);
             Picasso.with(context)
-                    .load(R.drawable.group_icon)
-                    .placeholder(context.getResources().getDrawable(R.drawable.group_icon))
-                    .error(context.getResources().getDrawable(R.drawable.group_icon))
+                    .load(R.drawable.ic_launcher)
+                    .placeholder(context.getResources().getDrawable(R.drawable.ic_launcher))
+                    .error(context.getResources().getDrawable(R.drawable.ic_launcher))
                     .resize(200, 200)
                     .centerInside()
                     .into(holder.avatar);
