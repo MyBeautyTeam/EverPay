@@ -206,10 +206,11 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     /*
     Редактирование группы
      */
-    public void editGroup(int groupId) {
+    public void editGroup(int groupId, String groupTitle) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.EDIT_GROUP);
         intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+        intentService.putExtra(Constants.IntentParams.GROUP_TITLE, groupTitle);
 
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);

@@ -38,6 +38,7 @@ import com.flurry.android.FlurryAgent;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.CALCULATE;
+import static com.beautyteam.everpay.Constants.Action.EDIT_GROUP;
 import static com.beautyteam.everpay.Constants.Action.REMOVE_MEMBER_FROM_GROUP;
 
 /**
@@ -118,12 +119,11 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
 
                 if ( ! oldTitle.equals(newTitle)) {
                     int groupId = getArguments().getInt(GROUP_ID);
-                    ContentValues cv = new ContentValues();
-                    cv.put(Groups.TITLE, newTitle);
-                    getActivity().getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
-                    ((MainActivity)getActivity()).getServiceHelper().editGroup(groupId);
+                    showProgressBar("Изменение названия");
+                    serviceHelper.editGroup(groupId, newTitle);
+                } else {
+                    ((MainActivity)getActivity()).removeFragment();
                 }
-                ((MainActivity)getActivity()).removeFragment();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -150,10 +150,15 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     }
 
     public void removeUserFromGroup(int userId, int groupId) {
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Удаление участника");
-        progressDialog.show();
+        showProgressBar("Удаление участника");
         serviceHelper.removeMemberFromGroup(userId, groupId);
+    }
+
+    private void showProgressBar(String text) {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(text);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -210,11 +215,17 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
+        progressDialog.dismiss();
         if (action.equals(REMOVE_MEMBER_FROM_GROUP)) {
-            progressDialog.dismiss();
             if (result == Constants.Result.OK) {
             } else {
-                Toast.makeText(getActivity(), "Ошибка удаения пользователя", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Ошибка удаления пользователя. Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
+            }
+        } else if (action.equals(EDIT_GROUP)) {
+            if (result == Constants.Result.OK) {
+                ((MainActivity)getActivity()).removeFragment();
+            } else {
+                Toast.makeText(getActivity(), "Ошибка. Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
             }
         }
     }
