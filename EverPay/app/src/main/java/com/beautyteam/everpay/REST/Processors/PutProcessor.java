@@ -183,7 +183,7 @@ public class PutProcessor extends Processor{
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
 
-                    //service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                    //service.getContentResolver(`).delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
                     Iterator<String> historyKeys = history.keys();
                     while (historyKeys.hasNext()) {
                         JSONObject historyItem = history.getJSONObject(historyKeys.next());
