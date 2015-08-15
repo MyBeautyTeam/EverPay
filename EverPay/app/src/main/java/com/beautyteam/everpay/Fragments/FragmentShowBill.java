@@ -1,5 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,8 @@ import com.flurry.android.FlurryAgent;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.GET_BILL;
+import static com.beautyteam.everpay.Constants.IntentParams.IS_DELETED;
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
  * Created by Admin on 22.04.2015.
@@ -87,7 +91,7 @@ public class FragmentShowBill extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //((MainActivity)getActivity()).getServiceHelper().getBill(billId, groupId);
+
         FlurryAgent.logEvent("Просмотр счета");
 
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
@@ -118,6 +122,8 @@ public class FragmentShowBill extends Fragment implements
         //((MainActivity)getActivity()).setTitle(Constants.Titles.GROUPS);
     }
 
+
+
     @Override
     public void onPause() {
         super.onPause();
@@ -131,10 +137,14 @@ public class FragmentShowBill extends Fragment implements
         if (action.equals(GET_BILL)) {
             loadingLayout.setVisibility(View.GONE);
             if (result == Constants.Result.OK) {
+                if (data.getBoolean(IS_DELETED)) {
+                    Toast.makeText(getActivity(), "Этот счет удален", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 
     @Override
@@ -239,6 +249,8 @@ public class FragmentShowBill extends Fragment implements
             case R.id.remove_bill:
                 showDialog();
                 break;
+
+
         }
         return super.onOptionsItemSelected(item);
     }

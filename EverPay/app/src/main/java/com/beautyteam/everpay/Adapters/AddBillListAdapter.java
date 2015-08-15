@@ -197,6 +197,7 @@ public class AddBillListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
             viewHolder.put.setId(position);
             viewHolder.editNeed.setId(position);
+
         }
 
         BillListItem billListItem = (BillListItem)getItem(position);

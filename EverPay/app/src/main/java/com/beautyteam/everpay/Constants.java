@@ -117,6 +117,8 @@ public class Constants {
         public final static String SETTING_PUSH = "SETTING_PUSH";
         public final static String SETTING_ADVICE = "SETTING_ADVICE";
         public final static String GCM_REGID = "GCM_REGID";
+
+        public final static String IS_DEMO_REVIEWED = "IS_DEMO_REVIEWED";
     }
 
     public class State {
@@ -136,6 +138,7 @@ public class Constants {
         public final static String MALE = "MALE";
         public final static String GROUP_TITLE = "GROUP_TITLE";
         public final static String IMAGE = "IMAGE";
+        public final static String IS_DELETED = "IS_DELETED";
 
         //==== bugreport
         public final static String THEME = "THEME";

@@ -6,27 +6,49 @@
     android:orientation="vertical"
     android:layout_margin="12dp"
     tools:context="com.beautyteam.everpay.LoginActivity">
+    <LinearLayout
+        android:layout_weight="1.2"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/title"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1.1"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/title"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="60dp"
-        />
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:src="@drawable/logo"
-        android:layout_marginBottom = "30dp"
         />
-    <Button
-        android:id="@+id/login_button"
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1.5"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_login"
-        android:layout_margin="30dp"
-        android:background="@drawable/btn_vk_login_style"
-        android:textColor="@color/primary"
-    />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_login"
+            android:background="@drawable/btn_vk_login_style"
+            android:textColor="@color/primary"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+        />
+
+    </LinearLayout>
 
 </LinearLayout>

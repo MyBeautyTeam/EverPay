@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -145,6 +146,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         refreshLayout.setOnRefreshListener(this);
 
         setupEmptyList(view);
+
+        ((MainActivity)getActivity()).hideSoftKeyboard();
     }
 
     @Override
@@ -328,4 +331,5 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         getActivity().getContentResolver().delete(EverContentProvider.BILLS_CONTENT_URI, Bills.BILL_ID + "=" + billId, null);
         Toast.makeText(getActivity(), "Счет удален", Toast.LENGTH_SHORT).show();
     }
+
 }

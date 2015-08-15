@@ -10,12 +10,11 @@
         android:id="@+id/separator"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="22dp"
         android:fontFamily="sans-serif-light"
         android:textSize="30dp"
         android:textColor="@color/primary"
-        android:layout_weight="0.1"
+        android:layout_weight="0.13"
         />
     <com.beautyteam.everpay.Views.RoundedImageView
         android:id="@+id/item_edit_friends_in_group_avatar"
@@ -34,41 +33,3 @@
         android:layout_weight="0.75"
         />
 </LinearLayout>
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--android:orientation="horizontal" android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--android:clickable="true"-->
-<!--android:background="@drawable/on_group_pressed_selector"-->
-    <!-->-->
-<!--<TextView-->
-    <!--android:id="@+id/separator"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:fontFamily="sans-serif-light"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:textSize="30dp"-->
-    <!--android:layout_marginLeft="16dp"-->
-    <!--android:layout_marginRight="15dp"-->
-    <!--android:textColor="@color/primary"-->
-    <!--/>-->
-<!--<com.beautyteam.everpay.Views.RoundedImageView-->
-    <!--android:id="@+id/item_edit_friends_in_group_avatar"-->
-    <!--android:layout_width="40dp"-->
-    <!--android:layout_height="40dp"-->
-    <!--android:layout_margin="@dimen/activity_horizontal_margin"-->
-    <!--android:layout_gravity="center"-->
-    <!--/>-->
-<!--<TextView-->
-    <!--android:id="@+id/item_edit_friends_in_group_name"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:gravity="center"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:text="Илья Абашин"-->
-    <!--android:layout_marginLeft="5dp"-->
-    <!--android:textSize="16dp"-->
-    <!--android:fontFamily="sans-serif-light"-->
-    <!--/>-->
-<!--</LinearLayout>-->

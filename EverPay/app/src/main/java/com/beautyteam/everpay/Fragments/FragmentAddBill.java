@@ -1,7 +1,9 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -25,6 +27,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,24 +35,29 @@ import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
+import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
 import com.flurry.android.FlurryAgent;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
-
-import it.carlom.stikkyheader.core.StikkyHeaderBuilder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by Admin on 15.03.2015.
  */
 public class FragmentAddBill extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, TitleUpdater {
+        LoaderManager.LoaderCallbacks<Cursor>, TitleUpdater, View.OnClickListener {
 
     private static final String GROUP_ID = "GROUP_ID";
     private static final String BILL_ID = "BILL_ID";
@@ -79,6 +87,10 @@ public class FragmentAddBill extends Fragment implements
     private static final int LOADER_ADD = 2;
     private static final int LOADER_EDIT = 3;
     private String screenName = "Добавление счета";
+
+    private ShowcaseView show;
+    private int indexOfShowcase = 1;
+    private RelativeLayout.LayoutParams params;
 
     String title = "";
 
@@ -198,6 +210,28 @@ public class FragmentAddBill extends Fragment implements
             }
         });
 
+        indexOfShowcase = 1;
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                demotour();
+            }
+        });
+    }
+
+    private void demotour() {
+        params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.setMargins(0, 0, 60, 60);
+        show = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
+                .setContentTitle("Если сумма разбита поровну между участниками - нажмите ПОРОВНУ, иначе - НЕПОРОВНУ")
+                //.setScaleMultiplier(0.5f)
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .build();
+        show.setButtonPosition(params);
+        show.overrideButtonClick(this);
     }
 
     public void setLeftSumma(int summa) {
@@ -218,18 +252,6 @@ public class FragmentAddBill extends Fragment implements
             leftSumma.setTextColor(getResources().getColor(R.color.secondary_text));
         else
             leftSumma.setTextColor(getResources().getColor(R.color.red_text));
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        StikkyHeaderBuilder.stickTo(addBillList)
-                .setHeader(R.id.header, (ViewGroup) getView())
-                .minHeightHeader(250)
-                .build();
-
-
     }
 
 
@@ -493,7 +515,109 @@ public class FragmentAddBill extends Fragment implements
         return billID;
     }
 
-    private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
+    @Override
+    public void onClick(View view) {
+        if (!switchCompat.isChecked()) {
+            switch (indexOfShowcase) {
+                case 1: {
+                    indexOfShowcase++;
+                    show.setTarget(new ViewTarget(getView().findViewById(R.id.add_bill_need_summa_edit)));
+                    show.setContentTitle("В поле ДОЛЖНЫ введите общую сумму долга у участников");
+                    show.show();
+                    break;
+                }
+                case 2: {
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        show =  new ShowcaseView.Builder(getActivity())
+                                .setTarget(new ViewTarget(R.id.add_bill_name_put, getActivity()))
+                                .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                //.setScaleMultiplier(0.5f)
+                                .build();
+                        show.overrideButtonClick(this);
+                        show.setButtonPosition(params);
+                    }
+                    break;
+                }
+                case 3: {
+                    show.hide();
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        show = new ShowcaseView.Builder(getActivity())
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
+                                .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                //.setScaleMultiplier(0.5f)
+                                .build();
+                        show.setButtonPosition(params);
+                    }
+                    break;
+                }
+            }
+        } else {
+            switch (indexOfShowcase) {
+                case 1: {
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        show = new ShowcaseView.Builder(getActivity())
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_need_text)))
+                                .setContentTitle("В ячейку под полем ДОЛЖЕН впишите сумму, которую должен каждый участник")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                //.setScaleMultiplier(0.5f)
+                                .build();
+                        show.setButtonPosition(params);
+                        show.overrideButtonClick(this);
+                    }
+                    break;
+                }
+                case 2: {
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        show = new ShowcaseView.Builder(getActivity())
+                                .setTarget(new ViewTarget(R.id.add_bill_name_put, getActivity()))
+                                .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                //.setScaleMultiplier(0.5f)
+                                .build();
+                        show.setButtonPosition(params);
+                        show.overrideButtonClick(this);
+                    }
+                    break;
+                }
+                case 3: {
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        show = new ShowcaseView.Builder(getActivity())
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
+                                .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                //.setScaleMultiplier(0.5f)
+                                .build();
+                        show.setButtonPosition(params);                    }
+                    break;
+                }
+            }
+        }
+    }
+
+
+private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
@@ -583,4 +707,11 @@ public class FragmentAddBill extends Fragment implements
         } catch (Exception e) {};
     }
 
+    @Override
+    public void onStop() {
+        indexOfShowcase = 0;
+        show.hide();
+        super.onStop();
+
+    }
 }

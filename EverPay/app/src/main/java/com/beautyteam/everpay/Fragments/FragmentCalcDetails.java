@@ -196,7 +196,7 @@ public class FragmentCalcDetails extends Fragment implements
                 summaText.setTextColor(getResources().getColor(R.color.red_text));
             } else {
                 debtTitle.setText("Вы ничего не должны");
-                summaText.setText("в этой группе");
+                summaText.setText("");
             }
         }
     }

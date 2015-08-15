@@ -115,11 +115,10 @@ public class PutProcessor extends Processor{
         } else
         if (EDIT_GROUP.equals(action)) {
             int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
-            String title = intent.getStringExtra(Constants.IntentParams.GROUP_TITLE);
 
-            /*Cursor c = service.getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, PROJECTION_GROUPS, Groups.GROUP_ID + "=" + groupId, null, null);
+            Cursor c = service.getContentResolver().query(EverContentProvider.GROUPS_CONTENT_URI, PROJECTION_GROUPS, Groups.GROUP_ID + "=" + groupId, null, null);
             c.moveToFirst();
-            String title = c.getString(c.getColumnIndex(Groups.TITLE));*/
+            String title = c.getString(c.getColumnIndex(Groups.TITLE));
             JSONObject requestJSON = new JSONObject();
             try {
                 requestJSON.put("users_id", userId);
@@ -130,16 +129,11 @@ public class PutProcessor extends Processor{
                 String response = urlConnectionPut(Constants.URL.EDIT_GROUP, requestJSON.toString());
                 if (response != null && response.contains("200")) {
                     result = Constants.Result.OK;
-
-                    ContentValues cv = new ContentValues();
-                    cv.put(Groups.TITLE, title);
-                    service.getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
-
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
                     JSONObject history = responseJSON.getJSONObject("history");
 
-                    cv = readHistory(history);
+                    ContentValues cv = readHistory(history);
                     service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
 
                     // Обновим дату в группе
@@ -266,6 +260,8 @@ public class PutProcessor extends Processor{
             if (code == 200) {
                 InputStream in = connection.getInputStream();
                 str = handleInputStream(in);
+            } else {
+                str = null;
             }
             writer.close();
         } catch (IOException e) {

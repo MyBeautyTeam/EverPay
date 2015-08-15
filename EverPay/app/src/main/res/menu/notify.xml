@@ -6,7 +6,7 @@
         android:id="@+id/notify_vk"
         android:orderInCategory="200"
         android:title="Готово"
-        android:icon="@drawable/ic_delete_white_18dp"
+        android:icon="@drawable/ic_mail_white_24dp"
         app:showAsAction="ifRoom">
     </item>
 </menu>

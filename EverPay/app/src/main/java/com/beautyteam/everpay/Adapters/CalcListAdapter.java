@@ -16,6 +16,9 @@ import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -43,7 +46,7 @@ public class CalcListAdapter extends CursorAdapter {
     private HashMap<Integer, Boolean> mapPositionToIsOpenFirstAvatar = new HashMap<Integer, Boolean>();
     private HashMap<Integer, Boolean> mapPositionToIsOpenSecondAvatar = new HashMap<Integer, Boolean>();
     private HashMap<String, String> mapIdToAvatar = new HashMap<String, String>();
-
+    private boolean isEnabled = true;
 
     private int userIdOwner; // ID пользователя, чтобы узнать, какая должна быть стрелочка
 
@@ -140,7 +143,7 @@ public class CalcListAdapter extends CursorAdapter {
         String firstNameValue = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHO)).replace(" ", "\n");
         holder.firstName.setText(firstNameValue);
 
-        holder.summa.setText(cursor.getString(cursor.getColumnIndex(Calculation.SUMMA)));
+        holder.summa.setText(cursor.getString(cursor.getColumnIndex(Calculation.SUMMA)) + " \u20BD");
 
         String secondNameValue = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHOM)).replace(" ", "\n");
         holder.secondName.setText(secondNameValue);
@@ -167,6 +170,10 @@ public class CalcListAdapter extends CursorAdapter {
 
             }
         });
+
+        if (!isEnabled) {
+            holder.checkBox.setEnabled(false);
+        }
 
         String userWhoVK = cursor.getString(cursor.getColumnIndex(Calculation.WHO_ID_VK));
         String userWhomVK = cursor.getString(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
@@ -215,7 +222,6 @@ public class CalcListAdapter extends CursorAdapter {
             closeAvatar(holder.secondLayout, holder.secondName);
             mapPositionToIsOpenSecondAvatar.put(position, false);
         }
-
     }
 
     @Override
@@ -301,6 +307,13 @@ public class CalcListAdapter extends CursorAdapter {
 
         imageLayout.setVisibility(View.GONE); // Прячем картинку
         text.setVisibility(View.VISIBLE); // Показываем текст
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        if (this.isEnabled != isEnabled) {
+            this.isEnabled = isEnabled;
+            notifyDataSetChanged();
+        }
     }
 
 }

@@ -2,8 +2,11 @@ package com.beautyteam.everpay.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,6 +15,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Layout;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +46,13 @@ import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Utils.PrintScreener;
 import com.flurry.android.FlurryAgent;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.tjeannin.apprate.AppRate;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,7 +60,9 @@ import java.util.Random;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.CALCULATE;
+import static com.beautyteam.everpay.Constants.Action.EDIT_CALCULATION;
 import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
+import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
  * Created by Admin on 14.03.2015.
@@ -62,6 +76,9 @@ public class FragmentCalculation extends Fragment implements
     private Button calcBtn;
     private Button detailsBtn;
     private int groupId;
+    private ShowcaseView show;
+    private int indexOfShowcase = 1;
+
 
     private CalcListAdapter mAdapter;
     private static final String GROUP_ID = "GROUP_ID";
@@ -71,6 +88,10 @@ public class FragmentCalculation extends Fragment implements
 
     private TextView emptyText;
     private String screenName = "Расчет";
+
+    SharedPreferences sPref;
+    private final String NOTIFICATION = "NOTIF";
+    private ProgressDialog progressDialog;
 
 
     public static FragmentCalculation getInstance(int groupId) {
@@ -85,8 +106,12 @@ public class FragmentCalculation extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        indexOfShowcase = 1;
+
         groupId = getArguments().getInt(GROUP_ID);
         setHasOptionsMenu(true);
+
+        sPref = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
         serviceHelper = new ServiceHelper(getActivity(), this);
@@ -105,7 +130,7 @@ public class FragmentCalculation extends Fragment implements
         detailsBtn = (Button) view.findViewById(R.id.calc_details_btn);
         detailsBtn.setOnClickListener(this);
 
-        if (new Random().nextInt() % 2 == 0) {
+        if (new Random().nextInt() % 3 == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setMessage("Поставьте нам оценку! Для Вас пустяк, а для нас это очень важно!")
                     .setIcon(R.drawable.group_icon)
@@ -120,6 +145,68 @@ public class FragmentCalculation extends Fragment implements
 
 
         setupEmptyList(view);
+
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                demotour();
+            }
+        });
+    }
+
+    private void demotour() {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.setMargins(0, 0, 70, 70);
+        show = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(R.id.notify_vk, getActivity()))
+                .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .build();
+        show.setButtonPosition(params);
+        show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
+            @Override
+            public void onShowcaseViewHide(ShowcaseView showcaseView) {
+            }
+
+            @Override
+            public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+                switch (indexOfShowcase) {
+                    case 1: {
+                        if (calcList.getChildAt(0) == null) {
+                            indexOfShowcase = 0;
+                        } else {
+                            indexOfShowcase++;
+                            show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_summa)));
+                            show.setContentTitle("Число над стрелочкой обозначает сумму долга");
+                            show.show();
+                        }
+                        break;
+                    }
+                    case 2: {
+                        indexOfShowcase++;
+                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_first_name)));
+                        show.setContentTitle("Чтобы посмотреть аватарку пользователя - нажмите на имя пользователя");
+                        show.show();
+                        break;
+                    }
+                    case 3: {
+                        indexOfShowcase++;
+                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_checkbox)));
+                        show.setContentTitle("Если долг возвращен - поставьте галочку");
+                        show.show();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onShowcaseViewShow(ShowcaseView showcaseView) {
+
+            }
+        });
 
     }
 
@@ -171,6 +258,8 @@ public class FragmentCalculation extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.notify_vk:
+                indexOfShowcase = 0;
+                show.hide();
                 showDialog();
                 break;
         }
@@ -196,6 +285,8 @@ public class FragmentCalculation extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.calc_ok_btn:
+                indexOfShowcase = 0;
+                show.hide();
                 HashMap<String, Integer> mapIdToIsDeleted = mAdapter.getMapIdToIsdeleted();
                 Iterator it = mapIdToIsDeleted.entrySet().iterator();
 
@@ -212,10 +303,15 @@ public class FragmentCalculation extends Fragment implements
                     int length = getActivity().getContentResolver().update(uri, cv, Calculation.CALC_ID + "=" + id, null);
 
                 }
-                ((MainActivity) getActivity()).getServiceHelper().editCalculation(groupId);
-                ((MainActivity) getActivity()).removeFragment();
+                progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Применение изменений");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                serviceHelper.editCalculation(groupId);
                 break;
             case R.id.calc_details_btn:
+                indexOfShowcase = 0;
+                show.hide();
                 ((MainActivity) getActivity()).addFragment(FragmentCalcDetails.getInstance(groupId));
                 break;
 
@@ -230,10 +326,21 @@ public class FragmentCalculation extends Fragment implements
             loadingLayout.setVisibility(View.GONE);
             if (result == Constants.Result.OK) {
             } else {
+                if (mAdapter != null)
+                    mAdapter.setEnabled(false);
                 emptyText.setText("Произошла ошибка =(\n Проверьте соединение с интернетом");
                 Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
             }
+        } else
+        if (action.equals(EDIT_CALCULATION)) {
+            progressDialog.dismiss();
+            if (result == Constants.Result.OK) {
+                ((MainActivity)getActivity()).removeFragment();
+            } else {
+                Toast.makeText(getActivity(), "Ошибка. Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
+            }
         }
+
     }
 
 
@@ -257,21 +364,50 @@ public class FragmentCalculation extends Fragment implements
             @Override
             public void onItemClick(AdapterView<?> parent,View view1,int position, long id) {
                 dialog.dismiss();
+
+                String prefStr = groupId + NOTIFICATION + getDate();
+                if (sPref.getInt(prefStr, 2) < 1) {
+                    Toast.makeText(getActivity(), "Не больше двух оповещений в день :(", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                        /*
+                        Перенести в onRequestEnds
+                         */
+                    int countOfReportToday = sPref.getInt(prefStr, 2);
+                    countOfReportToday--;
+                    sPref.edit()
+                            .putInt(prefStr, countOfReportToday)
+                            .commit();
+                }
+
                 if (position == 0) {
                     Bitmap screen = new PrintScreener().printscreen2(calcList);
                     ((MainActivity) getActivity()).getServiceHelper().sendPrintScreen(screen, groupId);
-                    dialog.dismiss();
                 }
                 else {
-                    ((MainActivity) getActivity()).getServiceHelper().sendNotification();
-                    dialog.dismiss();
+                    ((MainActivity) getActivity()).getServiceHelper().sendNotification(groupId);
                 }
+
             }
         });
 
         dialog.show();
         Window window = dialog.getWindow();
         window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    public static String getDate() {
+        Date cDate = new Date();
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+        return date;
+    }
+
+    @Override
+    public void onStop() {
+        indexOfShowcase = 0;
+        show.hide();
+        super.onStop();
+
     }
 
 }

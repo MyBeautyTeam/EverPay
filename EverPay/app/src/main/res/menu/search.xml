@@ -4,8 +4,8 @@
     xmlns:nz.govt.app="http://schemas.android.com/tools">
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="Search Waste Items"
+        android:icon="@drawable/ic_search_white_30dp"
+        android:title="Поиск"
         app:showAsAction="ifRoom|collapseActionView"
         nz.govt.app:actionViewClass="android.support.v7.widget.SearchView"
         nz.govt.app:showAsAction="ifRoom|collapseActionView" />

@@ -33,6 +33,8 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.User;
 
+import org.apache.http.client.utils.URIBuilder;
+
 import java.util.ArrayList;
 
 import static com.beautyteam.everpay.Constants.ACTION;
@@ -134,17 +136,27 @@ public class FragmentEditFriendsInGroup extends Fragment implements
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri uri = ContentUris.withAppendedId(EverContentProvider.USERS_CONTENT_URI, getArguments().getInt(GROUP_ID));
+        //Uri uri = ContentUris.withAppendedId(EverContentProvider.USERS_CONTENT_URI, getArguments().getInt(GROUP_ID));
+        int groupId = getArguments().getInt(GROUP_ID);
+        Uri uri;
+        if (mCurFilter == null)
+            uri = Uri.parse("content://" + EverContentProvider.AUTHORITY + "/" + Users.USERS_TABLE + "/" + groupId + "/null" );
+        else
+            uri = Uri.parse("content://" + EverContentProvider.AUTHORITY + "/" + Users.USERS_TABLE + "/" + groupId + "/" + mCurFilter );
+
+        /*if (mCurFilter != null)
+        //uri = ContentUris.withAppendedId(uri, mCurFilter);
         if (mCurFilter != null) {
             return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, Users.NAME +" like ('%"+mCurFilter+"%')", null, Users.NAME);
-        } else {
+        } else {*/
             return new CursorLoader(getActivity(), uri, PROJECTION, null, null, Users.NAME);
-        }
+//        }
     }
 
     public void addMemberToGroup(int userId, int groupId) {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Добавление участника");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         serviceHelper.addMemberToGroup(userId, groupId);
     }

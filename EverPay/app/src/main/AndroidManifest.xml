@@ -44,6 +44,12 @@
             android:windowSoftInputMode="adjustPan"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".DemoActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
+            android:label="@string/app_name" >
+        </activity>
 
         <service
             android:name=".REST.Service"

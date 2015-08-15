@@ -1,6 +1,7 @@
 package com.beautyteam.everpay.Fragments;
 
 import android.app.SearchManager;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddFriendsToGroupAdapter;
 import com.beautyteam.everpay.Constants;
@@ -73,8 +75,6 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
         saveBtn.setOnClickListener(this);
         createBtn = (Button) view.findViewById(R.id.create_btn_user_add_friends);
         createBtn.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -122,12 +122,24 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
     };
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        /*Uri uri = ContentUris.withAppendedId(EverContentProvider.USERS_CONTENT_URI, getArguments().getInt(GROUP_ID));
         if (mCurFilter != null) {
-            return new CursorLoader(getActivity(), EverContentProvider.USERS_FRIENDS_GROUP_BY_VK, PROJECTION, Users.NAME +" like ('%"+mCurFilter+"%')", null, Users.NAME);
-
+            return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, Users.NAME +" like ('%"+mCurFilter+"%')", null, Users.NAME);
         } else {
-            return new CursorLoader(getActivity(), EverContentProvider.USERS_FRIENDS_GROUP_BY_VK, PROJECTION, null, null, Users.NAME);
-        }
+            return new CursorLoader(getActivity(), uri, PROJECTION, null, null, Users.NAME);
+        }*/
+        Uri uri;
+        if (mCurFilter == null)
+            uri = Uri.parse("content://" + EverContentProvider.AUTHORITY + "/" + Users.USERS_TABLE + "/order_vk" + "/null" );
+        else
+            uri = Uri.parse("content://" + EverContentProvider.AUTHORITY + "/" + Users.USERS_TABLE + "/order_vk" + "/" + mCurFilter );
+
+        /*if (mCurFilter != null)
+        //uri = ContentUris.withAppendedId(uri, mCurFilter);
+        if (mCurFilter != null) {
+            return new CursorLoader(getActivity(), EverContentProvider.USERS_CONTENT_URI, PROJECTION, Users.NAME +" like ('%"+mCurFilter+"%')", null, Users.NAME);
+        } else {*/
+        return new CursorLoader(getActivity(), uri, PROJECTION, null, null, Users.NAME);
     }
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
@@ -150,15 +162,15 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        ArrayList<User> finArrayList = getArguments().getParcelableArrayList(FRIENDS);
+        finArrayList = mAdapter.getArrayList();
         switch (v.getId()) {
             case R.id.save_btn_friends_in_group:
-                ArrayList<User> arrayList = getArguments().getParcelableArrayList(FRIENDS);
-                arrayList = mAdapter.getArrayList();
                 ((MainActivity) getActivity()).removeFragment();
                 break;
             case R.id.create_btn_user_add_friends:
-                //FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(groupId);
-                //((MainActivity) getActivity()).addFragment(fragmentCreateUser);
+                FragmentCreateUser fragmentCreateUser = FragmentCreateUser.getInstance(finArrayList);
+                ((MainActivity) getActivity()).addFragment(fragmentCreateUser);
                 break;
         }
     }

@@ -104,6 +104,7 @@ public class FragmentSettings  extends Fragment
                 VKSdk.logout();
 
                 ((MainActivity)getActivity()).clearData();
+
                 getActivity().finish();
 
                 break;

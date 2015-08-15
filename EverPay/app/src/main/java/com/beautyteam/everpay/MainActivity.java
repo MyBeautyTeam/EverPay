@@ -1,5 +1,6 @@
 package com.beautyteam.everpay;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
@@ -238,11 +240,6 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
             }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
         });
 
 
@@ -374,13 +371,7 @@ public class MainActivity extends ActionBarActivity
             }
         } else if (action.equals(ADD_MEMBER_TO_GROUP)) {
 
-        } else if (action.equals(EDIT_GROUP)) {
-            if (result == Constants.Result.OK) {
-                String title=data.getString(Constants.IntentParams.GROUP_TITLE);
-                setTitle(title);
-            } else {
-                setTitle("Группа");
-            }
+
         }
     }
 
@@ -481,6 +472,10 @@ public class MainActivity extends ActionBarActivity
             .clear()
             .commit();
 
+        sPref.edit()
+                .putBoolean(Constants.Preference.IS_DEMO_REVIEWED, true)
+                .commit();
+
         getContentResolver().delete(EverContentProvider.USERS_CONTENT_URI, null, null);
         getContentResolver().delete(EverContentProvider.GROUPS_CONTENT_URI, null, null);
         getContentResolver().delete(EverContentProvider.DEBTS_CONTENT_URI, null, null);
@@ -502,8 +497,11 @@ public class MainActivity extends ActionBarActivity
             FlurryAgent.setGender(com.flurry.android.Constants.FEMALE);
         else
             FlurryAgent.setGender(com.flurry.android.Constants.UNKNOWN);
+    }
 
-
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
 }

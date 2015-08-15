@@ -304,12 +304,12 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public void setIDebt(int summa) {
         TextView tabSumma = (TextView)tabViewArray[0].findViewById(R.id.tab_summa);
-        tabSumma.setText(summa + "");
+        tabSumma.setText(summa + " \u20BD");
     }
 
     public void setDebtForMe(int summa) {
         TextView tabSumma = (TextView)tabViewArray[1].findViewById(R.id.tab_summa);
-        tabSumma.setText(summa + "");
+        tabSumma.setText(summa + " \u20BD");
     }
 
     public void clearSlidingTab() {

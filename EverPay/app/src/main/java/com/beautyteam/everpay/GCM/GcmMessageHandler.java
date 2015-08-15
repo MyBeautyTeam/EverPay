@@ -17,6 +17,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
@@ -64,36 +66,41 @@ public class GcmMessageHandler extends IntentService {
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
+        //sendNotif("Everpay", "asdasdas sadsd adas asdask jsfl ПАША ОЧЕНЬ ХОРОШИЙ МАЛЬЧИК!!! ЫВФЫДВ ООООЧЕНЬ!", 1,2,3);
+
     }
 
-
     void sendNotif(String title, String message, int action, int groupId, int billId) {
-        // 1-я часть
-        Notification notification = new Notification(R.drawable.ic_launcher, message,
-                System.currentTimeMillis());
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(title)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                        .setContentText(message)
+                        .setAutoCancel(true);
 
-        // 3-я часть
         Intent intent = new Intent(this, LoginActivity.class);
-        /*intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);*/
+
         intent.setAction(Constants.Action.NOTIFICATION);
         intent.putExtra(Constants.IntentParams.ACTION_NOTIF, action);
         intent.putExtra(Constants.IntentParams.BILL_ID, billId);
         intent.putExtra(Constants.IntentParams.GROUP_ID, groupId);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(LoginActivity.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // 2-я часть
-        notification.setLatestEventInfo(this, title, message, pIntent);
-
-        // ставим флаг, чтобы уведомление пропало после нажатия
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.defaults |= Notification.DEFAULT_SOUND;
-        notification.defaults |= Notification.DEFAULT_VIBRATE;
-
-        // отправляем
-        nm.notify(1, notification);
-
+        mNotificationManager.notify(0, mBuilder.build());
     }
+
 
     private void switchOnScreen() {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -114,4 +121,3 @@ public class GcmMessageHandler extends IntentService {
 
 
 }
-

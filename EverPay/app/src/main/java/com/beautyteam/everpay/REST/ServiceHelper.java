@@ -206,11 +206,10 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
     /*
     Редактирование группы
      */
-    public void editGroup(int groupId, String groupTitle) {
+    public void editGroup(int groupId) {
         Intent intentService = new Intent(activity, Service.class);
         intentService.setAction(Constants.Action.EDIT_GROUP);
         intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
-        intentService.putExtra(Constants.IntentParams.GROUP_TITLE, groupTitle);
 
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
@@ -271,7 +270,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
-    public void sendNotification() {
+    public void sendNotification(int groupId) {
 
     }
 
@@ -299,7 +298,7 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     public void createUser(String name, String lastName, int sex) {
         Intent intentService = new Intent(activity, Service.class);
-        intentService.setAction(Constants.Action.CREATE_AND_ADD_USER);
+        intentService.setAction(Constants.Action.CREATE_USER);
 
         intentService.putExtra(Constants.IntentParams.NEW_USER_NAME, name);
         intentService.putExtra(Constants.IntentParams.NEW_USER_LASTNAME, lastName);

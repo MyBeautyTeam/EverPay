@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.flurry.android.FlurryAgent;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.vk.sdk.VKAccessToken;
@@ -22,6 +26,9 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.dialogs.VKCaptchaDialog;
 import com.vk.sdk.util.VKUtil;
 
+import java.util.jar.Attributes;
+
+import static com.beautyteam.everpay.Constants.Preference.IS_DEMO_REVIEWED;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 
@@ -32,6 +39,8 @@ public class LoginActivity extends Activity {
     private SharedPreferences sPref;
     private String screenName = "Авторизация";
 
+    private final static int ID = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +48,12 @@ public class LoginActivity extends Activity {
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
-        VKSdk.initialize(sdkListener, VK_APP_ID,VKAccessToken.tokenFromSharedPreferences(this,sTokenKey));
+        VKSdk.initialize(sdkListener, VK_APP_ID, VKAccessToken.tokenFromSharedPreferences(this, sTokenKey));
 
         if (!isPreviousCorrectEnds()) { // Проверка, что предыдущая оперция входа выполнилась
             return;
         }
+
 
         setContentView(R.layout.activity_login);
 
@@ -71,9 +81,14 @@ public class LoginActivity extends Activity {
             this.finish();
 
         } else {
-            FlurryAgent.logEvent("Фрагмент авторизации");
-            Log.d("vk", " no wake up");
-            loginButton.setVisibility(View.VISIBLE);
+            if (sPref.getBoolean(IS_DEMO_REVIEWED, false)) {
+                FlurryAgent.logEvent("Фрагмент авторизации");
+                Log.d("vk", " no wake up");
+                loginButton.setVisibility(View.VISIBLE);
+            } else {
+                Intent intentStartDemo = new Intent(LoginActivity.this, DemoActivity.class);
+                startActivity(intentStartDemo);
+            }
         }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +99,33 @@ public class LoginActivity extends Activity {
                 Log.d("vk", " click");
             }
         });
+
+/*
+        // =====================
+
+        TextView demoText = (TextView)findViewById(R.id.demoTEST_TEXT);
+        float x = demoText.getX();
+        float y = demoText.getY();
+
+        TextView view = new TextView(this);
+        view.setX(x);
+        view.setY(x);
+
+        final int s = demoText.getId();
+        demoText.setId(0);
+
+        view.setId(s);
+
+
+
+        ShowcaseView show = new ShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(s, this))
+                .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .build();
+        // ================
+*/
+
     }
 
     @Override
@@ -132,7 +174,7 @@ public class LoginActivity extends Activity {
         public void onReceiveNewToken(VKAccessToken newToken) {
             FlurryAgent.logEvent("Получен новый AccessToken");
             String accessToken = newToken.accessToken;
-            newToken.saveTokenToSharedPreferences(LoginActivity.this,sTokenKey);
+            newToken.saveTokenToSharedPreferences(LoginActivity.this, sTokenKey);
             Log.d("TOken receive", accessToken);
             Log.d("TOken receivw", String.valueOf(newToken.expiresIn));
             Intent i = new Intent(LoginActivity.this, MainActivity.class);

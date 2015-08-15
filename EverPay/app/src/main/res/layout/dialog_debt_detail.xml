@@ -2,7 +2,9 @@
     android:layout_width="fill_parent"
     android:layout_height="200dp"
     android:gravity="center"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@color/background_material_light"
+    >
 
     <LinearLayout
         android:layout_weight="1"
@@ -33,20 +35,24 @@
             android:textColor="@color/secondary_text"
             android:text="Долг: 500"
             />
-        <Button
-            android:id="@+id/dialog_btn_show_profile"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/on_btn_pressed_selector"
-            android:textColor="@color/primary"
-            android:padding="3dp"
-            android:text="Просмотреть профиль"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-
-            />
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            >
+            <Button
+                android:id="@+id/dialog_btn_show_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_dialog_vk"
+                android:textColor="@color/primary"
+                android:padding="3dp"
+                android:text="Просмотреть профиль"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                />
+            </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

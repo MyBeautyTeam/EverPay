@@ -119,11 +119,20 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
 
                 if ( ! oldTitle.equals(newTitle)) {
                     int groupId = getArguments().getInt(GROUP_ID);
-                    showProgressBar("Изменение названия");
-                    serviceHelper.editGroup(groupId, newTitle);
+                    ContentValues cv = new ContentValues();
+                    cv.put(Groups.TITLE, newTitle);
+                    getActivity().getContentResolver().update(EverContentProvider.GROUPS_CONTENT_URI, cv, Groups.GROUP_ID + "=" + groupId, null);
+
+                    progressDialog = new ProgressDialog(getActivity());
+                    progressDialog.setMessage("Изменение названия");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+                    serviceHelper.editGroup(groupId);
                 } else {
                     ((MainActivity)getActivity()).removeFragment();
                 }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -150,15 +159,10 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     }
 
     public void removeUserFromGroup(int userId, int groupId) {
-        showProgressBar("Удаление участника");
-        serviceHelper.removeMemberFromGroup(userId, groupId);
-    }
-
-    private void showProgressBar(String text) {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(text);
+        progressDialog.setMessage("Удаление участника");
         progressDialog.show();
-        progressDialog.setCancelable(false);
+        serviceHelper.removeMemberFromGroup(userId, groupId);
     }
 
     @Override
@@ -215,17 +219,19 @@ public class FragmentEditGroup extends Fragment implements View.OnClickListener,
     @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
-        progressDialog.dismiss();
         if (action.equals(REMOVE_MEMBER_FROM_GROUP)) {
+            progressDialog.dismiss();
             if (result == Constants.Result.OK) {
             } else {
                 Toast.makeText(getActivity(), "Ошибка удаления пользователя. Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
             }
         } else if (action.equals(EDIT_GROUP)) {
+            progressDialog.dismiss();
             if (result == Constants.Result.OK) {
+
                 ((MainActivity)getActivity()).removeFragment();
             } else {
-                Toast.makeText(getActivity(), "Ошибка. Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Ошибка. Проверьте соединение с интернетом.", Toast.LENGTH_SHORT).show();
             }
         }
     }

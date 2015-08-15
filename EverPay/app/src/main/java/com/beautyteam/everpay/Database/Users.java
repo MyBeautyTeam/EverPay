@@ -4,7 +4,7 @@ package com.beautyteam.everpay.Database;
  * Created by Admin on 04.04.2015.
  */
 public class Users {
-    static final String USERS_TABLE = "users";
+    public static final String USERS_TABLE = "users";
 
     static public final String ITEM_ID = "_id";
     static public final String USER_ID = "user_id";

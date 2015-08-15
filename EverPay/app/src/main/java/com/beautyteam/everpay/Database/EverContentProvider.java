@@ -19,7 +19,7 @@ import java.net.URI;
  */
 public class EverContentProvider extends ContentProvider {
     final String LOG_TAG = "myLogs";
-    static final String AUTHORITY = "com.beautyteam.everpay.EverpayDB";
+    public static final String AUTHORITY = "com.beautyteam.everpay.EverpayDB";
 
     public static final Uri USERS_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE);
     public static final Uri USERS_FRIENDS_GROUP_BY_VK = Uri.parse("content://" + AUTHORITY + "/" + Users.USERS_TABLE + "/" + "order_vk");
@@ -61,7 +61,7 @@ public class EverContentProvider extends ContentProvider {
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE, URI_USERS);
-        uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE + "/#", URI_USERS_LEFT_IN_GROUP);
+        uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE + "/#" + "/*", URI_USERS_LEFT_IN_GROUP);
         uriMatcher.addURI(AUTHORITY, Groups.GROUPS_TABLE, URI_GROUPS);
         uriMatcher.addURI(AUTHORITY, GroupMembers.GROUP_MEMBERS_TABLE, URI_GROUP_MEMBERS);
         uriMatcher.addURI(AUTHORITY, Bills.BILLS_TABLE, URI_BILLS);
@@ -71,7 +71,7 @@ public class EverContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, History.HISTORY_TABLE, URI_HISTORY);
         uriMatcher.addURI(AUTHORITY, Debts.DEBTS_TABLE + "/dialog", URI_DEBTS_DIALOG);
         uriMatcher.addURI(AUTHORITY, CalculationDetails.CALCULATION_DETAILS_TABLE, URI_CALC_DETAILS);
-        uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE + "/order_vk", URI_FRIENDS_GROUP_BY_VK);
+        uriMatcher.addURI(AUTHORITY, Users.USERS_TABLE + "/order_vk" + "/*", URI_FRIENDS_GROUP_BY_VK);
     }
 
 
@@ -175,7 +175,17 @@ public class EverContentProvider extends ContentProvider {
                 break;
 
             case URI_USERS_LEFT_IN_GROUP: {
-                id = uri.getLastPathSegment();
+                String filter  = uri.getLastPathSegment();
+                if (filter.equals("null")) {
+                    filter = "";
+                }
+
+                String path = uri.getPath();
+                int index = path.indexOf(Users.USERS_TABLE);
+                index += 1 + Users.USERS_TABLE.length();
+
+                id = path.substring(index, path.indexOf("/", index));
+
                 notifyUri = USERS_CONTENT_URI;
                 String request = "select * from " +
                         " (select " +
@@ -192,8 +202,9 @@ public class EverContentProvider extends ContentProvider {
                         " on " + Users.USERS_TABLE + "." + Users.USER_ID + " = " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID +
                         " and " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.GROUP_ID + " = " + id +
                         " where " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID + " is null" +
-                        " and " + Users.USER_ID_VK + "=0" +
+                        " and " + Users.USER_ID_VK + "=0 " +
                         //=========
+                        " and " + Users.USERS_TABLE + "." + Users.NAME +" like ('%"+filter+"%')" +
                         " Order By " + Users.NAME + ")"
                         + " UNION ALL " +
                         "select * from (" +
@@ -210,22 +221,12 @@ public class EverContentProvider extends ContentProvider {
                         " and " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.GROUP_ID + " = " + id +
                         " where " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID + " is null" +
                         " and " + Users.USER_ID_VK + "!=0" +
-                        " Order By " + Users.NAME + ")";
+                        //" and " + Users.NAME +" like ('%"+filter+"%')" +
+                        " Order By " + Users.NAME + ")" +
+                        " where "
+                        + Users.NAME +" like ('%"+filter+"%')";
 
-                String reque1st = "select " +
-                        Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
-                        Users.USERS_TABLE + "." + Users.USER_ID + " as " + Users.USER_ID + ", " +
-                        Users.USERS_TABLE + "." + Users.USER_ID_VK + " as " + Users.USER_ID_VK + ", " +
-                        Users.USERS_TABLE + "." + Users.NAME + " as " + Users.NAME + ", " +
-                        Users.USERS_TABLE + "." + Users.IMG + " as " + Users.IMG + ", " +
-                        Users.USERS_TABLE + "." + Users.STATE + " as " + Users.STATE + ", " +
-                        Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
-                        " from "
-                        + Users.USERS_TABLE + " left join " + GroupMembers.GROUP_MEMBERS_TABLE +
-                        " on " + Users.USERS_TABLE + "." + Users.USER_ID + " = " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID +
-                        " and " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.GROUP_ID + " = " + id +
-                        " where " + GroupMembers.GROUP_MEMBERS_TABLE + "." + GroupMembers.USER_ID + " is null" +
-                        " Order By " + Users.NAME;
+
                 Cursor c = db.rawQuery(request, null);
                 int count = c.getCount();
                 c.setNotificationUri(getContext().getContentResolver(), notifyUri);
@@ -238,6 +239,12 @@ public class EverContentProvider extends ContentProvider {
 
             case URI_FRIENDS_GROUP_BY_VK: {
                 notifyUri = USERS_CONTENT_URI;
+                String filter  = uri.getLastPathSegment();
+                if (filter.equals("null")) {
+                    filter = "";
+                }
+
+
                 String request = "select * from " +
                         " (select " +
                         Users.USERS_TABLE + "." + Users.ITEM_ID + " as " + Users.ITEM_ID + ", " +
@@ -249,6 +256,7 @@ public class EverContentProvider extends ContentProvider {
                         Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
                         " from " + Users.USERS_TABLE +
                         " where " + Users.USER_ID_VK + "=0" +
+                        " and " + Users.USERS_TABLE + "." + Users.NAME +" like ('%"+filter+"%')" +
                         " Order By " + Users.NAME + ")"
                         + " UNION ALL " +
                         "select * from (" +
@@ -261,7 +269,9 @@ public class EverContentProvider extends ContentProvider {
                         Users.USERS_TABLE + "." + Users.RESULT + " as " + Users.RESULT +
                         " from " + Users.USERS_TABLE +
                         " where " + Users.USER_ID_VK + "!=0" +
-                        " Order By " + Users.NAME + ")";
+                        " Order By " + Users.NAME + ")" +
+                        " where "
+                        + Users.NAME +" like ('%"+filter+"%')";
                 Cursor c = db.rawQuery(request, null);
                 c.setNotificationUri(getContext().getContentResolver(), notifyUri);
                 return c;

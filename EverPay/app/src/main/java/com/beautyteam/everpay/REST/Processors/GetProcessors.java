@@ -209,6 +209,7 @@ public class GetProcessors extends Processor {
                     JSONObject billDetails = jsonObject.getJSONObject("bills_details");
 
                     JSONObject billItem;
+                    boolean isDeleted = bill.getBoolean("is_deleted");
                     for (int i=0; i<billDetails.length(); i++) {
                         billItem = billDetails.getJSONObject(i + "");
                         JSONObject user = billItem.getJSONObject("user");
@@ -226,7 +227,7 @@ public class GetProcessors extends Processor {
                         service.getContentResolver().insert(EverContentProvider.BILLS_CONTENT_URI, cv);
 
                     }
-
+                    intent.putExtra(Constants.IntentParams.IS_DELETED, isDeleted);
                     result = Constants.Result.OK;
                 } catch (JSONException e) {
                     result = Constants.Result.ERROR;

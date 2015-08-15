@@ -25,7 +25,7 @@
                         android:paddingLeft="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/secondary_text"
                         android:text="ТЕМА:"
                         android:clickable="false"
                         android:textSize="20dp"
@@ -42,18 +42,18 @@
                     >
                     <RadioButton
                         android:text="ОШИБКА"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/secondary_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                     <RadioButton
                         android:text="ПРЕДЛОЖЕНИЕ"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/secondary_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         />
                     <RadioButton
                         android:text="ДРУГОЕ"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/secondary_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 

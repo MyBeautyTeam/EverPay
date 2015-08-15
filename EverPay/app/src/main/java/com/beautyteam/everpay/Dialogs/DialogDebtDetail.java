@@ -70,6 +70,10 @@ public class DialogDebtDetail extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_debt_detail);
         showProfileBtn = (Button) findViewById(R.id.dialog_btn_show_profile);
         showProfileBtn.setOnClickListener(this);
+        if ("0".equals(userIdVk)) {
+            showProfileBtn.setEnabled(false);
+            showProfileBtn.setText("Нет профиля vk");
+        }
 
         dialogDebtName = (TextView) findViewById(R.id.dialog_debt_name);
         dialogDebtName.setText(userName);

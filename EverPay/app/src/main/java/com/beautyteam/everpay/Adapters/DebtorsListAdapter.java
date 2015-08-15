@@ -109,7 +109,7 @@ public class DebtorsListAdapter extends CursorAdapter {
 
         //holder.text.setText(cursor.getString(cursor.getColumnIndex(MyContentProvider.CONTACT_NAME)));
         final int summ = cursor.getInt(cursor.getColumnIndex(Debts.SUM_SUMMA));
-        holder.summa.setText(summ + "");
+        holder.summa.setText(summ + " \u20BD" );
 
         final String userName = cursor.getString(cursor.getColumnIndex(Debts.USER_NAME));
         final String groupTitle = cursor.getString(cursor.getColumnIndex(Debts.GROUP_TITLE));

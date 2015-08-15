@@ -2,6 +2,7 @@ package com.beautyteam.everpay.Fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +21,10 @@ import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
+import com.beautyteam.everpay.User;
 import com.flurry.android.FlurryAgent;
+
+import java.util.ArrayList;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.CREATE_AND_ADD_USER;
@@ -40,6 +44,8 @@ public class FragmentCreateUser extends Fragment
     private ServiceHelper serviceHelper;
     ProgressDialog progressDialog;
     private static final String GROUP_ID = "GROUP_ID";
+    private static final String FRIENDS = "FRIENDS";
+    private static final String ACTION = "ACTION";
     private int groupId;
 
     // У тебя скорее всего будет другой getInstance!
@@ -47,12 +53,22 @@ public class FragmentCreateUser extends Fragment
     public static FragmentCreateUser getInstance(int groupId) {
         FragmentCreateUser fragmentCreateUser = new FragmentCreateUser();
         Bundle bundle = new Bundle();
+        bundle.putInt(ACTION, 0);
         bundle.putInt(GROUP_ID, groupId);
         fragmentCreateUser.setArguments(bundle);
         FlurryAgent.logEvent("Фрагмент создания пользователя");
         return fragmentCreateUser;
     }
 
+    public static FragmentCreateUser getInstance(ArrayList<User> arrayList) {
+        FragmentCreateUser fragmentCreateUser = new FragmentCreateUser();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(FRIENDS, arrayList);
+        bundle.putInt(ACTION, 1);
+        fragmentCreateUser.setArguments(bundle);
+        FlurryAgent.logEvent("Фрагмент создания пользователя");
+        return fragmentCreateUser;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,7 +98,6 @@ public class FragmentCreateUser extends Fragment
                     sex = 1;
             }
         });
-
     }
 
     @Override
@@ -110,7 +125,10 @@ public class FragmentCreateUser extends Fragment
         switch (v.getId()) {
             case R.id.save_btn_user:
                 if((!name.getText().toString().equals(""))&&(!lastname.getText().toString().equals(""))) {
-                    createAndAddUser(sex, name.getText().toString(), lastname.getText().toString());// добавить созданного польщователя в группу
+                    if (getArguments().getInt(ACTION) == 0)
+                        createAndAddUser(sex, name.getText().toString(), lastname.getText().toString());// добавить созданного польщователя в группу
+                    else
+                        createUser(sex, name.getText().toString(), lastname.getText().toString());
                 }
                 else
                     Toast.makeText(getActivity(), "Введите имя и фамилию", Toast.LENGTH_SHORT).show();
@@ -143,6 +161,7 @@ public class FragmentCreateUser extends Fragment
     @Override
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
+        progressDialog.dismiss();
         if (action.equals(CREATE_AND_ADD_USER)) {
 
             if (result == Constants.Result.OK) {
@@ -156,12 +175,13 @@ public class FragmentCreateUser extends Fragment
         if (action.equals(CREATE_USER)) {
 
 
-            progressDialog.dismiss();
             if (result == Constants.Result.OK) {
                 Toast.makeText(getActivity(), "Пользователь создан", Toast.LENGTH_SHORT).show();
                 // TODO ДЛЯ ТАТЬЯНЫ
                 int newUserId = data.getInt(Constants.IntentParams.USER_ID); // ID НОВОГО ПОЛЬЗОВАТЕЛЯ, ОН УЖЕ ЛЕЖИТ В БАЗЕ
-
+                ArrayList<User> arrayList = getArguments().getParcelableArrayList(FRIENDS);
+                User user = new User(newUserId ,0,  name.getText().toString(), lastname.getText().toString(), null);
+                arrayList.add(user);
                 ((MainActivity) getActivity()).removeFragment();
             } else {
                 Toast.makeText(getActivity(), "Ошибка. Проверьте подключение к интернету.", Toast.LENGTH_SHORT).show();

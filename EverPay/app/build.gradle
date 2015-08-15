@@ -30,5 +30,16 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.3.0'
     compile files('src/libs/FlurryAnalytics-5.5.0.jar')
     compile files('src/libs/AppRate_1.1.jar')
-    compile 'com.github.carlonzo.stikkyheader:core:0.0.3-SNAPSHOT'
+    repositories {
+        mavenCentral()
+        maven(){
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
+    compile ('com.github.worker8:tourguide:1.0.13-SNAPSHOT@aar'){
+        transitive=true
+    }
+    compile 'com.github.amlcurran.showcaseview:library:5.0.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+
 }
