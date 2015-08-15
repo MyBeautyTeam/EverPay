@@ -151,6 +151,7 @@ public class FragmentCalculation extends Fragment implements
                 .setTarget(new ViewTarget(R.id.notify_vk, getActivity()))
                 .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
                 .setStyle(R.style.CustomShowcaseTheme2)
+                .setScaleMultiplier(0.5f)
                 .build();
         show.setButtonPosition(params);
         show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
