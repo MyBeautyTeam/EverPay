@@ -295,7 +295,8 @@ public class FragmentCalculation extends Fragment implements
         switch (view.getId()) {
             case R.id.calc_ok_btn:
                 indexOfShowcase = 0;
-                show.hide();
+                if (show!=null)
+                    show.hide();
                 HashMap<String, Integer> mapIdToIsDeleted = mAdapter.getMapIdToIsdeleted();
                 Iterator it = mapIdToIsDeleted.entrySet().iterator();
 
@@ -320,7 +321,8 @@ public class FragmentCalculation extends Fragment implements
                 break;
             case R.id.calc_details_btn:
                 indexOfShowcase = 0;
-                show.hide();
+                if (show != null)
+                    show.hide();
                 ((MainActivity) getActivity()).addFragment(FragmentCalcDetails.getInstance(groupId));
                 break;
 
@@ -407,7 +409,8 @@ public class FragmentCalculation extends Fragment implements
     public void onStop() {
         if(indexOfShowcase > 0 && indexOfShowcase < 5) {
             indexOfShowcase = 0;
-            show.hide();
+            if (show != null)
+                show.hide();
         }
         super.onStop();
 
