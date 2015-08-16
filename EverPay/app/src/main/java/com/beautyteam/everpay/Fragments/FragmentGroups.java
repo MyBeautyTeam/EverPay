@@ -39,10 +39,6 @@ import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
-import tourguide.tourguide.Overlay;
-import tourguide.tourguide.Pointer;
-import tourguide.tourguide.ToolTip;
-import tourguide.tourguide.TourGuide;
 
 import static android.support.v4.widget.SwipeRefreshLayout.*;
 import static com.beautyteam.everpay.Constants.ACTION;
@@ -64,7 +60,7 @@ public class FragmentGroups extends Fragment implements
     private Button addBtn;
     private Fragment self;
     private MainActivity mainActivity;
-    private TourGuide mTourGuideHandler;
+
     private static final int LOADER_ID = 0;
     private GroupsListAdapter mAdapter;
     ServiceHelper serviceHelper;

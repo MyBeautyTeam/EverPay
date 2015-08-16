@@ -164,6 +164,7 @@ public class FragmentCalculation extends Fragment implements
                 .setTarget(new ViewTarget(R.id.notify_vk, getActivity()))
                 .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
                 .setStyle(R.style.CustomShowcaseTheme2)
+                .setScaleMultiplier(0.5f)
                 .build();
         show.setButtonPosition(params);
         show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
@@ -395,6 +396,7 @@ public class FragmentCalculation extends Fragment implements
         Window window = dialog.getWindow();
         window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
+
 
     public static String getDate() {
         Date cDate = new Date();

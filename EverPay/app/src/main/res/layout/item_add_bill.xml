@@ -51,18 +51,25 @@
         android:maxLines="1"
         android:maxLength="8"
         />
-    <EditText
-        android:id="@+id/add_bill_list_put"
-        android:layout_weight="1.8"
+    <LinearLayout
+        android:id="@+id/add_bill_list_put_parrent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_weight="1.8"
         android:layout_gravity="center"
         android:gravity="center"
-        android:inputType="number"
-        android:maxLines="1"
-        android:hint="0 \u20BD"
-        android:maxLength="8"
-        />
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/add_bill_list_put"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLines="1"
+            android:hint="0 \u20BD"
+            android:maxLength="8"
+            />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/add_bill_list_remove"

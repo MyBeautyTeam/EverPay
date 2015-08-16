@@ -227,7 +227,7 @@ public class FragmentAddBill extends Fragment implements
         show = new ShowcaseView.Builder(getActivity())
                 .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
                 .setContentTitle("Если сумма разбита поровну между участниками - нажмите ПОРОВНУ, иначе - НЕПОРОВНУ")
-                //.setScaleMultiplier(0.5f)
+                .setScaleMultiplier(0.5f)
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
         show.setButtonPosition(params);
@@ -487,7 +487,7 @@ public class FragmentAddBill extends Fragment implements
      */
     private int insertToDB() {
 
-        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String [] {"MAX("+Bills.BILL_ID+")"}, null, null, null);
+        Cursor maxCursor = getActivity().getContentResolver().query(EverContentProvider.BILLS_CONTENT_URI, new String[]{"MAX(" + Bills.BILL_ID + ")"}, null, null, null);
         maxCursor.moveToFirst();
         int max = maxCursor.getInt(0);
         int billID = max+1;
@@ -532,11 +532,15 @@ public class FragmentAddBill extends Fragment implements
                     else {
                         indexOfShowcase++;
                         show.hide();
+
+                        LinearLayout child = (LinearLayout) getViewByPosition(1);
+                        View put = child.findViewById(R.id.add_bill_list_put_parrent);
+
                         show =  new ShowcaseView.Builder(getActivity())
-                                .setTarget(new ViewTarget(R.id.add_bill_name_put, getActivity()))
+                                .setTarget(new ViewTarget(put))
                                 .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
-                                //.setScaleMultiplier(0.5f)
+                                .setScaleMultiplier(0.5f)
                                 .build();
                         show.overrideButtonClick(this);
                         show.setButtonPosition(params);
@@ -554,7 +558,7 @@ public class FragmentAddBill extends Fragment implements
                                 .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
                                 .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
                                 .setStyle(R.style.CustomShowcaseTheme2)
-                                //.setScaleMultiplier(0.5f)
+                                .setScaleMultiplier(0.5f)
                                 .build();
                         show.setButtonPosition(params);
                     }
@@ -573,7 +577,7 @@ public class FragmentAddBill extends Fragment implements
                                 .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_need_text)))
                                 .setContentTitle("В ячейку под полем ДОЛЖЕН впишите сумму, которую должен каждый участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
-                                //.setScaleMultiplier(0.5f)
+                                .setScaleMultiplier(0.5f)
                                 .build();
                         show.setButtonPosition(params);
                         show.overrideButtonClick(this);
@@ -590,7 +594,7 @@ public class FragmentAddBill extends Fragment implements
                                 .setTarget(new ViewTarget(R.id.add_bill_name_put, getActivity()))
                                 .setContentTitle("В ячейку под полем ВНЕС впишите сумму, которую внес каждый участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
-                                //.setScaleMultiplier(0.5f)
+                                .setScaleMultiplier(0.5f)
                                 .build();
                         show.setButtonPosition(params);
                         show.overrideButtonClick(this);
@@ -607,7 +611,7 @@ public class FragmentAddBill extends Fragment implements
                                 .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
                                 .setContentTitle("Если человек не участвует в счете, нажмите на крестик")
                                 .setStyle(R.style.CustomShowcaseTheme2)
-                                //.setScaleMultiplier(0.5f)
+                                .setScaleMultiplier(0.5f)
                                 .build();
                         show.setButtonPosition(params);                    }
                     break;
@@ -714,4 +718,17 @@ private class SwitchChangeListener implements CompoundButton.OnCheckedChangeList
         super.onStop();
 
     }
+
+    private View getViewByPosition(int pos) {
+        final int firstListItemPosition = addBillList.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + addBillList.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return addBillList.getAdapter().getView(pos, null, addBillList);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return addBillList.getChildAt(childIndex);
+        }
+    }
+
 }

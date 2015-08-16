@@ -34,10 +34,6 @@ import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
-import tourguide.tourguide.Overlay;
-import tourguide.tourguide.Pointer;
-import tourguide.tourguide.ToolTip;
-import tourguide.tourguide.TourGuide;
 
 /**
  * Created by Admin on 10.03.2015.
