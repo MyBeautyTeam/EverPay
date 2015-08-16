@@ -84,7 +84,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Должны"
+                android:text="Сумма счета"
                 android:textSize="16dp"
                 />
 
@@ -134,7 +134,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Внесли"
+                android:text="Распределено"
                 android:textSize="16dp"
                 />
             <TextView
@@ -154,6 +154,7 @@
                 android:layout_height="match_parent"/>
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -173,7 +174,7 @@
             android:layout_weight="1.8"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Должен"
+            android:text="Потрачено"
             android:drawableBottom="@drawable/package_up"
             android:gravity="center"
             android:textSize="14dp"
@@ -183,7 +184,7 @@
             android:layout_weight="1.8"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Внес"
+            android:text="Оплачено"
             android:gravity="center"
             android:drawableBottom="@drawable/package_down"
             android:textSize="14dp"

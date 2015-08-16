@@ -57,6 +57,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Handler;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.CALCULATE;
@@ -77,7 +78,8 @@ public class FragmentCalculation extends Fragment implements
     private Button detailsBtn;
     private int groupId;
     private ShowcaseView show;
-    private int indexOfShowcase = 1;
+    private int indexOfShowcase;
+    private SharedPreferences sPref;
 
 
     private CalcListAdapter mAdapter;
@@ -89,7 +91,6 @@ public class FragmentCalculation extends Fragment implements
     private TextView emptyText;
     private String screenName = "Расчет";
 
-    SharedPreferences sPref;
     private final String NOTIFICATION = "NOTIF";
     private ProgressDialog progressDialog;
 
@@ -106,8 +107,6 @@ public class FragmentCalculation extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        indexOfShowcase = 1;
-
         groupId = getArguments().getInt(GROUP_ID);
         setHasOptionsMenu(true);
 
@@ -121,6 +120,9 @@ public class FragmentCalculation extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sPref = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
+
         FlurryAgent.logEvent("Фрагмент расчет");
         loadingLayout = (LinearLayout) view.findViewById(R.id.loadingPanel);
         calcList = (ListView) view.findViewById(R.id.calc_list);
@@ -145,69 +147,75 @@ public class FragmentCalculation extends Fragment implements
 
 
         setupEmptyList(view);
-
-        view.post(new Runnable() {
+        if (!sPref.getBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, false)||sPref.getBoolean(Constants.Preference.SETTING_ADVICE, false))
+            view.postDelayed(new Runnable() {
             @Override
             public void run() {
                 demotour();
             }
-        });
+        },1000);
     }
 
     private void demotour() {
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.setMargins(0, 0, 70, 70);
-        show = new ShowcaseView.Builder(getActivity())
-                .setTarget(new ViewTarget(R.id.notify_vk, getActivity()))
-                .setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку")
-                .setStyle(R.style.CustomShowcaseTheme2)
-                .setScaleMultiplier(0.5f)
-                .build();
-        show.setButtonPosition(params);
-        show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
-            @Override
-            public void onShowcaseViewHide(ShowcaseView showcaseView) {
-            }
+        indexOfShowcase = 1;
+        if (calcList.getChildAt(0) == null) {
+            indexOfShowcase = 0;
+        }else {
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.setMargins(0, 0, 70, 70);
+            show = new ShowcaseView.Builder(getActivity())
+                .setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_first_name)))
+                .setContentTitle("Чтобы посмотреть аватарку пользователя - нажмите на имя пользователя")
 
-            @Override
-            public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-                switch (indexOfShowcase) {
-                    case 1: {
-                        if (calcList.getChildAt(0) == null) {
-                            indexOfShowcase = 0;
-                        } else {
+                    .setStyle(R.style.CustomShowcaseTheme2)
+                    .setScaleMultiplier(0.5f)
+                    .build();
+            show.setButtonPosition(params);
+            show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
+                @Override
+                public void onShowcaseViewHide(ShowcaseView showcaseView) {
+                }
+
+                @Override
+                public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+                    switch (indexOfShowcase) {
+                        case 1: {
                             indexOfShowcase++;
                             show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_summa)));
                             show.setContentTitle("Число над стрелочкой обозначает сумму долга");
                             show.show();
+                            break;
                         }
-                        break;
-                    }
-                    case 2: {
-                        indexOfShowcase++;
-                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_first_name)));
-                        show.setContentTitle("Чтобы посмотреть аватарку пользователя - нажмите на имя пользователя");
-                        show.show();
-                        break;
-                    }
-                    case 3: {
-                        indexOfShowcase++;
-                        show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_checkbox)));
-                        show.setContentTitle("Если долг возвращен - поставьте галочку");
-                        show.show();
-                        break;
+                        case 2: {
+                            indexOfShowcase++;
+                            show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_checkbox)));
+                            show.setContentTitle("Если долг возвращен - поставьте галочку");
+                            show.show();
+                            break;
+                        }
+                        case 3: {
+                            indexOfShowcase++;
+                            show.setTarget(new ViewTarget(R.id.notify_vk, getActivity()));
+                            show.setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку");
+                            show.show();
+                            sPref.edit()
+                                    .putBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, true)
+                                    .commit();
+                            break;
+                        }
+
                     }
                 }
-            }
 
-            @Override
-            public void onShowcaseViewShow(ShowcaseView showcaseView) {
+                @Override
+                public void onShowcaseViewShow(ShowcaseView showcaseView) {
 
-            }
-        });
+                }
+            });
+        }
 
     }
 
@@ -406,8 +414,10 @@ public class FragmentCalculation extends Fragment implements
 
     @Override
     public void onStop() {
-        indexOfShowcase = 0;
-        show.hide();
+        if(indexOfShowcase > 0 && indexOfShowcase < 5) {
+            indexOfShowcase = 0;
+            show.hide();
+        }
         super.onStop();
 
     }

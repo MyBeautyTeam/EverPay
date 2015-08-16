@@ -119,6 +119,10 @@ public class Constants {
         public final static String GCM_REGID = "GCM_REGID";
 
         public final static String IS_DEMO_REVIEWED = "IS_DEMO_REVIEWED";
+
+
+        public final static String WAS_ADD_BILL_ADVICE_REVIEWED = "WAS_ADD_BILL_ADVICE_REVIEWED";
+        public final static String WAS_CALCULATION_ADVICE_REVIEWED = "WAS_CALCULATION_ADVICE_REVIEWED";
     }
 
     public class State {

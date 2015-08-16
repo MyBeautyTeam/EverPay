@@ -240,12 +240,7 @@ public class AddBillListAdapter extends BaseAdapter {
             viewHolder.editNeed.setVisibility(View.VISIBLE);
         }
 
-        // АВАТАРКА
-        /*String fileName = billListItem.id; // Возможно, в дальнейшем будет id
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                Constants.FILE_DIRECTORY + '/' + fileName +
-                ".png"; // !!!!!!!!!
-        File file = new File(filePath);*/
+
         String avatarUrl = mapIdToAvatar.get(billAvailableArrayList.get(position).vkid);
         Picasso.with(context)
                 .load(avatarUrl)
@@ -258,9 +253,15 @@ public class AddBillListAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int sum = getNeedSumma() - getInvestSumma();
-                if (sum > 0)
-                    viewHolder.put.setText(sum + "");
+                int diff = getNeedSumma() - getInvestSumma();
+                if (diff > 0) {
+                    String oldSummaText = viewHolder.put.getText().toString();
+                    int oldSummaPut = 0;
+                    if (!oldSummaText.isEmpty())
+                        oldSummaPut = Integer.parseInt(oldSummaText);
+                    int newSummaPut = oldSummaPut + diff;
+                    viewHolder.put.setText(newSummaPut+"");
+                }
             }
         });
 

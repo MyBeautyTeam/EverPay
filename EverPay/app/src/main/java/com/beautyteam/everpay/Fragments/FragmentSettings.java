@@ -140,9 +140,10 @@ public class FragmentSettings  extends Fragment
 
     private void setupSwitch() {
         String regId = sPref.getString(Constants.Preference.GCM_REGID, null);
-        if (regId == null) {
-            pushSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_PUSH, true));
-        }
+
+        pushSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_PUSH, true));
+        if (regId == null)
+            pushSwitch.setChecked(false);
         adviceSwitch.setChecked(sPref.getBoolean(Constants.Preference.SETTING_ADVICE, false));
     }
 

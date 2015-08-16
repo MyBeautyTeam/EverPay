@@ -460,7 +460,7 @@ public class MainActivity extends ActionBarActivity
                 replaceAllFragment(FragmentShowBill.getInstance(groupId, billId));
                 break;
             default:
-                replaceAllFragment(FragmentGroupDetails.getInstance(groupId));
+                replaceAllFragment(FragmentViewPager.getInstance());
                 break;
 
         }
