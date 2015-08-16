@@ -268,7 +268,8 @@ public class FragmentCalculation extends Fragment implements
         switch (item.getItemId()) {
             case R.id.notify_vk:
                 indexOfShowcase = 0;
-                show.hide();
+                if (show != null)
+                    show.hide();
                 showDialog();
                 break;
         }

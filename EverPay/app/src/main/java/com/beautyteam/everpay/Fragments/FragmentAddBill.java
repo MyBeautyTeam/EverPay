@@ -434,12 +434,8 @@ public class FragmentAddBill extends Fragment implements
                     else {
                         ((MainActivity)getActivity()).getServiceHelper().editBill(billID);
                     }
-                    /*getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .remove(this)
-                            .commit();*/
                     ((MainActivity)getActivity()).onBackPressed();
-                    //((MainActivity)getActivity()).removeFragment();
+
 
                 }
                 break;
