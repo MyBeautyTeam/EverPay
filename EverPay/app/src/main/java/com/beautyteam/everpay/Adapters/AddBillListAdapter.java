@@ -201,7 +201,7 @@ public class AddBillListAdapter extends BaseAdapter {
         }
 
         BillListItem billListItem = (BillListItem)getItem(position);
-        viewHolder.name.setText(billListItem.name + "");
+        viewHolder.name.setText(billListItem.name.replace(" ", "\n") + "");
 
         viewHolder.textNeed.setText(billListItem.need + "");
 

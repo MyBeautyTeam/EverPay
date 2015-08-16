@@ -3,61 +3,61 @@
 <animation-list
     android:oneshot="false"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:duration="24" android:drawable="@drawable/progress1">
+    <item android:duration="30" android:drawable="@drawable/progress1">
         <scale android:drawable="@drawable/progress1" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24" >
+    <item android:duration="30" >
         <scale android:drawable="@drawable/progress2" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress3" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress3" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress4" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress5" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress6" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress7" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress8" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress9" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress10" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress11" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress12" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress13" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress14" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress15" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress16" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress17" android:scaleGravity="center"/>
     </item>
-    <item android:duration="24">
+    <item android:duration="30">
         <scale android:drawable="@drawable/progress18" android:scaleGravity="center"/>
     </item>
 
