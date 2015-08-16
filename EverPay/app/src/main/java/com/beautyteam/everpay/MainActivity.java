@@ -364,7 +364,17 @@ public class MainActivity extends ActionBarActivity
                 Toast.makeText(this, "Ошибка соединения с интернетом. Попробуйте позже", Toast.LENGTH_SHORT).show();
             }
         } else if(action.equals(SEND_MESSAGE_WITH_IMAGE)) {
+
             if (result == Constants.Result.OK) {
+                int groupId = data.getInt(Constants.IntentParams.GROUP_ID, 0);
+                String prefStr = groupId + NOTIFICATION + FragmentCalculation.getDate();
+
+                int countOfReportToday = sPref.getInt(prefStr, 2);
+                countOfReportToday--;
+                sPref.edit()
+                        .putInt(prefStr, countOfReportToday)
+                        .commit();
+
                 Toast.makeText(this, "Сообщения доставлены", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Ошибка отправки сообщений", Toast.LENGTH_SHORT).show();

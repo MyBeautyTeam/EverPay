@@ -45,6 +45,7 @@ public class VKProcessor extends Processor {
         Bitmap photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         final int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
         VKRequest requestLoadPhoto = VKApi.uploadWallPhotoRequest(new VKUploadImage(photo, VKImageParameters.jpgImage(0.9f)), 0, 60479154);
+        intent.putExtra(Constants.IntentParams.GROUP_ID, groupId);
 
         requestLoadPhoto.executeWithListener(new VKRequest.VKRequestListener() {
             @Override

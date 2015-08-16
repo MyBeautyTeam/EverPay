@@ -185,7 +185,7 @@ public class FragmentCalculation extends Fragment implements
                         case 1: {
                             indexOfShowcase++;
                             show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_summa)));
-                            show.setContentTitle("Число над стрелочкой обозначает сумму долга");
+                            show.setContentTitle("Число над стрелочкой означает сумму долга");
                             show.show();
                             break;
                         }
@@ -199,7 +199,7 @@ public class FragmentCalculation extends Fragment implements
                         case 3: {
                             indexOfShowcase++;
                             show.setTarget(new ViewTarget(R.id.notify_vk, getActivity()));
-                            show.setContentTitle("Чтобы оповестить пользователей - нажмите на следующую кнопку");
+                            show.setContentTitle("Нажмите, чтобы оповестить пользователей");
                             show.show();
                             sPref.edit()
                                     .putBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, true)
@@ -359,7 +359,7 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private void showDialog(){
-        String names[] = {"Личное сообщение vk.com", "Оповещение в приложении"};
+        String names[] = {"Личное сообщение vk.com", "В приложении (анононимно)"};
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_list);
@@ -378,15 +378,6 @@ public class FragmentCalculation extends Fragment implements
                 if (sPref.getInt(prefStr, 2) < 1) {
                     Toast.makeText(getActivity(), "Не больше двух оповещений в день :(", Toast.LENGTH_SHORT).show();
                     return;
-                } else {
-                        /*
-                        Перенести в onRequestEnds
-                         */
-                    int countOfReportToday = sPref.getInt(prefStr, 2);
-                    countOfReportToday--;
-                    sPref.edit()
-                            .putInt(prefStr, countOfReportToday)
-                            .commit();
                 }
 
                 if (position == 0) {
