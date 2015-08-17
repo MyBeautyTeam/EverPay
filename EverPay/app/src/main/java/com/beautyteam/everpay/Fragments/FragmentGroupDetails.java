@@ -243,18 +243,30 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
         return new CursorLoader(getActivity(), EverContentProvider.HISTORY_CONTENT_URI, PROJECTION, History.GROUP_ID + "=" + groupId, null, History.ACTION_DATETIME + " asc");
     }
 
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 
         switch (loader.getId()) {
             case LOADER_ID:
                 /*
                 Проверить, не падает ли из-за возможно неинициализированной mainActivity;
                  */
-                mAdapter = new GroupDetailsAdapter(getActivity(), cursor, 0, mainActivity, this);
+                mAdapter = new GroupDetailsAdapter(getActivity(), c, 0, mainActivity, this);
                 historyList.setAdapter(mAdapter);
 
                 int error = historyList.getHeaderViewsCount() + 1; // "Погрещность" на header и footer
-                historyList.setSelection(cursor.getCount() - previousCount + error); // скролим до предыдущей записи, с учетом "еще"
+                historyList.setSelection(c.getCount() - previousCount + error); // скролим до предыдущей записи, с учетом "еще"
+
+                boolean isFoundEnd = false;
+                if (c.moveToFirst() && c.getCount() != 0) {
+                    while (!c.isAfterLast()) {
+                        if (c.getString(c.getColumnIndex(History.TEXT_DESCRIPTION)).contains("оздал")) {
+                            isFoundEnd = true;
+                        }
+                        c.moveToNext();
+                    }
+                }
+                setHeaderVisible(!isFoundEnd);
+
                 break;
         }
     }
@@ -273,7 +285,8 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
             calcBtn.setVisibility(View.VISIBLE);
             if (result == Constants.Result.OK) {
                 downloadedGroupSet.add(groupId); // Ставим "флаг", что группа загружена
-                setHeaderVisible(!data.getBoolean(Constants.IntentParams.IS_ENDS)); // Если догузили до конца - убираем header
+                boolean isFullLoaded = data.getBoolean(Constants.IntentParams.IS_ENDS);
+                setHeaderVisible(!isFullLoaded); // Если догузили до конца - убираем header
 
                 if (data.getBoolean(Constants.IntentParams.IS_MORE_LOAD)) {
                     //historyList.setSelection(previousCount);

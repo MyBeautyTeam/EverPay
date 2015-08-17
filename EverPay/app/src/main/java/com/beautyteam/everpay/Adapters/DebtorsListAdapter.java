@@ -47,13 +47,13 @@ public class DebtorsListAdapter extends CursorAdapter {
         super(context, c, flags);
         this.context=context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        new Handler().post(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!c.isClosed()) // Без этого падает переход на дроверу с экрана расчета
                     loadAvatarsFromVK(c);
             }
-        });
+        }, 150);
     }
 
 
