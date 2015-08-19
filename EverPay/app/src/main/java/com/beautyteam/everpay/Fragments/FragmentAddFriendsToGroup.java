@@ -1,8 +1,5 @@
 package com.beautyteam.everpay.Fragments;
 
-import android.app.SearchManager;
-import android.content.ContentUris;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +9,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
-import android.widget.Toast;
 
 import com.beautyteam.everpay.Adapters.AddFriendsToGroupAdapter;
 import com.beautyteam.everpay.Constants;
@@ -49,6 +44,8 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
     private Button createBtn;
     private String mCurFilter;
     private static final String GROUP_ID = "GROUP_ID";
+    private ArrayList<User> finArrayList;
+    private ArrayList<User> userList;
 
     public static FragmentAddFriendsToGroup getInstance(ArrayList<User> arrayList) {
         FragmentAddFriendsToGroup fragmentAddFriendsToGroup = new FragmentAddFriendsToGroup();
@@ -60,6 +57,8 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        finArrayList = getArguments().getParcelableArrayList(FRIENDS);
+        userList = new ArrayList<User>();
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
         return inflater.inflate(R.layout.fragment_add_friends, null);
@@ -151,8 +150,28 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
                     friendsList.setAdapter(mAdapter);
                     break;
             }
-        } else
+        } else {
+//            finArrayList = mAdapter.getArrayList();
+//            if(finArrayList.size() != 0 && userList.size() != 0) {
+//                if (finArrayList.get(finArrayList.size() - 1).getId() != userList.get(userList.size() - 1).getId()) {
+//                    for (int i = 0; i < finArrayList.size(); i++)
+//                        userList.add(finArrayList.get(i));
+//                }
+//            }
+//            else {
+            finArrayList = mAdapter.getArrayList();
+                for (int i = 0; i < finArrayList.size(); i++) {
+                    boolean flag = false;
+                    for (int j = 0; j < userList.size(); j++) {
+                        if (finArrayList.get(i).getId() == userList.get(j).getId())
+                            flag = true;
+                    }
+                    if(flag == false)
+                        userList.add(finArrayList.get(i));
+                }
+
             mAdapter.swapCursor(cursor);
+        }
     }
 
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -162,8 +181,16 @@ public class FragmentAddFriendsToGroup extends Fragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        ArrayList<User> finArrayList = getArguments().getParcelableArrayList(FRIENDS);
         finArrayList = mAdapter.getArrayList();
+        for (int i = 0; i < userList.size(); i++) {
+            boolean flag = false;
+            for (int j = 0; j < finArrayList.size(); j++) {
+                if (userList.get(i).getId() == finArrayList.get(j).getId())
+                    flag = true;
+            }
+            if(flag == false)
+                finArrayList.add(userList.get(i));
+        }
         switch (v.getId()) {
             case R.id.save_btn_friends_in_group:
                 ((MainActivity) getActivity()).removeFragment();

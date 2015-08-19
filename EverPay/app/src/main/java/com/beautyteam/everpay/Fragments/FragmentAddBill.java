@@ -236,7 +236,7 @@ public class FragmentAddBill extends Fragment implements
         params.setMargins(0, 0, 60, 60);
         show = new ShowcaseView.Builder(getActivity())
                 .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
-                .setContentTitle("Если сумма разбита поровну между участниками - вырерите ПОРОВНУ,\nиначе - НЕ ПОРОВНУ")
+                .setContentTitle("Если сумма разбита поровну между участниками - выберите ПОРОВНУ,\nиначе - НЕ ПОРОВНУ")
                 .setScaleMultiplier(1.5f)
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
