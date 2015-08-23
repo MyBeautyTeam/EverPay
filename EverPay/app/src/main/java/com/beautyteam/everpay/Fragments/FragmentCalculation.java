@@ -166,7 +166,7 @@ public class FragmentCalculation extends Fragment implements
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.setMargins(0, 0, 70, 70);
-            show = new ShowcaseView.Builder(getActivity())
+            show = new ShowcaseView.Builder(getActivity(), true)
                 .setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_first_name)))
                 .setContentTitle("Чтобы посмотреть аватарку пользователя - нажмите на имя пользователя")
 
