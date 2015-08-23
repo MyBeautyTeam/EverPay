@@ -234,10 +234,10 @@ public class FragmentAddBill extends Fragment implements
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         params.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER);
         params.setMargins(0, 0, 60, 60);
-        show = new ShowcaseView.Builder(getActivity())
+        show = new ShowcaseView.Builder(getActivity(), false)
                 .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
                 .setContentTitle("Если сумма разбита поровну между участниками - выберите ПОРОВНУ,\nиначе - НЕ ПОРОВНУ")
-                .setScaleMultiplier(1.5f)
+                .setScaleMultiplier(1f)
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
         show.setButtonPosition(params);
@@ -529,7 +529,7 @@ public class FragmentAddBill extends Fragment implements
                     indexOfShowcase++;
                     show.hide();
 
-                    show =  new ShowcaseView.Builder(getActivity())
+                    show =  new ShowcaseView.Builder(getActivity(), true)
                             .setTarget(new ViewTarget(getView().findViewById(R.id.add_bill_need_summa_edit)))
                             .setContentTitle("Введите общую сумму счета")
                             .setStyle(R.style.CustomShowcaseTheme2)
@@ -551,7 +551,7 @@ public class FragmentAddBill extends Fragment implements
                         show.hide();
                         View put = getViewByPosition(1).findViewById(R.id.add_bill_list_put_parrent);
 
-                        show =  new ShowcaseView.Builder(getActivity())
+                        show =  new ShowcaseView.Builder(getActivity(), true)
                                 .setTarget(new ViewTarget(put))
                                 .setContentTitle("Введите сумму, которую внес участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
@@ -569,7 +569,7 @@ public class FragmentAddBill extends Fragment implements
                     else {
                         indexOfShowcase++;
                         show.hide();
-                        show = new ShowcaseView.Builder(getActivity())
+                        show = new ShowcaseView.Builder(getActivity(), true)
                                 .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
                                 .setContentTitle("Если пользователь не участвует в счете,\nнажмите на крестик")
                                 .setStyle(R.style.CustomShowcaseTheme2)
@@ -591,7 +591,7 @@ public class FragmentAddBill extends Fragment implements
                     else {
                         indexOfShowcase++;
                         show.hide();
-                        show = new ShowcaseView.Builder(getActivity())
+                        show = new ShowcaseView.Builder(getActivity(), true)
                                 .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_need_text)))
                                 .setContentTitle("Введите сумму, которую потратил участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
@@ -609,7 +609,7 @@ public class FragmentAddBill extends Fragment implements
                         indexOfShowcase++;
                         show.hide();
                         View put = getViewByPosition(1).findViewById(R.id.add_bill_list_put_parrent);
-                        show = new ShowcaseView.Builder(getActivity())
+                        show = new ShowcaseView.Builder(getActivity(), true)
                                 .setTarget(new ViewTarget(put))
                                 .setContentTitle("Введите сумму, которую внес участник")
                                 .setStyle(R.style.CustomShowcaseTheme2)
@@ -625,7 +625,7 @@ public class FragmentAddBill extends Fragment implements
                         indexOfShowcase = 0;
                     else {
                         show.hide();
-                        show = new ShowcaseView.Builder(getActivity())
+                        show = new ShowcaseView.Builder(getActivity(), true)
                                 .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
                                 .setContentTitle("Если пользователь не участвует в счете,\nнажмите на крестик")
                                 .setStyle(R.style.CustomShowcaseTheme2)

@@ -79,11 +79,13 @@ public class ShowcaseView extends RelativeLayout
     private boolean hasManualPostion = false;
     private int xPosition, yPosition, width;
 
-    protected ShowcaseView(Context context, boolean newStyle) {
-        this(context, null, R.styleable.CustomTheme_showcaseViewStyle, newStyle);
+   // private boolean flag = false;
+
+    protected ShowcaseView(Context context, boolean newStyle, boolean flag) {
+        this(context, null, R.styleable.CustomTheme_showcaseViewStyle, newStyle, flag);
     }
 
-    protected ShowcaseView(Context context, AttributeSet attrs, int defStyle, boolean newStyle) {
+    protected ShowcaseView(Context context, AttributeSet attrs, int defStyle, boolean newStyle, boolean flag) {
         super(context, attrs, defStyle);
 
         ApiUtils apiUtils = new ApiUtils();
@@ -106,9 +108,9 @@ public class ShowcaseView extends RelativeLayout
 
         mEndButton = (Button) LayoutInflater.from(context).inflate(R.layout.showcase_button, null);
         if (newStyle) {
-            showcaseDrawer = new NewShowcaseDrawer(getResources());
+            showcaseDrawer = new NewShowcaseDrawer(getResources(), flag);
         } else {
-            showcaseDrawer = new StandardShowcaseDrawer(getResources());
+            showcaseDrawer = new StandardShowcaseDrawer(getResources(), flag);
         }
         textDrawer = new TextDrawer(getResources(), showcaseAreaCalculator, getContext());
 
@@ -394,13 +396,13 @@ public class ShowcaseView extends RelativeLayout
         final ShowcaseView showcaseView;
         private final Activity activity;
 
-        public Builder(Activity activity) {
-            this(activity, false);
+        public Builder(Activity activity, boolean flag) {
+            this(activity, false, flag);
         }
 
-        public Builder(Activity activity, boolean useNewStyle) {
+        public Builder(Activity activity, boolean useNewStyle, boolean flag) {
             this.activity = activity;
-            this.showcaseView = new ShowcaseView(activity, useNewStyle);
+            this.showcaseView = new ShowcaseView(activity, useNewStyle, flag);
             this.showcaseView.setTarget(Target.NONE);
         }
 

@@ -32,7 +32,7 @@ class StandardShowcaseDrawer implements ShowcaseDrawer {
     private final float showcaseRadius;
     protected int backgroundColour;
 
-    public StandardShowcaseDrawer(Resources resources) {
+    public StandardShowcaseDrawer(Resources resources, boolean flag) {
         PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY);
         eraserPaint = new Paint();
         eraserPaint.setColor(0xFFFFFF);
@@ -41,7 +41,10 @@ class StandardShowcaseDrawer implements ShowcaseDrawer {
         eraserPaint.setAntiAlias(true);
         basicPaint = new Paint();
         showcaseRadius = resources.getDimension(R.dimen.showcase_radius);
-        showcaseDrawable = resources.getDrawable(R.drawable.cling_300dp);
+        if (flag == true)
+            showcaseDrawable = resources.getDrawable(R.drawable.cling_300dp);
+        else
+            showcaseDrawable = resources.getDrawable(R.drawable.cling_bleached);
     }
 
     @Override

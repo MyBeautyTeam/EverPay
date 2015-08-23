@@ -123,7 +123,7 @@ public class FragmentGroups extends Fragment implements
     }
 
     private void demotour() {
-        show = new ShowcaseView.Builder(getActivity())
+        show = new ShowcaseView.Builder(getActivity(),true)
                 .setTarget(new ViewTarget(R.id.add_group_button, getActivity()))
                 .setContentTitle("Кнопка для создания новой группы")
                 .build();
@@ -131,7 +131,7 @@ public class FragmentGroups extends Fragment implements
         show.setOnShowcaseEventListener(new OnShowcaseEventListener() {
             @Override
             public void onShowcaseViewHide(ShowcaseView showcaseView) {
-                show2 = new ShowcaseView.Builder(getActivity())
+                show2 = new ShowcaseView.Builder(getActivity(),true)
                         .setTarget(new ViewTarget(R.id.add_group_tlb, getActivity()))
                         .setContentTitle("Кнопка для создания новой группы")
                         .build();

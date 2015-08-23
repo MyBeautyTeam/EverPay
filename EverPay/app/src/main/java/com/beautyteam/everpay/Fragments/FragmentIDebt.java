@@ -114,7 +114,7 @@ public class FragmentIDebt extends Fragment implements
     }
 
     private void demotour() {
-        show = new ShowcaseView.Builder(getActivity())
+        show = new ShowcaseView.Builder(getActivity(),true)
                 .setTarget(new ViewTarget(R.id.add_group_tlb, getActivity()))
                 .setContentTitle("Здравствуйте")
                 .setContentText("Этот экран отображает," +
