@@ -64,11 +64,11 @@ public class HistoryGenerator {
         String max = maxCursor.getString(0);
 
         int length = max.length();
-        String lastChar = max.substring(length-2);
+        String lastChar = max.substring(length-demo2);
         int lastDigit = Integer.parseInt(lastChar);
         lastDigit++;
 
-        max = max.substring(0, length-2) + lastDigit;
+        max = max.substring(0, length-demo2) + lastDigit;
         return max;
         */
 

@@ -9,6 +9,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.CalculationDetails;
+import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 
 /**
@@ -36,13 +37,14 @@ public class CalcDetailsAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         String billTitle = cursor.getString(cursor.getColumnIndex(CalculationDetails.BILL_TITLE));
         int need = cursor.getInt(cursor.getColumnIndex(CalculationDetails.DEBT_SUM));
         int invest = cursor.getInt(cursor.getColumnIndex(CalculationDetails.INVEST_SUM));
         int balance = cursor.getInt(cursor.getColumnIndex(CalculationDetails.BALANCE));
+
 
         holder.billTextView.setText(billTitle);
         holder.needTextView.setText(need+"");
@@ -57,8 +59,6 @@ public class CalcDetailsAdapter extends CursorAdapter {
         }
 
         holder.balanceTextView.setText(balanceStr);
-
-
 
     }
 

@@ -16,11 +16,12 @@ public class DemoPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+
         return FragmentDemo.getInstance(position);
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 1;
     }
 }

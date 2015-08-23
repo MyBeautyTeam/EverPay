@@ -327,7 +327,7 @@ public class PostProcessor extends Processor {
 
 
         }
-        else {
+        else
             if (REGISTER_GCM.equals(action)) {
                 String regID = intent.getStringExtra(Constants.IntentParams.GCM_ID);
                 try {
@@ -346,7 +346,26 @@ public class PostProcessor extends Processor {
 
 
             }
-        }
+        else
+            if (PUSH_IN_APP.equals(action)) {
+                int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+                try {
+                    JSONObject paramsJSON = new JSONObject();
+                    paramsJSON.put("users_id", userId);
+                    paramsJSON.put("access_token", accessToken);
+                    paramsJSON.put("groups_id", groupId);
+                    String response = urlConnectionPost(Constants.URL.PUSH_IN_APP, paramsJSON.toString());
+
+                    if (response != null && response.contains("200")) {
+                        result = Constants.Result.OK;
+
+                    } else {
+                        result = Constants.Result.ERROR;
+                    }
+                } catch (JSONException e) {
+                    result = Constants.Result.ERROR;
+                }
+            }
         service.onRequestEnd(result, intent);
     }
 

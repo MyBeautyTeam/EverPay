@@ -272,6 +272,13 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
 
     public void sendNotification(int groupId) {
 
+        Intent intentService = new Intent(activity, Service.class);
+        intentService.setAction(Constants.Action.PUSH_IN_APP);
+
+        intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+        intentService.putExtra(Constants.RECEIVER, mReceiver);
+
+        activity.startService(intentService);
     }
 
     public void sendBugReport(String theme, String msg) {

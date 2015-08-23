@@ -13,6 +13,7 @@ public class Constants {
 
     public class NOTIFICATION_ACTION {
         public final static int ADD_GROUPS = 0;
+        public final static int EDIT_GROUP = 1;
         public final static int ADD_MEMBERS = 2;
         public final static int REMOVE_MEMBERS = 3;
         public final static int ADD_BILLS = 4;
@@ -49,6 +50,8 @@ public class Constants {
 
         public final static String REGISTER_GCM = BASE_URL + "gcm/register/";
         public final static String UNREGISTER_GCM = BASE_URL + "gcm/unregister/";
+
+        public final static String PUSH_IN_APP = BASE_URL + "debts/remind/";
     }
 
     public class Action {
@@ -87,6 +90,8 @@ public class Constants {
         public final static String SEND_MESSAGE_WITH_IMAGE = "IMG_MESSAGE";
 
         public final static String BUG_REPORT = "BUG_REPORT";
+
+        public final static String PUSH_IN_APP = "PUSH_IN_APP";
     }
 
     public class Titles {

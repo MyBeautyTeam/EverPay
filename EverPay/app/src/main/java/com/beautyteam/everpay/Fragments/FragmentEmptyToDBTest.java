@@ -110,7 +110,7 @@ public class FragmentEmptyToDBTest extends Fragment implements LoaderManager.Loa
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = Uri.withAppendedPath(EverContentProvider.BILL_DETAILS_CONTENT_URI, "bill");
-        uri = Uri.withAppendedPath(uri, "3");
+        uri = Uri.withAppendedPath(uri, "demo3");
         return new CursorLoader(getActivity(), uri, PROJECTION, null, null, null);
     }
 

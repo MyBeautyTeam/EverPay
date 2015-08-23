@@ -290,13 +290,13 @@ public class FragmentGroupDetails extends Fragment implements View.OnClickListen
 
                 if (data.getBoolean(Constants.IntentParams.IS_MORE_LOAD)) {
                     //historyList.setSelection(previousCount);
-                    //historyList.smoothScrollToPositionFromTop(20, previousCount/2, 0);
+                    //historyList.smoothScrollToPositionFromTop(20, previousCount/demo2, 0);
                 }
 
             } else {
                 setHeaderVisible(false);
                 emptyText.setText("Произошла ошибка =(\n Проверьте соединение с интернетом");
-                Toast.makeText(getActivity(), "Неудалось загрузить новые данные", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Ошибка соединение с интернетом. Но Вы все равно можете добавить счет", Toast.LENGTH_SHORT).show();
 
             }
             refreshLayout.setRefreshing(false);

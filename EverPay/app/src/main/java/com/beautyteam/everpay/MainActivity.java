@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -333,7 +334,7 @@ public class MainActivity extends ActionBarActivity
                 Editor editor = sPref.edit();
                 editor.putInt(Constants.Preference.USER_ID, data.getInt(USER_ID));
                 editor.putInt(Constants.Preference.USER_ID_VK, data.getInt(USER_ID_VK));
-                editor.putString(Constants.Preference.ACCESS_TOKEN, data.getString(ACCESS_TOKEN, "5"));
+                editor.putString(Constants.Preference.ACCESS_TOKEN, data.getString(ACCESS_TOKEN, "demo5"));
                 editor.putString(USER_NAME, data.getString(USER_NAME, "Самый Красивый"));
                 editor.putString(IMG_URL, data.getString(IMG_URL, "IMG"));
                 editor.putInt(MALE, data.getInt(Constants.IntentParams.MALE, 0));
@@ -367,7 +368,7 @@ public class MainActivity extends ActionBarActivity
 
             if (result == Constants.Result.OK) {
                 int groupId = data.getInt(Constants.IntentParams.GROUP_ID, 0);
-                String prefStr = groupId + NOTIFICATION + FragmentCalculation.getDate();
+                String prefStr = groupId + FragmentCalculation.NOTIFICATION + FragmentCalculation.getDate();
 
                 int countOfReportToday = sPref.getInt(prefStr, 2);
                 countOfReportToday--;
@@ -379,8 +380,21 @@ public class MainActivity extends ActionBarActivity
             } else {
                 Toast.makeText(this, "Ошибка отправки сообщений", Toast.LENGTH_SHORT).show();
             }
-        } else if (action.equals(ADD_MEMBER_TO_GROUP)) {
+        } else if (action.equals(PUSH_IN_APP)) {
+            if (result == Constants.Result.OK) {
+                int groupId = data.getInt(Constants.IntentParams.GROUP_ID, 0);
+                String prefStr = groupId + FragmentCalculation.NOTIFICATION + FragmentCalculation.getDate();
 
+                int countOfReportToday = sPref.getInt(prefStr, 2);
+                countOfReportToday--;
+                sPref.edit()
+                        .putInt(prefStr, countOfReportToday)
+                        .commit();
+
+                Toast.makeText(this, "Сообщения доставлены", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Ошибка отправки сообщений", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }
@@ -460,6 +474,7 @@ public class MainActivity extends ActionBarActivity
                 replaceAllFragment(FragmentCalculation.getInstance(groupId));
                 break;
             case Constants.NOTIFICATION_ACTION.EDIT_DEBTS:
+            case Constants.NOTIFICATION_ACTION.EDIT_GROUP:
             case Constants.NOTIFICATION_ACTION.ADD_GROUPS:
             case Constants.NOTIFICATION_ACTION.ADD_MEMBERS:
                 replaceAllFragment(FragmentGroupDetails.getInstance(groupId));
@@ -511,7 +526,9 @@ public class MainActivity extends ActionBarActivity
 
     public void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        View focus = getCurrentFocus();
+        if (focus != null)
+            inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
     }
 
 }

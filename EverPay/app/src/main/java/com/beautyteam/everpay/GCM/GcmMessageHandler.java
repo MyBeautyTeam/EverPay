@@ -66,7 +66,7 @@ public class GcmMessageHandler extends IntentService {
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
-        //sendNotif("Everpay", "asdasdas sadsd adas asdask jsfl ПАША ОЧЕНЬ ХОРОШИЙ МАЛЬЧИК!!! ЫВФЫДВ ООООЧЕНЬ!", 1,2,3);
+        //sendNotif("Everpay", "asdasdas sadsd adas asdask jsfl ПАША ОЧЕНЬ ХОРОШИЙ МАЛЬЧИК!!! ЫВФЫДВ ООООЧЕНЬ!", 1,demo2,demo3);
 
     }
 

@@ -1,6 +1,8 @@
 package com.beautyteam.everpay;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,14 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.flurry.android.FlurryAgent;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
@@ -41,6 +38,7 @@ public class LoginActivity extends Activity {
 
     private final static int ID = 2;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +47,9 @@ public class LoginActivity extends Activity {
         //205932A2E24B6EF94D38AEB2A9F7CC920E2B84D4 - проверка отпечатка Сертификата
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
         VKSdk.initialize(sdkListener, VK_APP_ID, VKAccessToken.tokenFromSharedPreferences(this, sTokenKey));
+
+
+
 
         if (!isPreviousCorrectEnds()) { // Проверка, что предыдущая оперция входа выполнилась
             return;
@@ -85,7 +86,8 @@ public class LoginActivity extends Activity {
                 FlurryAgent.logEvent("Фрагмент авторизации");
                 Log.d("vk", " no wake up");
                 loginButton.setVisibility(View.VISIBLE);
-            } else {
+            }
+            else {
                 Intent intentStartDemo = new Intent(LoginActivity.this, DemoActivity.class);
                 startActivity(intentStartDemo);
             }
@@ -228,6 +230,7 @@ public class LoginActivity extends Activity {
         getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, null, null);
 
     }
+
 
 
 }

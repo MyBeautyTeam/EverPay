@@ -91,7 +91,7 @@ public class FragmentCalculation extends Fragment implements
     private TextView emptyText;
     private String screenName = "Расчет";
 
-    private final String NOTIFICATION = "NOTIF";
+    public static final String NOTIFICATION = "NOTIF";
     private ProgressDialog progressDialog;
 
 
@@ -378,7 +378,8 @@ public class FragmentCalculation extends Fragment implements
                 dialog.dismiss();
 
                 String prefStr = groupId + NOTIFICATION + getDate();
-                if (sPref.getInt(prefStr, 2) < 1) {
+                int countOfNotif = sPref.getInt(prefStr, 2);
+                if (countOfNotif < 1) {
                     Toast.makeText(getActivity(), "Не больше двух оповещений в день :(", Toast.LENGTH_SHORT).show();
                     return;
                 }

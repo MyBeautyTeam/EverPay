@@ -31,7 +31,8 @@ public class ProcessorFactory {
             CALCULATE.equals(action) ||
             CREATE_USER.equals(action) ||
             CREATE_AND_ADD_USER.equals(action) ||
-            REGISTER_GCM.equals(action)
+            REGISTER_GCM.equals(action) ||
+            PUSH_IN_APP.equals(action)
             ) {
             return new PostProcessor(context);
         } else
