@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="4dp"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Выход"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#b7000000"
+            android:layout_marginBottom="16dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Вы действительно хотите выйти? Все неотправленные счета будут потеряны."
+            android:textSize="16dp"
+            android:textColor="#b7000000"
+            android:layout_marginBottom="16dp"
+
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right">
+            <Button
+                android:id="@+id/dialog_btn_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/on_btn_pressed_selector"
+                android:textColor="@color/primary"
+                android:padding="3dp"
+                android:text="Выйти"
+                />
+            <Button
+                android:id="@+id/dialog_btn_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/on_btn_pressed_selector"
+                android:textColor="@color/primary"
+                android:padding="3dp"
+                android:layout_marginLeft="4dp"
+                android:text="Отмена"
+                />
+        </LinearLayout>
+
+    <!--<TextView
+        android:id="@+id/dialog_txt_dia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="Вы уверены, что хотите удалить счет?"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:textStyle="bold"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#3E80B4"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/dialog_btn_yes"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/dialog_btn"
+            android:clickable="true"
+            android:text="Да"
+            android:textColor="@color/primary"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/dialog_btn_no"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/dialog_btn"
+            android:clickable="true"
+            android:text="Нет"
+            android:textColor="@color/primary"
+            android:textStyle="bold" />
+    </LinearLayout>
+-->
+</LinearLayout>

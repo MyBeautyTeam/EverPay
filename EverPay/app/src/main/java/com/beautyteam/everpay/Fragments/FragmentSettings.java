@@ -14,11 +14,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Constants;
+import com.beautyteam.everpay.Dialogs.DialogWindow;
+import com.beautyteam.everpay.LoginActivity;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.flurry.android.FlurryAgent;
@@ -45,6 +48,7 @@ public class FragmentSettings  extends Fragment
 
     private SharedPreferences sPref;
     private ProgressDialog progressDialog;
+    private DialogWindow dialogWindow;
 
 
     @Override
@@ -101,12 +105,7 @@ public class FragmentSettings  extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.quit_button:
-                VKSdk.logout();
-
-                ((MainActivity)getActivity()).clearData();
-
-                getActivity().finish();
-
+                showDialog();
                 break;
 
             case R.id.bug_report_btn:
@@ -164,6 +163,29 @@ public class FragmentSettings  extends Fragment
                 break;
         }
 
+    }
+
+    private void showDialog() {
+        dialogWindow = new DialogWindow(getActivity(),R.layout.dialog_quit);
+        dialogWindow.show();
+        Window window = dialogWindow.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialogWindow.setOnYesClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogWindow.dismiss();
+                FlurryAgent.logEvent("Выход");
+
+                VKSdk.logout();
+
+                ((MainActivity)getActivity()).clearData();
+
+                Intent intentLogin = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intentLogin);
+                getActivity().finish();
+
+            }
+        });
     }
 
 
