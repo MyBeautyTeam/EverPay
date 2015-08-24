@@ -132,7 +132,7 @@ public class FragmentCalculation extends Fragment implements
         detailsBtn = (Button) view.findViewById(R.id.calc_details_btn);
         detailsBtn.setOnClickListener(this);
 
-        if (!sPref.getBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, false) && new Random().nextInt() % 3 == 0) {
+        if (sPref.getBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, false) && new Random().nextInt() % 3 == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setMessage("Поставьте нам оценку! Для Вас пустяк, а для нас это очень важно!")
                     .setIcon(R.drawable.group_icon)

@@ -119,7 +119,7 @@ public class FragmentSettings  extends Fragment
             case R.id.evaluate_btn:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse
-                        ("https://play.google.com/store/apps/details?id=com.scimob.ninetyfour.percent"));
+                        ("https://play.google.com/store/apps/details?id=com.beautyteam.everpay"));
                 startActivity(intent);
                 break;
         }

@@ -36,15 +36,29 @@ public class DemoActivity extends android.support.v4.app.FragmentActivity {
 
         setContentView(R.layout.activity_demo);
 
-        viewPager = (ViewPager)findViewById(R.id.demo_view_pager);
+        //===========
+        sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
+        Button btn = (Button)findViewById(R.id.demo_next_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sPref.edit()
+                        .putBoolean(Constants.Preference.IS_DEMO_REVIEWED, true)
+                        .commit();
+                finish();
+            }
+        });
+        //============
+
+        /*viewPager = (ViewPager)findViewById(R.id.demo_view_pager);
 
         demoAdapter = new DemoPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(demoAdapter);
 
         sPref = getSharedPreferences(SHARED_PREFERENCES, Context.MODE_MULTI_PROCESS);
 
-        /*TODO
-        Запретить возможность прокрутки пальцем*/
+        *//*TODO
+        Запретить возможность прокрутки пальцем*//*
 
         final Button btn = (Button)findViewById(R.id.demo_next_btn);
 
@@ -89,7 +103,7 @@ public class DemoActivity extends android.support.v4.app.FragmentActivity {
                 }
             }
         });
-
+*/
     }
 
 
