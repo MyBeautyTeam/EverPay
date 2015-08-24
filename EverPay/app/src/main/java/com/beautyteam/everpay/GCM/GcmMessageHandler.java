@@ -50,16 +50,20 @@ public class GcmMessageHandler extends IntentService {
 
         } else if (action.equals("com.google.android.c2dm.intent.RECEIVE")) {
             if (sPref.getBoolean(Constants.Preference.SETTING_PUSH, true)) {
-                String msg = intent.getStringExtra("text");
-                int actionId = Integer.parseInt(intent.getStringExtra("action"));
-                int groupId = Integer.parseInt(intent.getStringExtra("groups_id"));
-                String billidStr = intent.getStringExtra("bills_id");
-                int billId = 0;
-                if (billidStr != null)
-                    billId = Integer.parseInt(billidStr);
-                switchOnScreen();
 
-                sendNotif("EverPay", msg, actionId, groupId, billId);
+                String msg = intent.getStringExtra("text");
+                if (msg != null) {
+
+                    int actionId = Integer.parseInt(intent.getStringExtra("action"));
+                    int groupId = Integer.parseInt(intent.getStringExtra("groups_id"));
+                    String billidStr = intent.getStringExtra("bills_id");
+                    int billId = 0;
+                    if (billidStr != null)
+                        billId = Integer.parseInt(billidStr);
+                    switchOnScreen();
+
+                    sendNotif("EverPay", msg, actionId, groupId, billId);
+                }
             }
         }
 

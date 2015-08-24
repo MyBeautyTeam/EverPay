@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -50,6 +51,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -223,6 +225,7 @@ public class FragmentAddBill extends Fragment implements
                 public void run() {
                     demotour();
                 }
+
             });
         }
     }
@@ -233,7 +236,7 @@ public class FragmentAddBill extends Fragment implements
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         params.addRule(RelativeLayout.TEXT_ALIGNMENT_CENTER);
-        params.setMargins(0, 0, 60, 60);
+        params.setMargins(0, 0, 60, 120);
         show = new ShowcaseView.Builder(getActivity(), false)
                 .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
                 .setContentTitle("Если сумма разбита поровну между участниками - выберите ПОРОВНУ,\nиначе - НЕ ПОРОВНУ")

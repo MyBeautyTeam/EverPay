@@ -1,5 +1,6 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -147,13 +148,7 @@ public class FragmentCalculation extends Fragment implements
 
 
         setupEmptyList(view);
-        if (!sPref.getBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, false)||sPref.getBoolean(Constants.Preference.SETTING_ADVICE, false))
-            view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                demotour();
-            }
-        },1000);
+
     }
 
     private void demotour() {
@@ -165,7 +160,7 @@ public class FragmentCalculation extends Fragment implements
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.setMargins(0, 0, 70, 70);
+            params.setMargins(0, 0, 70, 120);
             show = new ShowcaseView.Builder(getActivity(), true)
                 .setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.item_calc_first_name)))
                 .setContentTitle("Чтобы посмотреть аватарку пользователя - нажмите на имя пользователя")
@@ -181,33 +176,35 @@ public class FragmentCalculation extends Fragment implements
 
                 @Override
                 public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-                    switch (indexOfShowcase) {
-                        case 1: {
-                            indexOfShowcase++;
-                            show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_summa)));
-                            show.setContentTitle("Число над стрелочкой означает сумму долга");
-                            show.show();
-                            break;
+                    MainActivity activity = ((MainActivity) getActivity());
+                    String title = activity.getMyTitle();
+                    if (title.equals(Constants.Titles.CALCULATION))
+                        switch (indexOfShowcase) {
+                            case 1: {
+                                indexOfShowcase++;
+                                show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_summa)));
+                                show.setContentTitle("Число над стрелочкой означает сумму долга");
+                                show.show();
+                                break;
+                            }
+                            case 2: {
+                                indexOfShowcase++;
+                                show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_checkbox)));
+                                show.setContentTitle("Если долг возвращен - поставьте галочку");
+                                show.show();
+                                break;
+                            }
+                            case 3: {
+                                indexOfShowcase++;
+                                show.setTarget(new ViewTarget(R.id.notify_vk, getActivity()));
+                                show.setContentTitle("Нажмите, чтобы оповестить пользователей");
+                                show.show();
+                                sPref.edit()
+                                        .putBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, true)
+                                        .commit();
+                                break;
+                            }
                         }
-                        case 2: {
-                            indexOfShowcase++;
-                            show.setTarget(new ViewTarget(calcList.getChildAt(0).findViewById(R.id.calc_checkbox)));
-                            show.setContentTitle("Если долг возвращен - поставьте галочку");
-                            show.show();
-                            break;
-                        }
-                        case 3: {
-                            indexOfShowcase++;
-                            show.setTarget(new ViewTarget(R.id.notify_vk, getActivity()));
-                            show.setContentTitle("Нажмите, чтобы оповестить пользователей");
-                            show.show();
-                            sPref.edit()
-                                    .putBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, true)
-                                    .commit();
-                            break;
-                        }
-
-                    }
                 }
 
                 @Override
@@ -296,7 +293,7 @@ public class FragmentCalculation extends Fragment implements
         switch (view.getId()) {
             case R.id.calc_ok_btn:
                 indexOfShowcase = 0;
-                if (show!=null)
+                if (show != null)
                     show.hide();
                 HashMap<String, Integer> mapIdToIsDeleted = mAdapter.getMapIdToIsdeleted();
                 Iterator it = mapIdToIsDeleted.entrySet().iterator();
@@ -334,6 +331,14 @@ public class FragmentCalculation extends Fragment implements
     public void onRequestEnd(int result, Bundle data) {
         String action = data.getString(ACTION);
         if (action.equals(CALCULATE)) {
+
+            if (!sPref.getBoolean(Constants.Preference.WAS_CALCULATION_ADVICE_REVIEWED, false)||sPref.getBoolean(Constants.Preference.SETTING_ADVICE, false))
+                    getView().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            demotour();
+                        }
+                    }, 1000);
             emptyText.setText("Расчет пуст \nЧтобы здесь что-то появилось, нужно добавить счет");
             loadingLayout.setVisibility(View.GONE);
             if (result == Constants.Result.OK) {

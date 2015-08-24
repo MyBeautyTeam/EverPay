@@ -143,7 +143,7 @@ public class CalcListAdapter extends CursorAdapter {
         String firstNameValue = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHO)).replace(" ", "\n");
         holder.firstName.setText(firstNameValue);
 
-        holder.summa.setText(cursor.getString(cursor.getColumnIndex(Calculation.SUMMA)) + " \u20BD");
+        holder.summa.setText(cursor.getString(cursor.getColumnIndex(Calculation.SUMMA)) + " " + context.getResources().getString(R.string.rubble));
 
         String secondNameValue = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHOM)).replace(" ", "\n");
         holder.secondName.setText(secondNameValue);

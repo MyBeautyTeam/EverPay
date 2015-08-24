@@ -56,7 +56,7 @@ public class DialogDebtorsAdapter extends CursorAdapter {
         holder.bill.setText(groupTitle);
 
         int sum =  cursor.getInt(cursor.getColumnIndex(Debts.SUMMA));
-        holder.summa.setText(sum + " \u20BD");
+        holder.summa.setText(sum + " " + context.getResources().getString(R.string.rubble));
 
         final int groupId = cursor.getInt(cursor.getColumnIndex(Debts.GROUP_ID));
         holder.groupId = groupId;

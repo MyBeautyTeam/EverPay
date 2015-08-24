@@ -302,6 +302,13 @@ public class MainActivity extends ActionBarActivity
         this.toolbar.setTitle(title);
     }
 
+
+    public String getMyTitle() {
+        return toolbar.getTitle().toString();
+    }
+
+
+
     public void replaceAllFragment(Fragment fragment) {
         for(int i = 0; i <= fragmentManager.getBackStackEntryCount(); ++i) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -396,7 +403,13 @@ public class MainActivity extends ActionBarActivity
                 Toast.makeText(this, "Ошибка отправки сообщений", Toast.LENGTH_SHORT).show();
             }
 
-        }
+        } else
+            if (action.equals(REMOVE_BILL)) {
+                if (result == Constants.Result.OK) {
+                } else {
+                    Toast.makeText(this, "У Вас нет прав для удаления счета", Toast.LENGTH_SHORT).show();
+                }
+            }
     }
 
 /*    private void registerGCM() {

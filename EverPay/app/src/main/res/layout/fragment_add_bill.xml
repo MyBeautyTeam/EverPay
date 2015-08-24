@@ -94,7 +94,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:hint="0 \u20BD"
+                android:hint="@string/rubble"
                 android:textSize="16dp"
                 android:visibility="gone"
                 />
@@ -111,7 +111,7 @@
                 android:maxLines="1"
                 android:inputType="number"
                 android:maxLength="9"
-                android:hint="0 \u20BD"
+                android:hint="@string/rubble_null"
                 />
             <LinearLayout
                 android:layout_weight="1.2"
@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="0 \u20BD"
+                android:hint="@string/rubble_null"
                 android:textSize="16dp"
 
                 android:textColor="@color/red_text"

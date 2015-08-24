@@ -80,6 +80,8 @@ public class FragmentSettings  extends Fragment
         pushSwitch.setOnCheckedChangeListener(this);
         adviceSwitch.setOnCheckedChangeListener(this);
 
+        ((MainActivity)getActivity()).hideSoftKeyboard();
+
 
     }
 

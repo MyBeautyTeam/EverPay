@@ -28,6 +28,7 @@
                 android:layout_margin="8dp"
                 android:background="#2196f3"
                 android:textColor="@color/active_white"
+                android:padding="8dp"
 
                 />
         </LinearLayout>

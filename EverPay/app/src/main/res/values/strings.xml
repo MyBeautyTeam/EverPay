@@ -19,6 +19,8 @@
     <string name="radio_male">Мужской</string>
     <string name="radio_female">Женский</string>
     <string name="radio_sex">Пол:</string>
+    <string name="rubble">\u20BD</string>
+    <string name="rubble_null">0 \u20BD</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
