@@ -176,9 +176,11 @@ public class FragmentCalculation extends Fragment implements
 
                 @Override
                 public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+/*
                     MainActivity activity = ((MainActivity) getActivity());
                     String title = activity.getMyTitle();
                     if (title.equals(Constants.Titles.CALCULATION))
+*/
                         switch (indexOfShowcase) {
                             case 1: {
                                 indexOfShowcase++;
