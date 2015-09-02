@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;import android.support.v4.app.LoaderManag
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -174,6 +175,7 @@ public class FragmentGroups extends Fragment implements
                  */
                 mAdapter = new GroupsListAdapter(getActivity(), cursor, 0, mainActivity);
                 groupList.setAdapter(mAdapter);
+
                 break;
         }
     }
@@ -247,7 +249,11 @@ public class FragmentGroups extends Fragment implements
 
                 /* Для корректного отображения сообщения об ошибке
                  Работает только для случая, когда список пуст*/
-                emptyText.setText("Список групп пуст \n Создайте свою первую группу");
+
+                emptyText.setText(Html.fromHtml(
+                        " <h5>Создайте свою первую группу</h5> "
+                                                + "<h1>" +"\u21e9" + "</h1>"
+                                                ));
                 emptyText.setOnClickListener(null);
             } else {
                 Toast.makeText(getActivity(), "Ошибка загрузки данных. Проверьте соединение с интернетом", Toast.LENGTH_SHORT).show();
@@ -258,6 +264,7 @@ public class FragmentGroups extends Fragment implements
                     public void onClick(View view) {
                         onRefresh();
                         loadingLayout.setVisibility(View.VISIBLE);
+                        emptyText.setOnClickListener(null);
                     }
                 });
             }

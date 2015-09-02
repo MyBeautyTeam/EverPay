@@ -16,9 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.text.Layout;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,7 +40,6 @@ import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.REST.RequestCallback;
-import com.beautyteam.everpay.REST.Service;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.beautyteam.everpay.Utils.PrintScreener;
 import com.flurry.android.FlurryAgent;
@@ -58,12 +54,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Handler;
 
 import static com.beautyteam.everpay.Constants.ACTION;
 import static com.beautyteam.everpay.Constants.Action.CALCULATE;
 import static com.beautyteam.everpay.Constants.Action.EDIT_CALCULATION;
-import static com.beautyteam.everpay.Constants.Action.GET_HISTORY;
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 
 /**
@@ -94,6 +88,8 @@ public class FragmentCalculation extends Fragment implements
 
     public static final String NOTIFICATION = "NOTIF";
     private ProgressDialog progressDialog;
+
+    private static MainActivity mainActivity;
 
 
     public static FragmentCalculation getInstance(int groupId) {
@@ -153,6 +149,10 @@ public class FragmentCalculation extends Fragment implements
 
     private void demotour() {
         indexOfShowcase = 1;
+
+        if (!isCalculationScreen())
+            return;
+
         if (calcList.getChildAt(0) == null) {
             indexOfShowcase = 0;
         }else {
@@ -176,11 +176,10 @@ public class FragmentCalculation extends Fragment implements
 
                 @Override
                 public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-/*
-                    MainActivity activity = ((MainActivity) getActivity());
-                    String title = activity.getMyTitle();
-                    if (title.equals(Constants.Titles.CALCULATION))
-*/
+
+                        if (!isCalculationScreen())
+                            return;
+
                         switch (indexOfShowcase) {
                             case 1: {
                                 indexOfShowcase++;
@@ -216,6 +215,14 @@ public class FragmentCalculation extends Fragment implements
             });
         }
 
+    }
+
+    private boolean isCalculationScreen() {
+        if (mainActivity == null)
+            return false;
+
+        String title = mainActivity.getCurrentTitle().toString();
+        return title.equals(Constants.Titles.CALCULATION);
     }
 
     private void setupEmptyList(View view) {
@@ -360,6 +367,12 @@ public class FragmentCalculation extends Fragment implements
             }
         }
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mainActivity = (MainActivity) activity;
     }
 
 

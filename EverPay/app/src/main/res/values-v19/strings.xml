@@ -2,8 +2,8 @@
 <resources>
 
 
-    <string name="rubble">\u20BD</string>
-    <string name="rubble_null">0 \u20BD</string>
+    <string name="rubble">P</string>
+    <string name="rubble_null">0 P</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

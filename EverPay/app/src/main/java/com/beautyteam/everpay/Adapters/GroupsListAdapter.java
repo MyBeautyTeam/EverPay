@@ -62,6 +62,7 @@ public class GroupsListAdapter  extends CursorAdapter {
     @Override
     public int getCount() {
         return getCursor() == null ? 0 : super.getCount();
+        //return 0;
     }
 
     private static class ViewHolder {

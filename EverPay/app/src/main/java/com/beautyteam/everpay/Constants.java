@@ -20,6 +20,7 @@ public class Constants {
         public final static int EDIT_BILLS = 5;
         public final static int ADD_DEBTS = 7;
         public final static int EDIT_DEBTS = 8;
+        public final static int UNCLOSED_BILL = 10;
     }
 
     public class URL {
@@ -102,7 +103,7 @@ public class Constants {
         public final static String EDIT_GROUP = "Участники группы";
         public final static String CALCULATION = "Расчет";
         public final static String GROUPS = "Группы";
-        public final static String MAIN = "Главная";
+        public final static String MAIN = "Обо мне";
         public final static String SETTINGS = "Настройки";
         public final static String CREATE_USER = "Создание участника";
         public final static String CALC_DETAILS = "Детализация";

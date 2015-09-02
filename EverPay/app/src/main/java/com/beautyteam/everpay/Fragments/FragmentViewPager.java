@@ -39,7 +39,6 @@ public class FragmentViewPager extends Fragment implements
         RequestCallback,
         TitleUpdater {
 
-    private String screenName = "Главная";
     private MainActivity mainActivity;
     public static SlidingTabLayout slidingTabLayout;
     private ServiceHelper serviceHelper;

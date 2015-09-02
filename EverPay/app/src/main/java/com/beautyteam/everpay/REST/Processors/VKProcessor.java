@@ -184,7 +184,8 @@ public class VKProcessor extends Processor {
         }
 
         message += "\nС Уважением, и бесконечной любовью,\n";
-        message += "Ваш Everpay.";
+        message += "Ваш Everpay.\n";
+        message += "https://play.google.com/store/apps/details?id=com.beautyteam.everpay";
 
         return message;
     }

@@ -178,8 +178,8 @@ public class VKAuthProcessor extends Processor {
         }
 
         private void initVKUsers(final Service service, final Intent intent) {
-            final VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
-            VKRequest request2 = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
+            final VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.LANG, "en", VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
+            VKRequest request2 = VKApi.friends().get(VKParameters.from(VKApiConst.LANG, "en", VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
 
             VKBatchRequest batch = new VKBatchRequest(request1, request2);
             batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {

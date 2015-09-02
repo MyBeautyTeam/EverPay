@@ -72,7 +72,7 @@ import static com.beautyteam.everpay.Constants.Preference.USER_ID_VK;
 public class MainActivity extends ActionBarActivity
     implements RequestCallback {
 
-    String TITLES[] = {"Главная" ,"Группы", "Настройки"};
+    String TITLES[] = {"Обо мне" ,"Группы", "Настройки"};
     int ICONS[] = {R.drawable.ic_home_white_24dp, R.drawable.ic_group_white_24dp, R.drawable.ic_exit_to_app_white_24dp, R.drawable.ic_exit_to_app_white_24dp};
 
 
@@ -136,7 +136,7 @@ public class MainActivity extends ActionBarActivity
                 handleNotificationIntent();
             } else { // Если запустили сами
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container, FragmentViewPager.getInstance());
+                fragmentTransaction.replace(R.id.main_container, FragmentGroups.getInstance());
                 fragmentTransaction.commit();
             }
         }
@@ -303,7 +303,7 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-    public String getMyTitle() {
+    public String getCurrentTitle() {
         return toolbar.getTitle().toString();
     }
 
@@ -488,6 +488,7 @@ public class MainActivity extends ActionBarActivity
                 break;
             case Constants.NOTIFICATION_ACTION.EDIT_DEBTS:
             case Constants.NOTIFICATION_ACTION.EDIT_GROUP:
+            case Constants.NOTIFICATION_ACTION.UNCLOSED_BILL:
             case Constants.NOTIFICATION_ACTION.ADD_GROUPS:
             case Constants.NOTIFICATION_ACTION.ADD_MEMBERS:
                 replaceAllFragment(FragmentGroupDetails.getInstance(groupId));
