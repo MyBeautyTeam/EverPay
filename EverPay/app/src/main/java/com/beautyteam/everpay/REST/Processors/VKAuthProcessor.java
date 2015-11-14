@@ -19,6 +19,7 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.methods.VKApiFriends;
 import com.vk.sdk.api.model.VKApiUserFull;
 import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.api.model.VKUsersArray;
@@ -178,8 +179,11 @@ public class VKAuthProcessor extends Processor {
         }
 
         private void initVKUsers(final Service service, final Intent intent) {
-            final VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.LANG, "en", VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
-            VKRequest request2 = VKApi.friends().get(VKParameters.from(VKApiConst.LANG, "en", VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
+
+            VKRequest request1 = VKApi.users().get(VKParameters.from(/*VKApiConst.LANG, "ru", */VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
+            VKRequest request2 = VKApi.friends().get(VKParameters.from(/*VKApiConst.LANG, "ru",*/ VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
+
+            //VKRequest request2 = new VKRequest("friends.get", VKParameters.from(VKApiConst.LANG, "ru", VKApiConst.FIELDS, "id,first_name,last_name, photo_100, sex"));
 
             VKBatchRequest batch = new VKBatchRequest(request1, request2);
             batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {

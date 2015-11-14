@@ -352,7 +352,7 @@ public class MainActivity extends ActionBarActivity
                 setupDrawer();
                 //replaceFragment(FragmentViewPager.getInstance());
                 fragmentManager.beginTransaction()
-                        .replace(R.id.main_container, FragmentViewPager.getInstance())
+                        .replace(R.id.main_container, FragmentGroups.getInstance())
                         .setCustomAnimations(R.anim.alpha_appear, R.anim.alpha_disappear)
                         .commit();
 

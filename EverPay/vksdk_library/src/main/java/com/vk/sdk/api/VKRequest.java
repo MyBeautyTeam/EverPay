@@ -204,7 +204,7 @@ public class VKRequest extends VKObject {
 		this.attempts = 1;
 
 		//If system language is not supported, we use english
-		this.mPreferredLang = "en";
+		this.mPreferredLang = "ru";
 		//By default we use system language.
 		this.useSystemLanguage = true;
 	}

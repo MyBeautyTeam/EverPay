@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="1600"
+    android:fromDegrees="0"
+    android:interpolator="@android:anim/linear_interpolator"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:repeatCount="infinite"
+    android:drawable="@drawable/progress1"
+    android:toDegrees="358" />
+<!--
+
 <animation-list
     android:oneshot="false"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -62,3 +73,4 @@
     </item>
 
 </animation-list>
+-->
