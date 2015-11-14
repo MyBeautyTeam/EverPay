@@ -1,9 +1,6 @@
 package com.beautyteam.everpay.Adapters;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,14 +11,11 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.beautyteam.everpay.Constants;
-import com.beautyteam.everpay.Database.Debts;
-import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -33,7 +27,6 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -190,7 +183,7 @@ public class AddBillListAdapter extends BaseAdapter {
             viewHolder.put.setId(position);
             viewHolder.put.addTextChangedListener(new GenericTextWatcher(viewHolder.put));
 
-            viewHolder.remove = (ImageView) convertView.findViewById(R.id.add_bill_list_remove);
+            viewHolder.monetize = (ImageView) convertView.findViewById(R.id.add_bill_list_monetize);
             viewHolder.position = position;
             convertView.setTag(viewHolder);
 
@@ -217,15 +210,6 @@ public class AddBillListAdapter extends BaseAdapter {
         else
             viewHolder.editNeed.setText(billListItem.need + "");
 
-        /*
-        Удаляем элемент
-         */
-        viewHolder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeItem(position);
-            }
-        });
 
         /*
         В зависимости от мода прячем нужные вьюшки
@@ -248,7 +232,7 @@ public class AddBillListAdapter extends BaseAdapter {
                 .centerInside()
                 .into(viewHolder.avatar);
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.monetize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int diff = getNeedSumma() - getInvestSumma();
@@ -258,7 +242,7 @@ public class AddBillListAdapter extends BaseAdapter {
                     if (!oldSummaText.isEmpty())
                         oldSummaPut = Integer.parseInt(oldSummaText);
                     int newSummaPut = oldSummaPut + diff;
-                    viewHolder.put.setText(newSummaPut+"");
+                    viewHolder.put.setText(newSummaPut + "");
                 }
             }
         });
@@ -302,7 +286,7 @@ public class AddBillListAdapter extends BaseAdapter {
         EditText editNeed;
         TextView textNeed;
         EditText put;
-        ImageView remove;
+        ImageView monetize;
         RoundedImageView avatar;
         int position;
     }

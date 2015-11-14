@@ -1,15 +1,11 @@
 package com.beautyteam.everpay.Fragments;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -26,8 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -41,29 +35,18 @@ import com.beautyteam.everpay.Adapters.AddBillListAdapter;
 import com.beautyteam.everpay.Adapters.BillListItem;
 import com.beautyteam.everpay.Constants;
 import com.beautyteam.everpay.Database.Bills;
-import com.beautyteam.everpay.Database.Calculation;
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.MainActivity;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Utils.AnimUtils;
 import com.flurry.android.FlurryAgent;
-import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
-import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import static com.beautyteam.everpay.Constants.Preference.SHARED_PREFERENCES;
 /**
@@ -241,20 +224,22 @@ public class FragmentAddBill extends Fragment implements
     }
 
     private void setupListManinulation() {
-
+        addBillList.setAdapter(mAdapter);
         addBillList.enableSwipeToDismiss(
                 new OnDismissCallback() {
                     @Override
                     public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
                         for (int position : reverseSortedPositions) {
-                            mAdapter.removeItem(position);
+                            // Если нажали не на футер "Вернуть участника
+                            if (listView.getChildCount()-1 != position)
+                                mAdapter.removeItem(position);
+                            else
+                                Toast.makeText(getActivity(), "Эээй! Не делай так больше!", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
         );
-        //swipeUndoAdapter.setAbsListView(addBillList);
-        //addBillList.setAdapter(swipeUndoAdapter);
-        //addBillList.enableSimpleSwipeUndo();
+
     }
 
 
@@ -354,7 +339,6 @@ public class FragmentAddBill extends Fragment implements
                 int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
                 mAdapter = new AddBillListAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
 
-                addBillList.setAdapter(mAdapter);
                 setupListManinulation();
                 //addBillList.setOnItemClickListener(new MyOnItemClickListener(addBillList));
                 break;
@@ -409,7 +393,7 @@ public class FragmentAddBill extends Fragment implements
                 }
                 int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
                 mAdapter = new AddBillListAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
-                //addBillList.setAdapter(mAdapter);
+                setupListManinulation();
                 break;
             }
         }
@@ -604,7 +588,7 @@ public class FragmentAddBill extends Fragment implements
                         indexOfShowcase++;
                         show.hide();
                         show = new ShowcaseView.Builder(getActivity(), true)
-                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_monetize)))
                                 .setContentTitle("Если пользователь не участвует в счете,\nнажмите на крестик")
                                 .setStyle(R.style.CustomShowcaseTheme2)
                                 .setScaleMultiplier(0.5f)
@@ -660,7 +644,7 @@ public class FragmentAddBill extends Fragment implements
                     else {
                         show.hide();
                         show = new ShowcaseView.Builder(getActivity(), true)
-                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_remove)))
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_monetize)))
                                 .setContentTitle("Если пользователь не участвует в счете,\nнажмите на крестик")
                                 .setStyle(R.style.CustomShowcaseTheme2)
                                 .setScaleMultiplier(0.5f)
