@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -25,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -50,6 +53,11 @@ import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 
 import java.net.Socket;
 import java.util.ArrayList;
@@ -68,9 +76,10 @@ public class FragmentAddBill extends Fragment implements
     private static final String BILL_ID = "BILL_ID";
     private int groupId;
     private int billEditedId;
+    private static final int INITIAL_DELAY_MILLIS = 300;
 
     private AddBillListAdapter mAdapter;
-    private ListView addBillList;
+    private DynamicListView addBillList;
     private SwitchCompat switchCompat;
     private LinearLayout leftSummaLayout;
     private EditText needSummaEdit;
@@ -152,13 +161,14 @@ public class FragmentAddBill extends Fragment implements
 
         titleEditText = (EditText) view.findViewById(R.id.add_bill_title);
 
-        addBillList = (ListView) view.findViewById(R.id.add_bill_list);
+        addBillList = (DynamicListView) view.findViewById(R.id.add_bill_list);
         addBillList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 
         footerLayout = (LinearLayout)inflater.inflate(R.layout.footer_btn, null);
         footerBtn = (Button)footerLayout.findViewById(R.id.add_group_button);
         footerBtn.setVisibility(View.GONE);
         addBillList.addFooterView(footerLayout);
+
 
         leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa_layout);
 
@@ -230,7 +240,34 @@ public class FragmentAddBill extends Fragment implements
         }
     }
 
-    private void demotour() {
+    private void setupListManinulation() {
+
+        addBillList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //handleOnItemOnSettings(position);
+            }
+        });
+
+        SimpleSwipeUndoAdapter swipeUndoAdapter = new SimpleSwipeUndoAdapter(mAdapter, getActivity(),
+                new OnDismissCallback() {
+                    @Override
+                    public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+                        for (int position : reverseSortedPositions) {
+                            /*db.deleteArt(artsAdapter.getItem(position));
+                            artsAdapter.remove(position);
+                            artsAdapter.notifyDataSetChanged();*/
+                        }
+                    }
+                }
+        );
+        swipeUndoAdapter.setAbsListView(addBillList);
+        addBillList.setAdapter(swipeUndoAdapter);
+        addBillList.enableSimpleSwipeUndo();
+    }
+    
+
+        private void demotour() {
         indexOfShowcase = 1;
         params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -316,7 +353,7 @@ public class FragmentAddBill extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         switch (loader.getId()) {
-                case LOADER_ADD: {
+            case LOADER_ADD: {
 
                 title = Constants.Titles.ADD_BILL;
                 updateTitle();
@@ -325,7 +362,10 @@ public class FragmentAddBill extends Fragment implements
                 }
                 int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
                 mAdapter = new AddBillListAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
+
                 addBillList.setAdapter(mAdapter);
+                setupListManinulation();
+                //addBillList.setOnItemClickListener(new MyOnItemClickListener(addBillList));
                 break;
             }
 
@@ -378,7 +418,7 @@ public class FragmentAddBill extends Fragment implements
                 }
                 int mode = switchCompat.isChecked() ? AddBillListAdapter.EDIT_TEXT_MODE : AddBillListAdapter.TEXT_VIEW_MODE;
                 mAdapter = new AddBillListAdapter(getActivity(), billArrayList, this, needSummaEdit.getText().toString(), mode);
-                addBillList.setAdapter(mAdapter);
+                //addBillList.setAdapter(mAdapter);
                 break;
             }
         }

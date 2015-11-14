@@ -3,6 +3,7 @@ package com.beautyteam.everpay.Adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.beautyteam.everpay.Database.GroupMembers;
 import com.beautyteam.everpay.Fragments.FragmentAddBill;
 import com.beautyteam.everpay.R;
 import com.beautyteam.everpay.Views.RoundedImageView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -38,7 +40,7 @@ import java.util.HashMap;
 /**
  * Created by Admin on 06.04.2015.
  */
-public class AddBillListAdapter extends BaseAdapter {
+public class AddBillListAdapter extends BaseAdapter implements UndoAdapter {
 
     private ArrayList<BillListItem> billFullArrayList;
     private ArrayList<BillListItem> billAvailableArrayList;
@@ -290,6 +292,21 @@ public class AddBillListAdapter extends BaseAdapter {
         return summa;
     }
 
+    @NonNull
+    @Override
+    public View getUndoView(final int position, final View convertView, @NonNull final ViewGroup parent) {
+        View view = convertView;
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_add_bill, parent, false);
+        }
+        return view;
+    }
+
+    @NonNull
+    @Override
+    public View getUndoClickView(@NonNull View view) {
+        return view.findViewById(R.id.add_bill_list_remove);
+    }
 
 
     private static class ViewHolder {

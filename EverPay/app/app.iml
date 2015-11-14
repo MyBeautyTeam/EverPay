@@ -95,6 +95,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services/7.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.nhaarman.listviewanimations/lib-core-slh/3.1.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.nhaarman.listviewanimations/lib-core/3.1.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.nhaarman.listviewanimations/lib-manipulation/3.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
@@ -113,11 +116,13 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="lib-core-slh-3.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wallet-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-drive-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-appstate-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-games-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="httpclient-android-4.3.5.1" level="project" />
+    <orderEntry type="library" exported="" name="lib-manipulation-3.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-fitness-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="FlurryAnalytics-5.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-7.3.0" level="project" />
@@ -142,6 +147,7 @@
     <orderEntry type="library" exported="" name="play-services-analytics-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="play-services-appinvite-7.3.0" level="project" />
+    <orderEntry type="library" exported="" name="lib-core-3.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-7.3.0" level="project" />
     <orderEntry type="module" module-name="vksdk_library" exported="" />

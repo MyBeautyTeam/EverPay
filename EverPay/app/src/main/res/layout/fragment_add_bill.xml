@@ -195,9 +195,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
-    <ListView
-        android:layout_weight="1"
+
+    <com.nhaarman.listviewanimations.itemmanipulation.DynamicListView
         android:id="@+id/add_bill_list"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusable="false"
