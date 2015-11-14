@@ -40,7 +40,7 @@ import java.util.HashMap;
 /**
  * Created by Admin on 06.04.2015.
  */
-public class AddBillListAdapter extends BaseAdapter implements UndoAdapter {
+public class AddBillListAdapter extends BaseAdapter {
 
     private ArrayList<BillListItem> billFullArrayList;
     private ArrayList<BillListItem> billAvailableArrayList;
@@ -137,7 +137,7 @@ public class AddBillListAdapter extends BaseAdapter implements UndoAdapter {
                 super.onComplete(responses);
                 VKList<VKApiUser> userList = (VKList<VKApiUser>) responses[0].parsedModel;
                 int count = userList.size();
-                for (int i=0; i<count; i++)
+                for (int i = 0; i < count; i++)
                     mapIdToAvatar.put(userList.get(i).id + "", userList.get(i).photo_100);
 
                 notifyDataSetChanged();
@@ -223,11 +223,7 @@ public class AddBillListAdapter extends BaseAdapter implements UndoAdapter {
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                billAvailableArrayList.get(position).isRemoved = true;
-                billAvailableArrayList.get(position).invest = 0;
-                billAvailableArrayList.get(position).need = 0;
-                investSummaArray.remove(position);
-                refreshAvaliableList();
+                removeItem(position);
             }
         });
 
@@ -270,6 +266,14 @@ public class AddBillListAdapter extends BaseAdapter implements UndoAdapter {
         return convertView;
     }
 
+    public void removeItem(int position) {
+        billAvailableArrayList.get(position).isRemoved = true;
+        billAvailableArrayList.get(position).invest = 0;
+        billAvailableArrayList.get(position).need = 0;
+        investSummaArray.remove(position);
+        refreshAvaliableList();
+    }
+
     /*
     Считает сумму колонки Внес
      */
@@ -290,22 +294,6 @@ public class AddBillListAdapter extends BaseAdapter implements UndoAdapter {
             summa += billAvailableArrayList.get(i).need;
         }
         return summa;
-    }
-
-    @NonNull
-    @Override
-    public View getUndoView(final int position, final View convertView, @NonNull final ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_add_bill, parent, false);
-        }
-        return view;
-    }
-
-    @NonNull
-    @Override
-    public View getUndoClickView(@NonNull View view) {
-        return view.findViewById(R.id.add_bill_list_remove);
     }
 
 

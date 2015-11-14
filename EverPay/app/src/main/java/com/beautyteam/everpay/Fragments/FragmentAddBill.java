@@ -242,30 +242,21 @@ public class FragmentAddBill extends Fragment implements
 
     private void setupListManinulation() {
 
-        addBillList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //handleOnItemOnSettings(position);
-            }
-        });
-
-        SimpleSwipeUndoAdapter swipeUndoAdapter = new SimpleSwipeUndoAdapter(mAdapter, getActivity(),
+        addBillList.enableSwipeToDismiss(
                 new OnDismissCallback() {
                     @Override
                     public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
                         for (int position : reverseSortedPositions) {
-                            /*db.deleteArt(artsAdapter.getItem(position));
-                            artsAdapter.remove(position);
-                            artsAdapter.notifyDataSetChanged();*/
+                            mAdapter.removeItem(position);
                         }
                     }
                 }
         );
-        swipeUndoAdapter.setAbsListView(addBillList);
-        addBillList.setAdapter(swipeUndoAdapter);
-        addBillList.enableSimpleSwipeUndo();
+        //swipeUndoAdapter.setAbsListView(addBillList);
+        //addBillList.setAdapter(swipeUndoAdapter);
+        //addBillList.enableSimpleSwipeUndo();
     }
-    
+
 
         private void demotour() {
         indexOfShowcase = 1;
