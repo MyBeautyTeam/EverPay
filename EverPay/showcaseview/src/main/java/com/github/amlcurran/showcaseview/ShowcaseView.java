@@ -78,8 +78,9 @@ public class ShowcaseView extends RelativeLayout
     //changes text gravity
     private boolean hasManualPostion = false;
     private int xPosition, yPosition, width;
+    private View mHandy;
 
-   // private boolean flag = false;
+    // private boolean flag = false;
 
     protected ShowcaseView(Context context, boolean newStyle, boolean flag) {
         this(context, null, R.styleable.CustomTheme_showcaseViewStyle, newStyle, flag);
@@ -185,6 +186,36 @@ public class ShowcaseView extends RelativeLayout
                 }
             }
         }, 100);
+    }
+
+    /**
+     * Adds an animated hand performing a gesture.
+     * @param startX                x-coordinate or x-offset of the start position
+     * @param startY                y-coordinate or x-offset of the start position
+     * @param endX                  x-coordinate or x-offset of the end position
+     * @param endY                  y-coordinate or x-offset of the end position
+     * @param absoluteCoordinates   If true, this will use absolute coordinates instead of coordinates relative to the center of the showcased view
+     */
+    public void animateGesture(float startX, float startY, float endX,
+                               float endY, boolean absoluteCoordinates) {
+        mHandy = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.handy, null);
+        addView(mHandy);
+        moveHand(startX, startY, endX, endY, absoluteCoordinates, new AnimationUtils.AnimationEndListener() {
+            @Override
+            public void onAnimationEnd() {
+                removeView(mHandy);
+            }
+        });
+    }
+
+    private void moveHand(float startX, float startY, float endX,
+                          float endY, boolean absoluteCoordinates, AnimationUtils.AnimationEndListener listener) {
+        AnimationUtils.createMovementAnimation(mHandy, absoluteCoordinates ? 0 : showcaseX,
+                absoluteCoordinates ? 0 : showcaseY,
+                startX, startY,
+                endX, endY,
+                listener).start();
     }
 
     private void updateBitmap() {
