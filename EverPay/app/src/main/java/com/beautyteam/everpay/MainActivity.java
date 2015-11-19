@@ -1,14 +1,11 @@
 package com.beautyteam.everpay;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,13 +20,11 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
 import com.beautyteam.everpay.Fragments.FragmentCalculation;
-import com.beautyteam.everpay.Fragments.FragmentEmptyToDBTest;
 import com.beautyteam.everpay.Fragments.FragmentGroupDetails;
 import com.beautyteam.everpay.Fragments.FragmentGroups;
 import com.beautyteam.everpay.Fragments.FragmentLoading;
@@ -40,10 +35,7 @@ import com.beautyteam.everpay.REST.RequestCallback;
 import com.beautyteam.everpay.REST.ServiceHelper;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.tjeannin.apprate.AppRate;
 import com.vk.sdk.VKSdk;
 
 import com.beautyteam.everpay.Adapters.DrawerAdapter;
@@ -52,7 +44,6 @@ import com.vk.sdk.VKUIHelper;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -371,7 +362,7 @@ public class MainActivity extends ActionBarActivity
             } else {
                 Toast.makeText(this, "Ошибка соединения с интернетом. Попробуйте позже", Toast.LENGTH_SHORT).show();
             }
-        } else if(action.equals(SEND_MESSAGE_WITH_IMAGE)) {
+        } else if(action.equals(SEND_VK_FOR_ALL)) {
 
             if (result == Constants.Result.OK) {
                 int groupId = data.getInt(Constants.IntentParams.GROUP_ID, 0);

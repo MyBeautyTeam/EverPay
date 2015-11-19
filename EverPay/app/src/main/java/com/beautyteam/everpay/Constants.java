@@ -88,7 +88,8 @@ public class Constants {
 
         public final static String NOTIFICATION = "NOTIFICATION";
 
-        public final static String SEND_MESSAGE_WITH_IMAGE = "IMG_MESSAGE";
+        public final static String SEND_VK_FOR_ALL = "VK_FOR_ALL";
+        public final static String SEND_VK_FOR_MY = "VK_FOR_ME";
 
         public final static String BUG_REPORT = "BUG_REPORT";
 
@@ -165,6 +166,7 @@ public class Constants {
         //== NOTIFITACION
         public final static String ACTION_NOTIF = "ACTION_NOTIF";
 
+        public static final String IS_FOR_ALL = "IS_FOR_ALL";
     }
 
     public final static String RECEIVER = "RECEIVER";

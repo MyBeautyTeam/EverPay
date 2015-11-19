@@ -33,6 +33,8 @@ public class VKProcessor extends Processor {
     private final String smileApply = "&#10004;";
     private final String smileCancel = "&#10060;";
     private Context context;
+    private static boolean IS_FOR_ALL = true;
+    private static int groupId;
 
     public VKProcessor(Context context) {
         super(context);
@@ -43,7 +45,11 @@ public class VKProcessor extends Processor {
     public void request(final Intent intent, final Service service) {
         byte[] byteArray = intent.getByteArrayExtra(Constants.IntentParams.IMAGE);
         Bitmap photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        final int groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+        groupId = intent.getIntExtra(Constants.IntentParams.GROUP_ID, 0);
+
+        IS_FOR_ALL = intent.getBooleanExtra(Constants.IntentParams.IS_FOR_ALL, true);
+
+
         VKRequest requestLoadPhoto = VKApi.uploadWallPhotoRequest(new VKUploadImage(photo, VKImageParameters.jpgImage(0.9f)), 0, 60479154);
         intent.putExtra(Constants.IntentParams.GROUP_ID, groupId);
 
@@ -61,15 +67,25 @@ public class VKProcessor extends Processor {
                 try {
                     JSONObject jsonResponse = response.json.getJSONArray("response").getJSONObject(0);
                     int photoId = jsonResponse.getInt("id");
-                    Cursor cursor = service.getContentResolver().query(EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, Calculation.GROUPS_ID +" = " + groupId, null, /*SORT_ORDER*/null);
+                    Cursor cursor = service.getContentResolver().query(EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, Calculation.GROUPS_ID + " = " + groupId + " AND " + Calculation.IS_DELETED + "=" + 0, null, /*SORT_ORDER*/null);
 
                     HashSet<Integer> setUserToSend = new HashSet<Integer>(); // Список пользователей, кому будет отправлено сообщение
                     cursor.moveToFirst();
 
                     vkRequestArrayList = new ArrayList<VKRequest>();
+                    int myVkId = getUserVkId();
                     for (int i=0; i<cursor.getCount(); i++) {
                         int userIdWhoVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHO_ID_VK));
                         int userIdWhomVk = cursor.getInt(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
+
+                        // Если сообщение нужно отправлять только моим должникам
+                        if (!IS_FOR_ALL)
+                            if (myVkId != userIdWhoVk && myVkId != userIdWhomVk) {
+                                cursor.moveToNext();
+                                continue;
+                            }
+
+
                         if (userIdWhomVk != 0 && userIdWhoVk != 0) {
 
                             if (setUserToSend.add(userIdWhoVk) && userIdWhoVk != getUserVkId()) {
@@ -163,28 +179,49 @@ public class VKProcessor extends Processor {
 
     private String generateMessage(int userId) {
 
-        String message = "***Сообщение отправлено автоматически***\n";
-        message += "Текущее положение дел:";
+        String message = "**Автоматическое сообщение**\n";
+        message += "\n";
+        //message += "Текущее положение дел:";
+        Cursor cursor = context.getContentResolver().query(EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, "(" +Calculation.WHOM_ID_VK +" = " + userId + " OR " + Calculation.WHO_ID_VK + " = " + userId + ")" + " AND " + Calculation.GROUPS_ID +" = " + groupId + " AND " + Calculation.IS_DELETED +"="+ 0, null, /*SORT_ORDER*/null);
 
-        Cursor cursor = context.getContentResolver().query(EverContentProvider.CALCULATION_CONTENT_URI, PROJECTION, Calculation.WHOM_ID_VK +" = " + userId + " OR " + Calculation.WHO_ID_VK + " = " + userId , null, /*SORT_ORDER*/null);
         cursor.moveToFirst();
+
+        String msg_whom = ""; // Кому я должен
+        String msg_who = ""; // Кто мне должен
         for (int i=0; i < cursor.getCount(); cursor.moveToNext(), i++) {
-            message += "\n";
-            boolean isDeleted = cursor.getInt(cursor.getColumnIndex(Calculation.IS_DELETED)) > 0 ? true : false;
-            if (isDeleted)
-                message += smileApply;
-            else
-                message += smileCancel;
-            message += " ";
-            
+            //message += "\n";
+
+            //message += smileCancel;
+            //message += " ";
+
+
+            int idWho = cursor.getInt(cursor.getColumnIndex(Calculation.WHO_ID_VK));
+            int idWhom = cursor.getInt(cursor.getColumnIndex(Calculation.WHOM_ID_VK));
+
             String nameWho = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHO));
             String nameWhom = cursor.getString(cursor.getColumnIndex(Calculation.NAME_WHOM));
             int sum = cursor.getInt(cursor.getColumnIndex(Calculation.SUMMA));
-            message += nameWho + " -> " + sum + "руб. -> " + nameWhom + " ";
+
+            if (idWho == userId) {
+                msg_whom +=  smileCancel + " " + sum + "руб — " + nameWhom + "\n";
+            } else {
+                msg_who +=  smileApply + " " + sum + "руб — " + nameWho + "\n";
+            }
+            //message += nameWho + " -> " + sum + "руб. -> " + nameWhom + " ";
         }
 
-        message += "\nС Уважением, и бесконечной любовью,\n";
-        message += "Ваш Everpay.\n";
+        if (!"".equals(msg_who)) {
+            message += "Вам должны: \n";
+            message += msg_who;
+        }
+        message += "\n";
+
+        if (!"".equals(msg_whom)) {
+            message += "Вы должны: \n";
+            message += msg_whom;
+        }
+        //message += "\nС Уважением, и бесконечной любовью,\n";
+        message += "\n Искренне Ваш Everpay\n";
         message += "https://play.google.com/store/apps/details?id=com.beautyteam.everpay";
 
         return message;

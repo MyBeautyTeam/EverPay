@@ -50,7 +50,7 @@ public class ProcessorFactory {
             )
             return new DeleteProcessor(context);
         else
-        if (SEND_MESSAGE_WITH_IMAGE.equals(action)) {
+        if (SEND_VK_FOR_ALL.equals(action)) {
             return new VKProcessor(context);
         }
         else

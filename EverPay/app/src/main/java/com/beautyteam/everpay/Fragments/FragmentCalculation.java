@@ -25,11 +25,11 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,9 +49,11 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.tjeannin.apprate.AppRate;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -388,7 +390,8 @@ public class FragmentCalculation extends Fragment implements
     }
 
     private void showDialog(){
-        String names[] = {"Личное сообщение vk.com", "В приложении (анононимно)"};
+
+        FlurryAgent.logEvent("Открыто оповещение");
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_list);
@@ -396,8 +399,32 @@ public class FragmentCalculation extends Fragment implements
         title.setText("Оповещение");
         ListView lv = (ListView) dialog.findViewById(R.id.dialog_action_list);
         dialog.setCancelable(true);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.item_dialog_not_send, R.id.item_dialog, names);
-        lv.setAdapter(adapter);
+
+
+        List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        Map<String, String> datum = new HashMap<String, String>(2);
+        datum.put("First Line", "ВКонтакте всем");
+        datum.put("Second Line","Личное сообщение VK всей группе");
+        data.add(datum);
+
+        datum = new HashMap<String, String>(2);
+        datum.put("First Line", "ВКонтакте моим должникам");
+        datum.put("Second Line","Личное сообщение VK связанным со мной");
+        data.add(datum);
+
+        datum = new HashMap<String, String>(2);
+        datum.put("First Line", "Оповещение в приложении");
+        datum.put("Second Line", "Push-уведомление в EverPay связанным со мной");
+        data.add(datum);
+
+
+        SimpleAdapter adapter1 = new SimpleAdapter(getActivity(), data,
+                R.layout.item_dialog_send_message,
+                new String[] {"First Line", "Second Line" },
+                new int[] {R.id.item_dialog_send_main, R.id.item_dialog_send_second });
+        //
+        lv.setAdapter(adapter1);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent,View view1,int position, long id) {
@@ -409,14 +436,34 @@ public class FragmentCalculation extends Fragment implements
                     Toast.makeText(getActivity(), "Не больше двух оповещений в день :(", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                switch (position) {
+                    case 0: {
+                        FlurryAgent.logEvent("Оповещение vk всем");
+                        Bitmap screen = new PrintScreener().printscreen2(calcList);
+                        ((MainActivity) getActivity()).getServiceHelper().sendVkMessage(screen, groupId, true);
+                        break;
+                    }
+                    case 1: {
+                        FlurryAgent.logEvent("Оповещение vk моим");
+                        Bitmap screen = new PrintScreener().printscreen2(calcList);
+                        ((MainActivity) getActivity()).getServiceHelper().sendVkMessage(screen, groupId, false);
+                        break;
+                    }
+                    case 2: {
+                        FlurryAgent.logEvent("Пуш-уведомление в EverPay");
+                        ((MainActivity) getActivity()).getServiceHelper().sendNotification(groupId);
+                        break;
+                    }
 
-                if (position == 0) {
+                }
+                /*if (position == 0) {
+                    FlurryAgent.logEvent("Оповещение vk всем");
                     Bitmap screen = new PrintScreener().printscreen2(calcList);
-                    ((MainActivity) getActivity()).getServiceHelper().sendPrintScreen(screen, groupId);
+                    ((MainActivity) getActivity()).getServiceHelper().sendVkMessage(screen, groupId);
                 }
                 else {
                     ((MainActivity) getActivity()).getServiceHelper().sendNotification(groupId);
-                }
+                }*/
 
             }
         });

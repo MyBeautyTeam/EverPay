@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/item_dialog_send_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dip"
+        android:fontFamily="sans-serif"
+        android:text="Поход в кино"
+        android:textColor="@color/primary_text_default_material_light"
+        android:paddingLeft="16dp"
+        android:paddingTop="6dp"
+        android:paddingRight="6dp"
+        />
+    <TextView
+        android:id="@+id/item_dialog_send_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10dip"
+        android:fontFamily="sans-serif"
+        android:text="Поход в кино"
+        android:textColor="@color/secondary_text"
+        android:paddingLeft="16dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="6dp"
+        />
+
+</LinearLayout>

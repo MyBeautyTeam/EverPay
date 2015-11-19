@@ -255,20 +255,22 @@ public class ServiceHelper implements AppResultsReceiver.Receiver {
         activity.startService(intentService);
     }
 
-    public void sendPrintScreen(Bitmap screen, int groupId) {
+    public void sendVkMessage(Bitmap screen, int groupId, boolean isForAll) {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         screen.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
         Intent intentService = new Intent(activity, Service.class);
-        intentService.setAction(Constants.Action.SEND_MESSAGE_WITH_IMAGE);
+        intentService.setAction(Constants.Action.SEND_VK_FOR_ALL);
 
         intentService.putExtra(Constants.IntentParams.IMAGE, byteArray);
         intentService.putExtra(Constants.IntentParams.GROUP_ID, groupId);
+        intentService.putExtra(Constants.IntentParams.IS_FOR_ALL, isForAll);
         intentService.putExtra(Constants.RECEIVER, mReceiver);
         activity.startService(intentService);
     }
+
 
     public void sendNotification(int groupId) {
 
