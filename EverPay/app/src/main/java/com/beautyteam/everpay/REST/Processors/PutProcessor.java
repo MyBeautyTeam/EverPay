@@ -181,19 +181,24 @@ public class PutProcessor extends Processor{
 
                     JSONObject responseJSON = new JSONObject(response);
                     responseJSON = responseJSON.getJSONObject("response");
-                    JSONObject history = responseJSON.getJSONObject("history");
 
-                    //service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
-                    Iterator<String> historyKeys = history.keys();
-                    while (historyKeys.hasNext()) {
-                        JSONObject historyItem = history.getJSONObject(historyKeys.next());
-                        ContentValues cv = readHistory(historyItem);
-                        service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                    // Проверяется, потому что у этого метода два возможных варианта возврата
+                    // Косяк на серверной стороне. Если не было изменений, он возвращает {group_id: 424}
+                    // Такое поведение не документировано и низменно!
+                    if (responseJSON.has("history")) {
+                        JSONObject history = responseJSON.getJSONObject("history");
+
+                        //service.getContentResolver().delete(EverContentProvider.HISTORY_CONTENT_URI, History.GROUP_ID + "=" + groupId, null);
+                        Iterator<String> historyKeys = history.keys();
+                        while (historyKeys.hasNext()) {
+                            JSONObject historyItem = history.getJSONObject(historyKeys.next());
+                            ContentValues cv = readHistory(historyItem);
+                            service.getContentResolver().insert(EverContentProvider.HISTORY_CONTENT_URI, cv);
+                        }
+
+                        // Обновим дату в группе
+                        updateDateInGroup(groupId, service);
                     }
-
-                    // Обновим дату в группе
-                    updateDateInGroup(groupId, service);
-
                     result = Constants.Result.OK;
                 } else {
                     /*

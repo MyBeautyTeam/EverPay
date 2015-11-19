@@ -304,7 +304,13 @@ public class FragmentCalculation extends Fragment implements
                 indexOfShowcase = 0;
                 if (show != null)
                     show.hide();
+
                 HashMap<String, Integer> mapIdToIsDeleted = mAdapter.getMapIdToIsdeleted();
+                /*if (mapIdToIsDeleted.size() == 0) { // Если экран пуст - просто закрываем
+                    ((MainActivity)getActivity()).removeFragment();
+                    break;
+                }*/
+
                 Iterator it = mapIdToIsDeleted.entrySet().iterator();
 
                 while (it.hasNext()) {
