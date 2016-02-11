@@ -1,10 +1,14 @@
 package com.beautyteam.everpay.Fragments;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -20,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -90,6 +95,9 @@ public class FragmentAddBill extends Fragment implements
     private RelativeLayout.LayoutParams params;
     private SharedPreferences sPref;
 
+    private TextView addBillPutTitle;
+    private TextView ostalosTextView;
+
     String title = "";
 
     /*
@@ -152,6 +160,8 @@ public class FragmentAddBill extends Fragment implements
         footerBtn.setVisibility(View.GONE);
         addBillList.addFooterView(footerLayout);
 
+        addBillPutTitle = (TextView) view.findViewById(R.id.add_bill_name_put);
+        ostalosTextView = (TextView) view.findViewById(R.id.add_bill_left_ostalos);
 
         leftSummaLayout = (LinearLayout) view.findViewById(R.id.add_bill_left_summa_layout);
 
@@ -252,7 +262,7 @@ public class FragmentAddBill extends Fragment implements
         params.setMargins(0, 0, 60, 120);
         show = new ShowcaseView.Builder(getActivity(), false)
                 .setTarget(new ViewTarget(R.id.add_bill_switch, getActivity()))
-                .setContentTitle("Если сумма разбита поровну между участниками - выберите ПОРОВНУ,\nиначе - НЕ ПОРОВНУ")
+                .setContentTitle("Если все потратили одинаково - выберите ПОРОВНУ,\nиначе - НЕ ПОРОВНУ")
                 .setScaleMultiplier(1f)
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
@@ -261,23 +271,33 @@ public class FragmentAddBill extends Fragment implements
     }
 
     public void setLeftSumma(int summa) {
-        leftSumma.setText(summa + "");
+        leftSumma.setText(summa + " " + getResources().getString(R.string.rubble));
         updateTextColor();
     }
 
     public void setNeedSumma(int summa) {
-        needSummaText.setText(summa + "");
+        needSummaText.setText(summa + " " + getResources().getString(R.string.rubble));
         updateTextColor();
     }
 
     private void updateTextColor() {
-        int needSummaValue = Integer.parseInt(needSummaText.getText().toString());
-        int leftSummaValue = Integer.parseInt(leftSumma.getText().toString());
+        String needSummaStr = needSummaText.getText().toString().split(" ")[0];
+        String leftSummaStr = leftSumma.getText().toString().split(" ")[0];
 
-        if (needSummaValue == leftSummaValue)
+        int needSummaValue = Integer.parseInt(needSummaStr);
+        int leftSummaValue = Integer.parseInt(leftSummaStr);
+
+        int ostatokSumma = needSummaValue - leftSummaValue;
+        ostalosTextView.setText(ostatokSumma + " " + getResources().getString(R.string.rubble));
+
+        if (needSummaValue == leftSummaValue) {
             leftSumma.setTextColor(getResources().getColor(R.color.secondary_text));
-        else
+            ostalosTextView.setTextColor(getResources().getColor(R.color.secondary_text));
+        }
+        else {
             leftSumma.setTextColor(getResources().getColor(R.color.red_text));
+            ostalosTextView.setTextColor(getResources().getColor(R.color.red_text));
+        }
     }
 
 
@@ -473,12 +493,26 @@ public class FragmentAddBill extends Fragment implements
 
 
         if (needSumma == 0) {
-            Toast.makeText(getActivity(), "С нулевым долгом не принимаем!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Введите сумму счета!", Toast.LENGTH_SHORT).show();
+            needSummaEdit.requestFocus();
             return false;
         }
 
         if (needSumma != investSumma) {
-            Toast.makeText(getActivity(), "Сумма счета должна быть равна полю \"Распределено\"", Toast.LENGTH_SHORT).show();
+            if (investSumma == 0) {
+                Toast.makeText(getActivity(), "Нужно указать, кто оплатил счет", Toast.LENGTH_SHORT).show();
+                animateSumNotEqualPut(1200, 200);
+            }
+            else {
+                animateSumNotEqualPut(1200, 0);
+                if (investSumma < needSumma) {
+                    Toast.makeText(getActivity(), "Нужно разделить ВСЮ сумму счета. \nЕще " + (needSumma - investSumma) + " руб.", Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(getActivity(), "Сумма счета меньше оплаченной суммы на " + (investSumma - needSumma) + " руб.", Toast.LENGTH_LONG).show();
+                }
+            }
+
             return false;
         }
 
@@ -503,6 +537,39 @@ public class FragmentAddBill extends Fragment implements
         }
 
         return true;
+
+    }
+
+    /*
+    Анимация для случая, когда сумма счета не равна
+    duration - время анимации
+    delay - задержка между анимациями двух соседних edittext'ов
+     */
+    private void animateSumNotEqualPut(final int duration, final int delay) {
+
+
+            final int colorFrom = getResources().getColor(R.color.background_material_light);
+            final int colorTo = getResources().getColor(R.color.light_red);
+
+
+            int first = addBillList.getFirstVisiblePosition();
+            int last = addBillList.getLastVisiblePosition();
+
+            int j = 0;
+            for (int i = first; i <= last; i++) {
+                try {
+                    View view = addBillList.getChildAt(i);
+                    LinearLayout window = (LinearLayout) view.findViewById(R.id.add_bill_list_put_parrent);
+
+                    ObjectAnimator.ofObject(window, "backgroundColor", new ArgbEvaluator(), colorTo, colorFrom)
+                            .setDuration(duration + j * delay)
+                            .start();
+                    j++;
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+
 
     }
 
@@ -565,17 +632,16 @@ public class FragmentAddBill extends Fragment implements
                     View target = getViewByPosition(1).findViewById(R.id.add_bill_list_put_parrent);
                     if (target == null) {
                         indexOfShowcase = 0;
-                    }
-                    else {
+                    } else {
                         indexOfShowcase++;
-                            show = new ShowcaseView.Builder(getActivity(), true)
-                                    .setTarget(new ViewTarget(target))
-                                    .setContentTitle("Введите сумму, которую внес участник")
-                                    .setStyle(R.style.CustomShowcaseTheme2)
-                                    .setScaleMultiplier(0.5f)
-                                    .build();
-                            show.overrideButtonClick(this);
-                            show.setButtonPosition(params);
+                        show = new ShowcaseView.Builder(getActivity(), true)
+                                .setTarget(new ViewTarget(target))
+                                .setContentTitle("Введите сумму, которую внес(оплатил) участник")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                .setScaleMultiplier(0.5f)
+                                .build();
+                        show.overrideButtonClick(this);
+                        show.setButtonPosition(params);
                     }
                     break;
                 }
@@ -586,14 +652,14 @@ public class FragmentAddBill extends Fragment implements
                         indexOfShowcase = 0;
                     } else {
                         indexOfShowcase++;
-                            show = new ShowcaseView.Builder(getActivity(), true)
-                                    .setTarget(new ViewTarget(target))
-                                    .setContentTitle("Нажмите, чтобы назначить платящего")
-                                    .setStyle(R.style.CustomShowcaseTheme2)
-                                    .setScaleMultiplier(0.5f)
-                                    .build();
-                            show.overrideButtonClick(this);
-                            show.setButtonPosition(params);
+                        show = new ShowcaseView.Builder(getActivity(), true)
+                                .setTarget(new ViewTarget(target))
+                                .setContentTitle("Нажмите, чтобы назначить платящего \n (он за все заплатил)")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                .setScaleMultiplier(0.5f)
+                                .build();
+                        show.overrideButtonClick(this);
+                        show.setButtonPosition(params);
                     }
                     sPref.edit()
                             .putBoolean(Constants.Preference.WAS_ADD_BILL_ADVICE_REVIEWED, true)
@@ -623,89 +689,90 @@ public class FragmentAddBill extends Fragment implements
                     break;
                 }
             }
+        } else {
+            switch (indexOfShowcase) {
+                case 1: {
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        show = new ShowcaseView.Builder(getActivity(), true)
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_need_text)))
+                                .setContentTitle("Введите сумму, которую потратил участник \n(например, сколько стоил его обед)")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                .setScaleMultiplier(0.5f)
+                                .build();
+                        show.setButtonPosition(params);
+                        show.overrideButtonClick(this);
+                    }
+                    break;
+                }
+                case 2: {
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        View put = getViewByPosition(1).findViewById(R.id.add_bill_list_put_parrent);
+                        show = new ShowcaseView.Builder(getActivity(), true)
+                                .setTarget(new ViewTarget(put))
+                                .setContentTitle("Введите сумму, которую внес участник\n(сколько заплатил)")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                .setScaleMultiplier(0.5f)
+                                .build();
+                        show.setButtonPosition(params);
+                        show.overrideButtonClick(this);
+                    }
+                    break;
+                }
+                case 3: {
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        show = new ShowcaseView.Builder(getActivity(), true)
+                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_monetize)))
+                                .setContentTitle("Нажмите, чтобы назначить платящего\n (он за все заплатил)")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                .setScaleMultiplier(0.5f)
+                                .build();
+                        show.setButtonPosition(params);
+                        show.overrideButtonClick(this);
+                    }
+
+                    sPref.edit()
+                            .putBoolean(Constants.Preference.WAS_ADD_BILL_ADVICE_REVIEWED, true)
+                            .commit();
+                    break;
+                }
+                case 4: {
+                    show.hide();
+                    if (addBillList.getChildAt(0) == null)
+                        indexOfShowcase = 0;
+                    else {
+                        indexOfShowcase++;
+                        show.hide();
+                        ViewTarget target = new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_name));
+                        show = new ShowcaseView.Builder(getActivity(), false)
+                                .setTarget(target)
+                                .setContentTitle("Удалите,\nесли пользователь не участвует в счете")
+                                .setStyle(R.style.CustomShowcaseTheme2)
+                                .setScaleMultiplier(1f)
+                                .build();
+                        show.setButtonPosition(params);
+                        show.animateGesture(target.getPoint().x, target.getPoint().y, target.getPoint().x + 200, target.getPoint().y, false);
+                    }
+                    sPref.edit()
+                            .putBoolean(Constants.Preference.WAS_ADD_BILL_ADVICE_REVIEWED, true)
+                            .commit();
+                    break;
+                }
+            }
         }
-//        } else {
-//            switch (indexOfShowcase) {
-//                case 1: {
-//                    if (addBillList.getChildAt(0) == null)
-//                        indexOfShowcase = 0;
-//                    else {
-//                        indexOfShowcase++;
-//                        show.hide();
-//                        show = new ShowcaseView.Builder(getActivity(), true)
-//                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_need_text)))
-//                                .setContentTitle("Введите сумму, которую потратил участник")
-//                                .setStyle(R.style.CustomShowcaseTheme2)
-//                                .setScaleMultiplier(0.5f)
-//                                .build();
-//                        show.setButtonPosition(params);
-//                        show.overrideButtonClick(this);
-//                    }
-//                    break;
-//                }
-//                case 2: {
-//                    if (addBillList.getChildAt(0) == null)
-//                        indexOfShowcase = 0;
-//                    else {
-//                        indexOfShowcase++;
-//                        show.hide();
-//                        View put = getViewByPosition(1).findViewById(R.id.add_bill_list_put_parrent);
-//                        show = new ShowcaseView.Builder(getActivity(), true)
-//                                .setTarget(new ViewTarget(put))
-//                                .setContentTitle("Введите сумму, которую внес участник")
-//                                .setStyle(R.style.CustomShowcaseTheme2)
-//                                .setScaleMultiplier(0.5f)
-//                                .build();
-//                        show.setButtonPosition(params);
-//                        show.overrideButtonClick(this);
-//                    }
-//                    break;
-//                }
-//                case 3: {
-//                    if (addBillList.getChildAt(0) == null)
-//                        indexOfShowcase = 0;
-//                    else {
-//                        show.hide();
-//                        show = new ShowcaseView.Builder(getActivity(), true)
-//                                .setTarget(new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_monetize)))
-//                                .setContentTitle("Нажмите, чтобы назначить платящего")
-//                                .setStyle(R.style.CustomShowcaseTheme2)
-//                                .setScaleMultiplier(0.5f)
-//                                .build();
-//                        show.setButtonPosition(params);
-//                        show.overrideButtonClick(this);
-//                    }
-//
-//                    sPref.edit()
-//                            .putBoolean(Constants.Preference.WAS_ADD_BILL_ADVICE_REVIEWED, true)
-//                            .commit();
-//                    break;
-//                }
-//                case 4: {
-//                    show.hide();
-//                    if (addBillList.getChildAt(0) == null)
-//                        indexOfShowcase = 0;
-//                    else {
-//                        indexOfShowcase++;
-//                        show.hide();
-//                        ViewTarget target = new ViewTarget(addBillList.getChildAt(1).findViewById(R.id.add_bill_list_name));
-//                        show = new ShowcaseView.Builder(getActivity(), false)
-//                                .setTarget(target)
-//                                .setContentTitle("Удалите,\nесли пользователь не участвует в счете")
-//                                .setStyle(R.style.CustomShowcaseTheme2)
-//                                .setScaleMultiplier(1f)
-//                                .build();
-//                        show.setButtonPosition(params);
-//                        show.animateGesture(target.getPoint().x,target.getPoint().y,target.getPoint().x + 200,target.getPoint().y,false);
-//                    }
-//                    sPref.edit()
-//                            .putBoolean(Constants.Preference.WAS_ADD_BILL_ADVICE_REVIEWED, true)
-//                            .commit();
-//                    break;
-//                }
-//            }
-//        }
     }
+
 
 
 private class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
@@ -755,33 +822,6 @@ private class SwitchChangeListener implements CompoundButton.OnCheckedChangeList
         }
     }
 
-
-    private class AnimationListenerImpl implements Animation.AnimationListener {
-        static public final int ACTION_APPEAR = 1;
-        static public final int ACTION_DISAPPEAR = 2;
-
-        private int action;
-        private View view;
-
-        public AnimationListenerImpl(View _view, int _action) {
-            action = _action;
-            view = _view;
-        }
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-            if (action == ACTION_APPEAR) view.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            if (action == ACTION_DISAPPEAR) view.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-    }
 
     public void onPause() {
         super.onPause();

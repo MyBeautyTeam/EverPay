@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
+        android:background="#daf1f1f1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
@@ -24,7 +25,8 @@
             />
     </LinearLayout>
     <LinearLayout
-        android:layout_weight="1.8"
+        android:background="#daf1f1f1"
+        android:layout_weight="1.67"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -70,9 +72,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_weight="1"
+            android:layout_weight="0.95"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="1dp"
+            android:paddingTop="1dp"
             android:orientation="horizontal"
             >
             <LinearLayout
@@ -124,47 +128,81 @@
             android:id="@+id/add_bill_left_summa_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#daeeeeee"
             android:orientation="horizontal">
             <LinearLayout
-                android:layout_weight="1.2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="Распределено"
-                android:textSize="16dp"
-                />
-            <TextView
-                android:id="@+id/add_bill_left_summa"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:hint="@string/rubble_null"
-                android:textSize="16dp"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:text="Уже\nподелено"
+                    android:textSize="12dp"
+                    />
+                <TextView
+                    android:id="@+id/add_bill_left_summa"
+                    android:layout_weight="1.8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="@string/rubble_null"
+                    android:textSize="14dp"
 
-                android:textColor="@color/red_text"
+                    android:textColor="@color/red_text"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1.6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 />
             <LinearLayout
-                android:layout_weight="1.2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:text="Осталось\nподелить"
+                    android:minLines="2"
+                    android:textSize="12dp"
+                    />
+                <TextView
+                    android:id="@+id/add_bill_left_ostalos"
+                    android:layout_weight="1.8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="@string/rubble_null"
+                    android:textSize="14dp"
+                    android:textColor="@color/red_text"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/primary_text_default_material_light"
+        android:layout_height="1.2dp"
+        android:elevation="1.5dp"
+        android:background="#a0e0e0e0"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
+        >
         <LinearLayout
             android:layout_weight="1.25"
             android:layout_width="match_parent"
@@ -174,20 +212,20 @@
             android:layout_weight="1.8"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Потрачено"
+            android:text="Потратил"
             android:drawableBottom="@drawable/package_up"
             android:gravity="center"
-            android:textSize="14dp"
+            android:textSize="13dp"
             />
         <TextView
             android:id="@+id/add_bill_name_put"
             android:layout_weight="1.8"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Оплачено"
+            android:text="Оплатил"
             android:gravity="center"
             android:drawableBottom="@drawable/package_down"
-            android:textSize="14dp"
+            android:textSize="13dp"
             />
         <LinearLayout
             android:layout_weight="2.1"

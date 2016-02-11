@@ -56,6 +56,7 @@
         android:layout_weight="1.8"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@drawable/round_corner"
         android:layout_height="wrap_content">
         <EditText
             android:id="@+id/add_bill_list_put"

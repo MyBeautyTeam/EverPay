@@ -25,8 +25,8 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
     private TextView loadingText;
     private TextSwitcher attentionTextSwitcher;
     private Animation loopAppear;
-    private String firstAttemp = "Загрузка идет медленно, но верно! \nНе сдавайтесь!";
-    private String secondAttemp = "Медленно =(\nНо мы очень любим тебя и не хотим, чтобы ты уходил";
+    private String firstAttemp = "Первая загрузка может занять несколько минут! \nЗато потом все будет ну ооооочень быстро :)";
+    private String secondAttemp = "Медленно...\nНо мы очень любим тебя и не хотим, чтобы ты уходил... Подожди еще чуть-чуть :)";
 
     private Animation in;
     private Animation out;
@@ -73,14 +73,14 @@ public class FragmentLoading extends Fragment implements TitleUpdater {
             public void run() {
                 attentionTextSwitcher.setText(firstAttemp);
             }
-        }, 15000);
+        }, 8000);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 attentionTextSwitcher.setText(secondAttemp);
             }
-        }, 30000);
+        }, 50000);
     }
 
 

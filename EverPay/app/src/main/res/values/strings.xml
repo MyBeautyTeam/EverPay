@@ -21,6 +21,9 @@
     <string name="radio_sex">Пол:</string>
     <string name="rubble">\u20BD</string>
     <string name="rubble_null">0 \u20BD</string>
+    <string name="why_vk_only"><u>Почему только vk.com?</u></string>
+    <string name="why_vk_dialog">"Все очень просто! Это <b>особая</b> идея, которой мы очень гордимся!\nВсе Ваши друзья <b>уже</b> ждут Вас в приложении! Взаимодействие происходит прозрачно, с реальными людьми!\nА еще, это <b>безопасно</b>! <b>Официальное</b> SDK ВКонтакте не позволит <b>НИКОМУ</b> получить доступ к Вашим личным данным! \nА теперь, давай начинать?"</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

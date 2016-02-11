@@ -10,9 +10,15 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beautyteam.everpay.Database.EverContentProvider;
+import com.beautyteam.everpay.Dialogs.DialogWhyVk;
+import com.beautyteam.everpay.Dialogs.DialogWindow;
 import com.flurry.android.FlurryAgent;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
@@ -57,6 +63,15 @@ public class LoginActivity extends Activity {
 
 
         setContentView(R.layout.activity_login);
+
+        TextView vkOnly = (TextView) findViewById(R.id.text_vk_only);
+
+        vkOnly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
 
         Button loginButton = (Button) findViewById(R.id.login_button);
 
@@ -128,6 +143,14 @@ public class LoginActivity extends Activity {
         // ================
 */
 
+    }
+
+
+    private void showDialog() {
+        DialogWhyVk dialogWhyVk = new DialogWhyVk(this);
+        dialogWhyVk.show();
+        Window window = dialogWhyVk.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
